@@ -1,6 +1,6 @@
 // stats-app/src/components/Quiz.tsx
 import React, { useState } from 'react';
-import { QuizQuestion } from '../data/modules';
+import { type QuizQuestion } from '../data/modules';
 import { CheckCircle2, XCircle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

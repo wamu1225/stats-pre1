@@ -1,7 +1,7 @@
 // stats-app/src/App.tsx
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { modules, Module } from './data/modules';
+import { modules, type Module } from './data/modules';
 import { InteractiveGraph } from './components/InteractiveGraph';
 import { MathDisplay } from './components/MathDisplay';
 import { Quiz } from './components/Quiz';
@@ -57,7 +57,7 @@ function App() {
               </p>
             </div>
 
-            <h3 style={{ margin: '1.5rem 0 1rem' }}>学習コース</h3>
+            <h3 style={{ margin: '1.5rem 0 1rem' }}>学習コース（全セクション公開中）</h3>
             {modules.map((m) => (
               <div 
                 key={m.id} 
@@ -66,20 +66,28 @@ function App() {
                   display: 'flex', 
                   flexDirection: 'column', 
                   gap: '0.5rem',
-                  borderLeft: progress[m.id] ? '4px solid #22c55e' : '1px solid #e2e8f0'
+                  borderLeft: progress[m.id] ? '4px solid #22c55e' : '4px solid #e2e8f0',
+                  cursor: 'pointer',
+                  transition: 'transform 0.1s'
                 }}
                 onClick={() => setActiveModuleId(m.id)}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary)', background: '#dbeafe', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
-                    Phase {m.phase}
-                  </span>
-                  {progress[m.id] && <CheckCircle2 size={18} color="#22c55e" />}
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary)', background: '#dbeafe', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>
+                      Phase {m.phase}
+                    </span>
+                    {progress[m.id] && (
+                      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#16a34a', background: '#dcfce7', padding: '0.2rem 0.5rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                        <CheckCircle2 size={12} /> 完了済み
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <h4 style={{ margin: '0.25rem 0' }}>{m.title}</h4>
                 <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)' }}>{m.description}</p>
-                <button className="btn" style={{ marginTop: '0.5rem' }}>
-                  <BookOpen size={18} /> 学習を始める
+                <button className="btn" style={{ marginTop: '0.5rem', background: progress[m.id] ? '#64748b' : 'var(--primary)' }}>
+                  <BookOpen size={18} /> {progress[m.id] ? 'もう一度学習する' : '学習を始める'}
                 </button>
               </div>
             ))}
