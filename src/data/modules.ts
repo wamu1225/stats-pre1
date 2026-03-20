@@ -14,7 +14,7 @@ export interface Module {
   description: string;
   content: string;
   mathFormula?: string;
-  interactiveType?: 'normal' | 't' | 'chi' | 'pca';
+  interactiveType?: 'normal' | 't' | 'chi' | 'f' | 'pca';
   quiz: QuizQuestion[];
 }
 
@@ -36,6 +36,27 @@ export const modules: Module[] = [
         options: ['平均0, 分散0', '平均1, 分散1', '平均0, 分散1', '平均1, 分散0'],
         correctAnswer: 2,
         explanation: '標準正規分布は平均 $\\mu=0$、分散 $\\sigma^2=1$ と定義されます。'
+      }
+    ]
+  },
+  {
+    id: '1.2-sampling-dist',
+    title: '標本分布の相互関係 (t, χ², F)',
+    phase: 1,
+    description: '正規分布から派生する3つの重要な分布。それぞれの定義と、自由度が分布の形状に与える影響を学びます。',
+    content: `統計的推定や検定において、標本から計算される統計量が従う分布を「標本分布」と呼びます。
+
+1. **t分布**: 標準正規分布 $Z$ と $\\chi^2$ 分布 $W$ から $t = Z / \\sqrt{W/n}$ として定義されます。標本サイズが小さい時の母平均の検定に使われます。
+2. **$\\chi^2$分布**: 独立な標準正規分布の二乗和が従う分布です。分散の検定や適合度検定に使われます。
+3. **F分布**: 2つの独立な $\\chi^2$ 分布の比（それぞれを自由度で割ったもの）が従う分布です。分散分析（ANOVA）などで利用されます。`,
+    interactiveType: 't',
+    quiz: [
+      {
+        id: 'q3',
+        question: 't分布の自由度が大きくなると、どの分布に近づく？',
+        options: ['二項分布', '標準正規分布', 'ポアソン分布', 'F分布'],
+        correctAnswer: 1,
+        explanation: 't分布は自由度が大きくなる（標本サイズが大きくなる）につれて、標準正規分布に収束していきます。'
       }
     ]
   },

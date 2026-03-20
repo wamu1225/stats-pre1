@@ -13,16 +13,46 @@ function App() {
   const [progress, setProgress] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
+    // Progress loading
     const saved = localStorage.getItem('stats_progress');
     if (saved) setProgress(JSON.parse(saved));
+
+    // Initial hash sync
+    const hash = window.location.hash.replace('#', '');
+    if (hash && modules.find(m => m.id === hash)) {
+      setActiveModuleId(hash);
+    }
+
+    // Hash change listener
+    const handleHashChange = () => {
+      const newHash = window.location.hash.replace('#', '');
+      if (newHash && modules.find(m => m.id === newHash)) {
+        setActiveModuleId(newHash);
+      } else if (!newHash) {
+        setActiveModuleId(null);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  const updateModuleId = (id: string | null) => {
+    setActiveModuleId(id);
+    if (id) {
+      window.location.hash = id;
+    } else {
+      // Remove hash without scrolling
+      history.pushState('', document.title, window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+  };
 
   const handleComplete = (id: string) => {
     const nextProgress = { ...progress, [id]: true };
     setProgress(nextProgress);
     localStorage.setItem('stats_progress', JSON.stringify(nextProgress));
-    setActiveModuleId(null);
-    window.scrollTo(0, 0);
+    updateModuleId(null);
   };
 
   const activeModule = modules.find(m => m.id === activeModuleId);
@@ -70,7 +100,7 @@ function App() {
                   cursor: 'pointer',
                   transition: 'transform 0.1s'
                 }}
-                onClick={() => setActiveModuleId(m.id)}
+                onClick={() => updateModuleId(m.id)}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -102,7 +132,7 @@ function App() {
             <button 
               className="btn" 
               style={{ background: 'transparent', color: 'var(--text)', justifyContent: 'flex-start', paddingLeft: 0, marginBottom: '1rem' }}
-              onClick={() => setActiveModuleId(null)}
+              onClick={() => updateModuleId(null)}
             >
               <ChevronLeft size={18} /> 一覧に戻る
             </button>
