@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { type QuizQuestion } from '../data/modules';
 import { CheckCircle2, XCircle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { clsx } from 'clsx';
 
 interface Props {
   questions: QuizQuestion[];
   onComplete: () => void;
+  renderContent: (text: string) => React.ReactNode;
 }
 
-export const Quiz: React.FC<Props> = ({ questions, onComplete }) => {
+export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -33,28 +35,45 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete }) => {
     }
   };
 
+  if (!question) return null;
+
+  // Decide if we should use 2-column layout based on option length
+  const isCompact = question.options.every(opt => opt.length < 15);
+
   return (
-    <div className="card">
-      <h3 style={{ marginTop: 0 }}>理解度チェック</h3>
-      <p style={{ fontWeight: 600 }}>{question.question}</p>
+    <div className="card" style={{ border: '1px solid #e2e8f0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h3 style={{ margin: 0, fontSize: '1.1rem' }}>理解度チェック</h3>
+        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+          質問 {currentIdx + 1} / {questions.length}
+        </span>
+      </div>
       
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div style={{ marginBottom: '1.25rem', fontSize: '1rem', fontWeight: 600, lineHeight: 1.6 }}>
+        {renderContent(question.question)}
+      </div>
+      
+      <div className={clsx("quiz-options", isCompact && "compact")}>
         {question.options.map((opt, i) => (
           <button
-            key={i}
+            key={`${currentIdx}-${i}`}
             className="btn"
             style={{
               background: selected === i 
                 ? (i === question.correctAnswer ? '#22c55e' : '#ef4444')
-                : '#f1f5f9',
+                : '#ffffff',
               color: selected === i ? 'white' : 'var(--text)',
-              justifyContent: 'flex-start',
-              border: '1px solid #e2e8f0',
-              textAlign: 'left'
+              justifyContent: 'space-between',
+              border: selected === i ? 'none' : '1px solid #e2e8f0',
+              textAlign: 'left',
+              padding: '0.75rem 1rem',
+              boxShadow: 'none',
+              fontWeight: 500,
+              fontSize: '0.9rem'
             }}
             onClick={() => handleSelect(i)}
           >
-            {opt}
+            <div style={{ flex: 1 }}>{renderContent(opt)}</div>
             {selected === i && (
               i === question.correctAnswer ? <CheckCircle2 size={18} /> : <XCircle size={18} />
             )}
@@ -65,14 +84,21 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete }) => {
       <AnimatePresence>
         {selected !== null && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            style={{ marginTop: '1rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}
           >
-            <p style={{ margin: 0, fontSize: '0.875rem' }}>
-              <strong>解説:</strong> {question.explanation}
+            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
+              <strong style={{ color: isCorrect ? '#22c55e' : '#ef4444' }}>
+                {isCorrect ? '正解！' : '不正解...'}
+              </strong><br />
+              {renderContent(question.explanation)}
             </p>
-            <button className="btn" style={{ marginTop: '1rem' }} onClick={next}>
+            <button 
+              className="btn" 
+              style={{ marginTop: '1rem', width: 'auto', padding: '0.5rem 1rem' }} 
+              onClick={next}
+            >
               {currentIdx + 1 < questions.length ? '次の問題へ' : 'セクションを完了する'}
               <ChevronRight size={18} />
             </button>

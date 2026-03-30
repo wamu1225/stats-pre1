@@ -1,6 +1,42 @@
 // stats-app/src/utils/math.ts
 
 /**
+ * Normal Distribution PDF
+ */
+export function normalPDF(x: number, mean: number, std: number): number {
+  const p = 1 / (std * Math.sqrt(2 * Math.PI));
+  const e = Math.exp(-0.5 * Math.pow((x - mean) / std, 2));
+  return p * e;
+}
+
+/**
+ * t-Distribution PDF (Approximation)
+ */
+export function tPDF(x: number, df: number): number {
+  const coeff = gamma((df + 1) / 2) / (Math.sqrt(df * Math.PI) * gamma(df / 2));
+  return coeff * Math.pow(1 + (x * x) / df, -(df + 1) / 2);
+}
+
+/**
+ * Chi-Square PDF
+ */
+export function chi2PDF(x: number, df: number): number {
+  if (x <= 0) return 0;
+  return (Math.pow(x, df / 2 - 1) * Math.exp(-x / 2)) / (Math.pow(2, df / 2) * gamma(df / 2));
+}
+
+/**
+ * F-Distribution PDF
+ */
+export function fPDF(x: number, df1: number, df2: number): number {
+  if (x <= 0) return 0;
+  const num = Math.pow(df1 * x, df1) * Math.pow(df2, df2);
+  const den = Math.pow(df1 * x + df2, df1 + df2);
+  const coeff = gamma((df1 + df2) / 2) / (gamma(df1 / 2) * gamma(df2 / 2));
+  return coeff * Math.sqrt(num / den) / x;
+}
+
+/**
  * Gamma function approximation using Lanczos method
  */
 export function gamma(z: number): number {
@@ -19,44 +55,38 @@ export function gamma(z: number): number {
 }
 
 /**
- * Normal Distribution PDF
+ * Calculate the angle of the first principal component and its contribution ratio
  */
-export function normalPDF(x: number, mu: number, sigma: number): number {
-  return (
-    (1 / (sigma * Math.sqrt(2 * Math.PI))) *
-    Math.exp(-0.5 * Math.pow((x - mu) / sigma, 2))
-  );
-}
+export function calculatePCA(points: { x: number; y: number }[]) {
+  if (points.length < 2) return { angle: 0, ratio: 0 };
 
-/**
- * Student's t-distribution PDF
- */
-export function tPDF(x: number, df: number): number {
-  const term1 = gamma((df + 1) / 2) / (Math.sqrt(df * Math.PI) * gamma(df / 2));
-  const term2 = Math.pow(1 + (x * x) / df, -(df + 1) / 2);
-  return term1 * term2;
-}
+  const n = points.length;
+  const meanX = points.reduce((s, p) => s + p.x, 0) / n;
+  const meanY = points.reduce((s, p) => s + p.y, 0) / n;
 
-/**
- * Chi-squared distribution PDF
- */
-export function chi2PDF(x: number, df: number): number {
-  if (x < 0) return 0;
-  if (x === 0 && df === 2) return 0.5;
-  if (x === 0 && df < 2) return Infinity;
-  const term1 = 1 / (Math.pow(2, df / 2) * gamma(df / 2));
-  const term2 = Math.pow(x, df / 2 - 1) * Math.exp(-x / 2);
-  return term1 * term2;
-}
+  let sxx = 0, sxy = 0, syy = 0;
+  points.forEach(p => {
+    const dx = p.x - meanX;
+    const dy = p.y - meanY;
+    sxx += dx * dx;
+    sxy += dx * dy;
+    syy += dy * dy;
+  });
+  
+  // Angle of the first eigenvector
+  const angle = 0.5 * Math.atan2(2 * sxy, sxx - syy);
 
-/**
- * F-distribution PDF
- */
-export function fPDF(x: number, df1: number, df2: number): number {
-  if (x <= 0) return 0;
-  const num = Math.pow(df1 * x, df1) * Math.pow(df2, df2);
-  const den = Math.pow(df1 * x + df2, df1 + df2);
-  const term1 = Math.sqrt(num / den);
-  const beta = (gamma(df1 / 2) * gamma(df2 / 2)) / gamma((df1 + df2) / 2);
-  return term1 / (x * beta);
+  // Eigenvalues of covariance matrix
+  // Matrix is [[sxx, sxy], [sxy, syy]] / (n-1)
+  const trace = (sxx + syy);
+  const det = sxx * syy - sxy * sxy;
+  
+  // Solve: L^2 - trace*L + det = 0
+  const discriminant = Math.sqrt(trace * trace - 4 * det);
+  const L1 = (trace + discriminant) / 2;
+  const L2 = (trace - discriminant) / 2;
+
+  const ratio = L1 / (L1 + L2 || 1);
+
+  return { angle, ratio };
 }
