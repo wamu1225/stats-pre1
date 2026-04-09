@@ -9,6 +9,8 @@
     <meta property="og:title" content="判別分析とマハラノビス距離 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/2.3-discriminant/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/2.3-discriminant/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="判別分析とマハラノビス距離 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。" />
@@ -23,29 +25,41 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>判別分析とマハラノビス距離</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「このメールはスパムか？」「この患者はどの病気か？」——データの特徴を使って「どのグループに属するか」を判定したい。このモジュールでは、グループ間の差を最大化する**判別分析**の仕組みと、データの形状を考慮した距離の測り方（**マハラノビス距離**）を学びます。
+「このメールはスパムか？」「この患者はどの病気か？」——データの特徴を使って「どのグループに属するか」を判定したい。このモジュールでは、グループ間の差を最大化する判別分析の仕組みと、データの形状を考慮した距離の測り方（マハラノビス距離）を学びます。
 
-💡 **「病院の診断」のような多次元の振り分け**
+ 「病院の診断」のような多次元の振り分け
 
 血液検査の結果（白血球数・赤血球数・血小板数…）だけで「健康・貧血・感染症・白血病」のどのグループに属するかを判定する——これが判別分析の本質です。
 
-1つの数値だけでは判断しにくくても、**複数の検査値を組み合わせた「判別スコア」**を計算することで、かなり正確な振り分けができるようになります。
+1つの数値だけでは判断しにくくても、複数の検査値を組み合わせた「判別スコア」を計算することで、かなり正確な振り分けができるようになります。
 
----
+線形判別分析（LDA）の仕組み
 
-### 1. 線形判別分析（LDA）の仕組み
-
-**具体例**：スパムメール判定を考えます。メールの特徴を「単語"無料"の出現回数」と「リンク数」の2変数で表したとき、スパムと正常メールをどう分けるか？
-
-LDAは「グループ間の差を最大化し、グループ内のばらつきを最小化する」境界線を引きます——**フィッシャーの線形判別...</p>
+具体例：スパムメール判定を考えます。メールの特徴を「単語"無料"の出現回数」と「リンク数」の2変数で表したとき、スパムと正常メールをどう分けるか？
+...</p>
   </noscript>
     <div id="root"></div>
   </body>

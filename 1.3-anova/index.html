@@ -9,6 +9,8 @@
     <meta property="og:title" content="分散分析 (ANOVA) | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="3つ以上のグループを「一気に」比較する、効率的な判断手法。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.3-anova/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.3-anova/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="分散分析 (ANOVA) | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="3つ以上のグループを「一気に」比較する、効率的な判断手法。" />
@@ -23,25 +25,40 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>分散分析 (ANOVA)</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「3つ以上のグループに差があるか」を調べるのに、t検定を何度も繰り返してはいけません——繰り返すほど「たまたまの差」を本物と誤認するリスクが膨らむからです。このモジュールでは、その問題を1回の検定で解決する**分散分析（ANOVA）**の仕組みと、差が見つかった後の「どこが違うか」を特定する方法を学びます。
+「3つ以上のグループに差があるか」を調べるのに、t検定を何度も繰り返してはいけません——繰り返すほど「たまたまの差」を本物と誤認するリスクが膨らむからです。このモジュールでは、その問題を1回の検定で解決する分散分析（ANOVA）の仕組みと、差が見つかった後の「どこが違うか」を特定する方法を学びます。
 
-💡 **「何度もくじを引くほど外れが増える」問題**
+ 「何度もくじを引くほど外れが増える」問題
 
-コインを1回投げて「表が出たら差あり」と判定するとき、間違える確率は 5% です。では **3ペアを3回検定**するとどうなるでしょう？
+コインを1回投げて「表が出たら差あり」と判定するとき、間違える確率は 5% です。では 3ペアを3回検定するとどうなるでしょう？
 
-P(\text{1回以上間違える}) = 1 - (1-0.05)^3 \approx 14\%
+計算の読み方：「3回すべて正しく判断できる確率」は  なので、「少なくとも1回は間違える確率」は  になります。
 
-計算の読み方：「3回すべて正しく判断できる確率」は $(0.95)^3 \approx 86\%$ なので、「少なくとも1回は間違える確率」は $100\% - 86\% = 14\%$ になります。
+有意水準を5%にしたつもりが、実際には14%で間違えてしまいます。分散分析は「3グループを1回の検定でまとめて比較」することでこの問題を回避します。
 
-有意水準を5%にしたつもりが、実際には14%で間違えてしまいます。分散分析は「3グループを1回の検定でまとめて比較」することでこの問題を回避しま...</p>
+仕組み：ばらつきを「意...</p>
   </noscript>
     <div id="root"></div>
   </body>

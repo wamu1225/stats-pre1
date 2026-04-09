@@ -9,6 +9,8 @@
     <meta property="og:title" content="主成分分析 (PCA) | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="100個の項目を、3つの「本質」に凝縮する魔法のテクニック。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/2.2-pca/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/2.2-pca/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="主成分分析 (PCA) | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="100個の項目を、3つの「本質」に凝縮する魔法のテクニック。" />
@@ -23,27 +25,40 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>主成分分析 (PCA)</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「10科目のテスト結果があるが、どう整理すれば全体像が見えるか？」——情報が多すぎると人間には把握しきれません。このモジュールでは、多数の変数を情報の損失を最小化しながら少数の「本質的な指標」に凝縮する**主成分分析（PCA）**の仕組みを学びます。
+「10科目のテスト結果があるが、どう整理すれば全体像が見えるか？」——情報が多すぎると人間には把握しきれません。このモジュールでは、多数の変数を情報の損失を最小化しながら少数の「本質的な指標」に凝縮する主成分分析（PCA）の仕組みを学びます。
 
-💡 **「演奏家の実力を2つの数字で表す」ような情報圧縮**
+ 「演奏家の実力を2つの数字で表す」ような情報圧縮
 
 クラシックのピアニストを評価する際、「音の正確さ・スピード・音量の安定性・感情表現・リズム感・姿勢・表情・舞台映え…」と10項目を列挙しても比較しにくいですよね。実際には「技術力」と「表現力」という2軸で大半が説明できるかもしれません。
 
-主成分分析とは、このように「10個の数字を2〜3個の本質的な指標（主成分）で代替する」手法です。情報を捨てているようで、実は**最も情報量を保つ方向**を選んでいます。
+主成分分析とは、このように「10個の数字を2〜3個の本質的な指標（主成分）で代替する」手法です。情報を捨てているようで、実は最も情報量を保つ方向を選んでいます。
 
----
+数学的本質：「ばらつきが最大の方向」を新しい軸にする
 
-### 1. 数学的本質：「ばらつきが最大の方向」を新しい軸にする
-
-10科目の成績から「理数系能力」と「言語系能力」という2つの主成分を取り出す場面を想像してください。コンピュータは「10個の点がどの方向に最も広が...</p>
+10科目の成...</p>
   </noscript>
     <div id="root"></div>
   </body>

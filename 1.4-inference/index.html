@@ -9,6 +9,8 @@
     <meta property="og:title" content="推定・検定の理論的背景 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.4-inference/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.4-inference/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="推定・検定の理論的背景 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。" />
@@ -23,31 +25,42 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>推定・検定の理論的背景</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
 「P値が 0.03 です——この薬は効果がありますか？」この質問に正確に答えるには、P値の意味を深く理解する必要があります。このモジュールでは、P値の正しい解釈・2種類の誤り・そして「本物の効果を見逃さない」確率（検出力）の設計方法を学びます。
 
-💡 **「無実を前提とした裁判」のような仮説検定**
+ 「無実を前提とした裁判」のような仮説検定
 
 仮説検定は法廷の裁判によく似ています。
-- **帰無仮説 $H_0$**（無実の仮定）：「薬の効果はゼロだ（差がない）」——まず無実と仮定してスタート
-- **対立仮説 $H_1$**（証明したいこと）：「薬に本当の効果がある（差がある）」
-- **P値**：「無実と仮定したとき、今回の証拠（データ）以上に不利な状況が偶然起きる確率」
-- **有意水準 $\alpha$**：「この確率がこれ以下なら有罪と判断する」という基準（通常 5%）
+帰無仮説 （無実の仮定）：「薬の効果はゼロだ（差がない）」——まず無実と仮定してスタート
+対立仮説 （証明したいこと）：「薬に本当の効果がある（差がある）」
+P値：「無実と仮定したとき、今回の証拠（データ）以上に不利な状況が偶然起きる確率」
+有意水準 ：「この確率がこれ以下なら有罪と判断する」という基準（通常 5%）
 
 P値が小さい＝「無実なら滅多に起きないことが起きた」＝無実という仮定が疑わしい、ということです。
 
----
-
-### 1. P値の正しい解釈
-
-**具体例**：新薬Aがプラセボより血圧を下げるか調べます。5...</p>
+P値の正しい解釈...</p>
   </noscript>
     <div id="root"></div>
   </body>

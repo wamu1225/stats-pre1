@@ -9,6 +9,8 @@
     <meta property="og:title" content="標本分布の相互関係 ($t, \chi^2, F$) | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="母分散がわからない…そんな「現場のジレンマ」を解決する分布たちです。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.2-sampling/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.2-sampling/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="標本分布の相互関係 ($t, \chi^2, F$) | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="母分散がわからない…そんな「現場のジレンマ」を解決する分布たちです。" />
@@ -23,27 +25,40 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>標本分布の相互関係 ($t, \chi^2, F$)</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「10人の血圧データだけで新薬の効果を証明できるか？」——この問いに答えるには、正規分布だけでは不十分です。なぜなら、真のばらつき（母分散）が分からないからです。このモジュールでは、その制約のもとで正確な推測を可能にする3つの分布 $t$・$\chi^2$・$F$ の意味と使い所を学びます。
+「10人の血圧データだけで新薬の効果を証明できるか？」——この問いに答えるには、正規分布だけでは不十分です。なぜなら、真のばらつき（母分散）が分からないからです。このモジュールでは、その制約のもとで正確な推測を可能にする3つの分布 ・・ の意味と使い所を学びます。
 
-💡 **「代用品を使う不確かさ」を正直に反映した分布**
+ 「代用品を使う不確かさ」を正直に反映した分布
 
-理想の統計では「真のばらつき $\sigma^2$（母分散）が既知」という前提で正規分布を使います。しかし現実に母分散が分かっていることはまずありません。
+理想の統計では「真のばらつき （母分散）が既知」という前提で正規分布を使います。しかし現実に母分散が分かっていることはまずありません。
 
-仕方なく「手元のデータから計算した $s^2$（標本分散）」で代用するしかないのですが——これは「精密な計量カップの代わりに目分量で塩を入れる」ようなものです。代用品を使う分の余分な不確かさを、形に正直に反映したのが、これから学ぶ3つの分布です。
+仕方なく「手元のデータから計算した （標本分散）」で代用するしかないのですが——これは「精密な計量カップの代わりに目分量で塩を入れる」ようなものです。代用品を使う分の余分な不確かさを、形に正直に反映したのが、これから学ぶ3つの分布です。
 
----
+分布：母分散が不明なときの推測
 
-### 1. $t$ 分布：母分散が不明なときの推測
-
-新薬を10人に投与したら血圧が平均 **5 mmHg** 下がった。「これは本物の効果か、偶然か？」を調べたいが、全人類の血圧...</p>
+新薬を10人に投与したら血圧が平均 5 m...</p>
   </noscript>
     <div id="root"></div>
   </body>

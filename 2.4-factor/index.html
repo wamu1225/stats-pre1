@@ -9,6 +9,8 @@
     <meta property="og:title" content="因子分析 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="目に見えない「性格」や「価値観」を、アンケートデータからあぶり出す。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/2.4-factor/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/2.4-factor/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="因子分析 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="目に見えない「性格」や「価値観」を、アンケートデータからあぶり出す。" />
@@ -23,31 +25,42 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>因子分析</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「アンケートの10問の回答には、目に見えない『性格』が影響しているはず」——この仮説を検証するのが因子分析です。このモジュールでは、観測変数の背後に潜む**共通因子**を発見する仕組みと、主成分分析との本質的な違いを学びます。
+「アンケートの10問の回答には、目に見えない『性格』が影響しているはず」——この仮説を検証するのが因子分析です。このモジュールでは、観測変数の背後に潜む共通因子を発見する仕組みと、主成分分析との本質的な違いを学びます。
 
-💡 **「3つの症状の背後に1つの病気」のような潜在構造**
+ 「3つの症状の背後に1つの病気」のような潜在構造
 
 「発熱・倦怠感・頭痛」という3つの症状は、「インフルエンザ（共通因子）」という目に見えない原因から生まれているかもしれません。因子分析はこれと同じ発想で、複数の観測変数の共通原因（共通因子）を統計的に探し出します。
 
 10問の性格診断アンケートを例にすると：
-- 「人前で話すのが得意か」「友人が多いか」「パーティーが好きか」→ すべて「外向性」から生まれている
-- 「細部にこだわるか」「計画的か」「きれい好きか」→ すべて「誠実性」から生まれている
+「人前で話すのが得意か」「友人が多いか」「パーティーが好きか」→ すべて「外向性」から生まれている
+「細部にこだわるか」「計画的か」「きれい好きか」→ すべて「誠実性」から生まれている
 
----
+因子分析のモデル
 
-### 1. 因子分析のモデル
-
-x_j = \lambda_{j1} F_1 + \lambda_{j2} F_2 + \cdots + \lambda_{jm} F_m + u_j
-
-- $x...</p>
+：観測変数（アンケートの各回...</p>
   </noscript>
     <div id="root"></div>
   </body>

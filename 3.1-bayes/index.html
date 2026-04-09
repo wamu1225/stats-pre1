@@ -9,6 +9,8 @@
     <meta property="og:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.1-bayes/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.1-bayes/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
@@ -23,31 +25,42 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>ベイズ推定とマルコフ連鎖</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「昨日まで雨が続いていたから、今日も雨だろう」——このように過去の経験を踏まえて確率を更新し続ける統計学の考え方が**ベイズ統計**です。このモジュールでは、事前知識とデータを組み合わせて確信を更新するベイズ推論の仕組みと、計算上難しい問題を解くためのシミュレーション手法（MCMC）を学びます。
+「昨日まで雨が続いていたから、今日も雨だろう」——このように過去の経験を踏まえて確率を更新し続ける統計学の考え方がベイズ統計です。このモジュールでは、事前知識とデータを組み合わせて確信を更新するベイズ推論の仕組みと、計算上難しい問題を解くためのシミュレーション手法（MCMC）を学びます。
 
-💡 **「医師の診断」のような段階的な確率更新**
+ 「医師の診断」のような段階的な確率更新
 
-患者が「頭痛」を訴えています。医師は最初「風邪の可能性が80%、髄膜炎が5%、偏頭痛が15%」と経験から推測します（**事前分布**）。
+患者が「頭痛」を訴えています。医師は最初「風邪の可能性が80%、髄膜炎が5%、偏頭痛が15%」と経験から推測します（事前分布）。
 
-次に「首を動かすと痛い」という新しい情報が加わります（**尤度**）。この情報は髄膜炎と高く関連するため、医師の判断が更新されます（**事後分布**）。
+次に「首を動かすと痛い」という新しい情報が加わります（尤度）。この情報は髄膜炎と高く関連するため、医師の判断が更新されます（事後分布）。
 
 これがベイズ統計の核心——「今の確信」に「新しい証拠」を掛け合わせて「更新された確信」を得るプロセスです。
 
----
+ベイズの定理：確信を更新する方程式
 
-### 1. ベイズの定理：確信を更新する方程式
-
-**具体例**：迷惑メールフィルターを考えましょう。
-
-1. **事前確率（事前分布）**：もともとメールの30%がスパムだと知ってい...</p>
+具体例：迷惑メー...</p>
   </noscript>
     <div id="root"></div>
   </body>

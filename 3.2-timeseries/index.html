@@ -9,6 +9,8 @@
     <meta property="og:title" content="時系列解析 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="「過去」から「未来」を読み解く、時間の流れを考慮した統計学。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.2-timeseries/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.2-timeseries/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="時系列解析 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="「過去」から「未来」を読み解く、時間の流れを考慮した統計学。" />
@@ -23,36 +25,45 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>時系列解析</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「昨日の気温が高かったから、今日のアイス売上も多いだろう」——このように過去が未来に影響するデータの分析が**時系列解析**です。このモジュールでは、データの中に潜む「時間のルール」（トレンド・季節性・自己相関）を発見し、ARIMAモデルで未来を予測する方法を学びます。
+「昨日の気温が高かったから、今日のアイス売上も多いだろう」——このように過去が未来に影響するデータの分析が時系列解析です。このモジュールでは、データの中に潜む「時間のルール」（トレンド・季節性・自己相関）を発見し、ARIMAモデルで未来を予測する方法を学びます。
 
-💡 **アイスクリーム売上には「3つのルール」が隠れている**
+ アイスクリーム売上には「3つのルール」が隠れている
 
 あるアイスクリームショップの月次売上（万円）を見てみましょう：
 
-- 1月：150万円（冬——低い）
-- 7月：520万円（夏——ピーク）
-- 翌1月：165万円（昨年より少し増えた）
+1月：150万円（冬——低い）
+7月：520万円（夏——ピーク）
+翌1月：165万円（昨年より少し増えた）
 
 このデータには3つのパターンが混じっています：
-1. **トレンド**：年々売上が少しずつ伸びている（健康ブームの影響）
-2. **季節性**：夏は3倍以上売れ、冬は落ち込む（1年周期のパターン）
-3. **自己相関**：先週の売上が良いと今週も良い傾向がある
+トレンド：年々売上が少しずつ伸びている（健康ブームの影響）
+季節性：夏は3倍以上売れ、冬は落ち込む（1年周期のパターン）
+自己相関：先週の売上が良いと今週も良い傾向がある
 
-時系列解析では、これらのパターンを数式で捉えて未来を予測します。
-
----
-
-### 1. 自己相関：過去の自分が未来の自分に影響する
-
-**自己相関係数**（Au...</p>
+時系列解析では、これらのパターンを数式で捉えて未来を...</p>
   </noscript>
     <div id="root"></div>
   </body>

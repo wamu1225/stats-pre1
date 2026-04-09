@@ -9,6 +9,8 @@
     <meta property="og:title" content="正規分布と大標本理論 | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="データが増えることで見えてくる「究極の安定感」を理解しましょう。" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.1-clt/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.1-clt/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="正規分布と大標本理論 | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="データが増えることで見えてくる「究極の安定感」を理解しましょう。" />
@@ -23,31 +25,44 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
-    <script type="module" crossorigin src="../assets/index-DkMDx4gh.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-BjWALj00.css">
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-ssnwDKL9.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-BOOrWuaM.css">
   </head>
   <body>
     <noscript id="seo-data">
     <h1>正規分布と大標本理論</h1>
-    <p>💡 **このモジュールで学ぶこと**
+    <p>このモジュールで学ぶこと
 
-「1クラス30人の身長を測るだけで、全国平均が推測できる」——なぜそんなことが可能なのでしょうか？その答えが**正規分布**と**中心極限定理（CLT）**です。この2つは、少ないデータから母集団全体を推測するための理論的な土台です。
+「1クラス30人の身長を測るだけで、全国平均が推測できる」——なぜそんなことが可能なのでしょうか？その答えが正規分布と中心極限定理（CLT）です。この2つは、少ないデータから母集団全体を推測するための理論的な土台です。
 
-💡 **統計学のゴール：「スプーン一杯の味見」のたとえ**
+ 統計学のゴール：「スプーン一杯の味見」のたとえ
 
-私たちが統計学を使うのは、**「スプーン一杯の味見から、巨大な鍋全体の味を突き止めたい」**からです。
+私たちが統計学を使うのは、「スプーン一杯の味見から、巨大な鍋全体の味を突き止めたい」からです。
 
-- **母集団（鍋全体）**：本当に知りたい対象（全国民、全製品ロットなど）。
-- **標本（スプーン一杯）**：今、手元にあるデータ。母集団からランダムに取り出したもの。
-- **推測（ゴール）**：標本に混じる「たまたまの誤差」に騙されず、母数（真の値。$\theta$ という記号で表します）を見抜くこと。
+母集団（鍋全体）：本当に知りたい対象（全国民、全製品ロットなど）。
+標本（スプーン一杯）：今、手元にあるデータ。母集団からランダムに取り出したもの。
+推測（ゴール）：標本に混じる「たまたまの誤差」に騙されず、母数（真の値。 という記号で表します）を見抜くこと。
 
----
-
-### 1. 正規分布：自然界の「鐘の形」
+正規分布：自然界の「鐘の形」
 
 まず、具体的な場面を想像してください。
 
-日本人男性の身長を1万人分測り、ヒストグラムを描いてみます。平均は約 **170cm**、標準偏差は約 **6cm**。グラフを描くと—...</p>
+日本人男性の身長を1万人分測り、ヒストグラムを描いてみます。平...</p>
   </noscript>
     <div id="root"></div>
   </body>
