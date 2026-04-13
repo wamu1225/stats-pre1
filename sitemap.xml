@@ -2,85 +2,97 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://study-apps.com/stats-pre1/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.1-clt/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.2-sampling/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.3-anova/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.4-inference/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.1-regression/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.2-pca/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.3-discriminant/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.4-factor/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/3.1-bayes/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/3.2-timeseries/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/glossary/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/cheatsheet/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/guide/</loc>
-    <lastmod>2026-04-09</lastmod>
+    <lastmod>2026-04-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/about/</loc>
+    <lastmod>2026-04-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/privacy/</loc>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
