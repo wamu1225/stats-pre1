@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>判別分析とマハラノビス距離 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。" />
+    <meta property="og:title" content="判別分析とマハラノビス距離 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/2.3-discriminant/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/2.3-discriminant/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="判別分析とマハラノビス距離 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-COh7wh77.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"判別分析とマハラノビス距離","description":"「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。","url":"https://study-apps.com/stats-pre1/2.3-discriminant/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">判別分析とマハラノビス距離</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「このメールはスパムか？」「この患者はどの病気か？」——データの特徴を使って「どのグループに属するか」を判定したい。このモジュールでは、グループ間の差を最大化する判別分析の仕組みと、データの形状を考慮した距離の測り方（マハラノビス距離）を学びます。
+
+ 「病院の診断」のような多次元の振り分け
+
+血液検査の結果（白血球数・赤血球数・血小板数…）だけで「健康・貧血・感染症・白血病」のどのグループに属するかを判定する——これが判別分析の本質です。
+
+1つの数値だけでは判断しにくくても、複数の検査値を組み合わせた「判別スコア」を計算することで、かなり正確な振り分けができるようになります。
+
+線形判別分析（LDA）の仕組み
+
+具体例：スパムメール判定を考えます。メールの特徴を「単語"無料"の出現回数」と「リンク数」の2変数で表したとき、スパムと正常メールをどう分けるか？
+
+LDAは「グループ間の差を最大化し、グループ内のばらつきを最小化する」境界線を引きます——フィッシャーの線形判別規準とも呼ばれます。
+
+（右上の  は「逆行列」——行列の世界での「割り算」に相当する操作です）
+
+（ とも書く）：グループ内の分散共分散行列（各グループのデータがどの方向にどれだけ広がっているかを表す数字の表）
+：各グループの平均ベクトル
+：最適な判別方向（境界線に垂直な方向）
+
+新しいデータ  はこの方向  に射影した値を閾値と比較してグループを決定します。
+
+グラフで2つのグループの形と、判別境界がどう引かれるかを観察してください。
+
+このグラフから、判別関数がグループの分布の形（分散共分散構造）を考慮した境界線を引いていることが分かります。
+
+判別境界を引くには「新しいデータが各グループからどれだけ離れているか」を測る必要があります。では、データが楕円形に広がっているとき、この「離れ具合」をどう測るのが適切でしょうか？
+
+マハラノビス距離：「形を考慮した距離」
+
+普通のユークリッド距離は「円形」で測りますが、データは楕円形に分布することが多いです。例えば「身長と体重の関係」——どちらも「平均 」の範囲に収まることが多く、外れ値の判断には「楕円形の等高線」を使うべきです。
+
+マハラノビス距離はデータの形（分散共分散行列 （シグマ。注：正規分布の標準偏差  とは別の記号で、ここでは「分散の表（行列）」を意味します））を考慮して測ります：
+
+（式中の  は「転置」——行列の行と列を入れ替える操作。 は分散行列の逆行列です。式全体は「データ点  が平均  からどれだけ離れているか」を分布の形を考慮して測っています）
+
+データが広がっている方向は「大した距離ではない」と判断
+データが少ない方向に外れると「異常」と判断
+が単位行列のときはユークリッド距離の二乗に退化します
+
+ 試験頻出：判別分析 vs ロジスティック回帰
+判別分析：各グループが多変量正規分布に従うと仮定。分散が等しいなら線形境界
+ロジスティック回帰：分布の仮定が緩やか。実務ではより広く使われる
+
+判別モデルの評価
+
+判別のパフォーマンスは混同行列（Confusion Matrix）で評価します。
+
+再現率（Recall）：本物のスパムを正しく検出できた割合 
+適合率（Precision）：スパムと判定したうち本物の割合 
+
+このバランスを状況に応じて調整することが、実務では重要です。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
+    <meta property="og:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.1-bayes/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.1-bayes/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-COh7wh77.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ベイズ推定とマルコフ連鎖</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「昨日まで雨が続いていたから、今日も雨だろう」——このように過去の経験を踏まえて確率を更新し続ける統計学の考え方がベイズ統計です。このモジュールでは、事前知識とデータを組み合わせて確信を更新するベイズ推論の仕組みと、計算上難しい問題を解くためのシミュレーション手法（MCMC）を学びます。
+
+ 「医師の診断」のような段階的な確率更新
+
+患者が「頭痛」を訴えています。医師は最初「風邪の可能性が80%、髄膜炎が5%、偏頭痛が15%」と経験から推測します（事前分布）。
+
+次に「首を動かすと痛い」という新しい情報が加わります（尤度）。この情報は髄膜炎と高く関連するため、医師の判断が更新されます（事後分布）。
+
+これがベイズ統計の核心——「今の確信」に「新しい証拠」を掛け合わせて「更新された確信」を得るプロセスです。
+
+ベイズの定理：確信を更新する方程式
+
+具体例：迷惑メールフィルターを考えましょう。
+
+事前確率（事前分布）：もともとメールの30%がスパムだと知っている
+尤度（Likelihood）：「無料」「当選」という単語が含まれていた。スパムにこの組み合わせが出る確率は80%、正常メールでは5%
+事後確率（事後分布）：ベイズの定理で計算すると「スパムの確率は約87%」
+
+（「」は「比例する」という記号です。等号ではなく「形が同じ」という意味で使います。右辺の計算だけで事後分布の形（山の形状）が決まるため、難しい分母の計算を省略できます）
+
+（事後分布）（尤度）（事前分布）
+
+観測データ数のスライダーを増やしながら、事後分布がどう変化するか観察してみましょう。
+
+データが増えるほど事後分布が「細く高く」なり、確信が深まっていく様子が分かります——これがベイズ推定の「学習」です。
+
+計算上の問題とMCMC
+
+事後分布を正確に求めようとすると分母の積分が複雑で計算できないことが多々あります。
+
+分母の積分（全ての  にわたって足し合わせる操作）は、パラメータが1つの単純なケースでは解けますが、パラメータが10個・100個と増えると「10次元・100次元の空間で体積を計算する」ことになり、事実上計算不可能になります。そこで登場するのが MCMC（マルコフ連鎖モンテカルロ法）です。
+
+仕組み：分布そのものを求める代わりに、その分布から「サンプル」を大量に抽出してヒストグラムで形を近似する
+マルコフ連鎖（Markov Chain）：「一つ前の状態のみに依存して次の状態が決まる」過程。これによって効率的なサンプリングが可能になる
+ギブスサンプリング：たくさんのパラメータがあるとき、1つずつ順番に更新していく効率的なサンプリング手法
+
+MCMCがどのようにサンプルを生成していくか、その軌跡を観察してみましょう。
+
+このサンプルの集積が確率の高い領域を密に覆い、複雑な事後分布を近似します——「計算不可能な積分をサンプリングで回避する」のがMCMCの本質です。
+
+共役事前分布とMAP推定
+
+ 事後分布からの点推定
+
+事後分布が得られたら、そこから代表値を1つ選ぶ必要があります：
+事後平均（EAP: Expected A Posteriori）：事後分布の平均値を採用する、最もよく使われる方法
+MAP推定（Maximum A Posteriori）：事後分布の最頻値（確率が最も高い点）を採用する方法。最尤推定（MLE）に事前分布の情報を加えた形と解釈できる
+
+ 重要ポイント：共役事前分布
+
+特定の事前分布と尤度の組み合わせを使うと、MCMCなしで足し算のような簡単な計算だけで事後分布が求められます：
+
+例えば「コインを10回投げて7回表」のデータに対して、ベータ事前分布を使うと事後分布がパラメータを足すだけで求まります。この「形が変わらない」組み合わせが共役関係です。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

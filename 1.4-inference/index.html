@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>推定・検定の理論的背景 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。" />
+    <meta property="og:title" content="推定・検定の理論的背景 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.4-inference/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.4-inference/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="推定・検定の理論的背景 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-COh7wh77.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"推定・検定の理論的背景","description":"P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。","url":"https://study-apps.com/stats-pre1/1.4-inference/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">推定・検定の理論的背景</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">P値の正しい読み方と、「見逃し」を防ぐ検出力の設計を学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「P値が 0.03 です——この薬は効果がありますか？」この質問に正確に答えるには、P値の意味を深く理解する必要があります。このモジュールでは、P値の正しい解釈・2種類の誤り・そして「本物の効果を見逃さない」確率（検出力）の設計方法を学びます。
+
+ 「無実を前提とした裁判」のような仮説検定
+
+仮説検定は法廷の裁判によく似ています。
+帰無仮説 （無実の仮定）：「薬の効果はゼロだ（差がない）」——まず無実と仮定してスタート
+対立仮説 （証明したいこと）：「薬に本当の効果がある（差がある）」
+P値：「無実と仮定したとき、今回の証拠（データ）以上に不利な状況が偶然起きる確率」
+有意水準 ：「この確率がこれ以下なら有罪と判断する」という基準（通常 5%）
+
+P値が小さい＝「無実なら滅多に起きないことが起きた」＝無実という仮定が疑わしい、ということです。
+
+P値の正しい解釈
+
+具体例：新薬Aがプラセボより血圧を下げるか調べます。50人ずつ2グループに分け1か月後の血圧低下量を測定しました。
+
+新薬グループの平均低下：8.2 mmHg
+プラセボグループの平均低下：4.7 mmHg
+差：3.5 mmHg → P値：0.03
+
+読み方：「帰無仮説  のもとで、検定統計量  の絶対値が今回の観測値  以上になる確率」。 は絶対値（プラスでもマイナスでも、差の大きさだけを見る）、 は「 が正しいと仮定したとき」という条件を表します。
+
+P値 0.03 が意味すること：「もし本当に差がないなら、今回のような差（3.5 mmHg 以上）が偶然出る確率は 3%」。この確率が有意水準 5% より小さいため「偶然とは言いにくい → 差がある」と判断します。
+
+ P値についてよくある誤解
+
+2種類の誤りとトレードオフ
+
+検定では「本物の差があっても見逃す」または「差がないのに差があると誤判定する」という2種類の間違いが起きえます。
+
+（有意水準）：冤罪リスク。通常 5% に設定
+：見逃しリスク。下げることが実務の目標
+検出力（）：「本当に効果があるとき、正しく検出できる確率」。医療試験では 80% 以上を目標にします
+
+ 検出力を上げる3つの方法（試験頻出）
+サンプルサイズ  を増やす：最も確実
+有意水準  を緩める（例：5%→10%）：ただし冤罪リスクが増える
+効果量を大きくする：実験デザインで比較する差を明確にする
+
+サンプルサイズ設計
+
+臨床試験を設計する前に「何人集めれば良いか」を計算します。
+
+例：、検出力 （、）のとき係数は 。効果量  なら  人（各グループ）必要と計算できます。
+
+ 多重検定問題とボンフェローニ補正
+
+複数の検定を繰り返すと全体の第1種の過誤率が膨らみます（例：20回検定すれば全て差がなくても偶然1回は有意になりやすい）。ボンフェローニ補正では有意水準を検定回数で割ります（5回なら ）。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>
