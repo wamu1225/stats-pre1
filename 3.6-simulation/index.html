@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>シミュレーション手法と欠測値 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。" />
+    <meta property="og:title" content="シミュレーション手法と欠測値 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.6-simulation/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.6-simulation/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="シミュレーション手法と欠測値 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-48FyNcGe.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"シミュレーション手法と欠測値","description":"ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。","url":"https://study-apps.com/stats-pre1/3.6-simulation/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">シミュレーション手法と欠測値</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「解析的に分布を求められないとき、どうすれば推測できるか？」「データが欠けているとき、単純に除外すると何が問題か？」——このモジュールでは計算に頼る手法（シミュレーション）と欠測データの扱いを学びます。
+
+ 「数式が解けないなら大量計算で解く」という発想
+
+確率論の多くの問題は解析的に解けませんが、コンピュータで乱数を大量に発生させて近似することができます。これがモンテカルロ法の基本的な考え方です。
+
+モンテカルロ法
+
+モンテカルロ法（Monte Carlo Method）は「乱数でシミュレーションして期待値・確率を推定する」手法の総称です。
+
+例：円の面積を求めるモンテカルロ法——正方形の中にランダムに点を打ち、円の内側に落ちた割合から面積（）を推定します。
+
+一般的な枠組み：積分  を推定したい場合、 から  を生成して  で近似します（大数の法則による一致性）。
+
+棄却法（Rejection Sampling）： から直接サンプリングできない場合、包絡分布  から  を生成し、確率  で採択します。
+
+ブートストラップ法
+
+「推定量の標準誤差や信頼区間を、分布の仮定なしで計算したい」——これを可能にするのがブートストラップ法（Bootstrap Method）です。
+
+手順：
+元の  個のデータから復元抽出で  個を抽出（ブートストラップ標本）
+そのブートストラップ標本で推定量  を計算
+これを 回（例：）繰り返して  を得る
+この分布を「標本分布の推定」として使い、標準偏差を標準誤差の推定値とします
+
+ブートストラップの信頼区間： の  分位点と  分位点で構成します。
+
+有効な場面：標準誤差の計算式が複雑な統計量（中央値・スピアマン ・回帰係数の非線形変換など）。正規性の仮定が危うい小標本。
+
+ジャックナイフ法（1.11）はブートストラップの前身で、1個ずつ除いた推定量を使います。
+
+乱数生成
+
+シミュレーション法の基礎は一様乱数の生成です。線形合同法などの疑似乱数生成器（PRNG）が使われます。
+
+逆関数法（Inverse CDF Method）： として  とすれば 。CDF の逆関数が求めやすい分布（指数分布など）に有効です。
+
+複雑な分布には棄却法・重点サンプリング（Importance Sampling）・MCMC（3.1）などを組み合わせます。
+
+欠測値のメカニズム
+
+データの欠測は3種類に分類されます（Rubin, 1976）：
+
+MCAR（Missing Completely At Random）：欠測が完全にランダム——他のデータ（観測・非観測）と無関係。例：機器の偶発的故障。完全ケース分析でもバイアスは生じません。
+
+MAR（Missing At Random）：欠測が観測済みデータに依存——未観測データには依存しない。例：「高齢者は収入を答えにくい」（年齢は観測済み）。適切な手法（多重代入法など）を使えば一致推定が得られます。
+
+MNAR（Missing Not At Random / Non-Ignorable）：欠測が未観測データ自体に依存。例：「高収入の人ほど収入を答えない」。欠測モデルを明示的に扱う必要があり最も難しいケースです。
+
+ 試験頻出：MCAR・MAR・MNARの違いと、MNARがバイアスをもたらす理由を理解しましょう。
+
+EMアルゴリズム
+
+EMアルゴリズム（Expectation-Maximization Algorithm）は欠測データや潜在変数を含むモデルの最尤推定に使う反復アルゴリズムです。
+
+Eステップ（Expectation Step）：現在のパラメータ推定値  を使って、欠測データの条件付き期待値  を計算。
+
+Mステップ（Maximization Step）： を最大化する  を求める。
+
+E・Mを繰り返すと対数尤度は単調増加して収束します。局所最大解に収束するため初期値の選択が重要です。
+
+応用：混合正規分布のパラメータ推定、因子分析（欠測あり）、隠れマルコフモデルなど。
+
+ 多重代入法（Multiple Imputation）は欠測値を複数の代入値で置き換えて複数の完全データを作り、それぞれで分析して結果を結合します。MAR の仮定のもとで有効な推測が可能です。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

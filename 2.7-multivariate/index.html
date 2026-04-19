@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>その他の多変量解析手法 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="多次元尺度法・正準相関・対応分析・共分散構造分析など試験頻出の手法を網羅します。" />
+    <meta property="og:title" content="その他の多変量解析手法 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="多次元尺度法・正準相関・対応分析・共分散構造分析など試験頻出の手法を網羅します。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/2.7-multivariate/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/2.7-multivariate/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="その他の多変量解析手法 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="多次元尺度法・正準相関・対応分析・共分散構造分析など試験頻出の手法を網羅します。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-48FyNcGe.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"その他の多変量解析手法","description":"多次元尺度法・正準相関・対応分析・共分散構造分析など試験頻出の手法を網羅します。","url":"https://study-apps.com/stats-pre1/2.7-multivariate/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">その他の多変量解析手法</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">多次元尺度法・正準相関・対応分析・共分散構造分析など試験頻出の手法を網羅します。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+主成分分析・判別分析・クラスター分析でカバーされない多変量解析の残りの手法を学びます。特に「2組の変数セットの間の関係」を見る正準相関、「カテゴリデータの関係」を可視化する対応分析、「因果のネットワーク」を記述する共分散構造分析は準1級頻出です。
+
+多次元尺度法
+
+「東京・大阪・名古屋・福岡の都市間距離から、地図上の位置関係を再現できるか？」——このような問いに答えるのが多次元尺度法（MDS: Multidimensional Scaling）です。
+
+ 個の対象間の非類似度（距離）行列を与えると、それを近似的に再現する低次元（通常2次元）空間上の座標を求めます。「距離が近いもの同士を地図上で近くに配置する」操作です。
+
+主成分分析が「変数の次元削減」なら、MDSは「対象間の距離を保ちながら次元削減」です。
+
+メトリックMDS：距離を数値として使います。ノンメトリックMDS：順位情報だけを使います（「 と  は  と  より近い」という順序のみ）。
+
+正準相関分析
+
+「数学・理科の成績（変数セット）と国語・英語の成績（変数セット）は全体としてどれだけ関連しているか？」——これを答えるのが正準相関分析（Canonical Correlation Analysis）です。
+
+2組の変数セット （ 変数）と （ 変数）に対して、正準変数の組  を：
+
+ と  の相関（正準相関係数 ）が最大になるように  を選びます。
+
+ 組の正準対が存在し、各組は前の組と無相関になります。これはPCAの2変数版への拡張と見ることができます。
+
+対応分析
+
+「職業と政党支持の2元分割表から、どの職業がどの政党を支持しやすいかを可視化したい」——これが対応分析（Correspondence Analysis）の典型的な使い方です。
+
+行カテゴリと列カテゴリを同一の低次元空間に布置し、「近い点は関連が強い」という解釈をします。分割表データを可視化する強力な探索的手法です。
+
+基本的には分割表の行・列プロフィールに対して特異値分解（SVD）を適用します。主成分分析のカテゴリデータ版と考えられます。
+
+数量化法（Hayashi's Quantification Methods）は対応分析と関連する日本発の手法群で、カテゴリデータへの回帰・判別・クラスター分析に対応します（数量化I〜IV類）。
+
+共分散構造分析（SEM）
+
+「学力（潜在変数）は語彙力・読解力・計算力（観測変数）で測られる」——このような「観測できない概念（潜在変数）」を含む因果関係をモデル化するのが共分散構造分析（SEM: Structural Equation Modeling）です。
+
+SEMは2つのサブモデルからなります：
+測定モデル（因子分析部分）：潜在変数と観測変数の関係
+構造モデル（パス解析部分）：潜在変数間の因果関係
+
+パス図（Path Diagram）：変数を四角（観測変数）や楕円（潜在変数）、矢印（因果・共分散）で表した図。
+
+パス係数：矢印の重みで「原因変数が1標準偏差変化したとき、結果変数が何標準偏差変化するか」を表します。
+
+モデルの適合度は  検定・CFI（比較適合指標）・RMSEA（二乗平均平方根近似誤差）などで評価します。
+
+ 試験頻出：SEMでは「因果」は理論から来ます——矢印の向きはデータから決まるのではなく、研究者の理論的仮説を反映します。
+
+標本調査法
+
+有限母集団（Finite Population）からの標本抽出では、無限母集団と異なる修正が必要です。
+
+有限修正係数（Finite Population Correction）：
+
+ が母集団サイズ、 が標本サイズ。 が小さい（）ときは有限修正を無視できます。
+
+各種標本抽出法：
+単純無作為抽出：すべての個体が等確率で選ばれる
+層化抽出：母集団を層に分け各層から無作為抽出——各層を確実に代表できる
+系統抽出：一定間隔で抽出（例：名簿から10番おきに）
+クラスター抽出：クラスター（集落）を単位として抽出——費用が安い</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

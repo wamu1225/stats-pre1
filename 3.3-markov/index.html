@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>マルコフ連鎖と確率過程の基礎 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="「次の状態は現在だけで決まる」確率過程の理論と、ランダムウォーク・ポアソン過程を学びます。" />
+    <meta property="og:title" content="マルコフ連鎖と確率過程の基礎 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="「次の状態は現在だけで決まる」確率過程の理論と、ランダムウォーク・ポアソン過程を学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.3-markov/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.3-markov/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="マルコフ連鎖と確率過程の基礎 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="「次の状態は現在だけで決まる」確率過程の理論と、ランダムウォーク・ポアソン過程を学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-48FyNcGe.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"マルコフ連鎖と確率過程の基礎","description":"「次の状態は現在だけで決まる」確率過程の理論と、ランダムウォーク・ポアソン過程を学びます。","url":"https://study-apps.com/stats-pre1/3.3-markov/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">マルコフ連鎖と確率過程の基礎</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「次の状態は現在だけで決まる」確率過程の理論と、ランダムウォーク・ポアソン過程を学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「今日の天気は昨日の天気だけに依存し、一昨日以前は関係ない」——このような「現在が与えられれば過去と未来が独立になる性質」を持つ確率過程がマルコフ連鎖です。ベイズ法（3.1）で登場したMCMCの理論的基礎でもあります。
+
+ 確率過程とは「時間とともに変わる確率変数の系列」
+
+ のように時刻ごとの確率変数の列を確率過程（Stochastic Process）と呼びます。株価、天気、ランダムウォークなど「時間とともに変化する不確かさ」を記述します。
+
+マルコフ連鎖の定義と推移確率
+
+マルコフ性（Markov Property）：
+
+「未来  の確率は現在  だけで決まり、過去は関係ない」という性質です。
+
+1時刻先への遷移確率  を推移確率と呼びます。これを行列にした  が推移確率行列で、各行の和は1です。
+
+ 時刻後の推移確率は （行列の  乗）で得られます。
+
+既約性・再帰性
+
+既約性（Irreducibility）：すべての状態から他のすべての状態へ有限ステップで到達できること。つまり「孤立した状態が存在しない」状態です。
+
+再帰性（Recurrence）：状態  から出発したとき、いつか必ず  に戻ってくる確率が1であること。有限状態の既約なマルコフ連鎖はすべての状態が再帰的です。
+
+周期性（Periodicity）：状態  に戻る時刻が  の倍数になる場合、周期  を持つと言います。 を非周期的と呼びます。
+
+既約・非周期の有限マルコフ連鎖はエルゴード的と呼ばれ、定常分布の存在が保証されます。
+
+定常分布
+
+定常分布（Stationary Distribution） は：
+
+を満たす確率分布です。「この分布から出発するとずっとこの分布にとどまる」という均衡状態です。
+
+エルゴード的マルコフ連鎖では、初期状態によらず時刻  で定常分布に収束します：。
+
+MCMCではこの性質を使います——望む分布  を定常分布に持つマルコフ連鎖を設計し、長時間走らせることで  からのサンプルを得ます。
+
+ランダムウォーク
+
+ランダムウォーク（Random Walk）は最もシンプルな確率過程の一つです。
+
+、各ステップで確率  で 、確率  で  動く：（）。
+
+ の対称ランダムウォークは一次元ブラウン運動の離散近似です。、——時間とともに広がります。
+
+再帰性：1次元の対称ランダムウォークは再帰的（いつか必ず原点に戻る）。2次元も再帰的。3次元以上は非再帰的（確率1で原点に戻らない）。
+
+ポアソン過程とブラウン運動
+
+ポアソン過程（Poisson Process）は「単位時間に平均  件のイベントが発生する」連続時間確率過程です。
+
+任意の区間  でのイベント数は ポアソン分布に従う：
+重ならない区間のイベント数は独立
+イベント間の時間は指数分布に従う
+
+ブラウン運動（Brownian Motion） は連続時間の極限的なランダムウォークです：
+独立増分：（重ならない区間の増分が独立）
+連続なパス（確率1で）
+
+ブラウン運動は金融工学（株価モデル）・物理（拡散過程）・ベイズ統計（事前分布）で広く使われます。
+
+ 試験頻出：定常分布の方程式  と、ポアソン過程のイベント数  は必須です。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>
