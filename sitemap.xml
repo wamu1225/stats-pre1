@@ -61,6 +61,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://study-apps.com/stats-pre1/1.9b-ci/</loc>
+    <lastmod>2026-04-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://study-apps.com/stats-pre1/1.10-testing-adv/</loc>
     <lastmod>2026-04-20</lastmod>
     <changefreq>monthly</changefreq>
