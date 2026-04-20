@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-Df6zcc75.js"></script>
+    <script type="module" crossorigin src="../assets/index-C8AKRwbE.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"主成分分析 (PCA)","description":"100個の項目を、3つの「本質」に凝縮する魔法のテクニック。","url":"https://study-apps.com/stats-pre1/2.2-pca/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -66,8 +66,10 @@
 10科目の成績から「理数系能力」と「言語系能力」という2つの主成分を取り出す場面を想像してください。コンピュータは「10個の点がどの方向に最も広がっているか」を探します。その「最も広がっている方向」を数学的に求める手続きを固有値問題といいます（高校数学には登場しませんが、試験では「計算のやり方」より「結果の読み取り方」が問われます）。
 
 分散共分散行列とは：「各科目のばらつき（分散）」と「科目間の関係（共分散）」を数字の表にまとめたものです。例えば「数学が得意な人は物理も得意」という傾向があれば、その数字が行列の特定の場所に記録されています。この行列の固有値問題を解くと：
-固有ベクトル：データのばらつきが最も大きくなる「新しい軸」の向き
+固有ベクトル：データのばらつきが最も大きくなる「新しい軸」の向き。この固有ベクトルの各成分が「元の変数をどの重みで組み合わせるか」を表します
 固有値：その軸が保持している情報の量（分散）
+
+主成分スコア  は、元の変数に固有ベクトルの重み  をかけて足し合わせた値です。このように「複数の値を重みをかけて足し合わせる」操作を線形結合（Linear Combination）と呼びます。行列記法では  と書き、（転置）は行ベクトルと列ベクトルの内積を計算する記号です。
 
 グラフで、データの散らばりがどの方向に最も集中しているかを観察してみましょう。
 

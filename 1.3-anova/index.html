@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-Df6zcc75.js"></script>
+    <script type="module" crossorigin src="../assets/index-C8AKRwbE.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"分散分析 (ANOVA)","description":"3つ以上のグループを「一気に」比較する、効率的な判断手法。","url":"https://study-apps.com/stats-pre1/1.3-anova/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -57,11 +57,13 @@
 
  「何度もくじを引くほど外れが増える」問題
 
-コインを1回投げて「表が出たら差あり」と判定するとき、間違える確率は 5% です。では 3ペアを3回検定するとどうなるでしょう？
+まず用語を確認します。有意水準とは「この確率以下なら差があると判断する」というしきい値（通常 5%）で、第1種の過誤（偽陽性）とは「本当は差がないのに差があると誤判定してしまうこと」です（詳しくは「推定・検定の理論的背景」で学びます）。
 
-計算の読み方：「3回すべて正しく判断できる確率」は  なので、「少なくとも1回は間違える確率」は  になります。
+コインを1回投げて「有意水準 5% で差ありと判定」するとき、偽陽性が起きる確率は 5% です。では 3ペアを3回検定するとどうなるでしょう？
 
-有意水準を5%にしたつもりが、実際には14%で間違えてしまいます。分散分析は「3グループを1回の検定でまとめて比較」することでこの問題を回避します。
+計算の読み方：「3回すべて正しく判断できる確率」は  なので、「少なくとも1回は誤判定する確率」は  になります。
+
+有意水準を5%に設定したつもりが、実際には14%で誤判定してしまいます。分散分析は「3グループを1回の検定でまとめて比較」することでこの問題を回避します。
 
 仕組み：ばらつきを「意味ある差」と「誤差」に分解する
 
@@ -109,9 +111,7 @@
 
 ブロック効果を除いた残差  が小さくなり、ブロック化なしの一元配置より検出力が上がります。
 
-一部実施要因計画（Fractional Factorial Design）： 因子を2水準で全組み合わせ試すと  回の実験が必要です。 なら1024回——現実的ではありません。交互作用（高次のもの）を犠牲にして実験回数を  に減らす計画です。「主効果と2因子交互作用だけ見る」という判断のもと、少ない実験で多くの因子を同時に調べられます。
-
-直交配列（Orthogonal Array）：タグチメソッド（品質工学）で有名な設計法。各因子の水準の組み合わせが均等になるよう（直交性）設計した実験表で、少ない実験回数で</div>
+一部実施要因計画（Fractional Factorial Design）： 因子を2水準で全組み合わせ試すと  回の実験が必要です。 なら1024回——現実的ではありません。交互作用（高次のもの）を犠牲にして実験回数を  に減らす計画です。「主効果と</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>

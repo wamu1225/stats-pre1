@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-Df6zcc75.js"></script>
+    <script type="module" crossorigin src="../assets/index-C8AKRwbE.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -103,7 +103,11 @@ MAP推定（Maximum A Posteriori）：事後分布の最頻値（確率が最も
 
  重要ポイント：共役事前分布
 
-特定の事前分布と尤度の組み合わせを使うと、MCMCなしで足し算のような簡単な計算だけで事後分布が求められます：
+特定の事前分布と尤度の組み合わせを使うと、MCMCなしで足し算のような簡単な計算だけで事後分布が求められます。代表的な共役関係：
+
+二項分布の確率 ：事前分布にベータ  → 事後分布も （成功  回、試行  回を足すだけ）
+ポアソン分布の ：事前分布にガンマ  → 事後分布も 
+正規分布の平均 （分散既知）：事前分布に正規分布 → 事後分布も正規分布
 
 例えば「コインを10回投げて7回表」のデータに対して、ベータ事前分布を使うと事後分布がパラメータを足すだけで求まります。この「形が変わらない」組み合わせが共役関係です。</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
