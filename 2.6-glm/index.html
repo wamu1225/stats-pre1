@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-sgj0XtXH.js"></script>
+    <script type="module" crossorigin src="../assets/index-BPExBgla.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"質的回帰と一般化線形モデル","description":"「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。","url":"https://study-apps.com/stats-pre1/2.6-glm/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -114,7 +114,15 @@ GLM は次の3つの要素で構成されます：
 
 はずれ値と影響度：leverage（てこ比） は「 番目のデータが予測値に与える影響の大きさ」を表します。 は高影響点の目安です（：パラメータ数）。Q-Qプロットは残差の正規性を視覚的に確認します。
 
- 試験頻出：DW比の解釈—— は正の系列相関（残差が同じ符号で連続）、 は負の系列相関を示します。</div>
+ 試験頻出：DW比の解釈—— は正の系列相関（残差が同じ符号で連続）、 は負の系列相関を示します。
+
+ニューラルネットワークモデル
+
+GLMが「線形予測子 + リンク関数」でさまざまな分布を扱う枠組みであるなら、その非線形拡張がニューラルネットワーク（Neural Network）です。
+
+入力層・隠れ層・出力層からなる多層構造で、各層で非線形変換（活性化関数：ReLU・sigmoid など）を適用します。十分な隠れユニット数があれば任意の関数を近似できる（普遍近似定理）ため、回帰・分類・パターン認識など幅広く使われます。
+
+準1級では「一般化線形モデルのさらなる拡張として、非線形な関係を柔軟にモデル化できる手法」として位置づけられます。パラメータの多さから過学習が起きやすいため、正則化（ドロップアウト・L2正則化）やクロスバリデーションによるモデル選択が重要です。</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>

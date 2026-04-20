@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-sgj0XtXH.js"></script>
+    <script type="module" crossorigin src="../assets/index-BPExBgla.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"検定の理論と各種検定法","description":"「最良の棄却域」を導く定理から、正規・ノンパラ検定まで体系的に学びます。","url":"https://study-apps.com/stats-pre1/1.10-testing-adv/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -79,7 +79,7 @@
 
 ワルド型検定（Wald Test）：MLE  がどのくらい  から離れているかで判断：。
 
-スコア検定（Score Test / Lagrange Multiplier Test）：制約のもとで評価したスコア関数（対数尤度の微分）が0からどれくらいずれているかを使います。制約なし MLE を計算不要という利点があります。
+スコア検定（Score Test / Lagrange Multiplier Test）：「 が真なら対数尤度の微分（スコア関数）は  でゼロになるはず」という性質を使います。 でスコアを評価し、それがゼロから大きくずれているほど  が疑わしいと判断します。制約なし MLE を計算せずに済む利点があります。
 
 3つは漸近的に同値ですが、小標本での性質は異なります。
 
@@ -118,6 +118,12 @@
 クラスカル・ウォリス検定（Kruskal-Wallis Test）：3群以上の比較で分散分析の代替として使います（一元配置 ANOVA のノンパラ版）。
 
 順位相関係数：スピアマンの  は「大小関係だけ」でデータの相関を測ります。（：順位の差）。
+
+並べ替え検定（Permutation Test / Randomization Test）：「帰無仮説（グループ差なし）が真なら、2グループへのラベル割り当ては任意のはず」という発想に基づく検定です。
+
+手順：①実際のデータの検定統計量 （例：2群の平均差）を計算 ②データのラベルを全パターン（または大量無作為）に並べ替えて各  を計算 ③ となる割合が P値。
+
+分布の仮定が一切不要で、小標本でも正確な検定ができます。計算コストが高いため、実際には大量の無作為並べ替え（モンテカルロ的な近似）を使います。
 
  試験頻出：ノンパラ検定は「分布によらず使える」が「同じ状況なら対応する正規検定より検出力が低い」というトレードオフがあります。</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">

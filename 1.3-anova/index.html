@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-sgj0XtXH.js"></script>
+    <script type="module" crossorigin src="../assets/index-BPExBgla.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"分散分析 (ANOVA)","description":"3つ以上のグループを「一気に」比較する、効率的な判断手法。","url":"https://study-apps.com/stats-pre1/1.3-anova/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -99,7 +99,19 @@
 テューキー法（Tukey法）：全ペアを比較したい場合の定番。多重性を補正しつつ検出力も高い
 ボンフェローニ法：有意水準を比較回数で割る（3ペアなら ）。シンプルだが少し保守的（差を見つけにくい）
 
- 試験頻出：「分散分析で有意 → テューキー法などで多重比較」という2段階の流れを覚えておきましょう。また、実験の割り付けをランダムにするランダム化は、未知要因の影響を排除するための実験計画の基本です。</div>
+ 試験頻出：「分散分析で有意 → テューキー法などで多重比較」という2段階の流れを覚えておきましょう。また、実験の割り付けをランダムにするランダム化は、未知要因の影響を排除するための実験計画の基本です。
+
+実験計画法：ブロック化と効率的な実験設計
+
+分散分析の精度を上げるには「ノイズを減らす」ことが重要です。そのための設計法が以下の3つです。
+
+乱塊法（Randomized Complete Block Design, RCBD）：「土質が違う農場で肥料の比較をしたい」——土質というノイズ要因をブロックとして分割し、各ブロック内で処理をランダムに割り付けます。ブロック内は条件が揃っているため、ブロック間の差を取り除くことで肥料の純粋な効果を比較できます。
+
+ブロック効果を除いた残差  が小さくなり、ブロック化なしの一元配置より検出力が上がります。
+
+一部実施要因計画（Fractional Factorial Design）： 因子を2水準で全組み合わせ試すと  回の実験が必要です。 なら1024回——現実的ではありません。交互作用（高次のもの）を犠牲にして実験回数を  に減らす計画です。「主効果と2因子交互作用だけ見る」という判断のもと、少ない実験で多くの因子を同時に調べられます。
+
+直交配列（Orthogonal Array）：タグチメソッド（品質工学）で有名な設計法。各因子の水準の組み合わせが均等になるよう（直交性）設計した実験表で、少ない実験回数で</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>

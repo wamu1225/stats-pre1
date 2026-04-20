@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-sgj0XtXH.js"></script>
+    <script type="module" crossorigin src="../assets/index-BPExBgla.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"離散型確率分布","description":"「成功か失敗か」「何件発生するか」——カウントデータの背後にある分布を理解します。","url":"https://study-apps.com/stats-pre1/1.7-discrete/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -58,6 +58,16 @@
  ベルヌーイ試行：すべての離散分布の出発点
 
 コインを1回投げる——表（成功）か裏（失敗）か。この「2択の1回試行」をベルヌーイ試行と呼び、ここから多くの離散分布が派生します。
+
+離散一様分布
+
+「公正なサイコロを1回振ったときの目の数」——各値が同じ確率で出る場合が離散一様分布（Discrete Uniform Distribution）です。
+
+ が  の値を等確率でとるとき：
+
+期待値 （例：サイコロは ）、分散 。
+
+乱数生成・ゲーム理論・くじ引きなど、すべての選択肢が等確率の場面の基本分布です。
 
 ベルヌーイ分布・二項分布
 
@@ -87,6 +97,14 @@
 
 二項分布  で 、、 の極限をとるとポアソン分布に収束します。これが「少数法則」です。
 
+ポアソン分布の正規近似： が大きいとき（目安 ）、ポアソン分布は正規分布で近似できます：（期待値  分散  を利用）。二項分布の正規近似と合わせて、大きなパラメータの確率計算に使います。
+
+連続修正（Continuity Correction）：離散分布（二項・ポアソン）を連続分布（正規）で近似するとき、精度を上げる  の調整です。
+
+例： で  を正規近似するとき、連続修正なしだと 、連続修正ありだと  として計算します（ を加える理由：整数  が  の区間全体を代表するから）。
+
+ 試験頻出：「 の正規近似」では 、「 の正規近似」では  とします（ は近似に使う正規確率変数）。
+
 幾何分布・負の二項分布
 
 「コインを投げて初めて表が出るまでの回数」——初めての成功まで何回かかるかを記述するのが幾何分布（Geometric Distribution）です。
@@ -109,7 +127,7 @@
 
 二項分布が「成功か失敗か（2択）」なら、多項分布（Multinomial Distribution）は「3択以上」への拡張です。 種類の結果が確率 （）で起きる試行を  回繰り返したとき、各結果が  回起きる同時確率：
 
-各周辺分布は二項分布  になります。品質管理（良品・不良A・不良B）や選挙の得票率分析などに使われます。</div>
+各周辺分布は二項分布</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>
