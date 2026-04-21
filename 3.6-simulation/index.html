@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BdOwGcSY.js"></script>
+    <script type="module" crossorigin src="../assets/index-CmINfbwK.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"シミュレーション手法と欠測値","description":"ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。","url":"https://study-apps.com/stats-pre1/3.6-simulation/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -107,7 +107,7 @@ MNAR（Missing Not At Random / Non-Ignorable）：欠測が未観測データ自
 
 EMアルゴリズム
 
-EMアルゴリズム（Expectation-Maximization Algorithm）は欠測データや潜在変数を含むモデルの最尤推定に使う反復アルゴリズムです。
+「男女が混在する身長データ100件があるが、それぞれがどちらの性別かがわからない（ラベルが欠落している）」——このとき「男性の平均身長」と「女性の平均身長」をどう推定すればよいでしょうか？ラベルがわかれば平均を計算できますが、ラベル推定には平均が必要という循環があります。この「欠測している情報と推定したいパラメータを交互に更新して収束させる」のがEMアルゴリズム（Expectation-Maximization Algorithm）です。欠測データや観測できない潜在変数を含むモデルの最尤推定に広く使われます。
 
 Eステップ（Expectation Step）：現在のパラメータ推定値  を使って、欠測データの条件付き期待値  を計算。
 
@@ -117,7 +117,7 @@ E・Mを繰り返すと対数尤度は単調増加して収束します。局所
 
 応用：混合正規分布のパラメータ推定、因子分析（欠測あり）、隠れマルコフモデルなど。
 
- 多重代入法（Multiple Imputation）は欠測値を複数の代入値で置き換えて複数の完全データを作り、それぞれで分析して結果を結合します。MAR の仮定のもとで有効な推測が可能です。</div>
+ 多重代入法（Multiple Imputation）は欠測値を複数の代入値で置き換えて複数の完全データを作り、それぞれで分析して結果を結合します。MAR の仮</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>

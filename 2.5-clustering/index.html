@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BdOwGcSY.js"></script>
+    <script type="module" crossorigin src="../assets/index-CmINfbwK.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"クラスター分析","description":"「似たもの同士をグループに分ける」自動分類の理論と手法を学びます。","url":"https://study-apps.com/stats-pre1/2.5-clustering/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -65,7 +65,7 @@
 
 階層型クラスター分析とデンドログラム
 
-階層型クラスター分析（Hierarchical Clustering）は「 個のデータをすべて別クラスター」から出発し、最も近いクラスター同士を順番に併合していく手法です（凝集型）。
+50人の顧客の購買データがあるとします。最初は全員を「別々の50グループ」として出発し、最も似た2人を1グループに統合、また最も似たペア（またはグループ）を統合……という作業を繰り返すと、最終的に全員が1グループになります。この「くっつけていく」過程を追うのが階層型クラスター分析（Hierarchical Clustering）です（凝集型）。
 
 結果はデンドログラム（樹形図）で表されます。横軸がデータ、縦軸が併合されたときの距離（非類似度）です。デンドログラムの「枝の高さ」でカットすることで任意のクラスター数を得られます。
 
@@ -79,7 +79,7 @@
 
 k-means 法
 
-k-means 法は「 個のクラスター」を事前に指定する非階層型クラスター分析です。
+10,000人の顧客を「買い物パターンで3タイプに分けたい」とします。階層型は全ペアの距離を計算するため計算量が膨大になりがちです。一方、「 と最初から決めて分ける」ことで大規模データにも対応できるのがk-means 法です。
 
 アルゴリズム：
 個の重心（セントロイド）を初期配置

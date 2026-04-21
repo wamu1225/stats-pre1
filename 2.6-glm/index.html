@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BdOwGcSY.js"></script>
+    <script type="module" crossorigin src="../assets/index-CmINfbwK.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"質的回帰と一般化線形モデル","description":"「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。","url":"https://study-apps.com/stats-pre1/2.6-glm/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
   </head>
@@ -82,7 +82,7 @@
 
 プロビット分析
 
-ロジスティック回帰と同じ二値目的変数を持つが、リンク関数が異なります：
+「薬の投与量が増えるにつれて副作用が出る確率はどう変化するか」——毒性試験ではこのような「投与量 → 反応確率」の関係をモデル化します。ロジスティック回帰と同じ二値目的変数を扱いますが、確率の増え方を表す関数（リンク関数）が異なるのがプロビット分析です：
 
  は標準正規分布の累積分布関数の逆関数（プロビット関数）です。結果はロジスティック回帰と似ており、主に毒性研究や心理測定で使われます。
 
@@ -90,7 +90,7 @@
 
 一般化線形モデル（GLM）
 
-GLM は次の3つの要素で構成されます：
+「交通事故の日別発生件数（0件・1件・2件…）と気象条件の関係を調べたい」——件数は非負整数でポアソン分布に従いやすく、通常の線形回帰では予測値が負になる問題があります。ロジスティック回帰もプロビット分析も、じつはより大きな枠組み「一般化線形モデル（GLM: Generalized Linear Model）」の特殊ケースです。GLM は次の3つの要素で構成されます：
 
 確率分布（Random Component）： の分布族（指数型分布族：正規・二項・ポアソン・ガンマなど）
 線形予測子：
@@ -106,7 +106,7 @@ GLM は次の3つの要素で構成されます：
 
 回帰診断法
 
-モデルを作って終わりではなく、仮定が満たされているかを確認します。
+モデルを構築しても「残差に特定の時間パターンがある」「特定の1人の観測値が回帰直線を大きく引きずっている」などの問題があれば、モデルの仮定が破られて推定が信頼できません。モデルの健全性を確認する一連の手順が回帰診断法です。
 
 残差分析：標準化残差のプロット——ランダムな散布が望ましく、パターンがあれば仮定違反を示します。
 
@@ -120,9 +120,7 @@ GLM は次の3つの要素で構成されます：
 
 GLMが「線形予測子 + リンク関数」でさまざまな分布を扱う枠組みであるなら、その非線形拡張がニューラルネットワーク（Neural Network）です。
 
-入力層・隠れ層・出力層からなる多層構造で、各層で非線形変換（活性化関数：ReLU・sigmoid など）を適用します。十分な隠れユニット数があれば任意の関数を近似できる（普遍近似定理）ため、回帰・分類・パターン認識など幅広く使われます。
-
-準1級では「一般化線形モデルのさらなる拡張として、非線形な関係を柔軟にモデル化できる手法」として位置づけられます。パラメータの多さから過学習が起きやすいため、正則化（ドロップアウト・L2正則化）やクロスバリデーションによるモデル選択が重要です。</div>
+入力層・隠れ層・出力層からなる多層構造で、各層で非線形変換（活性化関数：ReLU・sigmoid など）を適用します。十分な隠れユニット数があれば任</div>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
   </nav>
