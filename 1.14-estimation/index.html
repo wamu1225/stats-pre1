@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"推定法：最尤推定法とモーメント法","description":"最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.14-estimation/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"推定法：最尤推定法とモーメント法","description":"最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.14-estimation/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"尤度関数  の直感的な意味として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"観測データが得られる確率を  の関数として見たもの"}},{"@type":"Question","name":"最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"積の形が和に変わり微分しやすくなるから"}},{"@type":"Question","name":"正規分布  の  の最尤推定量（MLE）はどれか？","acceptedAnswer":{"@type":"Answer","text":"標本平均"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.13-sufficient-stats/" style="color:#2563eb;text-decoration:none">← 十分統計量と順序統計量</a>
+    <a href="/stats-pre1/1.15-estimator-props/" style="color:#2563eb;text-decoration:none">推定量の性質：不偏性・一致性・有効性の理論 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">推定法：最尤推定法とモーメント法</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -82,10 +86,28 @@
 例：ポアソン分布  のモーメント推定量—— を  と等置するだけで 。この場合 MLE とも一致します。
 
 例：指数分布 （）のモーメント推定量—— より 。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 尤度関数  の直感的な意味として正しいものはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 観測データが得られる確率を  の関数として見たもの</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 積の形が和に変わり微分しやすくなるから</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 正規分布  の  の最尤推定量（MLE）はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 標本平均 </p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.13-sufficient-stats/" style="color:#2563eb;text-decoration:none">← 十分統計量と順序統計量</a>
+    <a href="/stats-pre1/1.15-estimator-props/" style="color:#2563eb;text-decoration:none">推定量の性質：不偏性・一致性・有効性の理論 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

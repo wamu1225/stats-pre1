@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"推定量の性質：不偏性・一致性・有効性の理論","description":"良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式——推定量の品質を評価する理論を学びます。","url":"https://study-apps.com/stats-pre1/1.15-estimator-props/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"推定量の性質：不偏性・一致性・有効性の理論","description":"良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式——推定量の品質を評価する理論を学びます。","url":"https://study-apps.com/stats-pre1/1.15-estimator-props/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"「推定量の期待値が真の値に等しい」という性質を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"不偏性"}},{"@type":"Question","name":"のとき推定量が真の値に確率収束する性質を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"一致性"}},{"@type":"Question","name":"クラーメル・ラオの不等式においてフィッシャー情報量  が大きいほど推定はどうなるか？","acceptedAnswer":{"@type":"Answer","text":"分散の下限が下がりより精密な推定が原理的に可能になる"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.14-estimation/" style="color:#2563eb;text-decoration:none">← 推定法：最尤推定法とモーメント法</a>
+    <a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none">信頼区間：1標本の推定 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">推定量の性質：不偏性・一致性・有効性の理論</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式——推定量の品質を評価する理論を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -84,10 +88,28 @@
  はフィッシャー情報量（Fisher Information）——「データが  についてどれだけ情報を持っているか」の指標です。 個の独立観測では下限は ——サンプルが増えるほど精度の限界が上がります。
 
 この下限を達成する不偏推定量を有効推定量（efficient estimator）と呼びます。正規分布の  に対する  が代表例。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 「推定量の期待値が真の値に等しい」という性質を何と呼ぶか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 不偏性</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2.  のとき推定量が真の値に確率収束する性質を何と呼ぶか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 一致性</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. クラーメル・ラオの不等式においてフィッシャー情報量  が大きいほど推定はどうなるか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 分散の下限が下がりより精密な推定が原理的に可能になる</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.14-estimation/" style="color:#2563eb;text-decoration:none">← 推定法：最尤推定法とモーメント法</a>
+    <a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none">信頼区間：1標本の推定 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

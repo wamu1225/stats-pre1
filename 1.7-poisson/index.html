@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"ポアソン分布族：ポアソン・幾何・多項分布","description":"稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。","url":"https://study-apps.com/stats-pre1/1.7-poisson/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"ポアソン分布族：ポアソン・幾何・多項分布","description":"稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。","url":"https://study-apps.com/stats-pre1/1.7-poisson/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ポアソン分布の「期待値と分散」の関係として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"期待値 = 分散 ="}},{"@type":"Question","name":"幾何分布の「無記憶性」とはどういう性質か？","acceptedAnswer":{"@type":"Answer","text":"過去の失敗回数に関わらず、次の試行の成功確率は  のまま変わらない"}},{"@type":"Question","name":"1日あたり平均3件の注文があるオンラインショップ。1日に5件以上注文が入る確率を求めるに最も適した分布はどれか？","acceptedAnswer":{"@type":"Answer","text":"ポアソン分布"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.6-binomial/" style="color:#2563eb;text-decoration:none">← 二項分布族：ベルヌーイ・二項・超幾何分布</a>
+    <a href="/stats-pre1/1.8-continuous/" style="color:#2563eb;text-decoration:none">連続型分布の基礎：指数・ガンマ・ベータ・コーシー・対数正規 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ポアソン分布族：ポアソン・幾何・多項分布</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -96,10 +100,28 @@
 二項分布が「成功か失敗か（2択）」なら、多項分布（Multinomial Distribution）は「3択以上」への拡張です。 種類の結果が確率 （）で起きる試行を  回繰り返したとき、各結果が  回起きる同時確率：
 
 各周辺分布は二項分布  になります。品質管理（良品・不良A・不良B）や選挙の得票率分析などに使われます。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. ポアソン分布の「期待値と分散」の関係として正しいものはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 期待値 = 分散 = </p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 幾何分布の「無記憶性」とはどういう性質か？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 過去の失敗回数に関わらず、次の試行の成功確率は  のまま変わらない</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 1日あたり平均3件の注文があるオンラインショップ。1日に5件以上注文が入る確率を求めるに最も適した分布はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. ポアソン分布</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.6-binomial/" style="color:#2563eb;text-decoration:none">← 二項分布族：ベルヌーイ・二項・超幾何分布</a>
+    <a href="/stats-pre1/1.8-continuous/" style="color:#2563eb;text-decoration:none">連続型分布の基礎：指数・ガンマ・ベータ・コーシー・対数正規 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

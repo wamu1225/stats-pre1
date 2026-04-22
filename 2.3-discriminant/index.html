@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"判別分析とマハラノビス距離","description":"「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。","url":"https://study-apps.com/stats-pre1/2.3-discriminant/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"判別分析とマハラノビス距離","description":"「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。","url":"https://study-apps.com/stats-pre1/2.3-discriminant/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"判別分析の目的は何か？","acceptedAnswer":{"@type":"Answer","text":"データをグループに分類すること"}},{"@type":"Question","name":"線形判別分析 (LDA) の基本戦略は？","acceptedAnswer":{"@type":"Answer","text":"グループ間分散を最大化し、グループ内分散を最小化する"}},{"@type":"Question","name":"マハラノビス距離がユークリッド距離と異なる点は？","acceptedAnswer":{"@type":"Answer","text":"データの相関・分散構造を考慮する"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/2.2-pca/" style="color:#2563eb;text-decoration:none">← 主成分分析 (PCA)</a>
+    <a href="/stats-pre1/2.4-factor/" style="color:#2563eb;text-decoration:none">因子分析 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">判別分析とマハラノビス距離</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「どのグループに属するか」を数式で判定し、外れ値を正確に見抜く技術。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -115,11 +119,49 @@ ROC曲線とAUC
 
 「閾値（スパムと判定するための判別スコアの基準値）を変えるとどうなるか？」——高くすれば見逃しが増えて誤検知が減り、低くすれば逆になります。このトレードオフを一枚のグラフで表したものが ROC曲線（Receiver Operating Characteristic Curve）です。
 
-横軸（偽陽性率）：本物の陰性</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+横軸（偽陽性率）：本物の陰性（正常メール）をスパムと誤判定した割合 
+縦軸（真陽性率／感度）：本物のスパムを正しく検出した割合 
+
+閾値を変えるにつれてこの2点が動き、曲線を描きます。AUC（Area Under the Curve）はこの曲線の下面積です：
+
+AUC = 1.0：すべての正例を負例より高スコアに排除できる完璧な分類器
+AUC = 0.5：ランダム分類（対角線）と同じ——判別能力ゼロ
+AUC = 0.7〜0.8：実用的なモデルの目安
+
+ 試験頻出：AUC は「ランダムに選んだ正例のスコアが負例のスコアより高い確率」と等価です（Wilcoxon-Mann-Whitney 統計量と一致）。
+
+2次判別分析（QDA）とSVM
+
+線形判別分析（LDA）はグループ間で共通の分散共分散行列  を仮定するため、境界線が直線（線形）になります。しかし各グループが異なる形（楕円の向き・大きさが違う）に分布するとき、線形境界は適合が悪くなります。
+
+2次判別分析（QDA: Quadratic Discriminant Analysis）は各グループが異なる  を持つと仮定します。尤度の対数の差をとると  の2次式になるため、判別境界が曲線（楕円・放物線など）になります。
+
+利点：より柔軟な境界でグループの形状を正確に反映できる
+欠点：各グループで  を推定するためパラメータが多く、サンプル数が少ないと不安定
+
+ サポートベクターマシン（SVM）：各グループの境界から最も近いデータ点（サポートベクター）との距離（マージン）を最大化する判別境界を求める手法です。カーネル関数（多項式・RBFカーネルなど）を使って非線形境界も扱えます。準1級では「判別分析の代替法のひとつ」として押さえておきます。</div>
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 判別分析の目的は何か？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. データをグループに分類すること</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 線形判別分析 (LDA) の基本戦略は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. グループ間分散を最大化し、グループ内分散を最小化する</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. マハラノビス距離がユークリッド距離と異なる点は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. データの相関・分散構造を考慮する</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/2.2-pca/" style="color:#2563eb;text-decoration:none">← 主成分分析 (PCA)</a>
+    <a href="/stats-pre1/2.4-factor/" style="color:#2563eb;text-decoration:none">因子分析 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

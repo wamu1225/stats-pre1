@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"連続型分布の基礎：指数・ガンマ・ベータ・コーシー・対数正規","description":"「待ち時間」から「比率」まで、正規分布の仲間たちを使い分けます。","url":"https://study-apps.com/stats-pre1/1.8-continuous/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"連続型分布の基礎：指数・ガンマ・ベータ・コーシー・対数正規","description":"「待ち時間」から「比率」まで、正規分布の仲間たちを使い分けます。","url":"https://study-apps.com/stats-pre1/1.8-continuous/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"指数分布の「無記憶性」の正しい説明はどれか？","acceptedAnswer":{"@type":"Answer","text":"過去の経過時間に関わらず、残り時間の分布は最初と同じ"}},{"@type":"Question","name":"指数分布とポアソン分布の関係として最も正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"ポアソン過程のイベント間隔の分布が指数分布"}},{"@type":"Question","name":"ガンマ分布  で  のとき、何の分布と一致するか？","acceptedAnswer":{"@type":"Answer","text":"指数分布"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.7-poisson/" style="color:#2563eb;text-decoration:none">← ポアソン分布族：ポアソン・幾何・多項分布</a>
+    <a href="/stats-pre1/1.9-multivariate/" style="color:#2563eb;text-decoration:none">多変量正規分布・変数変換・極値分布 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">連続型分布の基礎：指数・ガンマ・ベータ・コーシー・対数正規</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「待ち時間」から「比率」まで、正規分布の仲間たちを使い分けます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -92,10 +96,28 @@
 対数正規分布は、 が正規分布に従う場合の  の分布です。株価・所得・企業規模など「掛け算で成長するプロセス」の結果はしばしば対数正規分布に従います。
 
  のとき 、。右裾が重い（正の歪度）分布です。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 指数分布の「無記憶性」の正しい説明はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 過去の経過時間に関わらず、残り時間の分布は最初と同じ</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 指数分布とポアソン分布の関係として最も正しいものはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. ポアソン過程のイベント間隔の分布が指数分布</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. ガンマ分布  で  のとき、何の分布と一致するか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 指数分布 </p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.7-poisson/" style="color:#2563eb;text-decoration:none">← ポアソン分布族：ポアソン・幾何・多項分布</a>
+    <a href="/stats-pre1/1.9-multivariate/" style="color:#2563eb;text-decoration:none">多変量正規分布・変数変換・極値分布 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

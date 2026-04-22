@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法","description":"MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.22-asymptotic/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法","description":"MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.22-asymptotic/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"フィッシャー情報量  が大きいほど何が言えるか？","acceptedAnswer":{"@type":"Answer","text":"クラーメル・ラオの下限が小さくなり精密な推定が可能"}},{"@type":"Question","name":"MLE  の漸近分布  から言えることはどれか？","acceptedAnswer":{"@type":"Answer","text":"が増えるほど分散が  で減少し推定精度が上がる"}},{"@type":"Question","name":"デルタ法を使う典型的な場面はどれか？","acceptedAnswer":{"@type":"Answer","text":"推定量の変換（関数）の漸近分散を求めるとき"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.21-anova/" style="color:#2563eb;text-decoration:none">← 分散分析 (ANOVA)</a>
+    <a href="/stats-pre1/1.23-model-selection/" style="color:#2563eb;text-decoration:none">KL情報量・AIC・クロスバリデーション →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -88,10 +92,28 @@
 例：標本比率  の対数オッズ  の分散は？、 なので漸近分散は 。
 
 多変量版： の漸近分散共分散行列は （ はヤコビアン行列＝各成分が  の偏微分からなる行列、 は  の漸近分散共分散行列）。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. フィッシャー情報量  が大きいほど何が言えるか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. クラーメル・ラオの下限が小さくなり精密な推定が可能</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. MLE  の漸近分布  から言えることはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A.  が増えるほど分散が  で減少し推定精度が上がる</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. デルタ法を使う典型的な場面はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 推定量の変換（関数）の漸近分散を求めるとき</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.21-anova/" style="color:#2563eb;text-decoration:none">← 分散分析 (ANOVA)</a>
+    <a href="/stats-pre1/1.23-model-selection/" style="color:#2563eb;text-decoration:none">KL情報量・AIC・クロスバリデーション →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

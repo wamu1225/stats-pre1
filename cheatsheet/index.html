@@ -49,16 +49,114 @@
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:20px">公式集</h1>
-  <p style="color:#555;margin-bottom:24px">統計検定準1級の重要公式を分野別にまとめています。確率分布・推定・検定・回帰分析・主成分分析・ベイズ統計など試験で頻出の公式を網羅しています。</p>
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">正規分布の確率密度関数</h2>
-  <p style="color:#444">正規分布は平均μ・分散σ²で定まる釣り鐘型の分布です。</p>
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">最尤推定法（MLE）</h2>
-  <p style="color:#444">尤度関数L(θ)を最大化するθを推定値とする手法です。</p>
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">AIC（赤池情報量規準）</h2>
-  <p style="color:#444">AIC = -2×最大対数尤度 + 2×パラメータ数。値が小さいほど良いモデルです。</p>
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">回帰分析</h2>
-  <p style="color:#444">最小二乗法でy = β0 + β1x + εの係数を推定します。</p>
-  <p style="margin-top:24px"><a href="/stats-pre1/" style="color:#2563eb">← ホームへ戻る</a></p>
+  <p style="color:#555;margin-bottom:24px">統計検定準1級の重要公式を分野別にまとめています。試験で頻出の公式・定理を網羅しています。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">確率の基礎</h2>
+  <p style="color:#444"><strong>コルモゴロフの公理</strong>：確率は「非負性 P(A)≥0」「正規化 P(Ω)=1」「加法性（互いに排反な事象の和の確率は各確率の和）」の3条件を満たします。</p>
+  <p style="color:#444"><strong>包除原理</strong>：P(A∪B) = P(A) + P(B) − P(A∩B)。3事象では P(A∪B∪C) = P(A)+P(B)+P(C) − P(A∩B) − P(B∩C) − P(A∩C) + P(A∩B∩C)。</p>
+  <p style="color:#444"><strong>条件付き確率</strong>：P(B|A) = P(A∩B) / P(A)（P(A)&gt;0 のとき）。Aが起きたという情報のもとでBが起きる確率です。</p>
+  <p style="color:#444"><strong>乗法定理</strong>：P(A∩B) = P(B|A)P(A) = P(A|B)P(B)。</p>
+  <p style="color:#444"><strong>全確率の定理</strong>：完全系 {A₁,…,Aₖ} に対して P(B) = ΣP(B|Aᵢ)P(Aᵢ)。</p>
+  <p style="color:#444"><strong>ベイズの定理</strong>：P(Aᵢ|B) = P(B|Aᵢ)P(Aᵢ) / ΣP(B|Aⱼ)P(Aⱼ)。事前確率P(Aᵢ)に尤度P(B|Aᵢ)を掛けて正規化することで事後確率を得ます。</p>
+  <p style="color:#444"><strong>統計的独立</strong>：P(A∩B) = P(A)P(B) ⟺ P(B|A) = P(B)。一方の情報がもう一方の確率を変えません。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">主要な確率分布</h2>
+  <p style="color:#444"><strong>正規分布 N(μ,σ²)</strong>：期待値μ、分散σ²の釣り鐘型分布。μ±σに68.3%、μ±2σに95.4%、μ±3σに99.7%が入ります。標準正規分布N(0,1)に標準化：Z=(X−μ)/σ。</p>
+  <p style="color:#444"><strong>二項分布 B(n,p)</strong>：n回のベルヌーイ試行で成功がk回起きる確率 P(X=k)=C(n,k)p^k(1−p)^(n−k)。期待値E[X]=np、分散Var(X)=np(1−p)。</p>
+  <p style="color:#444"><strong>ポアソン分布 Po(λ)</strong>：P(X=k)=e^(−λ)λ^k/k!。期待値=分散=λ。稀な事象の件数モデル。二項分布でn→∞, p→0, np=λ の極限。</p>
+  <p style="color:#444"><strong>超幾何分布</strong>：N個中K個の当たりがある母集団からn個を非復元抽出したときの当たり数。期待値E[X]=nK/N、分散は有限修正係数(N−n)/(N−1)が付きます。</p>
+  <p style="color:#444"><strong>幾何分布</strong>：初めて成功するまでの試行回数。P(X=k)=(1−p)^(k−1)p、期待値1/p。無記憶性：P(X&gt;s+t|X&gt;s)=P(X&gt;t)。</p>
+  <p style="color:#444"><strong>負の二項分布</strong>：r回成功するまでの試行回数。期待値r/p、分散r(1−p)/p²。</p>
+  <p style="color:#444"><strong>指数分布 Exp(λ)</strong>：f(x)=λe^(−λx)（x≥0）。期待値1/λ、分散1/λ²。無記憶性を持つ連続型分布。ポアソン過程の待ち時間。</p>
+  <p style="color:#444"><strong>ガンマ分布 Ga(α,β)</strong>：形状パラメータα、レートパラメータβ。期待値α/β、分散α/β²。指数分布はα=1の特殊ケース。カイ二乗分布はGa(k/2,1/2)。</p>
+  <p style="color:#444"><strong>ベータ分布 Be(α,β)</strong>：[0,1]上の分布。期待値α/(α+β)。ベルヌーイ・二項分布の共役事前分布。</p>
+  <p style="color:#444"><strong>多変量正規分布 N(μ,Σ)</strong>：平均ベクトルμ、分散共分散行列Σ。正規分布の多変量版。相関係数ρ=0 ⟺ 独立（正規分布の特別な性質）。</p>
+  <p style="color:#444"><strong>t分布 t(ν)</strong>：自由度ν。N(0,1)÷√(χ²(ν)/ν)として定義。ν→∞で正規分布に収束。母分散未知のときの小標本推定・検定で使用。</p>
+  <p style="color:#444"><strong>カイ二乗分布 χ²(k)</strong>：k個の独立な標準正規変数の二乗和。期待値k、分散2k。分散の推定・適合度検定で使用。</p>
+  <p style="color:#444"><strong>F分布 F(m,n)</strong>：χ²(m)/m ÷ χ²(n)/n として定義。分散分析・回帰分析のF検定で使用。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">分布の特性値</h2>
+  <p style="color:#444"><strong>期待値</strong>：E[X] = ΣxP(X=x)（離散型）、∫xf(x)dx（連続型）。線形性：E[aX+b]=aE[X]+b。</p>
+  <p style="color:#444"><strong>分散</strong>：Var(X) = E[(X−μ)²] = E[X²]−(E[X])²。Var(aX+b)=a²Var(X)。独立なとき Var(X+Y)=Var(X)+Var(Y)。</p>
+  <p style="color:#444"><strong>歪度（わいど）</strong>：E[(X−μ)³]/σ³。正→右裾が重い。ゼロ→対称。</p>
+  <p style="color:#444"><strong>尖度（せんど）</strong>：E[(X−μ)⁴]/σ⁴ − 3（過剰尖度）。正規分布は0。正→裾が重い（ファットテール）。</p>
+  <p style="color:#444"><strong>モーメント母関数（MGF）</strong>：M_X(t)=E[e^(tX)]。存在すればすべてのモーメントを生成。k次モーメント：M_X^(k)(0)=E[X^k]。独立な和のMGFは積になります。</p>
+  <p style="color:#444"><strong>相関係数</strong>：ρ(X,Y)=Cov(X,Y)/(σ_X σ_Y)∈[−1,1]。−1≤ρ≤1、ρ=0は線形無相関（独立は別）。</p>
+  <p style="color:#444"><strong>偏相関係数</strong>：r_{XY·Z} = (r_XY − r_XZ·r_YZ) / √((1−r_XZ²)(1−r_YZ²))。第3変数Zを制御した後のXとYの相関。</p>
+  <p style="color:#444"><strong>全期待値の法則</strong>：E[X] = E[E[X|Y]]。全分散の法則：Var(X) = E[Var(X|Y)] + Var(E[X|Y])。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">大標本理論・漸近理論</h2>
+  <p style="color:#444"><strong>大数の弱法則</strong>：iid サンプルの標本平均は真の期待値μに確率収束します（n→∞でP(|X̄−μ|&gt;ε)→0）。</p>
+  <p style="color:#444"><strong>中心極限定理（CLT）</strong>：iid でE[X]=μ、Var(X)=σ²のとき、√n(X̄−μ)/σ → N(0,1)（分布収束）。元の分布が何でも成立します。</p>
+  <p style="color:#444"><strong>デルタ法</strong>：√n(θ̂−θ)→N(0,σ²)のとき、√n(g(θ̂)−g(θ))→N(0,[g'(θ)]²σ²)。推定量の変換の漸近分散を求める公式。</p>
+  <p style="color:#444"><strong>フィッシャー情報量</strong>：I(θ)=−E[∂²logf(X;θ)/∂θ²]=E[(∂logf/∂θ)²]。対数尤度の曲率の大きさ。大きいほどθを精密に推定できます。</p>
+  <p style="color:#444"><strong>MLE漸近正規性</strong>：正則条件下で√n(θ̂_MLE−θ)→N(0,1/I(θ))。MLEはクラーメル・ラオ下界を漸近的に達成する最良推定量。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">点推定</h2>
+  <p style="color:#444"><strong>不偏性</strong>：E[θ̂]=θ。バイアス：Bias(θ̂)=E[θ̂]−θ=0。標本分散S²=(1/(n−1))Σ(Xᵢ−X̄)²は母分散σ²の不偏推定量。</p>
+  <p style="color:#444"><strong>一致性</strong>：n→∞でθ̂→θ（確率収束）。大標本での保証。</p>
+  <p style="color:#444"><strong>クラーメル・ラオの下界（CR不等式）</strong>：不偏推定量の分散は Var(θ̂) ≥ 1/(n·I(θ))。この下界を達成する推定量を有効推定量と呼びます。</p>
+  <p style="color:#444"><strong>最尤推定法（MLE）</strong>：L(θ)=Πf(xᵢ;θ) を最大化するθ̂_MLE を求める方法。対数尤度 logL を微分してゼロとおいた尤度方程式を解きます。</p>
+  <p style="color:#444"><strong>モーメント法</strong>：k次母モーメントE[X^k]をk次標本モーメント(1/n)ΣXᵢ^kで置き換えて連立方程式を解きます。パラメータが2つなら2つの方程式が必要。</p>
+  <p style="color:#444"><strong>十分統計量</strong>：ネイマンの分解定理：T(X)が十分統計量 ⟺ f(x;θ)=g(T(x),θ)h(x)と分解できます。Tに含まれない情報はθに無関係。</p>
+  <p style="color:#444"><strong>ガウス・マルコフの定理</strong>：線形モデルの仮定（誤差の期待値0・等分散・無相関）のもとで、OLS推定量はBLUE（最良線形不偏推定量）。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">区間推定（信頼区間）</h2>
+  <p style="color:#444"><strong>母平均（σ²既知）</strong>：X̄ ± z_{α/2}·σ/√n。95%信頼区間はz_{0.025}=1.96。</p>
+  <p style="color:#444"><strong>母平均（σ²未知・正規母集団）</strong>：X̄ ± t_{α/2}(n−1)·S/√n。t分布の自由度はn−1。</p>
+  <p style="color:#444"><strong>母比率</strong>：p̂ ± z_{α/2}·√(p̂(1−p̂)/n)。大標本近似（np̂≥5, n(1−p̂)≥5が目安）。</p>
+  <p style="color:#444"><strong>母分散</strong>：((n−1)S²/χ²_{α/2,n−1}, (n−1)S²/χ²_{1−α/2,n−1})。χ²分布は非対称なので両端の分位点が異なります。</p>
+  <p style="color:#444"><strong>2標本の母平均差（等分散）</strong>：プール分散Sp²=((n₁−1)S₁²+(n₂−1)S₂²)/(n₁+n₂−2) を使い、自由度n₁+n₂−2のt分布。</p>
+  <p style="color:#444"><strong>被覆確率</strong>：同じ手順で構成した信頼区間が真の値を含む長期的な割合。95%CI→被覆確率95%。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">仮説検定</h2>
+  <p style="color:#444"><strong>検定統計量と棄却域</strong>：帰無仮説H₀のもとで検定統計量の分布を導出し、観測値が棄却域に入ればH₀を棄却。</p>
+  <p style="color:#444"><strong>P値</strong>：帰無仮説が正しいとしたとき、観測値以上に極端な結果が起きる確率。P値&lt;α（有意水準）なら棄却。「P値が小さい」≠「効果が大きい」。</p>
+  <p style="color:#444"><strong>第1種の過誤（α）</strong>：H₀が真なのに棄却してしまう確率。有意水準αで制御。</p>
+  <p style="color:#444"><strong>第2種の過誤（β）・検出力（1−β）</strong>：H₁が真なのに棄却しない確率がβ。検出力=1−β=H₁のもとで棄却できる確率。サンプルサイズを増やすと検出力が上がります。</p>
+  <p style="color:#444"><strong>z検定（母平均・σ²既知）</strong>：Z=(X̄−μ₀)/(σ/√n)、H₀のもとでN(0,1)に従います。</p>
+  <p style="color:#444"><strong>t検定（母平均・σ²未知）</strong>：T=(X̄−μ₀)/(S/√n)、H₀のもとでt(n−1)に従います。</p>
+  <p style="color:#444"><strong>カイ二乗検定（母分散）</strong>：χ²=(n−1)S²/σ₀²、H₀のもとでχ²(n−1)に従います。</p>
+  <p style="color:#444"><strong>適合度検定</strong>：χ²=Σ(Oᵢ−Eᵢ)²/Eᵢ。期待度数Eᵢ≥5が条件。自由度はカテゴリ数−1（パラメータを推定した数だけ追加で引く）。</p>
+  <p style="color:#444"><strong>ネイマン・ピアソン定理</strong>：単純仮説の検定では尤度比 L(θ₁)/L(θ₀)&gt;cの棄却域が一様最強力検定（UMP）を与えます。</p>
+  <p style="color:#444"><strong>尤度比検定統計量</strong>：−2log(L₀/L₁)→χ²(自由度=制約数)（大標本）。複合仮説の検定に使います。</p>
+  <p style="color:#444"><strong>ウィルコクソン順位和検定</strong>：2標本の中央値比較のノンパラ版。データを順位に変換して検定統計量を計算します。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">分散分析（ANOVA）</h2>
+  <p style="color:#444"><strong>一元配置</strong>：全変動=群間変動+群内変動（SS_T=SS_B+SS_W）。F=MS_B/MS_W（MS=SS/自由度）。H₀:全群の平均が等しい。</p>
+  <p style="color:#444"><strong>二元配置</strong>：2つの因子A・BとAB交互作用を同時に検定。交互作用が有意なら主効果の解釈に注意が必要。</p>
+  <p style="color:#444"><strong>多重比較</strong>：ANOVAで有意後の事後検定。ボンフェロー二補正：各検定の有意水準をα/m（m=比較数）に設定。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">回帰分析</h2>
+  <p style="color:#444"><strong>重回帰モデル</strong>：y = β₀ + β₁x₁ + … + βₚxₚ + ε、ε～N(0,σ²)。OLS推定：β̂=(XᵀX)⁻¹Xᵀy。</p>
+  <p style="color:#444"><strong>決定係数R²</strong>：R²=1−SS_Res/SS_Tot∈[0,1]。変数を増やすと必ず増加するため、自由度調整済みR²を使います。</p>
+  <p style="color:#444"><strong>AIC（赤池情報量規準）</strong>：AIC=−2logL+2k（kはパラメータ数）。値が小さいほど良いモデル。BIC=−2logL+k·logn（大標本でペナルティが強い）。</p>
+  <p style="color:#444"><strong>多重共線性</strong>：説明変数間の強い相関。VIF（分散拡大因子）≥10が目安で不安定な推定になります。</p>
+  <p style="color:#444"><strong>Lasso（L1正則化）</strong>：ペナルティ項λΣ|βⱼ|を加えた最小化。係数を完全にゼロにして変数選択を行います。Ridge（L2正則化）は係数を縮小しますが変数選択はしません。</p>
+  <p style="color:#444"><strong>クックの距離</strong>：各データ点が全推定係数に与える影響度。値が1以上（または4/nが目安）の点は影響力のある外れ値と判断します。</p>
+  <p style="color:#444"><strong>ロジスティック回帰</strong>：log(p/(1−p))=β₀+β₁x₁+…。係数の解釈：xⱼが1増えるとオッズがe^βⱼ倍になります。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">多変量解析</h2>
+  <p style="color:#444"><strong>主成分分析（PCA）</strong>：分散共分散行列（または相関行列）の固有ベクトルが主成分軸。第1主成分は分散最大方向。固有値=主成分の分散。寄与率=固有値の和の何%かを示します。</p>
+  <p style="color:#444"><strong>判別分析（LDA）</strong>：グループ間分散/グループ内分散を最大化する判別関数を求めます。等分散仮定で判別境界は線形（LDA）、各グループ別分散では二次（QDA）。</p>
+  <p style="color:#444"><strong>マハラノビス距離</strong>：D²=(x−μ)ᵀΣ⁻¹(x−μ)。共分散構造を考慮した距離。Σが単位行列のときユークリッド距離²に退化。</p>
+  <p style="color:#444"><strong>因子分析</strong>：観測変数X=Λf+ε（Λ:因子負荷行列、f:共通因子、ε:独自因子）。共通性=各行の因子負荷量の二乗和。バリマックス回転（直交）・プロマックス回転（斜交）で解釈を容易にします。</p>
+  <p style="color:#444"><strong>モデル選択基準</strong>：AIC（赤池）＝過学習防止・小標本向き。BIC（ベイズ）＝大標本で一致的なモデル選択。クロスバリデーション＝予測誤差の直接推定。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">ベイズ統計</h2>
+  <p style="color:#444"><strong>ベイズの定理（統計版）</strong>：p(θ|x) ∝ p(x|θ)p(θ)。事後分布∝尤度×事前分布。共役事前分布を使うと事後分布が閉じた形になります。</p>
+  <p style="color:#444"><strong>代表的な共役対</strong>：二項-ベータ、ポアソン-ガンマ、正規-正規（精度パラメータ既知）。</p>
+  <p style="color:#444"><strong>MCMC（マルコフ連鎖モンテカルロ）</strong>：目標分布を定常分布とするマルコフ連鎖を設計しサンプルを得る。ギブスサンプリング（条件付き分布から1つずつ更新）とメトロポリス・ヘイスティングス法が代表的。</p>
+
+  <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">時系列解析</h2>
+  <p style="color:#444"><strong>弱定常性</strong>：平均・分散・自己共分散が時点tによらず一定。ARIMAモデルの前提条件。</p>
+  <p style="color:#444"><strong>自己回帰モデル AR(p)</strong>：Xₜ=φ₁Xₜ₋₁+…+φₚXₜ₋ₚ+εₜ。ACF（自己相関関数）は指数的に減衰し、PACF（偏自己相関関数）はラグp以降でゼロに切断。</p>
+  <p style="color:#444"><strong>移動平均モデル MA(q)</strong>：Xₜ=εₜ+θ₁εₜ₋₁+…+θqεₜ₋q。ACFはラグq以降でゼロ、PACFは指数減衰。</p>
+  <p style="color:#444"><strong>ARIMAモデル ARIMA(p,d,q)</strong>：d回差分を取って定常化したうえでAR(p)+MA(q)を当てはめるモデル。</p>
+  <p style="color:#444"><strong>マルコフ連鎖</strong>：P(Xₜ₊₁|Xₜ,Xₜ₋₁,…)=P(Xₜ₊₁|Xₜ)（マルコフ性）。定常分布πは πP=π を満たします。既約・非周期ならば定常分布は一意に存在します。</p>
+
+  <p style="margin-top:32px"><a href="/stats-pre1/" style="color:#2563eb">← ホームへ戻る</a></p>
+  <p style="font-size:0.8rem;color:#888;margin-top:12px">※本サイトは個人による学習支援サイトです。最新の試験情報は公式サイトをご確認ください。</p>
 </article></div>
   </body>
 </html>

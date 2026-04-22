@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"全確率の定理とベイズの定理","description":"「結果から原因を推測する」全確率の定理とベイズの定理を具体的な病気検査の例で学びます。","url":"https://study-apps.com/stats-pre1/1.3-total-prob/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"全確率の定理とベイズの定理","description":"「結果から原因を推測する」全確率の定理とベイズの定理を具体的な病気検査の例で学びます。","url":"https://study-apps.com/stats-pre1/1.3-total-prob/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズの定理  において、 を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"事前確率"}},{"@type":"Question","name":"工場Xが製品の70%を作り不良率2%、工場Yが30%を作り不良率6%のとき、無作為に1個選んだ製品が不良品である確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}},{"@type":"Question","name":"袋に赤玉4個・青玉2個。1個取り出して戻さずにもう1個取る。両方赤の確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.2-conditional/" style="color:#2563eb;text-decoration:none">← 条件付き確率と統計的独立</a>
+    <a href="/stats-pre1/1.4-dist-basics/" style="color:#2563eb;text-decoration:none">確率分布の基礎関数 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">全確率の定理とベイズの定理</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「結果から原因を推測する」全確率の定理とベイズの定理を具体的な病気検査の例で学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -90,10 +94,28 @@
 ：事後確率（Posterior Probability）——結果  を観測した後に更新された確率
 
  試験頻出：「事前確率 × 尤度 に比例して事後確率が決まる」というパターンはベイズ統計の土台です。分母は「正規化定数」として全事後確率の合計を1にする役割を担います。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. ベイズの定理  において、 を何と呼ぶか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 事前確率</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 工場Xが製品の70%を作り不良率2%、工場Yが30%を作り不良率6%のとき、無作為に1個選んだ製品が不良品である確率はいくらか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. </p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 袋に赤玉4個・青玉2個。1個取り出して戻さずにもう1個取る。両方赤の確率はいくらか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. </p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.2-conditional/" style="color:#2563eb;text-decoration:none">← 条件付き確率と統計的独立</a>
+    <a href="/stats-pre1/1.4-dist-basics/" style="color:#2563eb;text-decoration:none">確率分布の基礎関数 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

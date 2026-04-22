@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"質的回帰と一般化線形モデル","description":"「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。","url":"https://study-apps.com/stats-pre1/2.6-glm/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"質的回帰と一般化線形モデル","description":"「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。","url":"https://study-apps.com/stats-pre1/2.6-glm/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ロジスティック回帰でモデル化する「ロジット」とは何か？","acceptedAnswer":{"@type":"Answer","text":"（対数オッズ）"}},{"@type":"Question","name":"ロジスティック回帰の係数  の解釈として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"が1増えるとオッズが  倍になる"}},{"@type":"Question","name":"GLMの「リンク関数」の役割はどれか？","acceptedAnswer":{"@type":"Answer","text":"期待値と線形予測子をつなぐ変換"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/2.5-clustering/" style="color:#2563eb;text-decoration:none">← クラスター分析</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">その他の多変量解析手法 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">質的回帰と一般化線形モデル</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -120,11 +124,31 @@
 
 GLMが「線形予測子 + リンク関数」でさまざまな分布を扱う枠組みであるなら、その非線形拡張がニューラルネットワーク（Neural Network）です。
 
-入力層・隠れ層・出力層からなる多層構造で、各層で非線形変換（活性化関数：ReLU・sigmoid など）を適用します。十分な隠れユニット数があれば任</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+入力層・隠れ層・出力層からなる多層構造で、各層で非線形変換（活性化関数：ReLU・sigmoid など）を適用します。十分な隠れユニット数があれば任意の関数を近似できる（普遍近似定理）ため、回帰・分類・パターン認識など幅広く使われます。
+
+準1級では「一般化線形モデルのさらなる拡張として、非線形な関係を柔軟にモデル化できる手法」として位置づけられます。パラメータの多さから過学習が起きやすいため、正則化（ドロップアウト・L2正則化）やクロスバリデーションによるモデル選択が重要です。</div>
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. ロジスティック回帰でモデル化する「ロジット」とは何か？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. （対数オッズ）</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. ロジスティック回帰の係数  の解釈として正しいものはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A.  が1増えるとオッズが  倍になる</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. GLMの「リンク関数」の役割はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 期待値と線形予測子をつなぐ変換</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/2.5-clustering/" style="color:#2563eb;text-decoration:none">← クラスター分析</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">その他の多変量解析手法 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

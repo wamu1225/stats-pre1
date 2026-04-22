@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"検定の理論：ネイマン・ピアソンと大標本検定","description":"最良の棄却域の理論（NP定理）と尤度比・ワルド・スコア検定——検定の数学的基礎を学びます。","url":"https://study-apps.com/stats-pre1/1.19-testing-adv/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"検定の理論：ネイマン・ピアソンと大標本検定","description":"最良の棄却域の理論（NP定理）と尤度比・ワルド・スコア検定——検定の数学的基礎を学びます。","url":"https://study-apps.com/stats-pre1/1.19-testing-adv/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ネイマン・ピアソンの基本定理が与える「最良の棄却域」とはどれか？","acceptedAnswer":{"@type":"Answer","text":"有意水準  のもとで検出力が最大になる棄却域"}},{"@type":"Question","name":"尤度比検定統計量  は  のもとで漸近的にどの分布に従うか？","acceptedAnswer":{"@type":"Answer","text":"分布（自由度 = 制約の数）"}},{"@type":"Question","name":"ワルド型検定とスコア検定の主な違いはどれか？","acceptedAnswer":{"@type":"Answer","text":"ワルド型は制約なし MLE を使い、スコア検定は制約あり評価点でスコアを測る"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.18-inference/" style="color:#2563eb;text-decoration:none">← 推定・検定の理論的背景</a>
+    <a href="/stats-pre1/1.20-testing-applied/" style="color:#2563eb;text-decoration:none">検定の実践：正規・適合度・ノンパラメトリック →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">検定の理論：ネイマン・ピアソンと大標本検定</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">最良の棄却域の理論（NP定理）と尤度比・ワルド・スコア検定——検定の数学的基礎を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -84,10 +88,28 @@
 スコア検定（Score Test / Lagrange Multiplier Test）：「 が真なら  でスコア関数（対数尤度の微分）はゼロになるはず」という性質を使います。制約なし MLE を計算せずに済む利点があります。
 
 3つは漸近的に同値ですが、小標本での性質は異なります。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. ネイマン・ピアソンの基本定理が与える「最良の棄却域」とはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 有意水準  のもとで検出力が最大になる棄却域</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 尤度比検定統計量  は  のもとで漸近的にどの分布に従うか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A.  分布（自由度 = 制約の数）</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. ワルド型検定とスコア検定の主な違いはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. ワルド型は制約なし MLE を使い、スコア検定は制約あり評価点でスコアを測る</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.18-inference/" style="color:#2563eb;text-decoration:none">← 推定・検定の理論的背景</a>
+    <a href="/stats-pre1/1.20-testing-applied/" style="color:#2563eb;text-decoration:none">検定の実践：正規・適合度・ノンパラメトリック →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"分散分析 (ANOVA)","description":"3つ以上のグループを「一気に」比較する、効率的な判断手法。","url":"https://study-apps.com/stats-pre1/1.21-anova/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"分散分析 (ANOVA)","description":"3つ以上のグループを「一気に」比較する、効率的な判断手法。","url":"https://study-apps.com/stats-pre1/1.21-anova/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"3つ以上の群の平均値の差を同時に検定する手法は？","acceptedAnswer":{"@type":"Answer","text":"分散分析"}},{"@type":"Question","name":"分散分析において、検定に用いられる統計量は？","acceptedAnswer":{"@type":"Answer","text":"F統計量"}},{"@type":"Question","name":"2つの要因を同時に考慮し、それらの相乗効果も評価する分散分析は？","acceptedAnswer":{"@type":"Answer","text":"二元配置"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/1.20-testing-applied/" style="color:#2563eb;text-decoration:none">← 検定の実践：正規・適合度・ノンパラメトリック</a>
+    <a href="/stats-pre1/1.22-asymptotic/" style="color:#2563eb;text-decoration:none">漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">分散分析 (ANOVA)</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">3つ以上のグループを「一気に」比較する、効率的な判断手法。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -111,11 +115,31 @@
 
 ブロック効果を除いた残差  が小さくなり、ブロック化なしの一元配置より検出力が上がります。
 
-一部実施要因計画（Fractional Factorial Design）： 因子を2水準で全組み合わせ試すと  回の実験が必要です。 なら1024回——現実的ではありません。交互作用（高次のもの）を犠牲にして実験回数を  に減らす計画です。「主効果と</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+一部実施要因計画（Fractional Factorial Design）： 因子を2水準で全組み合わせ試すと  回の実験が必要です。 なら1024回——現実的ではありません。交互作用（高次のもの）を犠牲にして実験回数を  に減らす計画です。「主効果と2因子交互作用だけ見る」という判断のもと、少ない実験で多くの因子を同時に調べられます。
+
+直交配列（Orthogonal Array）：タグチメソッド（品質工学）で有名な設計法。各因子の水準の組み合わせが均等になるよう（直交性）設計した実験表で、少ない実験回数でも主効果を効率よく独立に推定できます。・ などの記号で表されます（ は「 行、つまり  通りの実験条件を持つ表」という意味で、因子の数ではありません）。</div>
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 3つ以上の群の平均値の差を同時に検定する手法は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 分散分析</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 分散分析において、検定に用いられる統計量は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. F統計量</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 2つの要因を同時に考慮し、それらの相乗効果も評価する分散分析は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 二元配置</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/1.20-testing-applied/" style="color:#2563eb;text-decoration:none">← 検定の実践：正規・適合度・ノンパラメトリック</a>
+    <a href="/stats-pre1/1.22-asymptotic/" style="color:#2563eb;text-decoration:none">漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>

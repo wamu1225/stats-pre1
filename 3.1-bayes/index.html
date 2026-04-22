@@ -44,11 +44,15 @@
     </script>
     <script type="module" crossorigin src="../assets/index-DjpK1SSU.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？","acceptedAnswer":{"@type":"Answer","text":"事前分布"}},{"@type":"Question","name":"「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？","acceptedAnswer":{"@type":"Answer","text":"ベイズの定理"}},{"@type":"Question","name":"事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？","acceptedAnswer":{"@type":"Answer","text":"共役事前分布"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
-  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← その他の多変量解析手法</a>
+    <a href="/stats-pre1/3.2-timeseries/" style="color:#2563eb;text-decoration:none">時系列解析 →</a>
+  </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ベイズ推定とマルコフ連鎖</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
@@ -110,10 +114,28 @@ MAP推定（Maximum A Posteriori）：事後分布の最頻値（確率が最も
 正規分布の平均 （分散既知）：事前分布に正規分布 → 事後分布も正規分布
 
 例えば「コインを10回投げて7回表」のデータに対して、ベータ事前分布を使うと事後分布がパラメータを足すだけで求まります。この「形が変わらない」組み合わせが共役関係です。</div>
-  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 事前分布</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. ベイズの定理</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 共役事前分布</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← その他の多変量解析手法</a>
+    <a href="/stats-pre1/3.2-timeseries/" style="color:#2563eb;text-decoration:none">時系列解析 →</a>
   </nav>
-  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
 </article></div>
   </body>
 </html>
