@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>多変量正規分布・変数変換・極値分布 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。" />
+    <meta property="og:title" content="多変量正規分布・変数変換・極値分布 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.9-multivariate/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.9-multivariate/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="多変量正規分布・変数変換・極値分布 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"多変量正規分布・変数変換・極値分布","description":"多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。","url":"https://study-apps.com/stats-pre1/1.9-multivariate/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">多変量正規分布・変数変換・極値分布</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+1変数の連続型分布（指数・ガンマ・ベータなど）を学んだ次のステップとして、このモジュールでは「複数の変数が同時に絡む」3つのテーマを扱います。多変量正規分布（複数の変数が正規分布に従う場合）、変数変換（ある変数から別の変数に変換した後の分布）、そして極値分布（最大値・最小値が従う分布）です。
+
+ 「変換」と「多次元」が共通キーワード
+
+このモジュールのテーマはすべて「1変数の分布から出発して、何らかの変換・拡張をしたとき分布がどう変わるか」という問いに答えます。ヤコビアンは「1変数変換の面積補正」、多変量正規分布は「正規分布の多次元拡張」として統一的に理解できます。
+
+多変量正規分布
+
+1変数の正規分布を  次元に拡張したのが多変量正規分布（Multivariate Normal Distribution）です。 次元ベクトル  の PDF は：
+
+： 次元平均ベクトル
+： 分散共分散行列（対角成分が分散、非対角成分が共分散）
+
+多変量正規分布の重要な性質：周辺分布・条件付き分布も正規分布、任意の線形変換も正規分布、相関係数が0 ⟺ 統計的独立（正規分布に限り成立する特別な性質）。
+
+ 試験頻出：一般の分布では「無相関 ⟹ 独立」は成立しません。しかし多変量正規分布に限り「無相関 ⟺ 独立」が成立します。この方向性の違いに注意しましょう。
+
+変数変換
+
+確率変数  を関数  で変換したとき、 の分布を求めるにはヤコビアン（Jacobian）を使います。
+
+なぜ  をそのまま使えないのでしょう？変換  は確率の「面積」を引き伸ばしたり縮めたりするからです。例えば  なら横軸が2倍に伸び、同じ確率が「幅2倍の区間」に散らばります。ヤコビアン  はこの伸縮率を補正して「確率の総量が変わらない」ことを保証する係数です。
+
+ が単調増加（または単調減少）の場合、 の PDF は：
+
+例：、 のとき  は対数正規分布になります。、 なので：
+
+ 試験頻出：確率変数の線形変換  では 、。 なら 。
+
+極値分布
+
+「100年に一度の洪水の水位」「 個の電球のうち最初に切れるものの寿命」——最大値・最小値が従う分布が極値分布（Extreme Value Distribution）です。
+
+ 個の独立同分布の観測値の最大値を適切に正規化すると、 で3種類の分布のいずれかに収束します（Fisher-Tippett-Gnedenko の定理）：
+
+ガンベル分布（Gumbel / Type I）：指数型の裾（正規分布・指数分布など）の最大値が収束。。気象・土木分野で最頻出。
+フレシェ分布（Fréchet / Type II）：べき乗則の重い裾（コーシー・パレートなど）の最大値が収束。金融リスク・地震規模などに使われる。
+ワイブル分布（Weibull / Type III）：有界な分布（一様分布など）の最大値が収束。信頼性工学（部品の寿命）で多用される。
+
+これら3族を統一した一般極値分布（GEV: Generalized Extreme Value）は形状パラメータ  で切り替わります： がガンベル、 がフレシェ、 がワイブルです。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

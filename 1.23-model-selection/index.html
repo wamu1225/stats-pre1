@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KL情報量・AIC・クロスバリデーション | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。" />
+    <meta property="og:title" content="KL情報量・AIC・クロスバリデーション | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.23-model-selection/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.23-model-selection/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="KL情報量・AIC・クロスバリデーション | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"KL情報量・AIC・クロスバリデーション","description":"モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。","url":"https://study-apps.com/stats-pre1/1.23-model-selection/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">KL情報量・AIC・クロスバリデーション</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「複数のモデルのうちどれを選べばよいか？」——この問いに答えるのがモデル選択理論です。このモジュールではカルバック・ライブラー情報量・AIC・クロスバリデーションという3つのアプローチを、理論的な関係も含めて学びます。
+
+ 「当てはまりの良さ」と「シンプルさ」のトレードオフ
+
+パラメータを増やせばどんなデータにもピッタリ当てはまりますが、「新しいデータへの予測精度（汎化性能）」は下がります——これが過学習です。モデル選択の問題は本質的に「手元のデータへの当てはまり」と「将来のデータへの予測能力」をどうバランスするかです。
+
+カルバック・ライブラー情報量
+
+2つの確率分布  と  の「ズレ」を測る指標がカルバック・ライブラー情報量（KL情報量、KL-Divergence）です：
+
+、等号は  のとき。ただし対称ではない（）。
+
+KL情報量は「真のモデルから見て、当てはめたモデルがどれほど外れているか」を測り、モデル選択の理論的基礎です。
+
+AIC とモデル選択
+
+「フィットが良くてもパラメータが多すぎると将来データへの予測が悪くなる（過学習）」——このバランスを取るのが情報量規準です。
+
+AIC（赤池情報量規準、Akaike Information Criterion）：
+
+ は最大対数尤度（フィットの良さ）、 はパラメータ数（複雑さへのペナルティ）。AIC が小さいモデルが優れています。
+
+AIC の理論的根拠：KL情報量を最小化することと漸近的に同値です（赤池, 1974）。
+
+BIC（ベイズ情報量規準）は ——ペナルティが  でサンプルサイズが大きいほど大きく、一般に AIC より少ないパラメータのモデルを選びます。
+
+ 試験頻出：AIC の比較は同一データに対して複数モデルを評価するときに使います。AIC の絶対値の意味はなく、相対比較が重要です。
+
+クロスバリデーション（交差検証）
+
+クロスバリデーション（Cross-Validation, CV）は「データを訓練用と検証用に分けて、モデルの汎化性能を推定する」方法です。
+
+k分割交差検証（k-fold CV）：データを  個のグループ（フォールド）に等分し、1つを検証用・残り  を訓練用として  回繰り返します。各回の検証誤差の平均が汎化誤差の推定値です。
+
+Leave-One-Out CV（LOOCV）：（データ数と同じ）の場合。1つずつ除いて学習し、除いた1点で検証を繰り返します。ジャックナイフ法と構造が同じです。
+
+AICとCVの関係：AICは対数尤度ベースの理論的な汎化誤差の推定、CVは実際の予測誤差の推定です。大標本では漸近的に同値ですが、小標本では挙動が異なります。
+
+ 試験頻出：「AIC、cross validation」はシラバスに明示されたモデル選択の手法です。「過学習の防止」「汎化性能の推定」という文脈で使い分けを問われます。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

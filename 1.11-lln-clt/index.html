@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>大標本理論と推定量の性質 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="大数の法則・中心極限定理・スルスキーの定理——「サンプルが増えると何が保証されるか」を学びます。" />
+    <meta property="og:title" content="大標本理論と推定量の性質 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="大数の法則・中心極限定理・スルスキーの定理——「サンプルが増えると何が保証されるか」を学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.11-lln-clt/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.11-lln-clt/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="大標本理論と推定量の性質 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="大数の法則・中心極限定理・スルスキーの定理——「サンプルが増えると何が保証されるか」を学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"大標本理論と推定量の性質","description":"大数の法則・中心極限定理・スルスキーの定理——「サンプルが増えると何が保証されるか」を学びます。","url":"https://study-apps.com/stats-pre1/1.11-lln-clt/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">大標本理論と推定量の性質</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">大数の法則・中心極限定理・スルスキーの定理——「サンプルが増えると何が保証されるか」を学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「1クラス30人の身長を測るだけで、全国平均が推測できる」——なぜそんなことが可能なのでしょうか？前のモジュールで正規分布の形を学びました。次は「なぜ手元の標本から母集団全体について語れるのか」の数学的な根拠——大数の法則と中心極限定理——を学びます。
+
+大数の法則（LLN）：サンプルが増えると平均は真値へ一点収束する
+
+まず「どのくらいサンプルを増やせば安心か」という直感を養いましょう。
+
+サイコロの例で確認： 1〜6の目が等確率で出るサイコロの、真の期待値は  です。
+
+6回振ると → 平均が 2.3 や 4.7 になることもある（ばらつき大）
+100回振ると → 平均はだいたい 3〜4 の間に収まる
+1万回振ると → 平均は必ず 3.5 にほぼ一致
+
+これが 大数の法則（Law of Large Numbers, LLN） です。数式では：
+
+「」は「確率収束する」という記号で、「 を大きくすると、 が  から離れる確率が0に近づく」という意味です。値そのものが真値  の1点に近づいていくイメージです。
+
+ 試験頻出： の表記と意味（「 が増えると  が  から離れる確率が0になる」）は必ず押さえましょう。
+
+中心極限定理（CLT）：平均の「分布の形」まで正規分布になる
+
+大数の法則は「値が真値に近づく」ことを示しました。ではさらに「どのくらい近いか（バラツキの形）」まで言えるのが中心極限定理です。
+
+コイン投げの例で確認： コインを100回投げて「表の枚数」を数える実験を、1000回繰り返したとします。コイン投げは本来「表か裏か」という単純な0-1の分布ですが——1000回の実験で得た「表の枚数の分布」をヒストグラムにすると、平均50・標準偏差5の正規分布の形になります。
+
+これが 中心極限定理（Central Limit Theorem, CLT） です。元のデータの分布がどんな形でも、その平均値をたくさん集めると、正規分布に近づきます：
+
+「」は「分布収束する」という記号です（大数の法則の「（値が一点に近づく）」とは別物です）。CLTは「値」ではなく、 の分布の形全体が正規分布の形へと近づくことを言っています。
+
+数式を変形すると標準化した形にもなります：。
+
+ なぜ最強の定理なのか？ CLTが成立するための条件は「平均と分散が有限に存在すること」だけです。元の分布（年収・クレーム件数など）が不明でも、データさえ多ければ正規分布の道具で強気に分析できます。
+
+ 二項分布の正規近似： は  が十分大きければ  で近似できます（ド・モアブル=ラプラスの定理）。コイン100回の例では  となります。
+
+スライダーを動かしてみよう：
+
+：指数分布（右に強く歪んだ形）——元の分布がそのまま見える
+前後：ここからようやく「鐘の形」らしくなってくる
+以上：正規分布にほぼ一致。これが CLT の「 が十分大きければ」の目安
+
+ が増えるにつれ青い実線（実際の分布）が灰色の点線（）に収束していきます——これが中心極限定理の「収束」の意味です。
+
+ （補足）スルスキーの定理
+
+大数の法則とCLTをそれぞれ別々に証明しても、実際の問題ではこの2つを組み合わせて使うことが多いです。そのときに使う補題がスルスキーの定理です。
+
+「①CLTで正規分布に近づく部分」と「②LLNで真値に近づく部分」を掛け合わせた統計量の収束先は、それぞれの収束先を掛けたものになります。
+
+具体例：t検定統計量
+
+母分散（真のばらつき ）が不明なとき、検定では標本標準偏差  を使った統計量を使います：
+
+CLTより： は  に近づく
+LLNより：（つまり ）
+
+スルスキーの定理は「これら2つを掛け算しても収束先は変わらない」と保証します。よって  は  に近づきます。
+
+よい推定量の条件：「どの計算式で推測するのがベストか？」
+
+大数の法則により「サンプルを増やせば真値に近づく」ことはわかりました。では、同じデータから推定するとき、どの計算式（推定量）を使うのがベストなのか？ その品質基準を4つ学びます。
+
+ダーツ（矢投げ）で例えましょう。的の中心が「真の値 」、矢1本1本が「推定値 （シータハット）」です。
+
+不偏性（Unbiasedness）：何度も投げたとき、矢の重心（平均の着地点）が的の中心に来ている——式で表すと 。標本平均はこれを満たします。
+
+一致性（Consistency）：投げる回数（データ数 ）を増やすほど、矢が中心に集まっていく。大数の法則と直接対応します：（）。
+
+有効性（Efficiency）：同じ「偏りのない（不偏な）」射手2人を比べたとき、より中心近くにまとまって刺さる方が有効。散らばり（分散）が最小の推定</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

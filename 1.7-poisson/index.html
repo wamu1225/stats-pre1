@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ポアソン分布族：ポアソン・幾何・多項分布 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。" />
+    <meta property="og:title" content="ポアソン分布族：ポアソン・幾何・多項分布 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.7-poisson/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.7-poisson/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ポアソン分布族：ポアソン・幾何・多項分布 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"ポアソン分布族：ポアソン・幾何・多項分布","description":"稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。","url":"https://study-apps.com/stats-pre1/1.7-poisson/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ポアソン分布族：ポアソン・幾何・多項分布</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「1時間に何件のコールが来るか？」「初めて成功するまで何回かかるか？」「3種類の結果が出る試行を繰り返すとどうなるか？」——前モジュールで二項分布族を学びました。ここでは待ち時間・稀な件数・多択結果を記述する3つの分布を学びます。
+
+ 「何件起きるか」から「いつ起きるか」へ
+
+二項分布が「 回試行して何回成功するか」を問うのに対し、ポアソン分布は「稀な事象が単位期間に何件起きるか」、幾何分布は「何回試行して初めて成功するか（待ち時間）」を問います。現象の性質によって使い分けることが重要です。
+
+ポアソン分布
+
+「ある交差点で1時間に起きる交通事故の件数」「1ページの誤植の数」——稀な事象が一定期間・一定範囲内に起きる件数はポアソン分布（Poisson Distribution）に従います。
+
+パラメータ （ラムダ）は単位期間あたりの平均発生件数です。例：1時間あたり平均2件なら 。
+
+ポアソン分布の美しい性質：期待値と分散がともに  に等しい。
+
+独立なポアソン変数の和もポアソン分布になります：、 が独立なら 。
+
+ ポアソン分布の導出（少数法則）
+
+二項分布  で 、、 の極限をとるとポアソン分布に収束します。これが「少数法則」です。
+
+ポアソン分布の正規近似： が大きいとき（目安 ）、ポアソン分布は正規分布で近似できます：（期待値  分散  を利用）。二項分布の正規近似と合わせて、大きなパラメータの確率計算に使います。
+
+連続修正（Continuity Correction）：離散分布（二項・ポアソン）を連続分布（正規）で近似するとき、精度を上げる  の調整です。
+
+例： で  を正規近似するとき、連続修正なしだと 、連続修正ありだと  として計算します（ を加える理由：整数  が  の区間全体を代表するから）。
+
+ 試験頻出：「 の正規近似」では 、「 の正規近似」では  とします（ は近似に使う正規確率変数）。
+
+幾何分布・負の二項分布
+
+「コインを投げて初めて表が出るまでの回数」——初めての成功まで何回かかるかを記述するのが幾何分布（Geometric Distribution）です。
+
+「 回目に初めて成功する」ためには、「最初の  回が失敗で、 回目が成功」という事象が起きればよいです。期待値 、分散 。
+
+ 無記憶性（Memoryless Property）：——「すでに  回失敗していても、あと  回以内に成功する確率は最初から変わらない」性質。連続型では指数分布が同じ性質を持ちます。
+
+負の二項分布（Negative Binomial Distribution）は幾何分布の一般化で、「 回成功するまでの試行回数（または失敗回数）」を記述します。幾何分布は  の特殊ケースです。
+
+多項分布
+
+二項分布が「成功か失敗か（2択）」なら、多項分布（Multinomial Distribution）は「3択以上」への拡張です。 種類の結果が確率 （）で起きる試行を  回繰り返したとき、各結果が  回起きる同時確率：
+
+各周辺分布は二項分布  になります。品質管理（良品・不良A・不良B）や選挙の得票率分析などに使われます。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

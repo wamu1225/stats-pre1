@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。" />
+    <meta property="og:title" content="漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.22-asymptotic/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.22-asymptotic/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法","description":"MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.22-asymptotic/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+「最尤推定量はサンプルが多くなるとどんな性質を持つか？」「推定量を変換（対数をとるなど）したとき、精度はどう変わるか？」——これらの問いに答えるのが漸近理論の基礎です。このモジュールではフィッシャー情報量・MLE の漸近正規性・デルタ法の3本柱を学びます。
+
+ 「大きなサンプルでの振る舞い」を理論化する
+
+現実のデータは有限サンプルですが、 の極限での性質（漸近的性質）を知ることで、有限サンプルでも近似的に使える強力な道具が得られます。この理論によって、「推定の精度は何で決まるか」「どの推定量が最も優れているか」が厳密に議論できます。
+
+フィッシャー情報量
+
+「点推定の理論」でクラーメル・ラオの不等式を学びました。そこに登場したフィッシャー情報量（Fisher Information）をより深く見ていきます。
+
+（デル）は偏微分記号で、「複数の変数を持つ関数を1つの変数だけに着目して微分する操作」を表します。2つの表現は等価です（右側は2階偏微分で計算しやすいことが多い）。
+
+情報量の意味：対数尤度関数の「曲がり具合」を測ります。対数尤度が急峻な山形になる（曲率が大きい）ほど  の位置が鋭く特定でき、 が大きくなります。
+
+ 個の独立な観測値のフィッシャー情報量は （加法性）。これが標準誤差  の根拠です。
+
+最尤推定量の漸近正規性
+
+最尤推定量（MLE） は大標本で次の漸近分布を持ちます：
+
+または等価に 。
+
+これが「MLE は漸近有効」と言われる理由——大標本極限でクラーメル・ラオの下限を達成します。この性質を使うと、複雑なモデルでも MLE の標準誤差や信頼区間を近似計算できます。
+
+ 試験頻出：MLE の漸近分散は ——フィッシャー情報量の逆数。パラメータが複数のとき（ 次元）は情報行列の逆行列が漸近分散共分散行列になります。
+
+デルタ法
+
+「 の漸近分布がわかっているとき、（ の関数）の漸近分布はどうなるか？」に答えるのがデルタ法（Delta Method）です。
+
+ が微分可能なら：
+
+例：標本比率  の対数オッズ  の分散は？、 なので漸近分散は 。
+
+多変量版： の漸近分散共分散行列は （ はヤコビアン行列＝各成分が  の偏微分からなる行列、 は  の漸近分散共分散行列）。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>条件付き確率と統計的独立 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="条件付き確率の定義・乗法定理・統計的独立——「前提が変わると確率が変わる」仕組みを学びます。" />
+    <meta property="og:title" content="条件付き確率と統計的独立 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="条件付き確率の定義・乗法定理・統計的独立——「前提が変わると確率が変わる」仕組みを学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/1.2-conditional/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/1.2-conditional/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="条件付き確率と統計的独立 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="条件付き確率の定義・乗法定理・統計的独立——「前提が変わると確率が変わる」仕組みを学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-PqqI9k4P.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"LearningResource","name":"条件付き確率と統計的独立","description":"条件付き確率の定義・乗法定理・統計的独立——「前提が変わると確率が変わる」仕組みを学びます。","url":"https://study-apps.com/stats-pre1/1.2-conditional/","inLanguage":"ja","learningResourceType":"Article","provider":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}}</script>
+  </head>
+  <body>
+    <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← 学習リファレンス ホーム</a></nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">条件付き確率と統計的独立</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">条件付き確率の定義・乗法定理・統計的独立——「前提が変わると確率が変わる」仕組みを学びます。</p>
+  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
+
+前のモジュールでは確率の公理と包除原理を学びました。次は「ある情報を得たとき、別の事象の確率がどう変わるか」という条件付き確率と、「情報が何の役にも立たない」という統計的独立を学びます。これらは全確率の定理・ベイズの定理（次のモジュール）の直接の土台です。
+
+条件付き確率：「前提が変わると確率も変わる」
+
+あるクラスで男子20人・女子20人が試験を受けました。合格者は30人で、うち女子は20人でした。無作為に選んだ1人が「合格者だった」とわかったとき、その人が女子である確率は？
+
+全体で見ると女子は50%ですが、「合格者の中での女子の割合」は  です。「合格者」という情報が確率を変えました。これが条件付き確率（Conditional Probability）です。
+
+ は「 が起きたという条件のもとで  が起きる確率」と読みます。縦棒「」は「〜が与えられたとき（given that）」を意味します。
+
+この定義を変形すると乗法定理が得られます：
+
+「 と  が同時に起きる確率」＝「 が起きる確率」×「 のもとで  が起きる確率」という直感的な分解です。
+
+ 試験頻出： であれば、 と  は「関係がある（独立でない）」ことを意味します。次の独立の定義と一緒に押さえましょう。
+
+統計的独立：「知っても確率が変わらない」
+
+条件付き確率の定義から自然に「情報が何の役にも立たない」状態を定義できます。
+
+コインを2回投げます。1回目の結果は2回目の確率に何も影響しません。1回目が表（事象 ）でも裏でも、2回目が表（事象 ）になる確率は常に  です。これを統計的独立（Statistical Independence）と呼びます。
+
+条件付き確率の式に代入すると ——「 を知っても  の確率が変わらない」ことと同値です。
+
+ 「排反」と「独立」の混同に注意
+
+排反（Mutually Exclusive）： が起きれば  は絶対起きない（）
+独立（Independent）： が起きても  の確率は変わらない（）
+
+ かつ  のとき、排反と独立は同時に成立しません。排反なら  ですが、独立なら  となり矛盾します。</div>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:20px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>
