@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CDmjpq8J.js"></script>
+    <script type="module" crossorigin src="../assets/index-JuZk4P8i.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"全確率の定理とベイズの定理","item":"https://study-apps.com/stats-pre1/1.3-total-prob/"}]},{"@context":"https://schema.org","@type":"Article","headline":"全確率の定理とベイズの定理","description":"「結果から原因を推測する」全確率の定理とベイズの定理を具体的な病気検査の例で学びます。","url":"https://study-apps.com/stats-pre1/1.3-total-prob/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズの定理  において、 を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"事前確率"}},{"@type":"Question","name":"工場Xが製品の70%を作り不良率2%、工場Yが30%を作り不良率6%のとき、無作為に1個選んだ製品が不良品である確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}},{"@type":"Question","name":"袋に赤玉4個・青玉2個。1個取り出して戻さずにもう1個取る。両方赤の確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
@@ -94,7 +94,11 @@
 ：尤度（Likelihood）——原因  のもとで結果  が起きる確率
 ：事後確率（Posterior Probability）——結果  を観測した後に更新された確率
 
- 試験頻出：「事前確率 × 尤度 に比例して事後確率が決まる」というパターンはベイズ統計の土台です。分母  はすべての原因の寄与を足し合わせた値で、これで割ることで「すべての  にわたる事後確率の合計が1」になります——この意味で分母を正規化定数（normalizing constant）と呼びます。</div>
+分母  はすべての  に共通の定数です。そのため事後確率の大小関係は分子  だけで決まります。これを利用して「（比例する）」という簡略表記が使われます：
+
+実際の確率値が必要なときは分母で割って正規化します——この意味で分母を正規化定数（normalizing constant）と呼びます。分母で割ることで「すべての  にわたる事後確率の合計が1」になることが保証されます。
+
+ 試験頻出：「事前確率 × 尤度 に比例して事後確率が決まる」、「分母は正規化定数」、「 は分母が定数なので省略できる」という3点はベイズ統計の土台として頻出です。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">

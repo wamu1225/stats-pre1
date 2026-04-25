@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CDmjpq8J.js"></script>
+    <script type="module" crossorigin src="../assets/index-JuZk4P8i.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ベイズ推定とマルコフ連鎖","item":"https://study-apps.com/stats-pre1/3.1-bayes/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？","acceptedAnswer":{"@type":"Answer","text":"事前分布"}},{"@type":"Question","name":"「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？","acceptedAnswer":{"@type":"Answer","text":"ベイズの定理"}},{"@type":"Question","name":"事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？","acceptedAnswer":{"@type":"Answer","text":"共役事前分布"}}]}]</script>
@@ -114,7 +114,13 @@ MAP推定（Maximum A Posteriori）：事後分布の最頻値（確率が最も
 ポアソン分布の ：事前分布にガンマ  → 事後分布も 
 正規分布の平均 （分散既知）：事前分布に正規分布 → 事後分布も正規分布
 
-例えば「コインを10回投げて7回表」のデータに対して、ベータ事前分布を使うと事後分布がパラメータを足すだけで求まります。この「形が変わらない」組み合わせが共役関係です。</div>
+例えば「コインを10回投げて7回表」のデータに対して、ベータ事前分布を使うと事後分布がパラメータを足すだけで求まります。この「形が変わらない」組み合わせが共役関係です。
+
+ 無情報事前分布とジェフリーズ事前分布
+
+事前知識が全くないとき、「どの値も同じくらいもっともらしい」として一様分布を事前分布に使う考え方を無情報事前分布（Uninformative Prior）と呼びます。これを使うと事後分布は尤度だけで決まり、最尤法に近い推定になります。
+
+ただし単純な一様分布は変数変換に対して不変でないという問題があります——例えば  に一様分布を置いても、 には一様分布にならない。この問題を解決するのがジェフリーズ事前分布（Jeffreys Prior）で、フィッシャー情報量  を使って  と定義します。ジェフリーズ事前分布は変数変換に対して不変（変換しても同じ無情報性を保つ）という理論的に自然な性質を持ちます。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
