@@ -872,7 +872,7 @@ $m$ は真の中央値（$F(m) = 0.5$）、$f(m)$ は真の中央値における
 
 **一致性**（Consistency）：矢の本数（データ数 $n$）を増やすほど中心に集まる——$\\hat{\\theta} \\xrightarrow{p} \\theta$（$n \\to \\infty$）。大数の法則が典型例。
 
-**有効性**（Efficiency）：同じ「不偏な」推定量を比べたとき散らばり（分散）が最小——不偏推定量の中で分散が最小のものを**最小分散不偏推定量**（MVUE: Minimum Variance Unbiased Estimator）と呼びます。
+**有効性**（Efficiency）：同じ「不偏な」推定量を比べたとき散らばり（分散）が最小——不偏推定量の中で分散が最小のものを**最小分散不偏推定量**（MVUE: Minimum Variance Unbiased Estimator）と呼びます。**ラオ・ブラックウェルの定理**は「十分統計量を使って任意の不偏推定量を改良し、MVUEを構成できる」ことを保証します。
 
 **推定量の相対効率**：2つの不偏推定量 $\\hat{\\theta}_1$, $\\hat{\\theta}_2$ の相対効率 $e = \\text{Var}(\\hat{\\theta}_2)/\\text{Var}(\\hat{\\theta}_1)$。$e > 1$ なら $\\hat{\\theta}_1$ のほうが効率的。正規分布で標本平均 vs. 標本中央値の相対効率は $\\pi/2 \\approx 1.57$——標本平均のほうが効率的です。
 
