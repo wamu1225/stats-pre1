@@ -34,7 +34,11 @@ export const MathDisplay: React.FC<Props> = ({ formula, block }) => {
     }
   }, [formula, block]);
 
-  const activeSymbols = Object.keys(symbolGuide).filter(s => formula.includes(s));
+  const activeSymbols = Object.keys(symbolGuide).filter(s => {
+    if (s.startsWith('\\')) return formula.includes(s);
+    // Single-char keys: match only as standalone (not inside \command names)
+    return new RegExp(`(?<![a-zA-Z\\\\])${s}(?![a-zA-Z])`).test(formula);
+  });
 
   if (!block) {
     return (

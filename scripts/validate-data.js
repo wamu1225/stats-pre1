@@ -11,7 +11,7 @@ let errors = [];
 
 // Supported interactive types (Must match InteractiveGraph.tsx)
 const validInteractiveTypes = [
-  'normal', 't', 'chi2', 'f', 'pca', 'regression', 'logistic', 'mcmc', 'gibbs', 'update', 'overfit', 'outlier', 'multico'
+  'normal', 't', 'chi2', 'f', 'pca', 'regression', 'logistic', 'mcmc', 'gibbs', 'update', 'overfit', 'outlier', 'multico', 'skewkurt'
 ];
 
 const mathKeywords = [
@@ -46,9 +46,9 @@ function checkFile(filePath) {
     const moduleMatches = raw.match(/\{\s*id:[\s\S]*?quiz:\s*\[([\s\S]*?)\]\s*\}/g);
     if (moduleMatches) {
       moduleMatches.forEach((moduleBlock, i) => {
-        const questionCount = (moduleBlock.match(/\bquestion:\s*'/g) || []).length;
+        const questionCount = (moduleBlock.match(/\bquestion:\s*[`'"]/g) || []).length;
         if (questionCount !== 10) {
-          const moduleIdMatch = moduleBlock.match(/id:\s*'([^']+)'/);
+          const moduleIdMatch = moduleBlock.match(/id:\s*[`'"]([^`'"]+)[`'"]/);
           const id = moduleIdMatch ? moduleIdMatch[1] : `Module ${i+1}`;
           errors.push(`[Error] ${id} has ${questionCount} questions (Required: 10).`);
         }

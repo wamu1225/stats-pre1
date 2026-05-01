@@ -14,20 +14,38 @@ const flow: Record<string, Question> = {
     id: 'start',
     text: '分析の目的は何ですか？',
     options: [
+      { label: '確率・事象の基礎を理解したい', nextId: 'probability' },
       { label: '平均値やグループ間の差を調べたい', nextId: 'mean' },
       { label: '情報の要約や予測モデルを作りたい', nextId: 'model' },
       { label: '時間の経過による変化を予測したい', nextId: null, result: '3.2-timeseries' },
       { label: '知識をデータで更新（学習）させたい', nextId: null, result: '3.1-bayes' }
     ]
   },
+  probability: {
+    id: 'probability',
+    text: '確率のどのテーマを学びたいですか？',
+    options: [
+      { label: '確率の計算・独立・包除原理の基礎', nextId: null, result: '1.1-probability' },
+      { label: 'ベイズの定理・全確率の定理', nextId: null, result: '1.3-total-prob' }
+    ]
+  },
   mean: {
     id: 'mean',
     text: '比較したいグループ（群）の数は？',
     options: [
-      { label: '1つ（またはサンプル数が非常に多い）', nextId: null, result: '1.1-clt' },
-      { label: '2つ（A/Bテストなど）', nextId: null, result: '1.2-sampling' },
-      { label: '3つ以上（複数の条件比較）', nextId: null, result: '1.3-anova' },
-      { label: '検定のP値・検出力・サンプルサイズを設計したい', nextId: null, result: '1.4-inference' }
+      { label: '1つ（またはサンプル数が非常に多い）', nextId: 'normalclt' },
+      { label: '2つ（A/Bテストなど）', nextId: null, result: '1.12-sampling' },
+      { label: '3つ以上（複数の条件比較）', nextId: null, result: '1.21-anova' },
+      { label: '検定のP値・検出力・サンプルサイズを設計したい', nextId: null, result: '1.18-inference' }
+    ]
+  },
+  normalclt: {
+    id: 'normalclt',
+    text: '何を学びたいですか？',
+    options: [
+      { label: '正規分布の性質（PDF・歪度・尖度・MGF）', nextId: null, result: '1.10-normal-dist' },
+      { label: '大数の法則・中心極限定理・推定量の条件', nextId: null, result: '1.11-lln-clt' },
+      { label: '十分統計量・順序統計量', nextId: null, result: '1.13-sufficient-stats' },
     ]
   },
   model: {

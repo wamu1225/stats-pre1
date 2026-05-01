@@ -11,7 +11,8 @@
     "validate": "node scripts/validate-data.js",
     "predeploy": "npm run validate && npm run build && npx tsx scripts/prerender.ts",
     "deploy": "gh-pages -d dist",
-    "deploy:root": "npx tsx scripts/deploy-root.ts"
+    "deploy:root": "npx tsx scripts/deploy-root.ts",
+    "deploy:all": "npm run validate && npm run build && npx tsx scripts/prerender.ts && gh-pages -d dist && npx tsx scripts/deploy-root.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -35,6 +36,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "gh-pages": "^6.3.0",
     "globals": "^17.4.0",
+    "sharp": "^0.34.5",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",

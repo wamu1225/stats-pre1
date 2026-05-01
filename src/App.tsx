@@ -8,7 +8,8 @@ import { MathDisplay } from './components/MathDisplay';
 import { Quiz } from './components/Quiz';
 import { TermText } from './components/TermGlossary';
 import { DistributionSelector } from './components/DistributionSelector';
-import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2 } from 'lucide-react';
+import { ExamGuide } from './components/ExamGuide';
+import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const chapterNames: Record<number, string> = {
@@ -17,39 +18,136 @@ const chapterNames: Record<number, string> = {
   3: '高度なモデリング',
 };
 
+const PROGRESS_KEY = 'stats-pre1-progress';
+
+interface ProgressEntry { score: number; total: number; completedAt: string; }
+type Progress = Record<string, ProgressEntry>;
+
+function loadProgress(): Progress {
+  try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch { return {}; }
+}
+function saveProgress(p: Progress) {
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+}
+
+// Draw n random items from an array
+function sampleN<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
+type View = 'dashboard' | 'glossary' | 'cheatsheet' | 'randomquiz' | 'privacy' | 'about' | 'guide';
+
 function App() {
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
-  const [view, setView] = useState<'dashboard' | 'glossary'>('dashboard');
+  const [view, setView] = useState<View>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [progress, setProgress] = useState<Progress>(loadProgress);
+
+  // Random quiz state
+  const [rqQuestions, setRqQuestions] = useState<{ q: typeof modules[0]['quiz'][0]; moduleTitle: string; moduleId: string }[]>([]);
+  const [rqIdx, setRqIdx] = useState(0);
+  const [rqSelected, setRqSelected] = useState<number | null>(null);
+  const [rqIsCorrect, setRqIsCorrect] = useState<boolean | null>(null);
+  const [rqResults, setRqResults] = useState<{ moduleId: string; moduleTitle: string; correct: boolean }[]>([]);
+  const [rqDone, setRqDone] = useState(false);
+
+  const startRandomQuiz = useCallback(() => {
+    // Draw 2 questions per module (20 total from 10 modules)
+    const qs = modules.flatMap(m =>
+      sampleN(m.quiz, 2).map(q => ({ q, moduleTitle: m.title, moduleId: m.id }))
+    ).sort(() => Math.random() - 0.5);
+    setRqQuestions(qs);
+    setRqIdx(0);
+    setRqSelected(null);
+    setRqIsCorrect(null);
+    setRqResults([]);
+    setRqDone(false);
+    setView('randomquiz');
+    window.scrollTo(0, 0);
+  }, []);
+
+  const rqHandleSelect = (idx: number) => {
+    if (rqSelected !== null) return;
+    setRqSelected(idx);
+    const correct = idx === rqQuestions[rqIdx].q.correctAnswer;
+    setRqIsCorrect(correct);
+  };
+
+  const rqNext = () => {
+    const cur = rqQuestions[rqIdx];
+    const correct = rqSelected === cur.q.correctAnswer;
+    const newResults = [...rqResults, { moduleId: cur.moduleId, moduleTitle: cur.moduleTitle, correct }];
+    if (rqIdx + 1 < rqQuestions.length) {
+      setRqResults(newResults);
+      setRqIdx(rqIdx + 1);
+      setRqSelected(null);
+      setRqIsCorrect(null);
+      window.scrollTo(0, 0);
+    } else {
+      setRqResults(newResults);
+      setRqDone(true);
+      window.scrollTo(0, 0);
+    }
+  };
 
   const updateModuleId = useCallback((id: string | null) => {
-    window.location.hash = id || '';
+    // pathnameの変更とHistory APIの活用
+    const basePath = window.location.pathname.startsWith('/stats-pre1/') ? '/stats-pre1' : '';
+    const newPath = id ? `${basePath}/${id}/` : `${basePath}/`;
+    window.history.pushState(null, '', newPath);
+    
     if (!id) {
       setActiveModuleId(null);
+      setView('dashboard');
+    } else {
+      setActiveModuleId(id);
       setView('dashboard');
     }
     setQuizCompleted(false);
     window.scrollTo(0, 0);
   }, []);
 
-  const switchView = useCallback((newView: 'dashboard' | 'glossary') => {
-    window.location.hash = newView === 'glossary' ? 'glossary' : '';
+  const switchView = useCallback((newView: View) => {
+    setActiveModuleId(null);
+    setView(newView);
+    const basePath = window.location.pathname.startsWith('/stats-pre1/') ? '/stats-pre1' : '';
+    const newPath = newView === 'dashboard' ? `${basePath}/` : `${basePath}/${newView}/`;
+    window.history.pushState(null, '', newPath);
     window.scrollTo(0, 0);
   }, []);
 
+  const handleQuizComplete = useCallback((moduleId: string, score: number, total: number) => {
+    setQuizCompleted(true);
+    const entry: ProgressEntry = { score, total, completedAt: new Date().toLocaleDateString('ja-JP') };
+    const next = { ...loadProgress(), [moduleId]: entry };
+    saveProgress(next);
+    setProgress(next);
+  }, []);
+
   useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash === 'glossary') {
-        setView('glossary');
+    const handlePath = () => {
+      const segments = window.location.pathname.split('/').filter(Boolean);
+      const lastSegment = segments[segments.length - 1];
+      
+      const isCustomView = ['glossary', 'cheatsheet', 'privacy', 'about', 'guide'].includes(lastSegment || '');
+      
+      if (isCustomView) {
+        setView(lastSegment as View);
         setActiveModuleId(null);
-      } else if (hash) {
-        const found = modules.find(m => m.id === hash);
+        if (lastSegment === 'privacy') document.title = 'プライバシーポリシー | 統計検定 準1級 学習リファレンス';
+        else if (lastSegment === 'about') document.title = 'サイトについて | 統計検定 準1級 学習リファレンス';
+        else if (lastSegment === 'guide') document.title = '試験ガイド | 統計検定 準1級 学習リファレンス';
+      } else if (lastSegment && lastSegment !== 'stats-pre1') {
+        const found = modules.find(m => m.id === lastSegment);
         if (found) {
           setActiveModuleId(found.id);
           setView('dashboard');
           document.title = `${found.title} | 統計検定 準1級`;
+        } else {
+          setActiveModuleId(null);
+          setView('dashboard');
         }
       } else {
         setActiveModuleId(null);
@@ -57,14 +155,14 @@ function App() {
         document.title = '統計検定 準1級 学習リファレンス';
       }
     };
-    handleHash();
-    window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+    handlePath();
+    window.addEventListener('popstate', handlePath);
+    return () => window.removeEventListener('popstate', handlePath);
   }, []);
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -115,6 +213,163 @@ function App() {
                 return <InteractiveGraph key={key} type={type} renderContent={parseInline} />;
               }
             }
+            if (part === '[[pvalue-table]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#fef2f2', color: '#991b1b', padding: '0.6rem 0.75rem', border: '1px solid #fecaca', textAlign: 'left', fontWeight: 800 }}>❌ 間違った解釈</th>
+                      <th style={{ background: '#f0fdf4', color: '#166534', padding: '0.6rem 0.75rem', border: '1px solid #bbf7d0', textAlign: 'left', fontWeight: 800 }}>✅ 正しい解釈</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「帰無仮説が正しい確率が3%」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「帰無仮説が正しいと仮定したとき、この結果が偶然起きる確率が3%」</td>
+                    </tr>
+                    <tr style={{ background: '#f8fafc' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「P=0.03は効果が大きいことを示す」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>P値はサンプルサイズに影響される。効果の大きさは<strong>効果量</strong>（コーエンの d など）で測る</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+            if (part === '[[anova-table]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>グループ</th>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>10日間の売上例</th>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>10日間の平均</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>煮玉子</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>52, 48, 55, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>51万円</td>
+                    </tr>
+                    <tr style={{ background: '#f8fafc' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>チャーシュー</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>58, 61, 57, 60, 59…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700, color: '#1d4ed8' }}>59万円</td>
+                    </tr>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>メンマ</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>50, 52, 48, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>50万円</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+            if (part === '[[type-error-table]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: '#f0fdf4', color: '#166534', padding: '0.6rem 0.75rem', border: '1px solid #bbf7d0', textAlign: 'left', fontWeight: 800 }}>H₀ が真（本当は差なし）</th>
+                      <th style={{ background: '#fef2f2', color: '#991b1b', padding: '0.6rem 0.75rem', border: '1px solid #fecaca', textAlign: 'left', fontWeight: 800 }}>H₀ が偽（本当は差あり）</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>棄却（差ありと判断）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第1種の過誤 α（冤罪）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
+                    </tr>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>棄却しない（差なし）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第2種の過誤 β（見逃し）</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+            if (part === '[[confusion-matrix]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>予測: スパム</th>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>予測: 正常</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>実際: スパム</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TP）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b' }}>見逃し（FN）</td>
+                    </tr>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>実際: 正常</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b' }}>誤検知（FP）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TN）</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+            if (part === '[[pca-vs-fa-table]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'center', fontWeight: 800 }}>主成分分析（PCA）</th>
+                      <th style={{ background: '#fdf4ff', color: '#7e22ce', padding: '0.6rem 0.75rem', border: '1px solid #e9d5ff', textAlign: 'center', fontWeight: 800 }}>因子分析</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>目的</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>データの次元圧縮・要約</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>潜在因子の発見</td>
+                    </tr>
+                    <tr style={{ background: '#f8fafc' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>方向性</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>観測変数 → 主成分</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>因子 → 観測変数（因果的解釈）</td>
+                    </tr>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>扱う分散</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>ノイズを含む「全分散」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>共通性（共分散部分）だけ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+            if (part === '[[conjugate-table]]') return (
+              <div key={key} style={{ overflowX: 'auto', margin: '1rem 0' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>尤度</th>
+                      <th style={{ background: '#fdf4ff', color: '#7e22ce', padding: '0.6rem 0.75rem', border: '1px solid #e9d5ff', textAlign: 'left', fontWeight: 800 }}>共役事前分布</th>
+                      <th style={{ background: '#f0fdf4', color: '#166534', padding: '0.6rem 0.75rem', border: '1px solid #bbf7d0', textAlign: 'left', fontWeight: 800 }}>事後分布</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>二項分布（成功/失敗）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ベータ分布</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>ベータ分布</td>
+                    </tr>
+                    <tr style={{ background: '#f8fafc' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ポアソン分布（回数）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ガンマ分布</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>ガンマ分布</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
             if (part === '[[regularization-card]]') return (
               <div key={key} className="reg-card-container">
                 <div className="reg-side lasso">
@@ -152,61 +407,34 @@ function App() {
 
   const parseContent = useCallback((text: string): React.ReactNode => {
     if (!text) return null;
-
-    // First, split by lines to handle block-level elements like ### and -
     const lines = text.split('\n');
     const result: React.ReactNode[] = [];
     let currentList: React.ReactNode[] = [];
-
+    let currentOL: React.ReactNode[] = [];
     const flushList = (key: string) => {
       if (currentList.length > 0) {
         result.push(<ul key={`list-${key}`}>{currentList}</ul>);
         currentList = [];
       }
+      if (currentOL.length > 0) {
+        result.push(<ol key={`ol-${key}`}>{currentOL}</ol>);
+        currentOL = [];
+      }
     };
-
     lines.forEach((line, lineIdx) => {
       const trimmedLine = line.trim();
       const key = `line-${lineIdx}`;
-
-      // Handle Headings
-      if (trimmedLine.startsWith('#### ')) {
-        flushList(key);
-        result.push(<h4 key={key} className="content-h4">{parseInlineContent(trimmedLine.slice(5))}</h4>);
-        return;
-      }
-      if (trimmedLine.startsWith('### ')) {
-        flushList(key);
-        result.push(<h3 key={key} className="content-h3">{parseInlineContent(trimmedLine.slice(4))}</h3>);
-        return;
-      }
-      if (trimmedLine.startsWith('## ')) {
-        flushList(key);
-        result.push(<h2 key={key} className="content-h2">{parseInlineContent(trimmedLine.slice(3))}</h2>);
-        return;
-      }
-      if (trimmedLine.startsWith('---')) {
-        flushList(key);
-        result.push(<hr key={key} className="content-hr" />);
-        return;
-      }
-
-      // Handle Lists
-      if (trimmedLine.startsWith('- ')) {
-        currentList.push(<li key={`li-${lineIdx}`}>{parseInlineContent(trimmedLine.slice(2))}</li>);
-        return;
-      }
-
-      // Handle regular paragraphs
-      if (trimmedLine === '') {
-        flushList(key);
-        return;
-      }
-
+      if (trimmedLine.startsWith('#### ')) { flushList(key); result.push(<h4 key={key} className="content-h4">{parseInlineContent(trimmedLine.slice(5))}</h4>); return; }
+      if (trimmedLine.startsWith('### ')) { flushList(key); result.push(<h3 key={key} className="content-h3">{parseInlineContent(trimmedLine.slice(4))}</h3>); return; }
+      if (trimmedLine.startsWith('## ')) { flushList(key); result.push(<h2 key={key} className="content-h2">{parseInlineContent(trimmedLine.slice(3))}</h2>); return; }
+      if (trimmedLine.startsWith('---')) { flushList(key); result.push(<hr key={key} className="content-hr" />); return; }
+      if (trimmedLine.startsWith('- ')) { if (currentOL.length > 0) { result.push(<ol key={`ol-${key}`}>{currentOL}</ol>); currentOL = []; } currentList.push(<li key={`li-${lineIdx}`}>{parseInlineContent(trimmedLine.slice(2))}</li>); return; }
+      const olMatch = trimmedLine.match(/^(\d+)\. (.*)$/);
+      if (olMatch) { if (currentList.length > 0) { result.push(<ul key={`list-${key}`}>{currentList}</ul>); currentList = []; } currentOL.push(<li key={`oli-${lineIdx}`}>{parseInlineContent(olMatch[2])}</li>); return; }
+      if (trimmedLine === '') { flushList(key); return; }
       flushList(key);
       result.push(<p key={key} className="content-p">{parseInlineContent(line)}</p>);
     });
-
     flushList('final');
     return <>{result}</>;
   }, [parseInlineContent]);
@@ -214,8 +442,8 @@ function App() {
   const filteredModules = useMemo(() => {
     if (!searchQuery) return modules;
     const q = searchQuery.toLowerCase();
-    return modules.filter(m => 
-      m.title.toLowerCase().includes(q) || 
+    return modules.filter(m =>
+      m.title.toLowerCase().includes(q) ||
       m.content.toLowerCase().includes(q) ||
       m.description.toLowerCase().includes(q)
     );
@@ -229,20 +457,33 @@ function App() {
   }, [activeModuleId]);
   const findModulesByTerm = useCallback((termId: string) => modules.filter(m => m.content.includes(`[[term:${termId}]]`)), []);
 
+  const completedCount = modules.filter(m => progress[m.id]).length;
+  const totalModules = modules.length;
+
   return (
-    <div className="container" style={{ maxWidth: activeModuleId ? '600px' : view === 'glossary' ? '1000px' : '600px' }}>
+    <div className="container" style={{ maxWidth: activeModuleId ? '800px' : view === 'glossary' ? '1000px' : '800px' }}>
       <header className="header">
-        <h1 className="title" onClick={() => updateModuleId(null)} style={{ cursor: 'pointer' }}>Stats Grade Pre-1</h1>
-        <p className="subtitle">統計検定 準1級 学習リファレンス</p>
+        <h1 className="title" onClick={() => updateModuleId(null)} style={{ cursor: 'pointer' }}>統計検定 準1級</h1>
+        <p className="subtitle">学習リファレンス</p>
       </header>
 
       {!activeModuleId && (
-        <nav style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>
+        <nav style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem', flexWrap: 'wrap' }}>
           <button onClick={() => switchView('dashboard')} className={`nav-tab ${view === 'dashboard' ? 'active' : ''}`}>
             <LayoutDashboard size={18} /> ロードマップ
+            {completedCount > 0 && <span className="nav-progress-badge">{completedCount}/{totalModules}</span>}
           </button>
           <button onClick={() => switchView('glossary')} className={`nav-tab ${view === 'glossary' ? 'active' : ''}`}>
             <Book size={18} /> 用語集
+          </button>
+          <button onClick={() => switchView('cheatsheet')} className={`nav-tab ${view === 'cheatsheet' ? 'active' : ''}`}>
+            <FileText size={18} /> 公式集
+          </button>
+          <button onClick={startRandomQuiz} className={`nav-tab ${view === 'randomquiz' ? 'active' : ''}`}>
+            <Shuffle size={18} /> 全範囲クイズ
+          </button>
+          <button onClick={() => switchView('guide')} className={`nav-tab ${view === 'guide' ? 'active' : ''}`}>
+            <Target size={18} /> 試験ガイド
           </button>
         </nav>
       )}
@@ -258,20 +499,173 @@ function App() {
                 <div className="content-body">{activeModule && parseContent(activeModule.content)}</div>
               </div>
               <div style={{ marginTop: '2rem' }}>
-                <Quiz key={activeModuleId} questions={activeModule?.quiz || []} onComplete={() => setQuizCompleted(true)} renderContent={parseContent} />
+                <Quiz
+                  key={activeModuleId}
+                  questions={activeModule?.quiz || []}
+                  onComplete={(score, total) => handleQuizComplete(activeModuleId, score, total)}
+                  renderContent={parseContent}
+                />
               </div>
               {quizCompleted && (
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap' }}>
-                  <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: '#f1f5f9', color: 'var(--text)', border: '1px solid #e2e8f0' }}>
-                    <ChevronLeft size={16} /> 一覧に戻る
-                  </button>
-                  {nextModule && (
-                    <button className="btn" onClick={() => updateModuleId(nextModule.id)} style={{ flex: 2 }}>
-                      次のモジュールへ：{nextModule.title} <ArrowRight size={16} />
-                    </button>
+                <div style={{ marginTop: '1rem' }}>
+                  {activeModuleId && progress[activeModuleId] && (
+                    <div className="score-banner">
+                      {progress[activeModuleId].score} / {progress[activeModuleId].total} 問正解
+                      {progress[activeModuleId].score === progress[activeModuleId].total && ' 🎉 パーフェクト！'}
+                    </div>
                   )}
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
+                    <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: '#f1f5f9', color: 'var(--text)', border: '1px solid #e2e8f0' }}>
+                      <ChevronLeft size={16} /> 一覧に戻る
+                    </button>
+                    {nextModule && (
+                      <button className="btn" onClick={() => updateModuleId(nextModule.id)} style={{ flex: 2 }}>
+                        次のモジュールへ：{nextModule.title} <ArrowRight size={16} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
+            </motion.div>
+          ) : view === 'randomquiz' ? (
+            <motion.div key="rq" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <button className="btn-back" onClick={() => switchView('dashboard')}><ChevronLeft size={18} /> 一覧に戻る</button>
+              {rqDone ? (
+                /* Results screen */
+                <div>
+                  <div className="card" style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--primary)' }}>
+                      {rqResults.filter(r => r.correct).length} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/ {rqResults.length} 問正解</span>
+                    </div>
+                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>全範囲クイズ完了</p>
+                  </div>
+                  {/* Breakdown by module */}
+                  {(() => {
+                    const byModule: Record<string, { title: string; correct: number; total: number }> = {};
+                    rqResults.forEach(r => {
+                      if (!byModule[r.moduleId]) byModule[r.moduleId] = { title: r.moduleTitle, correct: 0, total: 0 };
+                      byModule[r.moduleId].total++;
+                      if (r.correct) byModule[r.moduleId].correct++;
+                    });
+                    const weak = Object.entries(byModule).filter(([, v]) => v.correct < v.total);
+                    return (
+                      <div className="card">
+                        <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>モジュール別結果</h3>
+                        {Object.entries(byModule).map(([id, v]) => (
+                          <div key={id} className="rq-result-row">
+                            <span className={`rq-result-dot ${v.correct === v.total ? 'ok' : 'ng'}`} />
+                            <span style={{ flex: 1, fontSize: '0.85rem' }}>{v.title}</span>
+                            <span style={{ fontSize: '0.8rem', color: v.correct === v.total ? '#16a34a' : '#dc2626', fontWeight: 700 }}>{v.correct}/{v.total}</span>
+                          </div>
+                        ))}
+                        {weak.length > 0 && (
+                          <div style={{ marginTop: '1.25rem' }}>
+                            <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', margin: '0 0 0.5rem' }}>復習が必要なモジュール：</p>
+                            <div className="links-row">
+                              {weak.map(([id, v]) => (
+                                <button key={id} className="btn-link" onClick={() => updateModuleId(id)}>
+                                  {v.title} <ArrowRight size={12} />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                  <button className="btn" onClick={startRandomQuiz} style={{ marginTop: '0.5rem' }}>
+                    <Shuffle size={16} /> もう一度
+                  </button>
+                </div>
+              ) : rqQuestions.length > 0 ? (
+                /* Quiz screen */
+                <div className="card" style={{ border: '1px solid #e2e8f0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <div>
+                      <h3 style={{ margin: 0, fontSize: '1.1rem' }}>全範囲クイズ</h3>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{rqQuestions[rqIdx].moduleTitle}</span>
+                    </div>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                      {rqIdx + 1} / {rqQuestions.length}
+                    </span>
+                  </div>
+                  <div style={{ marginBottom: '1.25rem', fontSize: '1rem', fontWeight: 600, lineHeight: 1.6 }}>
+                    {parseContent(rqQuestions[rqIdx].q.question)}
+                  </div>
+                  <div className="quiz-options">
+                    {rqQuestions[rqIdx].q.options.map((opt, i) => (
+                      <button
+                        key={`rq-${rqIdx}-${i}`}
+                        className="btn"
+                        style={{
+                          background: rqSelected === i ? (i === rqQuestions[rqIdx].q.correctAnswer ? '#22c55e' : '#ef4444') : '#ffffff',
+                          color: rqSelected === i ? 'white' : 'var(--text)',
+                          justifyContent: 'space-between',
+                          border: rqSelected === i ? 'none' : '1px solid #e2e8f0',
+                          textAlign: 'left',
+                          padding: '0.75rem 1rem',
+                          boxShadow: 'none',
+                          fontWeight: 500,
+                          fontSize: '0.9rem',
+                        }}
+                        onClick={() => rqHandleSelect(i)}
+                      >
+                        <div style={{ flex: 1 }}>{parseContent(opt)}</div>
+                        {rqSelected === i && (i === rqQuestions[rqIdx].q.correctAnswer ? <CheckCircle2 size={18} /> : <XCircle size={18} />)}
+                      </button>
+                    ))}
+                  </div>
+                  <AnimatePresence>
+                    {rqSelected !== null && (
+                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                        style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
+                        <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
+                          <strong style={{ color: rqIsCorrect ? '#22c55e' : '#ef4444' }}>{rqIsCorrect ? '正解！' : '不正解...'}</strong><br />
+                          {parseContent(rqQuestions[rqIdx].q.explanation)}
+                        </p>
+                        <button className="btn" style={{ marginTop: '1rem', width: 'auto', padding: '0.5rem 1rem' }} onClick={rqNext}>
+                          {rqIdx + 1 < rqQuestions.length ? '次の問題へ' : '結果を見る'} <ArrowRight size={16} />
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : null}
+            </motion.div>
+          ) : view === 'cheatsheet' ? (
+            <motion.div key="cs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h2 style={{ margin: '0 0 0.25rem', fontSize: '1.25rem', fontWeight: 800 }}>公式集</h2>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>試験直前の確認用。各モジュールの重要公式をまとめました。</p>
+              </div>
+              {[1, 2, 3].map(ch => (
+                <div key={ch}>
+                  <div className="chapter-header">
+                    <span className="badge-chapter" style={{ fontSize: '0.7rem' }}>Chapter {ch}</span>
+                    <h3 className="content-h3" style={{ margin: '0.25rem 0 0' }}>{chapterNames[ch]}</h3>
+                  </div>
+                  {modules.filter(m => m.chapter === ch && m.keyFormulas && m.keyFormulas.length > 0).map(m => (
+                    <div key={m.id} className="card cs-module-card" onClick={() => updateModuleId(m.id)} style={{ cursor: 'pointer' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800 }}>{m.title}</h4>
+                        {progress[m.id] && (
+                          <span className="progress-badge-small">
+                            {progress[m.id].score}/{progress[m.id].total}点
+                          </span>
+                        )}
+                      </div>
+                      <div className="cs-formulas">
+                        {m.keyFormulas!.map((kf, i) => (
+                          <div key={i} className="cs-formula-row">
+                            <span className="cs-label">{kf.label}</span>
+                            <div className="cs-formula"><MathDisplay formula={kf.formula} /></div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </motion.div>
           ) : view === 'dashboard' ? (
             <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
@@ -294,9 +688,17 @@ function App() {
                       </div>
                     );
                   }
+                  const p = progress[m.id];
                   acc.push(
                     <div key={m.id} className="card-module" onClick={() => updateModuleId(m.id)}>
-                      <span className="badge-chapter">Chapter {m.chapter}</span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span className="badge-chapter">Chapter {m.chapter}</span>
+                        {p && (
+                          <span className={`progress-badge ${p.score === p.total ? 'perfect' : ''}`}>
+                            {p.score === p.total ? '✓ ' : ''}{p.score}/{p.total}点
+                          </span>
+                        )}
+                      </div>
                       <h4>{parseContent(m.title)}</h4>
                       <div className="module-desc">{parseContent(m.description)}</div>
                     </div>
@@ -305,7 +707,96 @@ function App() {
                 }, [])}
               </div>
             </motion.div>
+          ) : view === 'about' ? (
+            <motion.div key="about" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <div className="privacy-page">
+                <h2>サイトについて</h2>
+
+                <section>
+                  <h3>このサイトについて</h3>
+                  <p>「統計検定 準1級 学習リファレンス」は、統計検定準1級の合格を目指す方のために作られた、個人運営の学習支援サイトです。</p>
+                  <p>数学的な素養が中学〜高校レベルの方でも理解できるよう、概念の直感的な説明・インタラクティブなグラフ・確認クイズを提供しています。</p>
+                  <p className="privacy-disclaimer">⚠️ 本サイトは個人による学習支援サイトであり、統計質保証推進協会および日本統計学会の公式サイトではありません。掲載内容は個人の見解に基づくものであり、公式の情報を保証するものではありません。試験の最新情報・申込方法・合否については、必ず公式サイトをご確認ください。</p>
+                </section>
+
+                <section>
+                  <h3>コンテンツ構成</h3>
+                  <ul>
+                    <li><strong>学習モジュール（全{totalModules}モジュール）</strong>：確率分布・推定・検定・多変量解析・ベイズ統計・時系列分析など</li>
+                    <li><strong>用語集</strong>：準1級頻出用語の解説</li>
+                    <li><strong>公式集</strong>：重要公式の一覧（印刷対応）</li>
+                    <li><strong>全範囲クイズ</strong>：全モジュールからランダム出題</li>
+                  </ul>
+                </section>
+
+                <section>
+                  <h3>運営者について</h3>
+                  <p>本サイトは、統計学の学習を個人的に進める中で、同じように学んでいる方の助けになればと思い作成・公開しています。</p>
+                  <p>お問い合わせは<a href="https://forms.gle/ccMv7oKwz6ysDHBe6" target="_blank" rel="noopener noreferrer">こちらのGoogleフォーム</a>からお願いします。</p>
+                </section>
+
+                <section>
+                  <h3>免責事項</h3>
+                  <p>本サイトの解説・問題・公式は学習目的で作成されており、内容の正確性・完全性を保証するものではありません。本サイトの情報を利用したことによるいかなる損害についても、運営者は責任を負いかねます。また、本サイトは統計検定への合格を保証するものではありません。</p>
+                </section>
+              </div>
+            </motion.div>
+          ) : view === 'guide' ? (
+            <motion.div key="guide" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <ExamGuide />
+            </motion.div>
+          ) : view === 'privacy' ? (
+            <motion.div key="privacy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <div className="privacy-page">
+                <h2>プライバシーポリシー</h2>
+                <p className="privacy-updated">最終更新：2025年4月</p>
+
+                <section>
+                  <h3>1. サイトについて</h3>
+                  <p>本サイト「統計検定 準1級 学習リファレンス」は、統計検定準1級の学習を支援することを目的とした個人運営のサイトです。</p>
+                  <p className="privacy-disclaimer">⚠️ 本サイトは個人による学習支援サイトであり、統計質保証推進協会および日本統計学会の公式サイトではありません。掲載内容は個人の見解に基づくものであり、公式の情報を保証するものではありません。試験の出題範囲・申込方法・合否については、必ず公式サイトをご確認ください。</p>
+                </section>
+
+                <section>
+                  <h3>2. Google Analytics の利用について</h3>
+                  <p>本サイトでは、アクセス状況を把握するために <strong>Google Analytics</strong>（Google LLC 提供）を使用しています。</p>
+                  <p><strong>送信される情報の例：</strong>閲覧したページのURL・滞在時間・使用デバイス・おおまかな地域情報（IPアドレスから推定）など。これらの情報はCookieを通じてGoogleのサーバーに送信されます。個人を特定する情報は収集しません。</p>
+                  <p><strong>利用目的：</strong>コンテンツ改善のためのアクセス分析</p>
+                  <p><strong>オプトアウト：</strong><a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google アナリティクス オプトアウト アドオン</a>をインストールすることで、データ送信を無効にできます。</p>
+                  <p>Googleのプライバシーポリシーは<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">こちら</a>をご参照ください。</p>
+                </section>
+
+                <section>
+                  <h3>3. Google AdSense の利用について</h3>
+                  <p>本サイトでは、広告配信のために <strong>Google AdSense</strong>（Google LLC 提供）を使用しています。</p>
+                  <p><strong>送信される情報の例：</strong>閲覧履歴・Cookieに保存された識別情報など。これらは広告のパーソナライズ（行動ターゲティング）に使用されます。</p>
+                  <p><strong>利用目的：</strong>サイト運営費用の確保</p>
+                  <p><strong>オプトアウト：</strong><a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer">広告設定ページ</a>でパーソナライズ広告を無効にできます。また、<a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">Digital Advertising Alliance</a> のオプトアウトツールもご利用いただけます。</p>
+                </section>
+
+                <section>
+                  <h3>4. Cookieについて</h3>
+                  <p>本サイトでは、Google Analytics および Google AdSense の機能提供のためにCookieを使用しています。ブラウザの設定からCookieを無効にすることができますが、一部機能が正常に動作しない場合があります。</p>
+                </section>
+
+                <section>
+                  <h3>5. 学習進捗データについて</h3>
+                  <p>クイズの得点・完了状況は、お使いのブラウザの <strong>ローカルストレージ</strong> にのみ保存されます。このデータは外部サーバーへ送信されることはなく、運営者も閲覧できません。ブラウザのデータ削除により消去されます。</p>
+                </section>
+
+                <section>
+                  <h3>6. コンテンツの免責事項</h3>
+                  <p>本サイトの解説・問題・公式は学習目的で作成されており、内容の正確性を保証するものではありません。本サイトの情報を利用したことによるいかなる損害についても、運営者は責任を負いかねます。また、本サイトは統計検定への合格を保証するものではありません。</p>
+                </section>
+
+                <section>
+                  <h3>7. 本ポリシーの変更</h3>
+                  <p>本ポリシーは予告なく変更される場合があります。変更後のポリシーはこのページへの掲載をもって効力を生じます。</p>
+                </section>
+              </div>
+            </motion.div>
           ) : (
+            /* Glossary view */
             <motion.div key="glos" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <div className="search-container" style={{ marginBottom: '2rem' }}>
                 <div className="search-input-wrapper">
@@ -366,6 +857,18 @@ function App() {
           )}
         </AnimatePresence>
       </main>
+
+      <footer className="site-footer">
+        <p className="footer-disclaimer">
+          本サイトは個人による学習支援サイトであり、統計質保証推進協会および日本統計学会の公式サイトではありません。掲載内容は個人の見解に基づくものであり、公式の情報を保証するものではありません。
+        </p>
+        <div className="footer-links">
+          <button className="footer-link" onClick={() => switchView('about')}>サイトについて</button>
+          <button className="footer-link" onClick={() => switchView('privacy')}>プライバシーポリシー</button>
+          <a className="footer-link" href="https://forms.gle/ccMv7oKwz6ysDHBe6" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
+        </div>
+        <p className="footer-copy">© {new Date().getFullYear()} 統計検定 準1級 学習リファレンス</p>
+      </footer>
     </div>
   );
 }

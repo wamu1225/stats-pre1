@@ -7,14 +7,16 @@ import { clsx } from 'clsx';
 
 interface Props {
   questions: QuizQuestion[];
-  onComplete: () => void;
+  onComplete: (score: number, total: number) => void;
   renderContent: (text: string) => React.ReactNode;
+  showModuleLabel?: string;
 }
 
-export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent }) => {
+export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, showModuleLabel }) => {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [correctCount, setCorrectCount] = useState(0);
 
   const question = questions[currentIdx];
 
@@ -23,6 +25,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent }) 
     setSelected(idx);
     const correct = idx === question.correctAnswer;
     setIsCorrect(correct);
+    if (correct) setCorrectCount(c => c + 1);
   };
 
   const next = () => {
@@ -31,7 +34,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent }) 
       setSelected(null);
       setIsCorrect(null);
     } else {
-      onComplete();
+      onComplete(correctCount, questions.length);
     }
   };
 
@@ -43,7 +46,10 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent }) 
   return (
     <div className="card" style={{ border: '1px solid #e2e8f0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h3 style={{ margin: 0, fontSize: '1.1rem' }}>理解度チェック</h3>
+        <div>
+          <h3 style={{ margin: 0, fontSize: '1.1rem' }}>理解度チェック</h3>
+          {showModuleLabel && <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{showModuleLabel}</span>}
+        </div>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           質問 {currentIdx + 1} / {questions.length}
         </span>
