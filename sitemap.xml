@@ -37,6 +37,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://study-apps.com/stats-pre1/1.5b-correlation/</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://study-apps.com/stats-pre1/1.6-binomial/</loc>
     <lastmod>2026-05-02</lastmod>
     <changefreq>monthly</changefreq>
