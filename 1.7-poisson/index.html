@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-DgjM3uIs.js"></script>
+    <script type="module" crossorigin src="../assets/index-BXznINJx.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ポアソン分布族：ポアソン・幾何・多項分布","item":"https://study-apps.com/stats-pre1/1.7-poisson/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ポアソン分布族：ポアソン・幾何・多項分布","description":"稀な事象の件数、待ち時間、多択の結果——3つの分布を使い分けます。","url":"https://study-apps.com/stats-pre1/1.7-poisson/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ポアソン分布の「期待値と分散」の関係として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"期待値 = 分散 ="}},{"@type":"Question","name":"幾何分布の「無記憶性」とはどういう性質か？","acceptedAnswer":{"@type":"Answer","text":"過去の失敗回数に関わらず、次の試行の成功確率は  のまま変わらない"}},{"@type":"Question","name":"1日あたり平均3件の注文があるオンラインショップ。1日に5件以上注文が入る確率を求めるに最も適した分布はどれか？","acceptedAnswer":{"@type":"Answer","text":"ポアソン分布"}}]}]</script>
@@ -80,7 +80,7 @@
 
 ポアソン分布の正規近似： が大きいとき（目安 ）、ポアソン分布は正規分布で近似できます：（期待値  分散  を利用）。二項分布の正規近似と合わせて、大きなパラメータの確率計算に使います。
 
-連続修正（Continuity Correction）：離散分布（二項・ポアソン）を連続分布（正規）で近似するとき、精度を上げる  の調整です。
+連続修正（Continuity Correction）：ポアソン分布も二項分布も「整数値しかとらない離散分布」です。これを連続な正規分布で近似するとき、「整数  は実数軸の区間  を代表する」と考えて  を加減する補正が連続修正です。どちらの分布を正規近似するときも同じルールを使います。
 
 例： で  を正規近似するとき、連続修正なしだと 、連続修正ありだと  として計算します（ を加える理由：整数  が  の区間全体を代表するから）。
 
@@ -88,19 +88,19 @@
 
 幾何分布・負の二項分布
 
-「コインを投げて初めて表が出るまでの回数」——初めての成功まで何回かかるかを記述するのが幾何分布（Geometric Distribution）です。
+「コインを投げて初めて表が出るまでの回数」——前モジュールで学んだベルヌーイ試行（1回の成功確率 、各試行が独立）を繰り返す状況で、初めての成功まで何回かかるかを記述するのが幾何分布（Geometric Distribution）です。
 
-「 回目に初めて成功する」ためには、「最初の  回が失敗で、 回目が成功」という事象が起きればよいです。期待値 、分散 。
+「 回目に初めて成功する」ためには、「最初の  回が独立に失敗（各回の確率 ）し、 回目が成功（確率 ）」という事象が起きればよいです。各試行の独立性から確率を掛け合わせると  が得られます。期待値 、分散 。
 
  無記憶性（Memoryless Property）：——「すでに  回失敗していても、あと  回以内に成功する確率は最初から変わらない」性質。連続型では指数分布が同じ性質を持ちます。
 
-負の二項分布（Negative Binomial Distribution）は幾何分布の一般化で、「 回成功するまでの試行回数（または失敗回数）」を記述します。幾何分布は  の特殊ケースです。
+負の二項分布（Negative Binomial Distribution）は幾何分布の一般化で、「 回成功するまでの試行回数」を記述します。幾何分布は  の特殊ケースです。期待値 、分散 （幾何分布の  倍になっています）。
 
 多項分布
 
 二項分布が「成功か失敗か（2択）」なら、多項分布（Multinomial Distribution）は「3択以上」への拡張です。 種類の結果が確率 （）で起きる試行を  回繰り返したとき、各結果が  回起きる同時確率：
 
-各周辺分布は二項分布  になります。品質管理（良品・不良A・不良B）や選挙の得票率分析などに使われます。</div>
+各周辺分布は二項分布  になります。なぜかというと、 番目の結果だけに注目すると「 が出る（確率 ）か出ない（確率 ）か」の2択に帰着するためです。品質管理（良品・不良A・不良B）や選挙の得票率分析などに使われます。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
