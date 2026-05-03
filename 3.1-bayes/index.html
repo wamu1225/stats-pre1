@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス</title>
+    <title>ベイズ推定とMCMC | 統計検定 準1級 学習リファレンス</title>
     <meta name="description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
-    <meta property="og:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:title" content="ベイズ推定とMCMC | 統計検定 準1級 学習リファレンス" />
     <meta property="og:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://study-apps.com/stats-pre1/3.1-bayes/" />
     <link rel="canonical" href="https://study-apps.com/stats-pre1/3.1-bayes/" />
     <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ベイズ推定とマルコフ連鎖 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:title" content="ベイズ推定とMCMC | 統計検定 準1級 学習リファレンス" />
     <meta name="twitter:description" content="「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。" />
     <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
@@ -42,19 +42,19 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CTyk1lo8.js"></script>
+    <script type="module" crossorigin src="../assets/index-ExzRUXqZ.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ベイズ推定とマルコフ連鎖","item":"https://study-apps.com/stats-pre1/3.1-bayes/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ベイズ推定とマルコフ連鎖","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？","acceptedAnswer":{"@type":"Answer","text":"事前分布"}},{"@type":"Question","name":"「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？","acceptedAnswer":{"@type":"Answer","text":"ベイズの定理"}},{"@type":"Question","name":"事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？","acceptedAnswer":{"@type":"Answer","text":"共役事前分布"}}]}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ベイズ推定とMCMC","item":"https://study-apps.com/stats-pre1/3.1-bayes/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ベイズ推定とMCMC","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？","acceptedAnswer":{"@type":"Answer","text":"事前分布"}},{"@type":"Question","name":"「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？","acceptedAnswer":{"@type":"Answer","text":"ベイズの定理"}},{"@type":"Question","name":"事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？","acceptedAnswer":{"@type":"Answer","text":"共役事前分布"}}]}]</script>
   </head>
   <body>
     <div id="root"><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
-    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← その他の多変量解析手法</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← 正準相関・対応分析・共分散構造分析</a>
     <a href="/stats-pre1/3.2-timeseries/" style="color:#2563eb;text-decoration:none">時系列解析 →</a>
   </nav>
-  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ベイズ推定とマルコフ連鎖</h1>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ベイズ推定とMCMC</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
 
@@ -142,13 +142,13 @@ MAP推定（Maximum A Posteriori）：事後分布の最頻値（確率が最も
     <li><a href="/stats-pre1/3.2-timeseries/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">時系列解析</a></li>
     <li><a href="/stats-pre1/3.3-markov/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">マルコフ連鎖と確率過程の基礎</a></li>
     <li><a href="/stats-pre1/3.4-contingency/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">分割表の解析</a></li>
-    <li><a href="/stats-pre1/3.5-survival/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">生存時間解析と十分統計量</a></li>
+    <li><a href="/stats-pre1/3.5-survival/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">生存時間解析：カプラン・マイヤーとCox比例ハザード</a></li>
     <li><a href="/stats-pre1/3.6-simulation/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">シミュレーション手法と欠測値</a></li>
   </ul>
 </section>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
-    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← その他の多変量解析手法</a>
+    <a href="/stats-pre1/2.7-multivariate/" style="color:#2563eb;text-decoration:none">← 正準相関・対応分析・共分散構造分析</a>
     <a href="/stats-pre1/3.2-timeseries/" style="color:#2563eb;text-decoration:none">時系列解析 →</a>
   </nav>
   <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">
