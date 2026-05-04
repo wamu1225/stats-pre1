@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BnTBFW8P.js"></script>
+    <script type="module" crossorigin src="../assets/index-CyxnQrYR.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"十分統計量と順序統計量","item":"https://study-apps.com/stats-pre1/1.13-sufficient-stats/"}]},{"@context":"https://schema.org","@type":"Article","headline":"十分統計量と順序統計量","description":"ネイマンの分解定理による十分統計量の特定と、順序統計量の分布理論を学びます。","url":"https://study-apps.com/stats-pre1/1.13-sufficient-stats/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ネイマンの分解定理で「十分統計量 」を使う主な理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"データを  だけに圧縮してもパラメータの推定で情報損失がない"}},{"@type":"Question","name":"ポアソン分布  のi.i.d.標本  における  の十分統計量はどれか？","acceptedAnswer":{"@type":"Answer","text":"（合計）"}},{"@type":"Question","name":"順序統計量  のうち、最小値  の分布の特徴はどれか？","acceptedAnswer":{"@type":"Answer","text":"（全観測値が  を超える確率）"}}]}]</script>
@@ -68,7 +68,7 @@
 
 コインを10回投げて「表：7回、裏：3回」というデータがあります。コインが公平かどうかを知りたいとき、「投げた順番（表裏表表裏…）」は重要でしょうか？——実は「表の合計枚数（7枚）」だけでコインの歪み  を完全に推定できます。このように「それ以外のデータを見ても追加の情報が得られない統計量」を十分統計量（Sufficient Statistic）と呼びます。 が十分統計量なら、 を計算した後は元データを捨てても  の推定で何も失いません。
 
-十分統計量の判定にはネイマンの分解定理（Neyman Factorization Theorem）を使います：尤度関数  が
+十分統計量の判定にはネイマンの分解定理（Neyman Factorization Theorem）を使います。尤度関数（Likelihood Function） とは「パラメータが  のもとで今のデータ  が得られる確率（密度）」を  の関数として見たものです： が
 
 という形に因数分解できるとき（ は  と  にのみ依存し、 は  に依存しない）、 は  についての十分統計量です。
 
