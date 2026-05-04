@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CQl_oh9t.js"></script>
+    <script type="module" crossorigin src="../assets/index-DF4UaoFI.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"正規分布の性質","item":"https://study-apps.com/stats-pre1/1.10-normal-dist/"}]},{"@context":"https://schema.org","@type":"Article","headline":"正規分布の性質","description":"PDF・68-95-99.7ルール・歪度・尖度・MGF——正規分布を深く理解します。","url":"https://study-apps.com/stats-pre1/1.10-normal-dist/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"正規分布  において、平均から  の範囲に含まれるデータの割合に最も近いものはどれか？","acceptedAnswer":{"@type":"Answer","text":"約95%"}},{"@type":"Question","name":"標準正規分布  の尖度（ピアソンの定義）はいくらか？","acceptedAnswer":{"@type":"Answer","text":"3"}},{"@type":"Question","name":"モーメント母関数が  で表される分布は？","acceptedAnswer":{"@type":"Answer","text":"正規分布"}}]}]</script>
@@ -60,14 +60,6 @@
 
 「日本人男性の身長は170cm前後に集中し、極端に低い人も高い人も少ない」——こんな「鐘の形」の分布が統計学のあらゆる場面で登場します。なぜ自然界のデータは正規分布に従うのか、そして正規分布をどう数式で扱うのかを学びます。
 
- 統計学のゴール：「スプーン一杯の味見」のたとえ
-
-私たちが統計学を使うのは、「スプーン一杯の味見から、巨大な鍋全体の味を突き止めたい」からです。
-
-母集団（鍋全体）：本当に知りたい対象（全国民、全製品ロットなど）。
-標本（スプーン一杯）：今、手元にあるデータ。母集団からランダムに取り出したもの。
-推測（ゴール）：母数（パラメータ：母集団の特性を表す定数。 という記号で表します）を、どれくらいの精度で・どれくらいの自信を持って言えるかまで含めて明らかにすること。※「母数」は日常語の「全体の数」とは別の統計用語です。
-
 正規分布：自然界の「鐘の形」
 
 まず、具体的な場面を想像してください。
@@ -82,6 +74,8 @@
 
 （ミュー）は平均（分布の中心）、（シグマ二乗）は分散（データの広がり具合）を表します。この2つだけで形が完全に決まるのが正規分布の大きな特徴です。
 
+ から  という変換をすると、 は平均0・分散1の標準正規分布  に従います（標準化）。確率を求めるときはこの変換で標準正規分布表に帰着させるのが基本操作です。
+
  68-95-99.7のルール：身長の例で覚えよう
 
 正規分布では、平均からどれくらい離れた範囲に何パーセントのデータが入るかが決まっています。先ほどの身長（cm, cm）で確認しましょう：
@@ -90,7 +84,7 @@
 （158〜182cm）：全体の約 95.4%——ほぼ全員。これより外は「珍しい」
 （152〜188cm）：全体の約 99.7%——ほぼ全員がここに収まる（この外側に出る人は わずか 0.3% のレアケース）
 
- 試験頻出：「 の範囲に 95% のデータが入る」という値は、95%信頼区間の公式の出発点です。必ず押さえておきましょう。
+ 試験頻出：「 の範囲に 95% のデータが入る」という値は、後の章で学ぶ95%信頼区間の公式の出発点です。必ず押さえておきましょう。
 
  分布の「クセ」を数値化する2つの指標
 
