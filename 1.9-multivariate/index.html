@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-DHL0X6qm.js"></script>
+    <script type="module" crossorigin src="../assets/index-CiqlYEAX.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"多変量正規分布・変数変換・極値分布","item":"https://study-apps.com/stats-pre1/1.9-multivariate/"}]},{"@context":"https://schema.org","@type":"Article","headline":"多変量正規分布・変数変換・極値分布","description":"多次元正規分布の性質、ヤコビアンによる変数変換、最大値の極限分布を学びます。","url":"https://study-apps.com/stats-pre1/1.9-multivariate/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"多変量正規分布において「相関係数が0」が意味することは何か？","acceptedAnswer":{"@type":"Answer","text":"統計的独立（正規分布に限り成立）"}},{"@type":"Question","name":"確率変数  の線形変換  のとき、 を  で表すとどうなるか？","acceptedAnswer":{"@type":"Answer","text":""}},{"@type":"Question","name":"（平均2、分散9）のとき、 はどんな分布に従うか？","acceptedAnswer":{"@type":"Answer","text":"（標準正規分布）"}}]}]</script>
@@ -66,7 +66,7 @@
 
 多変量正規分布
 
-1変数の正規分布を  次元に拡張したのが多変量正規分布（Multivariate Normal Distribution）です。 次元ベクトル  の PDF は：
+「身長と体重を同時に測ると、身長が高い人ほど体重も重い傾向がある」——2つの変数が互いに関係しながら「正規分布的」に散らばる状況を記述するのが多変量正規分布です。1変数の正規分布を  次元に拡張したもので： 次元ベクトル  の PDF は：
 
 ： 次元平均ベクトル
 ： 分散共分散行列（対角成分が分散、非対角成分が共分散）
@@ -93,7 +93,7 @@
 
  個の独立同分布の観測値の最大値を適切に正規化すると、 で3種類の分布のいずれかに収束します（Fisher-Tippett-Gnedenko の定理）：
 
-ガンベル分布（Gumbel / Type I）：指数型の裾（正規分布・指数分布など）の最大値が収束。。気象・土木分野で最頻出。
+ガンベル分布（Gumbel / Type I）：指数型の裾（正規分布・指数分布など）の最大値が収束。（二重指数の形は「指数的に小さくなる確率が  個の独立な最大値取り合いから生まれる」ことによる）。気象・土木分野で最頻出。
 フレシェ分布（Fréchet / Type II）：べき乗則の重い裾（コーシー・パレートなど）の最大値が収束。金融リスク・地震規模などに使われる。
 ワイブル分布（Weibull / Type III）：有界な分布（一様分布など）の最大値が収束。信頼性工学（部品の寿命）で多用される。
 
