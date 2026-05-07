@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-B9SeKN5G.js"></script>
+    <script type="module" crossorigin src="../assets/index-BJ_Xyq-H.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"相関・偏相関・条件付き期待値","item":"https://study-apps.com/stats-pre1/1.5b-correlation/"}]},{"@context":"https://schema.org","@type":"Article","headline":"相関・偏相関・条件付き期待値","description":"相関係数・偏相関係数・全期待値の法則——多変数の関係を分析する道具を習得します。","url":"https://study-apps.com/stats-pre1/1.5b-correlation/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"偏相関係数  が何を表すかとして正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"の影響を除いた  と  の純粋な相関"}},{"@type":"Question","name":"全分散の法則  の2つの成分はそれぞれ何を表すか？","acceptedAnswer":{"@type":"Answer","text":"グループ内のばらつきの平均とグループ平均のばらつき（分散分析の群内・群間変動に対応）"}},{"@type":"Question","name":"全期待値の法則  の実用的な意味として最も適切なものはどれか？","acceptedAnswer":{"@type":"Answer","text":"グループ（）ごとの平均を、グループの大きさで加重平均したものが全体の平均に等しい"}}]}]</script>
@@ -68,7 +68,7 @@
 
 期待値・分散の章で学んだ共分散  は2変数の「関係の方向と大きさ」を表しますが、単位に依存するという弱点があります。これを標準化（単位を消す）したものがピアソン相関係数（Pearson Correlation Coefficient）です：
 
-値域は 。コーシー・シュワルツ不等式「任意の確率変数  に対して 」を 、 に当てはめると  が得られ、両辺を  で割ると  になります。
+値域は ——標準化（ で割る）によって、どんな強さの線形関係も必ず  の範囲に収まるよう設計されています（コーシー・シュワルツ不等式により  が保証されます）。
 ：完全な正の線形関係、：完全な負の線形関係、：線形関係なし
 
 重要な注意：（無相関）は「独立」を意味しない。たとえば （ が平均0の対称分布）では  でも  と  の間には強い非線形の関係があります。
@@ -110,10 +110,13 @@
 
 この2つを足し合わせると全体のばらつきになります：
 
-具体的に計算してみます（男性 、女性 、比率60%/40%と仮定）：
+具体的に計算してみます（男性 、女性 、比率60%/40%と仮定。全体平均は164.8cm）：
 
 群内変動：
-群間変動：グループ平均170・157、全体平均164.8cm。
+群間変動：各グループ平均と全体平均の差の二乗×比率を合計する
+  - 男性：、
+  - 女性：、
+  - 合計：
 全体の分散：
 
 後の章で学ぶ分散分析（ANOVA）は、この分解を利用して「グループ間の差が偶然では説明できないほど大きいか」を検定します（）。</div>
