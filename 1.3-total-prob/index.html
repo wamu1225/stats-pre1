@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BJ_Xyq-H.js"></script>
+    <script type="module" crossorigin src="../assets/index-DYn_bsTp.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"全確率の定理とベイズの定理","item":"https://study-apps.com/stats-pre1/1.3-total-prob/"}]},{"@context":"https://schema.org","@type":"Article","headline":"全確率の定理とベイズの定理","description":"「結果から原因を推測する」全確率の定理とベイズの定理を具体的な病気検査の例で学びます。","url":"https://study-apps.com/stats-pre1/1.3-total-prob/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズの定理  において、 を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"事前確率"}},{"@type":"Question","name":"工場Xが製品の70%を作り不良率2%、工場Yが30%を作り不良率6%のとき、無作為に1個選んだ製品が不良品である確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}},{"@type":"Question","name":"袋に赤玉4個・青玉2個。1個取り出して戻さずにもう1個取る。両方赤の確率はいくらか？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
@@ -80,7 +80,13 @@
 
 全確率の定理で「全体の確率」が計算できました。次は逆方向——「結果を観測したとき、各原因がどのくらい疑わしいか」を問います。これが統計的推測の核心です。
 
-冒頭の問いに戻りましょう。ある病気の有病率（事前に病気である確率）は1%。検査の感度（病気の人が陽性になる確率）は95%、特異度（健康な人が陰性になる確率）は90%です。検査で陽性と出たとき、本当に病気である確率は？
+冒頭の問いに戻りましょう。3つの数値を整理します：
+
+有病率 1%：検査を受ける人1000人のうち、実際に病気なのは10人
+感度 95%：病気の10人中 9.5人（≈9人）が「陽性」と正しく検出される
+特異度 90%：健康な990人中 891人が「陰性」と正しく判定される → 残り 99人が誤って「陽性」（偽陽性）
+
+つまり「陽性と出た人」は約  人いるのに、本当に病気なのは9人だけ——直感より大幅に低い値になりそうです。ベイズの定理で正確に計算します：
 
 分母を全確率の定理で展開します（健康な人が陽性になる確率 ）：
 
