@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-6b6WIA5I.js"></script>
+    <script type="module" crossorigin src="../assets/index-cn4CZn1K.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第2章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"クラスター分析","item":"https://study-apps.com/stats-pre1/2.5-clustering/"}]},{"@context":"https://schema.org","@type":"Article","headline":"クラスター分析","description":"「似たもの同士をグループに分ける」自動分類の理論と手法を学びます。","url":"https://study-apps.com/stats-pre1/2.5-clustering/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"階層型クラスター分析の結果を可視化する図を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"デンドログラム（樹形図）"}},{"@type":"Question","name":"ウォード法（Ward's Method）がクラスター間距離を定義する方法はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター内平方和の増分を最小化"}},{"@type":"Question","name":"k-means 法で必要な事前指定はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター数"}}]}]</script>
@@ -109,7 +109,7 @@ k-means の注意点：
 
 シルエット係数（Silhouette Score）：各点  について、クラスター内の平均距離  と最近傍クラスターとの平均距離  を使って：
 
- の範囲は  で、1に近いほど適切なクラスタリングです。
+ の範囲は  で、1に近いほど適切なクラスタリングです。目安として平均シルエット係数が 0.5 以上なら概ね良好、0.25 未満なら構造が弱いと判断します。 が負の値の点は、別のクラスターに入った方が自然だったことを示します。
 
 クラスター数の決定にはシルエット係数の平均値、エルボー法、デンドログラムの見た目などを総合して判断します。</div>
   <section style="margin-top:28px">

@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-6b6WIA5I.js"></script>
+    <script type="module" crossorigin src="../assets/index-cn4CZn1K.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"シミュレーション手法と欠測値","item":"https://study-apps.com/stats-pre1/3.6-simulation/"}]},{"@context":"https://schema.org","@type":"Article","headline":"シミュレーション手法と欠測値","description":"ブートストラップ・モンテカルロ・欠測値のメカニズムとEMアルゴリズムを学びます。","url":"https://study-apps.com/stats-pre1/3.6-simulation/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"モンテカルロ法の基本原理はどれか？","acceptedAnswer":{"@type":"Answer","text":"乱数シミュレーションを使って期待値・確率を近似する方法"}},{"@type":"Question","name":"ブートストラップ法の手順として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"元データから復元抽出で  個を取り出し推定量を計算することを多数回繰り返す"}},{"@type":"Question","name":"欠測メカニズム MCAR（Missing Completely At Random）の定義として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"欠測が観測・未観測のどのデータとも独立で完全にランダム"}}]}]</script>
@@ -97,6 +97,8 @@
 逆関数法（Inverse CDF Method）： として  とすれば 。CDF の逆関数が求めやすい分布（指数分布など）に有効です。
 
 複雑な分布には棄却法・重点サンプリング（Importance Sampling）・MCMC（「ベイズ推定とマルコフ連鎖」参照）などを組み合わせます。
+
+乱数生成でデータをシミュレートできるようになりました。しかし現実のデータには「そもそも値が観測されていない（欠測）」という問題が伴います。欠測を無視した分析はバイアスを生む可能性があり、適切な扱い方を知ることが重要です。
 
 欠測値のメカニズム
 
