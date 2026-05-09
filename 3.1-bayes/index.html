@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-cn4CZn1K.js"></script>
+    <script type="module" crossorigin src="../assets/index-Dk1mhxpL.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ベイズ推定とMCMC","item":"https://study-apps.com/stats-pre1/3.1-bayes/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ベイズ推定とMCMC","description":"「今の確信」を「新しいデータ」でアップデートし続ける、進化する統計学。","url":"https://study-apps.com/stats-pre1/3.1-bayes/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ベイズ推定において、データを得る前に設定する母数の確率分布を何と呼ぶ？","acceptedAnswer":{"@type":"Answer","text":"事前分布"}},{"@type":"Question","name":"「事後分布は、事前分布と尤度の積に比例する」という関係を示す定理は？","acceptedAnswer":{"@type":"Answer","text":"ベイズの定理"}},{"@type":"Question","name":"事前分布と事後分布が同じ種類の分布（関数形）になるような、計算上便利な事前分布は？","acceptedAnswer":{"@type":"Answer","text":"共役事前分布"}}]}]</script>
@@ -88,7 +88,7 @@
 
 事後分布を正確に求めようとすると分母の積分が複雑で計算できないことが多々あります。
 
-分母の積分（全ての  にわたって足し合わせる操作）は、パラメータが1つの単純なケースでは解けますが、パラメータが10個・100個と増えると「10次元・100次元の空間で体積を計算する」ことになり、事実上計算不可能になります。そこで登場するのが MCMC（マルコフ連鎖モンテカルロ法）です。
+分母が必要な理由：事後分布は確率なので全体の合計が1でなければなりません。分子（尤度×事前分布）だけでは合計が1を超えることがあるため、全  にわたって足し合わせた分母で割ることで「合計が1になるよう正規化」します。この分母の積分が、パラメータが1つの単純なケースでは解けますが、パラメータが10個・100個と増えると「10次元・100次元の空間で体積を計算する」ことになり、事実上計算不可能になります。そこで登場するのが MCMC（マルコフ連鎖モンテカルロ法）です。
 
 仕組み：分布そのものを求める代わりに、その分布から「サンプル」を大量に抽出してヒストグラムで形を近似する
 マルコフ連鎖（Markov Chain）：「一つ前の状態のみに依存して次の状態が決まる」過程。これによって効率的なサンプリングが可能になる

@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-cn4CZn1K.js"></script>
+    <script type="module" crossorigin src="../assets/index-Dk1mhxpL.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第2章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"ロジスティック回帰と一般化線形モデル","item":"https://study-apps.com/stats-pre1/2.6-glm/"}]},{"@context":"https://schema.org","@type":"Article","headline":"ロジスティック回帰と一般化線形モデル","description":"「Yes/No」のデータを分析するロジスティック回帰とGLMの枠組みを学びます。","url":"https://study-apps.com/stats-pre1/2.6-glm/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ロジスティック回帰でモデル化する「ロジット」とは何か？","acceptedAnswer":{"@type":"Answer","text":"（対数オッズ）"}},{"@type":"Question","name":"ロジスティック回帰の係数  の解釈として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"が1増えるとオッズが  倍になる"}},{"@type":"Question","name":"GLMの「リンク関数」の役割はどれか？","acceptedAnswer":{"@type":"Answer","text":"期待値と線形予測子をつなぐ変換"}}]}]</script>
@@ -101,11 +101,11 @@
 線形予測子：
 リンク関数（Link Function）：——「期待値」を「線形予測子」につなぐ
 
-主なGLMの組み合わせ：
+主なGLMの組み合わせ（各リンク関数は「確率・カウントの値域を実数軸に変換する」自然な選択です）：
 
-正規分布 + 恒等リンク ：通常の線形回帰
-二項分布 + ロジットリンク ：ロジスティック回帰
-ポアソン分布 + 対数リンク ：ポアソン回帰（カウントデータ）
+正規分布 + 恒等リンク ：通常の線形回帰（ はすでに実数）
+二項分布 + ロジットリンク ：ロジスティック回帰（ を実数全体に変換）
+ポアソン分布 + 対数リンク ：ポアソン回帰（カウントデータ； を実数全体に変換し負の予測値を防ぐ）
 
 パラメータ推定はスコア方程式（最尤法）を反復法（IRLS: Iteratively Reweighted Least Squares）で解きます。
 

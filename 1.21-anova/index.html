@@ -42,7 +42,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-cn4CZn1K.js"></script>
+    <script type="module" crossorigin src="../assets/index-Dk1mhxpL.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-DKr98dQJ.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第1章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"分散分析 (ANOVA)","item":"https://study-apps.com/stats-pre1/1.21-anova/"}]},{"@context":"https://schema.org","@type":"Article","headline":"分散分析 (ANOVA)","description":"3つ以上のグループを「一気に」比較する、効率的な判断手法。","url":"https://study-apps.com/stats-pre1/1.21-anova/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"3つ以上の群の平均値の差を同時に検定する手法は？","acceptedAnswer":{"@type":"Answer","text":"分散分析"}},{"@type":"Question","name":"分散分析において、検定に用いられる統計量は？","acceptedAnswer":{"@type":"Answer","text":"F統計量"}},{"@type":"Question","name":"2つの要因を同時に考慮し、それらの相乗効果も評価する分散分析は？","acceptedAnswer":{"@type":"Answer","text":"二元配置"}}]}]</script>
@@ -79,7 +79,7 @@
 群間変動：トッピングの種類による「意味のある差」（3グループの平均 51・59・50 のばらつき）
 群内変動：同じトッピングでも日によって違う「ランダムな誤差」
 
-この  値が大きいほど「トッピングの差 > ただの誤差」となり、本物の差がある証拠になります（ は群の数、 は全データ数。自由度は  と表します）。
+自由度（、）で割る理由：グループ数やデータ数が違っても公平に比較するため、「合計の変動」を「1自由度あたりの変動（平均平方）」に換算します。この比（群間の平均変動 ÷ 群内の平均変動）が大きいほど「グループの差 > ランダムな誤差」となり、本物の差がある証拠です（ は群の数、 は全データ数）。
 
  分散分析の前提条件（試験頻出）：各グループが正規分布に従い、グループ間で分散が等しい（等分散性）こと。
 
