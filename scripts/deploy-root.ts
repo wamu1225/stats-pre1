@@ -2,28 +2,19 @@
  * deploy-root.ts
  * ルートドメイン（study-apps.com / wamu1225.github.io）への同期スクリプト。
  *
- * 【方針変更：2026-05-11】
- * AdSense「有用性の低いコンテンツ」落選を受け、ルートドメインを
- * stats-pre1 のミラーから「学習サイト集約ポータル」に転換した。
+ * 【方針：2026-05-14 更新】
+ * ルートドメインはポータル専用。旧ミラー由来の残骸ディレクトリは
+ * 削除するだけで、noindex リダイレクトページも作成しない。
+ * 存在しない URL は 404 を返すのが正しい。
  *
- * このスクリプトは以下のみを行い、ポータル本体（index.html / about/
- * privacy/ contact/ 等）には一切手を出さない：
- *
+ * このスクリプトが行うこと：
  *   1. ポータル repo の自己修復（remote / branch）
- *   2. stats-pre1 由来の静的ページ（about/glossary/guide/cheatsheet/
- *      faq/randomquiz/privacy）が誤ってルートに残っていれば削除
- *   3. 旧モジュールIDのディレクトリを削除（過去のミラー残骸の掃除）
- *   4. assets / favicon / icons / ads.txt の静的ファイル同期
- *      ※ ポータルは静的HTMLで完結するため assets は不要だが、
- *        既存リンク互換のため stats-pre1 の assets だけは残す。
- *        → 今回の方針では「ポータル側に assets/ は不要」として削除する。
- *   5. 旧モジュールURL（1.1-probability/ など）を、stats-pre1 の同名
- *      モジュールへ canonical する noindex ページに置き換える。
- *   6. robots.txt / sitemap.xml はポータルが管理するため何もしない。
+ *   2. stats-pre1 由来の残骸（about/glossary/guide/cheatsheet/faq/
+ *      randomquiz/privacy/assets）が誤って残っていれば削除
+ *   3. 旧モジュールIDのディレクトリを削除（ミラー残骸の掃除）
+ *   4. ads.txt のみ stats-pre1 ビルドから同期
  *
  * ポータル本体のファイルは wamu1225.github.io リポジトリで直接管理。
- * このスクリプトはあくまで「stats-pre1 のビルドに連動して旧URL互換と
- * 残骸掃除だけ行う最小限の同期処理」。
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -78,6 +69,10 @@ const PORTAL_PROTECTED = new Set<string>([
   'about',
   'privacy',
   'contact',
+  'terms',
+  'faq',
+  'learning-guide',
+  'sitemap',
   'robots.txt',
   'sitemap.xml',
   'ogp.png',
@@ -128,87 +123,16 @@ for (const name of PORTAL_PROTECTED) {
   }
 }
 
-// ── 4. 旧モジュールURLを noindex + canonical=stats-pre1 で復元 ─
-// 旧URL（study-apps.com/1.1-probability/ など）にアクセスされた場合は、
-// noindex を付け、canonical で stats-pre1 の同名モジュールを指す。
-// ユーザーは meta refresh で stats-pre1 に転送される。
-function buildLegacyModuleHtml(modId: string, modTitle: string, modDesc: string) {
-  const targetUrl = `${BASE_URL}/stats-pre1/${modId}/`;
-  const safeTitle = modTitle.replace(/"/g, '&quot;');
-  const safeDesc = modDesc.replace(/"/g, '&quot;');
-  return `<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href="${targetUrl}" />
-    <meta http-equiv="refresh" content="0;url=${targetUrl}" />
-    <title>${safeTitle} | study-apps.com</title>
-    <meta name="description" content="${safeDesc}" />
-    <script>window.location.replace('${targetUrl}');</script>
-    <style>
-      body { font-family: "Yu Gothic UI","Hiragino Sans",sans-serif; max-width:640px; margin:80px auto; padding:0 20px; line-height:1.8; color:#1f2937; }
-      a { color: #2563eb; }
-    </style>
-  </head>
-  <body>
-    <p>このページは <a href="${targetUrl}">${safeTitle}（統計検定 準1級 学習リファレンス）</a> に移動しました。自動で転送されない場合はリンクをクリックしてください。</p>
-    <p><a href="${BASE_URL}/">study-apps.com トップへ</a></p>
-  </body>
-</html>
-`;
-}
-
-let legacyRedirectCount = 0;
-for (const mod of modules) {
-  const dir = path.join(PORTAL_DIR, mod.id);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(
-    path.join(dir, 'index.html'),
-    buildLegacyModuleHtml(mod.id, mod.title, mod.description)
-  );
-  legacyRedirectCount++;
-}
-
-// さらに、過去の URL 互換のために特定の旧ID（現在 stats-g3 に移管されているもの等）も処理
-const extraLegacyIds = [
-  '1.1-clt', '1.2-sampling', '1.3-anova', '1.4-inference',
-];
-for (const oldId of extraLegacyIds) {
-  const dir = path.join(PORTAL_DIR, oldId);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(
-    path.join(dir, 'index.html'),
-    `<!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href="${BASE_URL}/" />
-    <meta http-equiv="refresh" content="0;url=${BASE_URL}/" />
-    <title>ページが移動しました | study-apps.com</title>
-    <script>window.location.replace('${BASE_URL}/');</script>
-  </head>
-  <body><p><a href="${BASE_URL}/">study-apps.com トップへ移動しました</a></p></body>
-</html>
-`
-  );
-  legacyRedirectCount++;
-}
-console.log(`✅ Generated ${legacyRedirectCount} legacy module redirect pages (noindex + canonical to stats-pre1).`);
-
-// ── 5. ads.txt のみ stats-pre1 ビルドから同期（広告審査用） ─
+// ── 4. ads.txt のみ stats-pre1 ビルドから同期（広告審査用） ─
 const adsTxtSrc = path.join(DIST_DIR, 'ads.txt');
 if (fs.existsSync(adsTxtSrc)) {
   fs.copyFileSync(adsTxtSrc, path.join(PORTAL_DIR, 'ads.txt'));
 }
 
-// ── 6. robots.txt / sitemap.xml / index.html / about/ / privacy/ /
-//      contact/ / ogp.png / favicon.svg / icons.svg はポータル側で
-//      手動管理するため、このスクリプトでは一切触らない。
+// ── 5. robots.txt / sitemap.xml / index.html 他ポータルページは
+//      wamu1225.github.io リポジトリで直接管理するため触らない。
 
-// ── 7. git commit & push ─────────────────────────
+// ── 6. git commit & push ─────────────────────────
 const today = new Date().toISOString().split('T')[0];
 console.log('--- Committing and pushing to wamu1225.github.io ---');
 
