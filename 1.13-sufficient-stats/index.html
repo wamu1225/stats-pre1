@@ -28,6 +28,18 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
     <script>
+      // Apply theme before React mounts to prevent flash of wrong theme
+      (function () {
+        try {
+          var t = localStorage.getItem('stats-pre1-theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) { /* noop */ }
+      })();
+    </script>
+    <script>
       // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
       (function () {
         var s = window.location.search;
@@ -42,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-_-v6gh2y.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dk2SJwEt.css">
+    <script type="module" crossorigin src="../assets/index-CBnmCNMF.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CiD_MmED.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"十分統計量と順序統計量","item":"https://study-apps.com/stats-pre1/1.13-sufficient-stats/"}]},{"@context":"https://schema.org","@type":"Article","headline":"十分統計量と順序統計量","description":"ネイマンの分解定理による十分統計量の特定と、順序統計量の分布理論を学びます。","url":"https://study-apps.com/stats-pre1/1.13-sufficient-stats/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ネイマンの分解定理で「十分統計量 」を使う主な理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"データを  だけに圧縮してもパラメータの推定で情報損失がない"}},{"@type":"Question","name":"ポアソン分布  のi.i.d.標本  における  の十分統計量はどれか？","acceptedAnswer":{"@type":"Answer","text":"（合計）"}},{"@type":"Question","name":"順序統計量  のうち、最小値  の分布の特徴はどれか？","acceptedAnswer":{"@type":"Answer","text":"（全観測値が  を超える確率）"}}]}]</script>
   </head>

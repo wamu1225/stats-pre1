@@ -28,6 +28,18 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
      crossorigin="anonymous"></script>
     <script>
+      // Apply theme before React mounts to prevent flash of wrong theme
+      (function () {
+        try {
+          var t = localStorage.getItem('stats-pre1-theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) { /* noop */ }
+      })();
+    </script>
+    <script>
       // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
       (function () {
         var s = window.location.search;
@@ -42,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-_-v6gh2y.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-Dk2SJwEt.css">
+    <script type="module" crossorigin src="../assets/index-CBnmCNMF.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CiD_MmED.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第3章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"標本分布の相互関係 ($t, \\chi^2, F$)","item":"https://study-apps.com/stats-pre1/1.12-sampling/"}]},{"@context":"https://schema.org","@type":"Article","headline":"標本分布の相互関係 ($t, \\chi^2, F$)","description":"母分散がわからない…そんな「現場のジレンマ」を解決する分布たちです。","url":"https://study-apps.com/stats-pre1/1.12-sampling/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"分布において、自由度を無限大に大きくしたときに近づく分布は？","acceptedAnswer":{"@type":"Answer","text":"標準正規分布"}},{"@type":"Question","name":"標準正規分布に従う変数を二乗して足し合わせたものが従う分布は？","acceptedAnswer":{"@type":"Answer","text":"自由度 n のカイ二乗分布"}},{"@type":"Question","name":"F分布  の逆数が従う分布は？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
   </head>
