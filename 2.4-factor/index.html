@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-C8jU4oDM.js"></script>
+    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"因子分析","item":"https://study-apps.com/stats-pre1/2.4-factor/"}]},{"@context":"https://schema.org","@type":"Article","headline":"因子分析","description":"目に見えない「性格」や「価値観」を、アンケートデータからあぶり出す。","url":"https://study-apps.com/stats-pre1/2.4-factor/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"因子分析において「目に見えない共通の要因」を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"共通因子"}},{"@type":"Question","name":"因子負荷量  は何を表すか？","acceptedAnswer":{"@type":"Answer","text":"変数  と因子  の相関の強さ"}},{"@type":"Question","name":"変数の分散のうち共通因子で説明できる割合を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"共通性"}}]}]</script>
@@ -114,7 +114,37 @@
 
  試験頻出：共通性
 
-変数  の分散の中で、共通因子によって説明できる割合が共通性です。各行の因子負荷量の二乗和  として計算されます。共通性が低い変数は、因子には捕捉されていない独自のばらつきが大きいことを意味します。</div>
+変数  の分散の中で、共通因子によって説明できる割合が共通性です。各行の因子負荷量の二乗和  として計算されます。共通性が低い変数は、因子には捕捉されていない独自のばらつきが大きいことを意味します。
+
+回転の使い分け（直交 vs 斜交）
+
+因子回転には大きく分けて2つの流派があります。どちらを選ぶかで「解釈のしやすさ」と「現実の心理学的妥当性」のどちらを優先するかが変わります。
+
+直交回転（Varimax・Quartimax 等）：因子間の相関を 0 に固定する回転。各因子が独立した次元を表すため、解釈が単純で報告も明快です。
+斜交回転（Promax・Oblimin 等）：因子間に相関を許す回転。心理学・社会科学では「言語能力」と「数理能力」のように、潜在因子が互いに相関する場面が多く、現実をより忠実に反映できます。
+
+ 試験頻出：直交 vs 斜交の比較表
+
+ 因子負荷量行列（loading matrix）の読み方
+
+回転後の因子負荷量行列は、行が観測変数・列が因子で構成されます。実務では次の目安で読みます。
+
+：その変数は因子  と関連が強い（採用）
+：境界的・補助的に解釈
+：無視してよい
+
+例えば「責任感がある」「計画的だ」「約束を守る」の 3 項目がすべて第1因子に 0.7 以上の負荷を持ち、他因子では 0.2 未満であれば、第1因子は「誠実性」と命名できます。逆に、複数因子に 0.4 以上の負荷を持つ項目（クロスローディング）は単純構造を乱すため、項目削除や因子数の再検討の対象になります。
+
+PCA vs 因子分析の使い分け
+
+PCAと因子分析はモデル構造が異なるため、目的によって明確に使い分ける必要があります。
+
+PCA：分散を最大化する直交軸を順に抽出する手法。観測変数の線形結合として主成分を作る（合成）。データ圧縮・可視化が主目的。
+因子分析：観測変数の背後に潜む潜在因子を推定する統計モデル。観測変数が「共通因子 + 独自因子」の和で表せると仮定する（モデルベース）。潜在構造の発見が主目的。
+
+ 試験頻出：PCA vs 因子分析の使い分け表
+
+ 判断の目安：「変数を減らしたい・指標を合成したい」なら PCA、「変数の裏にある概念を見つけたい」なら因子分析、と覚えると迷いません。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">

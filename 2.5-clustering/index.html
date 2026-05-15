@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-C8jU4oDM.js"></script>
+    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"クラスター分析","item":"https://study-apps.com/stats-pre1/2.5-clustering/"}]},{"@context":"https://schema.org","@type":"Article","headline":"クラスター分析","description":"「似たもの同士をグループに分ける」自動分類の理論と手法を学びます。","url":"https://study-apps.com/stats-pre1/2.5-clustering/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"階層型クラスター分析の結果を可視化する図を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"デンドログラム（樹形図）"}},{"@type":"Question","name":"ウォード法（Ward's Method）がクラスター間距離を定義する方法はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター内平方和の増分を最小化"}},{"@type":"Question","name":"k-means 法で必要な事前指定はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター数"}}]}]</script>
@@ -123,7 +123,41 @@ k-means の注意点：
 
  の範囲は  で、1に近いほど適切なクラスタリングです。目安として平均シルエット係数が 0.5 以上なら概ね良好、0.25 未満なら構造が弱いと判断します。 が負の値の点は、別のクラスターに入った方が自然だったことを示します。
 
-クラスター数の決定にはシルエット係数の平均値、エルボー法、デンドログラムの見た目などを総合して判断します。</div>
+クラスター数の決定にはシルエット係数の平均値、エルボー法、デンドログラムの見た目などを総合して判断します。
+
+k-means vs 階層クラスタリングの使い分け
+
+クラスター分析は大きく分けて 非階層型（k-means） と 階層型（凝集型） の 2 系統があります。データの規模・目的・ の事前知識に応じて選びます。
+
+k-means：あらかじめクラスター数  を指定し、各点をその重心に割り当てる手法。大規模データに強く、球状（等方的）なクラスタを想定するとき有効です。
+階層クラスタリング：すべてのペア間距離から樹形図（デンドログラム）を構築する手法。 が未知でも構造を視覚化できますが、計算量が大きく大規模データには不向きです。
+
+ 試験頻出：k-means vs 階層の比較表
+
+ 判断の目安：「 がだいたい分かっていて高速に分類したい」なら k-means、「 が分からず、まずデータの構造を眺めたい」なら階層、というのが基本方針です。
+
+の決定方法
+
+k-means では  を事前に決める必要があるため、複数の候補から最適値を選ぶ手続きが重要です。代表的な方法は次の 3 つです。
+
+エルボー法： ごとにクラスタ内平方和（WCSS）を計算し、 を横軸・WCSS を縦軸にプロットします。 を増やすほど WCSS は単調減少しますが、ある  から減り方が緩やかになる「肘の点」を選びます。
+シルエット係数：各  について平均シルエット係数を計算し、最大となる  を選びます。値の範囲は  から  で、 以上なら良好な分離、 未満なら構造が弱いと判断します。
+ギャップ統計量：観測データの WCSS と「一様分布から生成した参照データ」の WCSS の差（ギャップ）が最大となる  を選びます。理論的根拠が比較的厳密で、エルボーが曖昧なときに有用です。
+
+ 数値例：アイリスデータ（がく片・花弁の 4 変数、150 個体）に k-means を適用すると、 で WCSS の減少がカクッと緩やかになり（エルボー点）、平均シルエット係数もおよそ  と  や  より高くなります。実際の品種数（setosa・versicolor・virginica）と一致するため、教科書例として頻出です。
+
+距離尺度の使い分け
+
+クラスター分析の結果は「何をもって似ているとみなすか」——すなわち距離尺度の選択に大きく依存します。
+
+ユークリッド距離 ：最も標準的な距離。連続変数で次元のスケールが揃っているとき（または標準化後）に使います。
+マンハッタン距離 ：座標軸方向の絶対差の和。外れ値の影響を受けにくく、ロバストな分析が必要なときに使います。
+マハラノビス距離 ：共分散行列  で標準化するため、変数間の相関を考慮できます。多変量正規分布を仮定する場面で有効です。
+コサイン類似度 ：ベクトルの「向き」を測る尺度。テキスト分類（TF-IDF ベクトル）や推薦システムなど、大きさより方向が意味を持つ場面で使います。
+
+ 試験頻出：距離尺度の選び方
+
+ 判断の目安：距離尺度の選択は分析結果を左右します。「変数のスケールを揃えたか」「相関を考慮すべきか」「外れ値の影響を抑えたいか」の 3 点を確認してから選ぶと迷いません。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
