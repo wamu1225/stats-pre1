@@ -82,7 +82,8 @@ const PORTAL_PROTECTED = new Set<string>([
 ]);
 
 // stats-pre1 のミラー時代に作られた、もはやポータルでは不要な静的ページ
-const LEGACY_STATIC_PAGES = ['glossary', 'cheatsheet', 'guide', 'faq', 'randomquiz'];
+// 注: faq/ はポータル独自ページとして再構築されたため除外（PORTAL_PROTECTED 参照）
+const LEGACY_STATIC_PAGES = ['glossary', 'cheatsheet', 'guide', 'randomquiz'];
 
 // ── 1. 旧 stats-pre1 ミラーの残骸を削除 ─────────────
 for (const name of LEGACY_STATIC_PAGES) {
@@ -129,11 +130,41 @@ if (fs.existsSync(adsTxtSrc)) {
   fs.copyFileSync(adsTxtSrc, path.join(PORTAL_DIR, 'ads.txt'));
 }
 
-// ── 5. robots.txt / sitemap.xml / index.html 他ポータルページは
-//      wamu1225.github.io リポジトリで直接管理するため触らない。
+// ── 5. portal sitemap.xml の自動生成 ──────────────
+// ポータルおよびサブサイト一覧のサイトマップを今日の日付で再生成。
+// 新しいサブサイト・ポータルページを追加したらこのリストに追記する。
+const today = new Date().toISOString().split('T')[0];
+type SitemapEntry = { path: string; changefreq: string; priority: string };
+const PORTAL_SITEMAP: SitemapEntry[] = [
+  { path: '/',                changefreq: 'weekly',  priority: '1.0' },
+  { path: '/about/',          changefreq: 'monthly', priority: '0.7' },
+  { path: '/privacy/',        changefreq: 'yearly',  priority: '0.4' },
+  { path: '/contact/',        changefreq: 'yearly',  priority: '0.4' },
+  { path: '/sitemap/',        changefreq: 'monthly', priority: '0.4' },
+  { path: '/terms/',          changefreq: 'yearly',  priority: '0.4' },
+  { path: '/learning-guide/', changefreq: 'monthly', priority: '0.8' },
+  { path: '/faq/',            changefreq: 'monthly', priority: '0.7' },
+  { path: '/stats-pre1/',     changefreq: 'weekly',  priority: '0.9' },
+  { path: '/stats-g2/',       changefreq: 'weekly',  priority: '0.9' },
+  { path: '/stats-g3/',       changefreq: 'weekly',  priority: '0.9' },
+  { path: '/mhm-g3/',         changefreq: 'weekly',  priority: '0.9' },
+  { path: '/bizlaw-g3/',      changefreq: 'weekly',  priority: '0.9' },
+  { path: '/densha_asobi/',   changefreq: 'weekly',  priority: '0.8' },
+];
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${PORTAL_SITEMAP.map(e => `  <url>
+    <loc>${BASE_URL}${e.path}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${e.changefreq}</changefreq>
+    <priority>${e.priority}</priority>
+  </url>`).join('\n')}
+</urlset>
+`;
+fs.writeFileSync(path.join(PORTAL_DIR, 'sitemap.xml'), sitemapXml);
+console.log(`✅ Portal sitemap.xml regenerated (${PORTAL_SITEMAP.length} URLs, lastmod=${today})`);
 
 // ── 6. git commit & push ─────────────────────────
-const today = new Date().toISOString().split('T')[0];
 console.log('--- Committing and pushing to wamu1225.github.io ---');
 
 const statusOutput = execSync(`git -C "${PORTAL_DIR}" status --porcelain`, { encoding: 'utf-8' });
@@ -142,7 +173,7 @@ if (!statusOutput.trim()) {
 } else {
   execSync(`git -C "${PORTAL_DIR}" add -A`, { stdio: 'inherit' });
   execSync(
-    `git -C "${PORTAL_DIR}" commit -m "chore: sync legacy module redirects from stats-pre1 (${today})"`,
+    `git -C "${PORTAL_DIR}" commit -m "chore: sync portal (sitemap + ads.txt) from stats-pre1 (${today})"`,
     { stdio: 'inherit' }
   );
   execSync(`git -C "${PORTAL_DIR}" push origin main`, { stdio: 'inherit' });
