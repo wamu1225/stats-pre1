@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BNCV8q1j.js"></script>
+    <script type="module" crossorigin src="../assets/index-DH19WGqo.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第4章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"推定法：最尤推定法とモーメント法","item":"https://study-apps.com/stats-pre1/1.14-estimation/"}]},{"@context":"https://schema.org","@type":"Article","headline":"推定法：最尤推定法とモーメント法","description":"最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.14-estimation/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"尤度関数  の直感的な意味として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"観測データが得られる確率を  の関数として見たもの"}},{"@type":"Question","name":"最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"積の形が和に変わり微分しやすくなるから"}},{"@type":"Question","name":"正規分布  の  の最尤推定量（MLE）はどれか？","acceptedAnswer":{"@type":"Answer","text":"標本平均"}}]}]</script>
@@ -70,7 +70,7 @@
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
 
-「全国のコーヒー愛飲者の平均月額消費を知りたい」——全員を調査するのは不可能なので、100人を無作為抽出してパラメータを推定します。このモジュールでは「どうやってパラメータの値を求めるか」という推定法（estimation method）——最尤推定法とモーメント法——を学びます。推定量の品質評価（不偏性・有効性など）は次のモジュールで扱います。
+「全国のコーヒー愛飲者の平均月額消費を知りたい」——全員を調査するのは不可能なので、100人を無作為抽出してパラメータを推定します。このモジュールでは「どうやってパラメータの値を求めるか」という推定法（estimation method）——最尤推定法とモーメント法——を学びます。推定量の品質評価（不偏性・有効性など）は次のモジュール 1.15 で、深い漸近理論は 1.22 で扱います。
 
  推定量とは「データを使って真の値を当てる関数」
 
@@ -86,19 +86,58 @@
 
 計算上は （対数尤度）を最大化するほうが便利です。独立なデータでは積が和になり、 を解きます（スコア方程式）。
 
+ MLE の標準4ステップ手順
+
+尤度関数を書く：（積の形）
+対数尤度を取る：（和の形——微分が楽）
+スコア方程式： を解く
+2階微分の符号確認：（上に凸＝最大点であること）
+
+具体例：ベルヌーイ試行で MLE を実際に計算する
+
+コインを10回投げて成功5回・失敗5回が観測されたとします。表の確率  の MLE を4ステップで導きます。
+
+ステップ1（尤度）：1回の試行の確率関数は （）。観測 、 より：
+
+ステップ2（対数尤度）：
+
+ステップ3（スコア方程式）： で微分してゼロと置きます。
+
+ステップ4（最大確認）： なので確かに最大点です。一般化すると （標本平均）——「成功比率を素直に推定値とせよ」という直感と一致します。
+
  試験頻出：正規分布  の MLE は （標本平均）、（ 分の1——不偏ではない）。
 
  最小二乗法との関係：正規誤差モデルでは MLE と最小二乗推定（OLS）は一致します。残差二乗和の最小化と対数尤度の最大化が同じ解を与えます。
 
 モーメント法
 
-MLEは「データがもっとも得られやすいパラメータを選ぶ」という強力な方法ですが、計算が複雑になる場合があります。より直感的な方法がモーメント法（Method of Moments）で、「母集団のモーメントと標本モーメントが等しい」とおいてパラメータを決める方法です。 次母モーメント  を標本モーメント  で置き換えて連立方程式を解きます。
+MLEは強力ですが、計算が複雑になる場合があります。より直感的な方法がモーメント法（Method of Moments, MM）で、「母集団のモーメントと標本モーメントが等しい」とおいてパラメータを決める方法です。 次母モーメント  を標本モーメント  で置き換えて連立方程式を解きます。
 
-計算がシンプルで直感的ですが、一般に MLE より効率（精度）が劣ります。パラメータが1つなら1次モーメント（期待値）だけで解け、「標本平均を期待値の式と等置する」という操作になります。
+パラメータが1つなら1次モーメント（期待値）だけで解け、「標本平均を期待値の式と等置する」という操作になります。
 
-例：ポアソン分布  のモーメント推定量—— を  と等置するだけで 。この場合 MLE とも一致します。
+指数分布  のモーメント推定量の導出：
 
-例：指数分布 （）のモーメント推定量—— より 。</div>
+指数分布  の理論平均は 。これを標本平均  と等置します：
+
+例えば故障時間データ  時間なら （時間あたり0.5回の故障率）。MLE も同じ  になり、両者が一致します。
+
+ポアソン分布 ： なので 。これも MLE と一致します。
+
+使い分けの表：なぜ MLE が一般に優れるか
+
+ なぜ MLE はモーメント法より優れているのか
+
+MLE は十分統計量（モジュール 1.13 参照）を完全に活用するため、データの情報を最大限引き出します。その結果、漸近的に最小分散（クラーメル・ラオ下限を達成）を実現します——これは MLE が最良の推定量であることの理論的根拠です。漸近的性質の詳細は次のモジュール 1.15、フィッシャー情報量との関係は 1.22 漸近理論で扱います。
+
+MLE がうまく機能しない例
+
+MLE は強力ですが、すべての場面で万能というわけではありません。注意すべき場合があります。
+
+一様分布 ：尤度  は不連続で、スコア方程式が使えません。（標本最大値）が MLE になります——「微分してゼロ」が常に使えるわけではない点に注意。
+多峰性の対数尤度：複数の極大点があるとき、数値最適化が誤った極大に収束する危険があります。複数の初期値で計算するなどの工夫が必要です。
+正則条件の違反：パラメータ空間の境界で MLE が定義されないことがあります（例：分散パラメータが0近傍）。
+
+ 試験頻出：MLE が「微分してゼロ」で常に求まるとは限らない——特に一様分布のように尤度関数の台がパラメータに依存する場合は注意。具体的な処理（最大値や最小値が MLE）は試験頻出です。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">

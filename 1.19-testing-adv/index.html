@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BNCV8q1j.js"></script>
+    <script type="module" crossorigin src="../assets/index-DH19WGqo.js"></script>
     <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第4章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"検定の理論：ネイマン・ピアソンと大標本検定","item":"https://study-apps.com/stats-pre1/1.19-testing-adv/"}]},{"@context":"https://schema.org","@type":"Article","headline":"検定の理論：ネイマン・ピアソンと大標本検定","description":"最良の棄却域の理論（NP定理）と尤度比・ワルド・スコア検定——検定の数学的基礎を学びます。","url":"https://study-apps.com/stats-pre1/1.19-testing-adv/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ネイマン・ピアソンの基本定理が与える「最良の棄却域」とはどれか？","acceptedAnswer":{"@type":"Answer","text":"有意水準  のもとで検出力が最大になる棄却域"}},{"@type":"Question","name":"尤度比検定統計量  は  のもとで漸近的にどの分布に従うか？","acceptedAnswer":{"@type":"Answer","text":"分布（自由度 = 制約の数）"}},{"@type":"Question","name":"ワルド型検定とスコア検定の主な違いはどれか？","acceptedAnswer":{"@type":"Answer","text":"ワルド型は制約なし MLE を使い、スコア検定は制約あり評価点でスコアを測る"}}]}]</script>
@@ -70,7 +70,7 @@
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">最良の棄却域の理論（NP定理）と尤度比・ワルド・スコア検定——検定の数学的基礎を学びます。</p>
   <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
 
-「推定・検定の基礎」で P値・過誤・検出力を学びました。ここでは「なぜその棄却域が最良なのか」という理論的根拠——ネイマン・ピアソンの基本定理——と、大標本で使う3種類の検定（尤度比・ワルド・スコア）を学びます。
+前のモジュール 1.18 で P値・過誤・検出力を学びました。ここでは「なぜその棄却域が最良なのか」という理論的根拠——ネイマン・ピアソンの基本定理——と、大標本で使う3種類の検定（尤度比・ワルド・スコア）を学びます。漸近的な分布論（ウィルクスの定理など）は 1.22 漸近理論で扱います。
 
  検定の「設計問題」
 
@@ -84,23 +84,51 @@
 
 単純仮説  対  の検定で、棄却域を次のように設定します：
 
-なぜ「差」でなく「比」か——比は「 のもとでデータが得られやすい度合い」を「 のもとで得られやすい度合い」で正規化するため、各データ点の絶対的な確率の大小に左右されません。この尤度比が大きい領域で棄却する検定が、水準  のもとで最大の検出力を持ちます（最強力検定）。
+ なぜ「差」でなく「比」なのか
+
+尤度比  は、各データ点ごとに「 のもとでの確率」と「 のもとでの確率」の掛け算で蓄積されます（独立データなら積）：
+
+これに対し差  は複数データの情報を統合できません（足し算では各データ点の証拠の強さが希釈される）。比なら  をとれば  となり、各観測の証拠が加算的に積み上がります——これがネイマン・ピアソンが比を選ぶ理論的理由です。
+
+具体例：正規分布の NP 検定
+
+ で  vs  を考えます。 個の独立観測  の尤度比は：
+
+ という棄却条件を  で書き直すと：
+
+つまり「標本平均が閾値  を超える」という直感的な棄却域になります。 は水準  から  を満たす値、例えば 、 なら 。尤度比という抽象的な条件が、実用的な統計量（標本平均）の閾値検定と等価になるのが NP 定理の威力です。
 
  試験頻出：「一様最強力検定（UMP test）」とは、片側仮説に対して水準  を守りつつすべての対立仮説で検出力が最大になる検定です。両側検定では一般にUMPは存在しません。
 
-尤度比検定・ワルド型検定・スコア検定
+複合仮説の大標本検定：3つのアプローチ
 
-複合仮説（）に対する大標本検定の3つのアプローチを押さえます。
+複合仮説（）に対する大標本検定には3種類あります。
 
-尤度比検定（Likelihood Ratio Test）：制約あり・なしの最尤推定量の尤度の比：
+尤度比検定（Likelihood Ratio Test, LRT）：制約あり・なしの最尤推定量の尤度の比：
 
  は制約の数（自由度）。 倍の対数をとるのは、この変換によってウィルクスの定理が「漸近的にちょうど  分布になる」と保証できる係数だからです。
 
 ワルド型検定（Wald Test）：MLE  がどのくらい  から離れているかで判断：
 
-スコア検定（Score Test / Lagrange Multiplier Test）：「 が真なら  でスコア関数（対数尤度の微分）はゼロになるはず」という性質を使います。制約なし MLE を計算せずに済む利点があります。
+スコア検定（Score Test / Lagrange Multiplier Test）：「 が真なら  でスコア関数（対数尤度の微分）はゼロになるはず」という性質を使います。
 
-3つは漸近的に同値ですが、小標本での性質は異なります。</div>
+3つの検定の使い分け表
+
+ 漸近的同値性
+
+大標本（）ではこの3つはすべて漸近的に同じ  分布に従い、検出力も同等になります。これを「3つの漸近的同値性」と呼びます。詳細はモジュール 1.22 のウィルクスの定理で扱います。
+
+ 試験頻出：小標本では3つの性質が異なります。一般に LRT が最も信頼され、計算コストを抑えたい場面ではスコア検定、信頼区間との対応を見たい場面ではワルド検定が選ばれます。
+
+関連モジュールへの導線
+
+1.18 P値・検定の誤り・検出力：第1種の過誤 ・検出力  など本モジュールの前提を扱います。
+1.22 漸近理論：ウィルクスの定理（ の証明）、フィッシャー情報量との関係を扱います。
+1.20 検定の実践：本モジュールで学んだ理論を、適合度検定・ノンパラメトリック検定などに応用します。
+
+ ネイマン・ピアソンの歴史的意義
+
+NP定理（1933年）は「検定の最良性を客観的に評価する」枠組みを与えました。それ以前は検定の選択が経験的でしたが、NP定理以降は「水準  と対立仮説を与えれば最強力検定が一意に決まる」と数学的に保証されるようになりました。これが現代統計学における頻度論的推測（Frequentist inference）の理論的支柱です。</div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
