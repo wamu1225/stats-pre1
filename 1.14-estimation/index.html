@@ -54,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
+    <script type="module" crossorigin src="../assets/index-CC7MCfK-.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CoIqJWPW.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第4章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"推定法：最尤推定法とモーメント法","item":"https://study-apps.com/stats-pre1/1.14-estimation/"}]},{"@context":"https://schema.org","@type":"Article","headline":"推定法：最尤推定法とモーメント法","description":"最尤推定量（MLE）とモーメント推定量の導出と性質——「もっともらしいパラメータ」の求め方を学びます。","url":"https://study-apps.com/stats-pre1/1.14-estimation/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"尤度関数  の直感的な意味として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"観測データが得られる確率を  の関数として見たもの"}},{"@type":"Question","name":"最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"積の形が和に変わり微分しやすくなるから"}},{"@type":"Question","name":"正規分布  の  の最尤推定量（MLE）はどれか？","acceptedAnswer":{"@type":"Answer","text":"標本平均"}}]}]</script>
   </head>
@@ -106,6 +106,8 @@
 ステップ4（最大確認）： なので確かに最大点です。一般化すると （標本平均）——「成功比率を素直に推定値とせよ」という直感と一致します。
 
  試験頻出：正規分布  の MLE は （標本平均）、（ 分の1——不偏ではない）。
+
+ よくある誤解：「MLE は最良の推定量だから必ず不偏」と思いがちですが、誤りです。正規分布の  の MLE は  で  となり真値より小さい方向に偏っています。MLE が保証するのは「漸近的な有効性」であって、有限標本での不偏性ではありません。
 
  最小二乗法との関係：正規誤差モデルでは MLE と最小二乗推定（OLS）は一致します。残差二乗和の最小化と対数尤度の最大化が同じ解を与えます。
 

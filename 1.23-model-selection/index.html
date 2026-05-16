@@ -54,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
+    <script type="module" crossorigin src="../assets/index-CC7MCfK-.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CoIqJWPW.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第4章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"KL情報量・AIC・クロスバリデーション","item":"https://study-apps.com/stats-pre1/1.23-model-selection/"}]},{"@context":"https://schema.org","@type":"Article","headline":"KL情報量・AIC・クロスバリデーション","description":"モデル間の「ズレ」を定量化するKL情報量から、AIC・CVによるモデル選択まで学びます。","url":"https://study-apps.com/stats-pre1/1.23-model-selection/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"KL情報量  の性質として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"常に0以上で、等号は  のとき"}},{"@type":"Question","name":"AIC =  において、 の項が存在する理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"パラメータ数が多いモデルへのペナルティ（過学習の防止）"}},{"@type":"Question","name":"AIC と BIC を比較したとき、BIC の特徴として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"BIC のペナルティ項は  でサンプルが多いほど大きくなる"}}]}]</script>
   </head>
@@ -99,6 +99,8 @@ AIC が KL情報量の近似である導出
  は最大対数尤度（フィットの良さ）、 は複雑さへのペナルティ。AIC が小さいモデルが優れています。 の項は「パラメータを推定したことによる尤度の楽観的バイアス」を補正するために加わります。
 
  試験頻出：AIC の比較は同一データに対して複数モデルを評価するときに使います。AIC の絶対値の意味はなく、相対比較が重要です。
+
+ よくある誤解：「AIC が小さいモデル = 絶対的に良いモデル」と思いがちですが、誤りです。AIC は同一データ・同一目的変数で計算された複数モデル間の相対指標で、絶対値そのものに意味はありません（対数尤度の定数項や標本サイズの取り方で値が変わる）。「AIC = 200 のモデルは AIC = 5000 のモデルより25倍良い」のような解釈はできません。意味があるのは「差 」で、慣例として  ならほぼ同等、 なら明確に劣ると判断します。
 
 AIC と BIC の違い
 

@@ -54,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
+    <script type="module" crossorigin src="../assets/index-CC7MCfK-.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CoIqJWPW.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"クラスター分析","item":"https://study-apps.com/stats-pre1/2.5-clustering/"}]},{"@context":"https://schema.org","@type":"Article","headline":"クラスター分析","description":"「似たもの同士をグループに分ける」自動分類の理論と手法を学びます。","url":"https://study-apps.com/stats-pre1/2.5-clustering/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"階層型クラスター分析の結果を可視化する図を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"デンドログラム（樹形図）"}},{"@type":"Question","name":"ウォード法（Ward's Method）がクラスター間距離を定義する方法はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター内平方和の増分を最小化"}},{"@type":"Question","name":"k-means 法で必要な事前指定はどれか？","acceptedAnswer":{"@type":"Answer","text":"クラスター数"}}]}]</script>
   </head>
@@ -111,7 +111,7 @@ k-means の注意点：
 クラスター数  を事前に決める必要がある（エルボー法で判断）
 スケールの影響を受けるため、事前に標準化が必要
 
- エルボー法： を変えてクラスター内平方和をプロットし、減少が急から緩やかになる「肘の部分」を適切な  とします。
+ よくある誤解：「k-means はどんなデータにも使える万能な手法」と思いがちですが、誤りです。k-means は目的関数（クラスター内平方和の最小化）の構造上、等方的（球状）でほぼ同じ大きさのクラスターを仮定しています。そのため(a) 細長く伸びた帯状のクラスター（例：三日月型）、(b) クラスター間で大きさやばらつきが大きく異なる場合、(c) 階層構造を持つデータ、では明らかに不適切なグループ分けになります。このような場合は密度ベースの DBSCAN や階層クラスタリング（ウォード法・単リンク法）を検討します。
 
 距離行列とクラスター評価
 

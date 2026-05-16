@@ -54,8 +54,8 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CORhLhby.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-B4XX2CPU.css">
+    <script type="module" crossorigin src="../assets/index-CC7MCfK-.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-CoIqJWPW.css">
   <meta name="robots" content="index, follow" />
   <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"因子分析","item":"https://study-apps.com/stats-pre1/2.4-factor/"}]},{"@context":"https://schema.org","@type":"Article","headline":"因子分析","description":"目に見えない「性格」や「価値観」を、アンケートデータからあぶり出す。","url":"https://study-apps.com/stats-pre1/2.4-factor/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"因子分析において「目に見えない共通の要因」を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"共通因子"}},{"@type":"Question","name":"因子負荷量  は何を表すか？","acceptedAnswer":{"@type":"Answer","text":"変数  と因子  の相関の強さ"}},{"@type":"Question","name":"変数の分散のうち共通因子で説明できる割合を何と呼ぶか？","acceptedAnswer":{"@type":"Answer","text":"共通性"}}]}]</script>
   </head>
@@ -94,6 +94,8 @@
  PCAとの違い
 
 主成分分析（PCA）と因子分析（FA）は似ていますが、出発点が正反対です。PCAは「全分散（共通分散＋独自分散）を最大限保持する軸を探す」——データを圧縮することが目的です。一方、因子分析は「共通分散（変数間に共通する部分）だけを説明する潜在因子を探す」——隠れた原因を発見することが目的です。PCAの出力は「主成分（軸）」であるのに対し、FAの出力は「因子（解釈可能な概念）」です。
+
+ よくある誤解：「PCA と因子分析は本質的に同じで、計算手順が少し違うだけ」と思いがちですが、誤りです。両者はモデルの向きが正反対です。PCA は「観測変数 → 合成された主成分」と観測値から軸を作るのに対し、因子分析は「潜在因子 → 観測変数」と潜在変数モデルとして観測値を生成します。因子分析にはモデル誤差項 （独自因子）が明示的に存在し、PCA にはありません。「結果が似ているから」と混同すると、独自因子の解釈や因子回転の意味を見失います。
 
 因子回転：解釈しやすい因子へ
 
