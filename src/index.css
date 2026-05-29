@@ -3,11 +3,11 @@
 @import 'katex/dist/katex.min.css';
 
 :root {
-  /* Notion Brand */
-  --primary: #0075de;
-  --primary-hover: #005bab;
-  --primary-light: #f2f9ff;
-  --primary-text: #097fe8;
+  /* Primary — academic indigo (statistics/scholarly) */
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+  --primary-light: #eef2ff;
+  --primary-text: #3730a3;
 
   /* Backgrounds — warm neutrals */
   --bg: #ffffff;
@@ -45,15 +45,51 @@
   --success-bg: #f0fdf4;
 }
 
+/* ── Dark Mode ─────────────────────────────────── */
+:root[data-theme='dark'] {
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-light: #312e81;
+  --primary-text: #c7d2fe;
+
+  --bg: #0f172a;
+  --bg-warm: #1e293b;
+  --bg-hover: rgba(255, 255, 255, 0.05);
+  --card-bg: #1e293b;
+
+  --text: rgba(255, 255, 255, 0.95);
+  --text-body: rgba(255, 255, 255, 0.9);
+  --text-muted: #94a3b8;
+  --text-placeholder: #64748b;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-solid: #334155;
+
+  --shadow-card: rgba(0,0,0,0.3) 0px 4px 18px,
+                 rgba(0,0,0,0.2) 0px 2px 7.8px;
+  --shadow-btn: 0px 1px 2px rgba(0,0,0,0.3);
+
+  --success-bg: #14532d;
+}
+
+/* KaTeX in dark mode */
+:root[data-theme='dark'] .katex { color: var(--text-body); }
+:root[data-theme='dark'] table { color: var(--text-body); }
+:root[data-theme='dark'] table th { background: var(--bg-warm); }
+:root[data-theme='dark'] table tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+
 body {
   margin: 0;
   font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo UI', sans-serif;
   background-color: var(--bg);
   color: var(--text-body);
-  line-height: 1.5;
+  line-height: 1.75;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+
+html { scroll-behavior: smooth; }
 
 .container {
   max-width: 800px;

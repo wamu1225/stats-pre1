@@ -44,7 +44,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, sh
   const isCompact = question.options.every(opt => opt.length < 15);
 
   return (
-    <div className="card" style={{ border: '1px solid #e2e8f0' }}>
+    <div className="card" style={{ border: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>理解度チェック</h3>
@@ -54,23 +54,23 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, sh
           質問 {currentIdx + 1} / {questions.length}
         </span>
       </div>
-      
+
       <div style={{ marginBottom: '1.25rem', fontSize: '1rem', fontWeight: 600, lineHeight: 1.6 }}>
         {renderContent(question.question)}
       </div>
-      
+
       <div className={clsx("quiz-options", isCompact && "compact")}>
         {question.options.map((opt, i) => (
           <button
             key={`${currentIdx}-${i}`}
             className="btn"
             style={{
-              background: selected === i 
+              background: selected === i
                 ? (i === question.correctAnswer ? '#22c55e' : '#ef4444')
-                : '#ffffff',
+                : 'var(--card-bg)',
               color: selected === i ? 'white' : 'var(--text)',
               justifyContent: 'space-between',
-              border: selected === i ? 'none' : '1px solid #e2e8f0',
+              border: selected === i ? 'none' : '1px solid var(--border)',
               textAlign: 'left',
               padding: '0.75rem 1rem',
               boxShadow: 'none',
@@ -92,7 +92,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, sh
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}
+            style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--bg-warm)', borderRadius: '0.5rem', border: '1px solid var(--border)' }}
           >
             <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
               <strong style={{ color: isCorrect ? '#22c55e' : '#ef4444' }}>

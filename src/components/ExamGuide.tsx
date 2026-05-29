@@ -4,13 +4,13 @@ import { CheckCircle2, Target, Lightbulb } from 'lucide-react';
 
 const Section: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <div className="card" style={{ marginBottom: '1.5rem' }}>
-    <h3 style={{ margin: '0 0 1rem', fontSize: '1rem', color: 'var(--primary)', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem' }}>{title}</h3>
+    <h3 style={{ margin: '0 0 1rem', fontSize: '1rem', color: 'var(--primary)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>{title}</h3>
     {children}
   </div>
 );
 
 const Row: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.4rem 0', borderBottom: '1px solid #f1f5f9', gap: '1rem' }}>
+  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.4rem 0', borderBottom: '1px solid var(--border)', gap: '1rem' }}>
     <span style={{ fontSize: '0.85rem', color: '#64748b', flexShrink: 0 }}>{label}</span>
     <span style={{ fontSize: '0.85rem', fontWeight: 600, textAlign: 'right' }}>{value}</span>
   </div>
@@ -27,7 +27,7 @@ const PhaseCard: React.FC<{ phase: string; title: string; body: string }> = ({ p
 );
 
 const BookItem: React.FC<{ title: string; stars: number; tag: string; desc: string }> = ({ title, stars, tag, desc }) => (
-  <div style={{ padding: '0.6rem 0', borderBottom: '1px solid #f1f5f9' }}>
+  <div style={{ padding: '0.6rem 0', borderBottom: '1px solid var(--border)' }}>
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
       <span style={{ fontSize: '0.85rem', fontWeight: 700 }}>{title}</span>
       <span className="stat-badge" style={{ background: stars === 5 ? '#ef4444' : '#3b82f6', color: 'white', fontSize: '0.65rem' }}>{tag}</span>
@@ -37,8 +37,8 @@ const BookItem: React.FC<{ title: string; stars: number; tag: string; desc: stri
 );
 
 const ResourceItem: React.FC<{ name: string; type: string; desc: string }> = ({ name, type, desc }) => (
-  <div style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9', alignItems: 'flex-start' }}>
-    <span className="stat-badge" style={{ flexShrink: 0, fontSize: '0.65rem', background: '#f1f5f9', color: '#475569' }}>{type}</span>
+  <div style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', alignItems: 'flex-start' }}>
+    <span className="stat-badge" style={{ flexShrink: 0, fontSize: '0.65rem', background: 'var(--bg-warm)', color: '#475569' }}>{type}</span>
     <div>
       <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{name}</div>
       <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>{desc}</div>
@@ -49,7 +49,7 @@ const ResourceItem: React.FC<{ name: string; type: string; desc: string }> = ({ 
 const FieldItem: React.FC<{ priority: '最重要' | '重要' | '標準'; title: string; detail: string }> = ({ priority, title, detail }) => {
   const color = priority === '最重要' ? '#ef4444' : priority === '重要' ? '#f59e0b' : '#3b82f6';
   return (
-    <div style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', alignItems: 'flex-start' }}>
       <span className="stat-badge" style={{ flexShrink: 0, fontSize: '0.65rem', background: color, color: 'white' }}>{priority}</span>
       <div>
         <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{title}</div>
@@ -163,7 +163,7 @@ export const ExamGuide: React.FC = () => (
         { icon: '🗂', title: '優先度をつけて学習する', body: '多変量解析と統計ソフト出力解釈を最優先に。ただしCBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。' },
         { icon: '📐', title: '数学的基礎を固める', body: '行列の積・逆行列・固有値分解の理解が多変量解析の理解を劇的に加速させる。' },
       ].map(a => (
-        <div key={a.title} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9' }}>
+        <div key={a.title} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
           <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{a.icon}</span>
           <div>
             <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.15rem' }}>{a.title}</div>

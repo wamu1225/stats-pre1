@@ -59,7 +59,7 @@ export const MathDisplay: React.FC<Props> = ({ formula, block }) => {
       {activeSymbols.length > 0 && (
         <div className="symbol-guide" style={{ 
           marginTop: '1rem', 
-          background: '#f8fafc', 
+          background: 'var(--bg-warm)', 
           padding: '0.75rem', 
           borderRadius: '0.5rem', 
           fontSize: '0.75rem',

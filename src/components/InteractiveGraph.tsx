@@ -145,7 +145,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
     if (type === 'multico') {
       const instability = corr > 0.95 ? (corr - 0.95) * 100 : 0;
       return (
-        <div style={{ height: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', borderRadius: '12px' }}>
+        <div style={{ height: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-warm)', borderRadius: '12px' }}>
           <div className="stat-badge" style={{ marginBottom: '1rem', background: corr > 0.9 ? '#ef4444' : '#22c55e', color: 'white' }}>
             VIF: {(1 / (1 - corr * corr)).toFixed(1)}
           </div>

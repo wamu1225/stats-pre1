@@ -9,16 +9,40 @@ import { Quiz } from './components/Quiz';
 import { TermText } from './components/TermGlossary';
 import { DistributionSelector } from './components/DistributionSelector';
 import { ExamGuide } from './components/ExamGuide';
-import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, CheckCircle2, XCircle } from 'lucide-react';
+import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, CheckCircle2, XCircle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const chapterNames: Record<number, string> = {
-  1: '確率分布と推測統計',
-  2: '多変量解析',
-  3: '高度なモデリング',
+  1: '確率論の基礎',
+  2: '確率分布',
+  3: '標本分布と漸近理論',
+  4: '統計的推測',
+  5: '多変量解析',
+  6: 'ベイズ・確率過程・発展',
+};
+
+const chapterColors: Record<number, { bg: string; text: string; accent: string; light: string }> = {
+  1: { bg: '#e0e7ff', text: '#3730a3', accent: '#4338ca', light: '#eef2ff' },  // インディゴ（基礎）
+  2: { bg: '#cffafe', text: '#155e75', accent: '#0891b2', light: '#ecfeff' },  // シアン（分布）
+  3: { bg: '#d1fae5', text: '#065f46', accent: '#059669', light: '#ecfdf5' },  // 緑（標本・漸近）
+  4: { bg: '#fef3c7', text: '#92400e', accent: '#d97706', light: '#fffbeb' },  // 琥珀（推測）
+  5: { bg: '#ede9fe', text: '#5b21b6', accent: '#7c3aed', light: '#f5f3ff' },  // 紫（多変量）
+  6: { bg: '#fce7f3', text: '#9d174d', accent: '#db2777', light: '#fdf2f8' },  // ピンク（発展）
 };
 
 const PROGRESS_KEY = 'stats-pre1-progress';
+const THEME_KEY = 'stats-pre1-theme';
+
+function loadTheme(): 'light' | 'dark' {
+  try {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'dark' || saved === 'light') return saved;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch { return 'light'; }
+}
+function saveTheme(t: 'light' | 'dark') {
+  try { localStorage.setItem(THEME_KEY, t); } catch { /* noop */ }
+}
 
 interface ProgressEntry { score: number; total: number; completedAt: string; }
 type Progress = Record<string, ProgressEntry>;
@@ -44,6 +68,14 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [progress, setProgress] = useState<Progress>(loadProgress);
+  const [theme, setTheme] = useState<'light' | 'dark'>(loadTheme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    saveTheme(theme);
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => setTheme(t => t === 'light' ? 'dark' : 'light'), []);
 
   // Random quiz state
   const [rqQuestions, setRqQuestions] = useState<{ q: typeof modules[0]['quiz'][0]; moduleTitle: string; moduleId: string }[]>([]);
@@ -224,12 +256,12 @@ function App() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「帰無仮説が正しい確率が3%」</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「帰無仮説が正しいと仮定したとき、この結果が偶然起きる確率が3%」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', verticalAlign: 'top' }}>「帰無仮説が正しい確率が3%」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', verticalAlign: 'top' }}>「帰無仮説が正しいと仮定したとき、この結果が偶然起きる確率が3%」</td>
                     </tr>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>「P=0.03は効果が大きいことを示す」</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', verticalAlign: 'top' }}>P値はサンプルサイズに影響される。効果の大きさは<strong>効果量</strong>（コーエンの d など）で測る</td>
+                    <tr style={{ background: 'var(--bg-warm)' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', verticalAlign: 'top' }}>「P=0.03は効果が大きいことを示す」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', verticalAlign: 'top' }}>P値はサンプルサイズに影響される。効果の大きさは<strong>効果量</strong>（コーエンの d など）で測る</td>
                     </tr>
                   </tbody>
                 </table>
@@ -247,19 +279,19 @@ function App() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>煮玉子</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>52, 48, 55, 51, 49…</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>51万円</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>煮玉子</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>52, 48, 55, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>51万円</td>
                     </tr>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>チャーシュー</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>58, 61, 57, 60, 59…</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700, color: '#1d4ed8' }}>59万円</td>
+                    <tr style={{ background: 'var(--bg-warm)' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>チャーシュー</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>58, 61, 57, 60, 59…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700, color: '#1d4ed8' }}>59万円</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>メンマ</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>50, 52, 48, 51, 49…</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>50万円</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>メンマ</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>50, 52, 48, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>50万円</td>
                     </tr>
                   </tbody>
                 </table>
@@ -270,21 +302,21 @@ function App() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                   <thead>
                     <tr>
-                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: 'var(--bg-warm)', padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'left', fontWeight: 800 }}></th>
                       <th style={{ background: '#f0fdf4', color: '#166534', padding: '0.6rem 0.75rem', border: '1px solid #bbf7d0', textAlign: 'left', fontWeight: 800 }}>H₀ が真（本当は差なし）</th>
                       <th style={{ background: '#fef2f2', color: '#991b1b', padding: '0.6rem 0.75rem', border: '1px solid #fecaca', textAlign: 'left', fontWeight: 800 }}>H₀ が偽（本当は差あり）</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>棄却（差ありと判断）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第1種の過誤 α（冤罪）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>棄却（差ありと判断）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第1種の過誤 α（冤罪）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>棄却しない（差なし）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第2種の過誤 β（見逃し）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>棄却しない（差なし）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#f0fdf4', color: '#166534' }}>正解 ✓</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#fef2f2', color: '#991b1b', fontWeight: 700 }}>第2種の過誤 β（見逃し）</td>
                     </tr>
                   </tbody>
                 </table>
@@ -295,21 +327,21 @@ function App() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                   <thead>
                     <tr>
-                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: 'var(--bg-warm)', padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'left', fontWeight: 800 }}></th>
                       <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>予測: スパム</th>
                       <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'left', fontWeight: 800 }}>予測: 正常</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>実際: スパム</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TP）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b' }}>見逃し（FN）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>実際: スパム</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TP）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#fef2f2', color: '#991b1b' }}>見逃し（FN）</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>実際: 正常</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#fef2f2', color: '#991b1b' }}>誤検知（FP）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TN）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>実際: 正常</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#fef2f2', color: '#991b1b' }}>誤検知（FP）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', background: '#f0fdf4', color: '#166534', fontWeight: 700 }}>正解（TN）</td>
                     </tr>
                   </tbody>
                 </table>
@@ -320,26 +352,26 @@ function App() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                   <thead>
                     <tr>
-                      <th style={{ background: '#f8fafc', padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'left', fontWeight: 800 }}></th>
+                      <th style={{ background: 'var(--bg-warm)', padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'left', fontWeight: 800 }}></th>
                       <th style={{ background: '#eff6ff', color: '#1d4ed8', padding: '0.6rem 0.75rem', border: '1px solid #bfdbfe', textAlign: 'center', fontWeight: 800 }}>主成分分析（PCA）</th>
                       <th style={{ background: '#fdf4ff', color: '#7e22ce', padding: '0.6rem 0.75rem', border: '1px solid #e9d5ff', textAlign: 'center', fontWeight: 800 }}>因子分析</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>目的</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>データの次元圧縮・要約</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>潜在因子の発見</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>目的</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>データの次元圧縮・要約</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>潜在因子の発見</td>
                     </tr>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>方向性</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>観測変数 → 主成分</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>因子 → 観測変数（因果的解釈）</td>
+                    <tr style={{ background: 'var(--bg-warm)' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>方向性</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>観測変数 → 主成分</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>因子 → 観測変数（因果的解釈）</td>
                     </tr>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>扱う分散</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>ノイズを含む「全分散」</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', textAlign: 'center' }}>共通性（共分散部分）だけ</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>扱う分散</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>ノイズを含む「全分散」</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', textAlign: 'center' }}>共通性（共分散部分）だけ</td>
                     </tr>
                   </tbody>
                 </table>
@@ -357,14 +389,14 @@ function App() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>二項分布（成功/失敗）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ベータ分布</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>ベータ分布</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>二項分布（成功/失敗）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>ベータ分布</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>ベータ分布</td>
                     </tr>
-                    <tr style={{ background: '#f8fafc' }}>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ポアソン分布（回数）</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0' }}>ガンマ分布</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid #e2e8f0', fontWeight: 700 }}>ガンマ分布</td>
+                    <tr style={{ background: 'var(--bg-warm)' }}>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>ポアソン分布（回数）</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>ガンマ分布</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>ガンマ分布</td>
                     </tr>
                   </tbody>
                 </table>
@@ -411,6 +443,8 @@ function App() {
     const result: React.ReactNode[] = [];
     let currentList: React.ReactNode[] = [];
     let currentOL: React.ReactNode[] = [];
+    let tableLines: string[] = [];
+    let h2Counter = 0;
     const flushList = (key: string) => {
       if (currentList.length > 0) {
         result.push(<ul key={`list-${key}`}>{currentList}</ul>);
@@ -421,32 +455,76 @@ function App() {
         currentOL = [];
       }
     };
+    const flushTable = (key: string) => {
+      if (tableLines.length < 2) { tableLines = []; return; }
+      const rows = tableLines.map(r =>
+        r.split('|').slice(1, -1).map(cell => cell.trim())
+      );
+      const isSep = (r: string[]) => r.every(c => /^[-:]+$/.test(c));
+      const headerRow = rows[0];
+      const dataRows = rows.slice(1).filter(r => !isSep(r));
+      result.push(
+        <div key={`table-${key}`} className="content-table-wrap">
+          <table className="content-table">
+            <thead>
+              <tr>{headerRow.map((cell, ci) => <th key={ci}>{parseInlineContent(cell)}</th>)}</tr>
+            </thead>
+            <tbody>
+              {dataRows.map((row, ri) => (
+                <tr key={ri}>{row.map((cell, ci) => <td key={ci}>{parseInlineContent(cell)}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+      tableLines = [];
+    };
     lines.forEach((line, lineIdx) => {
       const trimmedLine = line.trim();
       const key = `line-${lineIdx}`;
+      if (trimmedLine.startsWith('|')) {
+        flushList(key);
+        tableLines.push(trimmedLine);
+        return;
+      }
+      if (tableLines.length > 0) { flushTable(key); }
       if (trimmedLine.startsWith('#### ')) { flushList(key); result.push(<h4 key={key} className="content-h4">{parseInlineContent(trimmedLine.slice(5))}</h4>); return; }
       if (trimmedLine.startsWith('### ')) { flushList(key); result.push(<h3 key={key} className="content-h3">{parseInlineContent(trimmedLine.slice(4))}</h3>); return; }
-      if (trimmedLine.startsWith('## ')) { flushList(key); result.push(<h2 key={key} className="content-h2">{parseInlineContent(trimmedLine.slice(3))}</h2>); return; }
+      if (trimmedLine.startsWith('## ')) { flushList(key); const sectionId = `section-${h2Counter++}`; result.push(<h2 key={key} id={sectionId} className="content-h2">{parseInlineContent(trimmedLine.slice(3))}</h2>); return; }
       if (trimmedLine.startsWith('---')) { flushList(key); result.push(<hr key={key} className="content-hr" />); return; }
       if (trimmedLine.startsWith('- ')) { if (currentOL.length > 0) { result.push(<ol key={`ol-${key}`}>{currentOL}</ol>); currentOL = []; } currentList.push(<li key={`li-${lineIdx}`}>{parseInlineContent(trimmedLine.slice(2))}</li>); return; }
       const olMatch = trimmedLine.match(/^(\d+)\. (.*)$/);
       if (olMatch) { if (currentList.length > 0) { result.push(<ul key={`list-${key}`}>{currentList}</ul>); currentList = []; } currentOL.push(<li key={`oli-${lineIdx}`}>{parseInlineContent(olMatch[2])}</li>); return; }
       if (trimmedLine === '') { flushList(key); return; }
       flushList(key);
+      // 💡 と 🎯 と ⚠️ で始まる行を視覚的なコールアウトに
+      if (trimmedLine.startsWith('💡 ')) {
+        result.push(<p key={key} className="content-p callout-tip">{parseInlineContent(trimmedLine.slice(2))}</p>);
+        return;
+      }
+      if (trimmedLine.startsWith('🎯 ')) {
+        result.push(<p key={key} className="content-p callout-target">{parseInlineContent(trimmedLine.slice(2))}</p>);
+        return;
+      }
+      if (trimmedLine.startsWith('⚠️ ')) {
+        result.push(<p key={key} className="content-p callout-warning">{parseInlineContent(trimmedLine.slice(3))}</p>);
+        return;
+      }
       result.push(<p key={key} className="content-p">{parseInlineContent(line)}</p>);
     });
+    flushTable('final');
     flushList('final');
     return <>{result}</>;
   }, [parseInlineContent]);
 
   const filteredModules = useMemo(() => {
-    if (!searchQuery) return modules;
-    const q = searchQuery.toLowerCase();
-    return modules.filter(m =>
-      m.title.toLowerCase().includes(q) ||
-      m.content.toLowerCase().includes(q) ||
-      m.description.toLowerCase().includes(q)
+    const base = !searchQuery ? modules : modules.filter(m =>
+      m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
+    // 章順にソート（同一章内は配列の元順序を維持＝stable sort）
+    return [...base].sort((a, b) => a.chapter - b.chapter);
   }, [searchQuery]);
 
   const activeModule = useMemo(() => modules.find(m => m.id === activeModuleId), [activeModuleId]);
@@ -457,18 +535,56 @@ function App() {
   }, [activeModuleId]);
   const findModulesByTerm = useCallback((termId: string) => modules.filter(m => m.content.includes(`[[term:${termId}]]`)), []);
 
+  // モジュール目次（h2 見出しを抽出）
+  const tocItems = useMemo(() => {
+    if (!activeModule) return [];
+    const items: { id: string; text: string }[] = [];
+    let counter = 0;
+    for (const line of activeModule.content.split('\n')) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('## ') && !trimmed.startsWith('### ')) {
+        items.push({
+          id: `section-${counter++}`,
+          text: trimmed.slice(3).replace(/\*\*/g, '').replace(/\$[^$]+\$/g, '').trim(),
+        });
+      }
+    }
+    return items;
+  }, [activeModule]);
+
+  // スクロール進捗とトップ戻るボタン
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    if (!activeModuleId) { setScrollProgress(0); setShowBackToTop(false); return; }
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      setScrollProgress(progress);
+      setShowBackToTop(scrollTop > 500);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeModuleId]);
+
   const completedCount = modules.filter(m => progress[m.id]).length;
   const totalModules = modules.length;
 
   return (
     <div className="container" style={{ maxWidth: activeModuleId ? '800px' : view === 'glossary' ? '1000px' : '800px' }}>
       <header className="header">
-        <h1 className="title" onClick={() => updateModuleId(null)} style={{ cursor: 'pointer' }}>統計検定 準1級</h1>
+        <div className="brand" onClick={() => updateModuleId(null)}>
+          <Sigma className="brand-icon" strokeWidth={1.5} />
+          <h1 className="title">統計検定 準1級</h1>
+        </div>
         <p className="subtitle">学習リファレンス</p>
       </header>
 
       {!activeModuleId && (
-        <nav style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.5rem', flexWrap: 'wrap' }}>
+        <nav style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexWrap: 'wrap' }}>
           <button onClick={() => switchView('dashboard')} className={`nav-tab ${view === 'dashboard' ? 'active' : ''}`}>
             <LayoutDashboard size={18} /> ロードマップ
             {completedCount > 0 && <span className="nav-progress-badge">{completedCount}/{totalModules}</span>}
@@ -485,6 +601,9 @@ function App() {
           <button onClick={() => switchView('guide')} className={`nav-tab ${view === 'guide' ? 'active' : ''}`}>
             <Target size={18} /> 試験ガイド
           </button>
+          <button onClick={toggleTheme} className="nav-tab" title={theme === 'light' ? 'ダークモードに切替' : 'ライトモードに切替'} aria-label="テーマ切替">
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
         </nav>
       )}
 
@@ -493,11 +612,83 @@ function App() {
           {activeModuleId ? (
             <motion.div key={activeModuleId} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
               <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
-              <div className="card">
-                <span className="badge-chapter">Chapter {activeModule?.chapter}</span>
+              <div
+                className="scroll-progress"
+                style={{
+                  width: `${scrollProgress}%`,
+                  background: chapterColors[activeModule?.chapter ?? 1].accent,
+                }}
+              />
+              <div
+                className="card"
+                style={{
+                  borderTop: `4px solid ${chapterColors[activeModule?.chapter ?? 1].accent}`,
+                  '--ch-accent': chapterColors[activeModule?.chapter ?? 1].accent,
+                } as React.CSSProperties}
+              >
+                <span style={{
+                  background: chapterColors[activeModule?.chapter ?? 1].bg,
+                  color: chapterColors[activeModule?.chapter ?? 1].text,
+                  fontSize: '0.6875rem', fontWeight: 700,
+                  padding: '3px 10px', borderRadius: '9999px',
+                  display: 'inline-block', marginBottom: '0.5rem',
+                }}>Chapter {activeModule?.chapter}：{chapterNames[activeModule?.chapter ?? 1]}</span>
                 <h2 style={{ marginTop: '0.5rem' }}>{parseContent(activeModule?.title || '')}</h2>
+                {tocItems.length > 2 && (
+                  <details className="module-toc" open>
+                    <summary>
+                      <ListOrdered size={14} />
+                      このモジュールの目次（{tocItems.length}セクション）
+                    </summary>
+                    <ol>
+                      {tocItems.map(item => (
+                        <li key={item.id}>
+                          <a href={`#${item.id}`}>{item.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
+                )}
                 <div className="content-body">{activeModule && parseContent(activeModule.content)}</div>
+                {activeModule?.keyFormulas && activeModule.keyFormulas.length > 0 && (
+                  <div className="module-key-formulas">
+                    <h3 className="module-key-formulas-title">
+                      <span className="module-key-formulas-icon">🔑</span>
+                      このモジュールの主要公式
+                    </h3>
+                    {activeModule.keyFormulas.map((kf, i) => (
+                      <div key={i} className="module-key-formula-row">
+                        <span className="module-key-formula-label">{kf.label}</span>
+                        <div className="module-key-formula-math"><MathDisplay formula={kf.formula} /></div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="module-bottom-nav">
+                  <button
+                    className="btn-back-to-list"
+                    onClick={() => updateModuleId(null)}
+                  >
+                    <ChevronLeft size={16} /> モジュール一覧へ
+                  </button>
+                  {nextModule && (
+                    <button
+                      className="btn-next-module"
+                      onClick={() => updateModuleId(nextModule.id)}
+                    >
+                      次のモジュール：{nextModule.title} <ArrowRight size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
+              <button
+                className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                style={{ background: chapterColors[activeModule?.chapter ?? 1].accent }}
+                aria-label="ページトップへ戻る"
+              >
+                <ChevronUp size={22} />
+              </button>
               <div style={{ marginTop: '2rem' }}>
                 <Quiz
                   key={activeModuleId}
@@ -515,7 +706,7 @@ function App() {
                     </div>
                   )}
                   <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-                    <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: '#f1f5f9', color: 'var(--text)', border: '1px solid #e2e8f0' }}>
+                    <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: 'var(--bg-warm)', color: 'var(--text)', border: '1px solid var(--border)' }}>
                       <ChevronLeft size={16} /> 一覧に戻る
                     </button>
                     {nextModule && (
@@ -579,7 +770,7 @@ function App() {
                 </div>
               ) : rqQuestions.length > 0 ? (
                 /* Quiz screen */
-                <div className="card" style={{ border: '1px solid #e2e8f0' }}>
+                <div className="card" style={{ border: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                     <div>
                       <h3 style={{ margin: 0, fontSize: '1.1rem' }}>全範囲クイズ</h3>
@@ -598,10 +789,10 @@ function App() {
                         key={`rq-${rqIdx}-${i}`}
                         className="btn"
                         style={{
-                          background: rqSelected === i ? (i === rqQuestions[rqIdx].q.correctAnswer ? '#22c55e' : '#ef4444') : '#ffffff',
+                          background: rqSelected === i ? (i === rqQuestions[rqIdx].q.correctAnswer ? '#22c55e' : '#ef4444') : 'var(--card-bg)',
                           color: rqSelected === i ? 'white' : 'var(--text)',
                           justifyContent: 'space-between',
-                          border: rqSelected === i ? 'none' : '1px solid #e2e8f0',
+                          border: rqSelected === i ? 'none' : '1px solid var(--border)',
                           textAlign: 'left',
                           padding: '0.75rem 1rem',
                           boxShadow: 'none',
@@ -618,7 +809,7 @@ function App() {
                   <AnimatePresence>
                     {rqSelected !== null && (
                       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                        style={{ marginTop: '1.5rem', padding: '1rem', background: '#f8fafc', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
+                        style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--bg-warm)', borderRadius: '0.5rem', border: '1px solid var(--border)' }}>
                         <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
                           <strong style={{ color: rqIsCorrect ? '#22c55e' : '#ef4444' }}>{rqIsCorrect ? '正解！' : '不正解...'}</strong><br />
                           {parseContent(rqQuestions[rqIdx].q.explanation)}
@@ -680,26 +871,71 @@ function App() {
               <div className="roadmap-grid">
                 {filteredModules.reduce<React.ReactNode[]>((acc, m, idx) => {
                   const prev = filteredModules[idx - 1];
+                  const cc = chapterColors[m.chapter] ?? chapterColors[1];
                   if (!prev || prev.chapter !== m.chapter) {
+                    if (prev) acc.push(<div key={`ch-end-${prev.chapter}`} style={{ marginBottom: '1.5rem' }} />);
+                    const chMods = modules.filter(x => x.chapter === m.chapter);
+                    const chDone = chMods.filter(x => progress[x.id]).length;
                     acc.push(
-                      <div key={`ch-${m.chapter}`} className="chapter-header">
-                        <span className="badge-chapter" style={{ fontSize: '0.7rem' }}>Chapter {m.chapter}</span>
-                        <h3 className="content-h3" style={{ margin: '0.25rem 0 0' }}>{chapterNames[m.chapter]}</h3>
+                      <div key={`ch-${m.chapter}`} className="chapter-header"
+                        style={{
+                          '--ch-accent': cc.accent,
+                          '--ch-bg': cc.bg,
+                        } as React.CSSProperties}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{
+                            background: cc.accent, color: '#fff',
+                            fontSize: '0.65rem', fontWeight: 700,
+                            padding: '2px 8px', borderRadius: '9999px', letterSpacing: '0.05em',
+                          }}>Chapter {m.chapter}</span>
+                          <span style={{ fontSize: '0.7rem', color: cc.text, fontWeight: 600 }}>
+                            {chDone}/{chMods.length}モジュール
+                          </span>
+                        </div>
+                        <h3 style={{
+                          margin: '0.35rem 0 0', fontSize: '1.05rem', fontWeight: 800,
+                          color: cc.text, letterSpacing: '-0.2px',
+                        }}>{chapterNames[m.chapter]}</h3>
                       </div>
                     );
                   }
                   const p = progress[m.id];
+                  const hasGraph = m.content.includes('[[interactive:');
+                  // 文字数から学習時間を概算（日本語600文字/分）
+                  const charCount = m.content.length;
+                  const readMin = Math.max(5, Math.round(charCount / 600));
                   acc.push(
-                    <div key={m.id} className="card-module" onClick={() => updateModuleId(m.id)}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span className="badge-chapter">Chapter {m.chapter}</span>
+                    <div key={m.id} className="card-module" onClick={() => updateModuleId(m.id)}
+                      style={{
+                        '--ch-accent': cc.accent,
+                        '--ch-light': cc.light,
+                        borderRadius: idx === filteredModules.length - 1 || filteredModules[idx + 1]?.chapter !== m.chapter
+                          ? '0 0 var(--radius-card) var(--radius-card)' : '0',
+                        marginBottom: 0,
+                        borderTop: 'none',
+                      } as React.CSSProperties}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                          <span style={{
+                            background: cc.bg, color: cc.text,
+                            fontSize: '0.6875rem', fontWeight: 600,
+                            padding: '2px 8px', borderRadius: '9999px',
+                          }}>Ch{m.chapter}</span>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>約{readMin}分</span>
+                          {hasGraph && (
+                            <span title="インタラクティブグラフあり" style={{ fontSize: '0.7rem' }} aria-label="グラフ">📊</span>
+                          )}
+                          {m.keyFormulas && m.keyFormulas.length > 0 && (
+                            <span title="主要公式あり" style={{ fontSize: '0.7rem' }} aria-label="公式">🔑</span>
+                          )}
+                        </div>
                         {p && (
                           <span className={`progress-badge ${p.score === p.total ? 'perfect' : ''}`}>
                             {p.score === p.total ? '✓ ' : ''}{p.score}/{p.total}点
                           </span>
                         )}
                       </div>
-                      <h4>{parseContent(m.title)}</h4>
+                      <h4 style={{ margin: '0.4rem 0 0.2rem', fontSize: '0.95rem' }}>{parseContent(m.title)}</h4>
                       <div className="module-desc">{parseContent(m.description)}</div>
                     </div>
                   );

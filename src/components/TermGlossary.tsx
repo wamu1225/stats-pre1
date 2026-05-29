@@ -77,7 +77,7 @@ export const TermText: React.FC<Props> = ({ termId, children, onNavigate, render
               </div>
 
               {data.formula && (
-                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
+                <div style={{ background: 'var(--bg-warm)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
                   <MathDisplay formula={data.formula} block />
                 </div>
               )}
@@ -89,7 +89,7 @@ export const TermText: React.FC<Props> = ({ termId, children, onNavigate, render
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
                     {data.relatedTerms.map(rtid => (
-                      <button key={rtid} onClick={() => switchTerm(rtid)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '4px', padding: '0.2rem 0.4rem', fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer' }}>
+                      <button key={rtid} onClick={() => switchTerm(rtid)} style={{ background: 'var(--bg-warm)', border: 'none', borderRadius: '4px', padding: '0.2rem 0.4rem', fontSize: '0.75rem', color: 'var(--primary)', cursor: 'pointer' }}>
                         {glossary[rtid]?.term || rtid}
                       </button>
                     ))}
