@@ -184,6 +184,7 @@ export function buildAboutHtml(base: string): string {
       <li><strong>用語集</strong>：準1級頻出用語の解説（英語名・難易度レベル付き）</li>
       <li><strong>公式集</strong>：全分野の重要公式・定理を一覧（印刷対応）</li>
       <li><strong>試験ガイド</strong>：試験概要・出題範囲・学習の進め方</li>
+      <li><strong>検定・分布の使い分けガイド</strong>：状況からどの分布・検定・手法を使うか逆引きできる早見表</li>
       <li><strong>全範囲ランダムクイズ</strong>：全モジュールから横断的に出題</li>
     </ul>
   </section>
@@ -239,6 +240,7 @@ ${moduleListHtml}
     <a href="${base}/glossary/" style="color:#2563eb">用語集</a>
     <a href="${base}/cheatsheet/" style="color:#2563eb">公式集</a>
     <a href="${base}/guide/" style="color:#2563eb">試験ガイド</a>
+    <a href="${base}/usecase/" style="color:#2563eb">検定・分布の使い分けガイド</a>
     <a href="${base}/faq/" style="color:#2563eb">よくある質問</a>
     <a href="${base}/randomquiz/" style="color:#2563eb">ランダムクイズ</a>
     <a href="${base}/about/" style="color:#2563eb">サイトについて</a>

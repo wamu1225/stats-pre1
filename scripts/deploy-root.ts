@@ -171,6 +171,7 @@ const SITES_REGISTRY: Site[] = [
       { label: '用語集', subpath: 'glossary/' },
       { label: '公式集', subpath: 'cheatsheet/' },
       { label: '試験ガイド', subpath: 'guide/' },
+      { label: '検定・分布の使い分けガイド', subpath: 'usecase/' },
       { label: 'よくある質問', subpath: 'faq/' },
       { label: '全範囲ランダムクイズ', subpath: 'randomquiz/' },
       { label: 'サイトについて', subpath: 'about/' },

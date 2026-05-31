@@ -3,6 +3,7 @@ import * as path from 'path';
 import sharp from 'sharp';
 import { modules } from '../src/data/modules';
 import { glossary } from '../src/data/glossary';
+import { buildUsecaseHtml } from '../src/data/usecaseGuide';
 import {
   buildCheatsheetHtml,
   buildGuideHtml,
@@ -247,6 +248,11 @@ ${glossaryTermsHtml}
     description: '統計検定準1級の試験概要・出題範囲・学習の進め方を解説。合格基準・試験時間・推奨学習時間など受験に必要な情報をまとめました。',
     bodyHtml: buildGuideHtml(BASE)
   },
+  usecase: {
+    title: '検定・分布の使い分けガイド',
+    description: 'どんなデータ・問いにどの確率分布／検定／多変量解析を使うかを状況から逆引きできる早見表。二項・ポアソン・正規分布、t検定・分散分析・χ²検定、重回帰・主成分分析などの選び方を整理。',
+    bodyHtml: buildUsecaseHtml(BASE)
+  },
   about: {
     title: 'サイトについて',
     description: '統計検定準1級 学習リファレンスについて。サイトの目的・コンテンツ構成・利用方法を説明します。',
@@ -335,7 +341,7 @@ const moduleUrls = modules.map(m =>
 ).join('\n');
 
 const staticUrls = staticPageNames.map(p =>
-  `  <url>\n    <loc>${BASE_URL}/${p}/</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p === 'faq' || p === 'cheatsheet' || p === 'guide' ? '0.7' : '0.6'}</priority>\n  </url>`
+  `  <url>\n    <loc>${BASE_URL}/${p}/</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p === 'faq' || p === 'cheatsheet' || p === 'guide' || p === 'usecase' ? '0.7' : '0.6'}</priority>\n  </url>`
 ).join('\n');
 
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
