@@ -195,6 +195,11 @@ export function buildAboutHtml(base: string): string {
   </section>
 
   <section style="margin-bottom:28px">
+    <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:10px">編集・制作方針</h2>
+    <p style="color:#444">本サイトのコンテンツは、統計検定の公式の出題範囲（試験要項）や一般に流通している統計学の教科書・専門書を参照しつつ、運営者が内容を一から再構成し、初学者がつまずきやすい点を補う形で独自に解説しています。他サイトの文章をそのまま転載することはありません。図解・インタラクティブなグラフ・確認クイズはすべて本サイト向けに独自に制作したものです。内容の誤りや古くなった情報に気づいた場合は、お問い合わせを受けて随時見直し・修正します。</p>
+  </section>
+
+  <section style="margin-bottom:28px">
     <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:10px">お問い合わせ</h2>
     <p style="color:#444">内容の誤り・ご意見・ご要望は<a href="https://forms.gle/ccMv7oKwz6ysDHBe6" target="_blank" rel="noopener noreferrer" style="color:#2563eb">こちらのGoogleフォーム</a>からお願いします。統計的な誤りのご指摘は特に歓迎しています。</p>
   </section>
