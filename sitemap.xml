@@ -247,6 +247,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://study-apps.com/stats-pre1/usecase/</loc>
+    <lastmod>2026-05-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://study-apps.com/stats-pre1/about/</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
