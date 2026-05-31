@@ -425,6 +425,31 @@ ${sitemapEntries.map(e => `  <url>
 fs.writeFileSync(path.join(PORTAL_DIR, 'sitemap.xml'), sitemapXml);
 console.log(`✅ Portal sitemap.xml regenerated (${sitemapEntries.length} URLs, lastmod=${today})`);
 
+// ── 5a-2. portal sitemap-index.xml（ポータル＋全サブサイトの sitemap を束ねる）──
+const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${BASE_URL}/sitemap.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>
+${SITES_REGISTRY.map((s) => `  <sitemap>
+    <loc>${BASE_URL}/${s.id}/sitemap.xml</loc>
+    <lastmod>${today}</lastmod>
+  </sitemap>`).join('\n')}
+</sitemapindex>
+`;
+fs.writeFileSync(path.join(PORTAL_DIR, 'sitemap-index.xml'), sitemapIndexXml);
+console.log(`✅ Portal sitemap-index.xml regenerated (${SITES_REGISTRY.length + 1} sitemaps)`);
+
+// ── 5a-3. portal robots.txt（サイトマップインデックスを参照・自動維持）──
+const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: ${BASE_URL}/sitemap-index.xml
+`;
+fs.writeFileSync(path.join(PORTAL_DIR, 'robots.txt'), robotsTxt);
+console.log('✅ Portal robots.txt regenerated (points to sitemap-index.xml)');
+
 // ── 5b. portal 404.html の自動生成 ──────────────
 const notFoundHtml = `<!doctype html>
 <html lang="ja">
