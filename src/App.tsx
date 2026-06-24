@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -240,6 +240,20 @@ function App() {
                   <div className="shell shell-mid"><span className="shell-label">個人の差 (クラス)</span><div className="shell shell-inner">データ</div></div>
                 </div>
               </div>
+            );
+            if (part === '[[venn-inclusion]]') return (
+              <figure key={key} className="venn-figure">
+                <svg viewBox="0 0 340 200" role="img" aria-label="包除原理のベン図：A と B の重なりを一度だけ引く" className="venn-svg">
+                  <circle cx="132" cy="92" r="78" fill="#4338ca" fillOpacity={0.22} stroke="#4338ca" strokeWidth={1.5} />
+                  <circle cx="208" cy="92" r="78" fill="#d97706" fillOpacity={0.22} stroke="#d97706" strokeWidth={1.5} />
+                  <text x="94" y="99" textAnchor="middle" fontSize={22} fontWeight={700} fill="#3730a3">A</text>
+                  <text x="246" y="99" textAnchor="middle" fontSize={22} fontWeight={700} fill="#b45309">B</text>
+                  <text x="170" y="99" textAnchor="middle" fontSize={13} fontWeight={700} fill="#1f2937">A∩B</text>
+                </svg>
+                <figcaption className="venn-caption">
+                  和事象 A∪B は、重なり A∩B を一度だけ引く：P(A∪B) = P(A) + P(B) − P(A∩B)。単純に足すと、重なり部分を二重に数えてしまうため。
+                </figcaption>
+              </figure>
             );
             if (part.startsWith('[[interactive:')) {
               const typeMatch = part.match(/\[\[interactive:(.*?)\]\]/);
