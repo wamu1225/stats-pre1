@@ -8,6 +8,7 @@ import { MathDisplay } from './components/MathDisplay';
 import { Quiz } from './components/Quiz';
 import { TermText } from './components/TermGlossary';
 import { DistributionSelector } from './components/DistributionSelector';
+import { ModuleSidebar } from './components/ModuleSidebar';
 import { ExamGuide } from './components/ExamGuide';
 import { buildUsecaseHtml } from './data/usecaseGuide';
 import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, CheckCircle2, XCircle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
@@ -616,6 +617,7 @@ function App() {
         <AnimatePresence mode="wait">
           {activeModuleId ? (
             <motion.div key={activeModuleId} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
+              <ModuleSidebar modules={modules} activeId={activeModuleId} onSelect={updateModuleId} chapterNames={chapterNames} chapterColors={chapterColors} />
               <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
               <div
                 className="scroll-progress"
