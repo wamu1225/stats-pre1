@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -292,6 +292,40 @@ function App() {
                 </figcaption>
               </figure>
             );
+            if (part === '[[ci-coverage]]') {
+              const trueX = 182;
+              const intervals: [number, number][] = [
+                [150, 214], [138, 202], [160, 226], [148, 210], [134, 198],
+                [168, 230], [120, 168], [156, 220], [142, 206], [164, 228],
+                [130, 194], [152, 216], [146, 208], [170, 232], [136, 200],
+                [158, 222], [144, 204], [162, 226], [140, 202], [154, 218],
+              ];
+              return (
+                <figure key={key} className="venn-figure">
+                  <svg viewBox="0 0 360 220" role="img" aria-label="信頼区間の被覆：別々の標本から作った95%信頼区間と、固定された真の値θ。約95%が真値をまたぐ" className="venn-svg ci-svg">
+                    <line x1={trueX} y1={22} x2={trueX} y2={210} stroke="#dc2626" strokeWidth={1.5} strokeDasharray="4 3" />
+                    <text x={trueX} y={15} textAnchor="middle" fontSize={12} fontWeight={700} fill="#b91c1c">θ（真の値・固定）</text>
+                    {intervals.map(([lo, hi], idx) => {
+                      const y = 30 + idx * 9;
+                      const covers = lo <= trueX && trueX <= hi;
+                      const color = covers ? '#4338ca' : '#dc2626';
+                      const cx = (lo + hi) / 2;
+                      return (
+                        <g key={idx}>
+                          <line x1={lo} y1={y} x2={hi} y2={y} stroke={color} strokeWidth={2} />
+                          <line x1={lo} y1={y - 3} x2={lo} y2={y + 3} stroke={color} strokeWidth={2} />
+                          <line x1={hi} y1={y - 3} x2={hi} y2={y + 3} stroke={color} strokeWidth={2} />
+                          <circle cx={cx} cy={y} r={1.7} fill={color} />
+                        </g>
+                      );
+                    })}
+                  </svg>
+                  <figcaption className="venn-caption">
+                    各横線は、別々の標本から作った95%信頼区間（中央の点が標本平均 x̄）。真の値 θ は1つに決まっていて動かない（赤い縦線）。標本ごとに区間のほうが左右に揺れる。この手順をくり返すと約95%の区間が θ をまたぐ（青）が、たまに外す（赤）。「95%」はこの手順の長期的な成功率であって、ある1つの区間に θ が入る確率ではない。
+                  </figcaption>
+                </figure>
+              );
+            }
             if (part.startsWith('[[interactive:')) {
               const typeMatch = part.match(/\[\[interactive:(.*?)\]\]/);
               if (typeMatch) {

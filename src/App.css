@@ -437,6 +437,7 @@
 /* ── 概念図（ベン図など・本文埋め込みの静的SVG） ── */
 .venn-figure { margin: 1.25rem 0; padding: 0.25rem 0; text-align: center; }
 .venn-svg { width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; }
+.ci-svg { max-width: 440px; }
 .venn-caption {
   font-size: 0.85rem;
   color: var(--text-muted, #666);
