@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -252,6 +252,43 @@ function App() {
                 </svg>
                 <figcaption className="venn-caption">
                   和事象 A∪B は、重なり A∩B を一度だけ引く：P(A∪B) = P(A) + P(B) − P(A∩B)。単純に足すと、重なり部分を二重に数えてしまうため。
+                </figcaption>
+              </figure>
+            );
+            if (part === '[[venn-conditional]]') return (
+              <figure key={key} className="venn-figure">
+                <svg viewBox="0 0 340 200" role="img" aria-label="条件付き確率：A が起きた世界の中での B の割合" className="venn-svg">
+                  <rect x="6" y="6" width="328" height="188" rx="8" fill="#f3f4f6" stroke="#d1d5db" strokeWidth={1} />
+                  <text x="20" y="26" fontSize={12} fill="#6b7280">Ω</text>
+                  <circle cx="140" cy="104" r="68" fill="#4338ca" fillOpacity={0.16} stroke="#4338ca" strokeWidth={3} />
+                  <circle cx="205" cy="104" r="68" fill="#d97706" fillOpacity={0.16} stroke="#d97706" strokeWidth={1.2} />
+                  <text x="104" y="110" textAnchor="middle" fontSize={22} fontWeight={700} fill="#3730a3">A</text>
+                  <text x="242" y="110" textAnchor="middle" fontSize={20} fontWeight={700} fill="#b45309">B</text>
+                  <text x="172" y="110" textAnchor="middle" fontSize={12} fontWeight={700} fill="#1f2937">A∩B</text>
+                </svg>
+                <figcaption className="venn-caption">
+                  条件付き確率 P(B∣A) = P(A∩B) / P(A)。A が起きたとわかった時点で、考える世界は A の中（太線）だけ。その中で B にも入っている割合が P(B∣A)。
+                </figcaption>
+              </figure>
+            );
+            if (part === '[[total-probability]]') return (
+              <figure key={key} className="venn-figure">
+                <svg viewBox="0 0 360 200" role="img" aria-label="全確率の定理：原因 B1 B2 B3 ごとの寄与を足す" className="venn-svg">
+                  <rect x="10" y="22" width="340" height="150" fill="#ffffff" stroke="#9ca3af" strokeWidth={1} />
+                  <line x1="158" y1="22" x2="158" y2="172" stroke="#9ca3af" strokeWidth={1} />
+                  <line x1="262" y1="22" x2="262" y2="172" stroke="#9ca3af" strokeWidth={1} />
+                  <rect x="10" y="120" width="148" height="52" fill="#4338ca" fillOpacity={0.3} />
+                  <rect x="158" y="92" width="104" height="80" fill="#4338ca" fillOpacity={0.3} />
+                  <rect x="262" y="146" width="88" height="26" fill="#4338ca" fillOpacity={0.3} />
+                  <text x="84" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₁</text>
+                  <text x="210" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₂</text>
+                  <text x="306" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₃</text>
+                  <text x="84" y="150" textAnchor="middle" fontSize={11} fontWeight={700} fill="#312e81">A∩B₁</text>
+                  <text x="210" y="136" textAnchor="middle" fontSize={11} fontWeight={700} fill="#312e81">A∩B₂</text>
+                  <text x="306" y="162" textAnchor="middle" fontSize={10} fontWeight={700} fill="#312e81">A∩B₃</text>
+                </svg>
+                <figcaption className="venn-caption">
+                  全確率の定理 P(A) = Σ P(A∣Bᵢ)·P(Bᵢ)。全体 Ω を排反な原因 B₁,B₂,B₃ … に分け、各原因の中で A が起きる量（青）を足し合わせると P(A) になる。列の幅が P(Bᵢ)、青い高さが P(A∣Bᵢ) のイメージ。
                 </figcaption>
               </figure>
             );

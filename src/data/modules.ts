@@ -95,6 +95,8 @@ $$P(B \\mid A) = \\frac{P(A \\cap B)}{P(A)} \\quad (P(A) > 0)$$
 
 $P(B \\mid A)$ は「$A$ が起きたという条件のもとで $B$ が起きる確率」と読みます。縦棒「$|$」は「〜が与えられたとき（given that）」を意味します。
 
+[[venn-conditional]]
+
 この定義を変形すると**乗法定理**が得られます：
 
 $$P(A \\cap B) = P(B \\mid A) \\cdot P(A) = P(A \\mid B) \\cdot P(B)$$
@@ -151,6 +153,8 @@ $$P(A) = \\sum_{i=1}^{n} P(A \\mid B_i) \\cdot P(B_i)$$
 $$P(\\text{不良}) = 0.02 \\times 0.6 + 0.05 \\times 0.4 = 0.012 + 0.020 = 0.032$$
 
 全確率の定理は、各原因 $B_i$ からの寄与（$P(A \\mid B_i) \\cdot P(B_i)$）を足し合わせる構造です。次のベイズの定理の分母の計算に必ず登場します。
+
+[[total-probability]]
 
 ---
 
