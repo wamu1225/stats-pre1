@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -360,6 +360,60 @@ function App() {
                   </svg>
                   <figcaption className="venn-caption">
                     左の山は差がない（H₀ が真）ときの検定統計量の分布、右の山は差がある（H₁ が真）ときの分布。境界 c より右に出たら H₀ を棄却する。α（赤）＝H₀ が真なのに棄却してしまう第1種の過誤、β（灰）＝H₁ が真なのに見逃す第2種の過誤、1−β（緑）＝検出力。境界 c を左へ動かすと α は増え β は減る（トレードオフ）。標本数 n を増やすと両方の山が細くなって重なりが減り、α を保ったまま検出力を上げられる。
+                  </figcaption>
+                </figure>
+              );
+            }
+            if (part === '[[markov-chain]]') return (
+              <figure key={key} className="venn-figure">
+                <svg viewBox="0 0 360 200" role="img" aria-label="マルコフ連鎖の状態遷移図：晴れと雨の2状態と推移確率" className="venn-svg ci-svg">
+                  <defs>
+                    <marker id="mkArrow" markerUnits="userSpaceOnUse" markerWidth={10} markerHeight={10} refX={7} refY={4} orient="auto">
+                      <path d="M0,0 L8,4 L0,8 Z" fill="#475569" />
+                    </marker>
+                  </defs>
+                  <path d="M139,93 Q180,55 221,93" fill="none" stroke="#475569" strokeWidth={1.6} markerEnd="url(#mkArrow)" />
+                  <path d="M221,127 Q180,165 139,127" fill="none" stroke="#475569" strokeWidth={1.6} markerEnd="url(#mkArrow)" />
+                  <path d="M78,98 C40,80 40,140 78,122" fill="none" stroke="#475569" strokeWidth={1.6} markerEnd="url(#mkArrow)" />
+                  <path d="M282,98 C320,80 320,140 282,122" fill="none" stroke="#475569" strokeWidth={1.6} markerEnd="url(#mkArrow)" />
+                  <circle cx={110} cy={110} r={34} fill="#fef3c7" stroke="#d97706" strokeWidth={2} />
+                  <circle cx={250} cy={110} r={34} fill="#dbeafe" stroke="#2563eb" strokeWidth={2} />
+                  <text x={110} y={117} textAnchor="middle" fontSize={20} fontWeight={700} fill="#b45309">晴</text>
+                  <text x={250} y={117} textAnchor="middle" fontSize={20} fontWeight={700} fill="#1d4ed8">雨</text>
+                  <text x={180} y={50} textAnchor="middle" fontSize={12} fontWeight={700} fill="#334155">0.2</text>
+                  <text x={180} y={181} textAnchor="middle" fontSize={12} fontWeight={700} fill="#334155">0.4</text>
+                  <text x={33} y={114} textAnchor="middle" fontSize={12} fontWeight={700} fill="#b45309">0.8</text>
+                  <text x={327} y={114} textAnchor="middle" fontSize={12} fontWeight={700} fill="#1d4ed8">0.6</text>
+                </svg>
+                <figcaption className="venn-caption">
+                  天気を晴れ・雨の2状態にしたマルコフ連鎖。矢印は推移確率 pᵢⱼ（晴→雨 = 0.2、雨→晴 = 0.4、自己ループは晴→晴 = 0.8、雨→雨 = 0.6）。各状態から出る矢印の確率の和は必ず1で、これが推移確率行列 P の各行の和が1になることに対応する。次の状態は今の状態だけで決まり、それより前の履歴にはよらない（マルコフ性）。
+                </figcaption>
+              </figure>
+            );
+            if (part === '[[logistic-sigmoid]]') {
+              const x0 = 44, x1 = 332, yTop = 30, yBot = 182;
+              const px = (eta: number) => x0 + ((eta + 6) / 12) * (x1 - x0);
+              const py = (p: number) => yBot - p * (yBot - yTop);
+              const sig = (eta: number) => 1 / (1 + Math.exp(-eta));
+              let scurve = '';
+              for (let e = -6; e <= 6.0001; e += 0.25) scurve += `${px(e).toFixed(1)},${py(sig(e)).toFixed(1)} `;
+              return (
+                <figure key={key} className="venn-figure">
+                  <svg viewBox="0 0 360 220" role="img" aria-label="ロジスティック回帰のシグモイド曲線：線形予測子に対し確率が0と1の間に収まる" className="venn-svg ci-svg">
+                    <line x1={x0} y1={py(1)} x2={x1} y2={py(1)} stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 3" />
+                    <line x1={x0} y1={py(0)} x2={x1} y2={py(0)} stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 3" />
+                    <line x1={x0} y1={yTop - 6} x2={x0} y2={yBot + 6} stroke="#9ca3af" strokeWidth={1} />
+                    <line x1={px(-6)} y1={py(0.5 + 0.11 * -6)} x2={px(6)} y2={py(0.5 + 0.11 * 6)} stroke="#9ca3af" strokeWidth={1.5} strokeDasharray="5 3" />
+                    <polyline points={scurve.trim()} fill="none" stroke="#0f766e" strokeWidth={2.4} />
+                    <circle cx={px(0)} cy={py(0.5)} r={2.8} fill="#0f766e" />
+                    <text x={x0 - 6} y={py(1) + 4} textAnchor="end" fontSize={11} fill="#6b7280">1</text>
+                    <text x={x0 - 6} y={py(0) + 4} textAnchor="end" fontSize={11} fill="#6b7280">0</text>
+                    <text x={px(0) + 7} y={py(0.5) - 6} textAnchor="start" fontSize={11} fontWeight={700} fill="#0f766e">p=0.5</text>
+                    <text x={x1} y={yBot + 20} textAnchor="end" fontSize={11} fill="#6b7280">β₀+β·x（線形予測子）</text>
+                    <text x={x0 - 4} y={yTop - 12} textAnchor="start" fontSize={11} fill="#6b7280">確率 p</text>
+                  </svg>
+                  <figcaption className="venn-caption">
+                    ロジスティック回帰のシグモイド関数 p = 1 / (1 + e^−(β₀+β·x))。線形予測子（横軸）がどれだけ大きく・小さくなっても、確率（縦軸）は必ず0と1の間に収まる。確率をそのまま直線で当てはめると（灰の破線）0を下回り1を超えてしまうのに対し、シグモイドはなめらかに0↔1を結ぶ。中央 β₀+β·x = 0 で p = 0.5、そこで傾きが最も急になる。
                   </figcaption>
                 </figure>
               );
