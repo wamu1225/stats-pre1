@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
       const parts = t.split(regex);
       return (
         <>
@@ -322,6 +322,44 @@ function App() {
                   </svg>
                   <figcaption className="venn-caption">
                     各横線は、別々の標本から作った95%信頼区間（中央の点が標本平均 x̄）。真の値 θ は1つに決まっていて動かない（赤い縦線）。標本ごとに区間のほうが左右に揺れる。この手順をくり返すと約95%の区間が θ をまたぐ（青）が、たまに外す（赤）。「95%」はこの手順の長期的な成功率であって、ある1つの区間に θ が入る確率ではない。
+                  </figcaption>
+                </figure>
+              );
+            }
+            if (part === '[[power-curve]]') {
+              const base = 190, A = 120, sig = 34, mu0 = 150, mu1 = 235, c = 206;
+              const g = (x: number, mu: number) => base - A * Math.exp(-0.5 * ((x - mu) / sig) ** 2);
+              const curve = (mu: number, a: number, b: number) => {
+                let s = '';
+                for (let x = a; x <= b; x += 3) s += `${x},${g(x, mu).toFixed(1)} `;
+                return s.trim();
+              };
+              const fillArea = (mu: number, a: number, b: number) => {
+                let s = `${a},${base} `;
+                for (let x = a; x <= b; x += 3) s += `${x},${g(x, mu).toFixed(1)} `;
+                return s + `${b},${base}`;
+              };
+              return (
+                <figure key={key} className="venn-figure">
+                  <svg viewBox="0 0 420 214" role="img" aria-label="検定の2分布図：H0とH1の重なりに第1種の過誤α・第2種の過誤β・検出力1−βを示す" className="venn-svg ci-svg">
+                    <line x1={48} y1={base} x2={372} y2={base} stroke="#9ca3af" strokeWidth={1} />
+                    <polygon points={fillArea(mu1, c, 360)} fill="#16a34a" fillOpacity={0.16} />
+                    <polygon points={fillArea(mu1, 140, c)} fill="#6b7280" fillOpacity={0.3} />
+                    <polygon points={fillArea(mu0, c, 290)} fill="#dc2626" fillOpacity={0.32} />
+                    <polyline points={curve(mu0, 52, 300)} fill="none" stroke="#4338ca" strokeWidth={2} />
+                    <polyline points={curve(mu1, 130, 360)} fill="none" stroke="#0f766e" strokeWidth={2} />
+                    <line x1={c} y1={52} x2={c} y2={base} stroke="#111827" strokeWidth={1.2} strokeDasharray="4 3" />
+                    <text x={mu0} y={base + 15} textAnchor="middle" fontSize={12} fill="#3730a3">μ₀</text>
+                    <text x={mu1} y={base + 15} textAnchor="middle" fontSize={12} fill="#0f766e">μ₁</text>
+                    <text x={c} y={48} textAnchor="middle" fontSize={11} fill="#111827">境界 c</text>
+                    <text x={mu0} y={64} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3730a3">H₀ 真</text>
+                    <text x={mu1} y={64} textAnchor="middle" fontSize={11} fontWeight={700} fill="#0f766e">H₁ 真</text>
+                    <text x={224} y={183} textAnchor="middle" fontSize={12} fontWeight={700} fill="#991b1b">α</text>
+                    <text x={189} y={170} textAnchor="middle" fontSize={12} fontWeight={700} fill="#374151">β</text>
+                    <text x={262} y={150} textAnchor="middle" fontSize={12} fontWeight={700} fill="#166534">1−β</text>
+                  </svg>
+                  <figcaption className="venn-caption">
+                    左の山は差がない（H₀ が真）ときの検定統計量の分布、右の山は差がある（H₁ が真）ときの分布。境界 c より右に出たら H₀ を棄却する。α（赤）＝H₀ が真なのに棄却してしまう第1種の過誤、β（灰）＝H₁ が真なのに見逃す第2種の過誤、1−β（緑）＝検出力。境界 c を左へ動かすと α は増え β は減る（トレードオフ）。標本数 n を増やすと両方の山が細くなって重なりが減り、α を保ったまま検出力を上げられる。
                   </figcaption>
                 </figure>
               );
