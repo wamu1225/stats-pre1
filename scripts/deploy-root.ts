@@ -72,6 +72,7 @@ const PORTAL_PROTECTED = new Set<string>([
   'terms',
   'faq',
   'learning-guide',
+  'editorial-policy',
   'sitemap',
   'robots.txt',
   'sitemap.xml',
@@ -734,6 +735,7 @@ const PORTAL_PAGES_SITEMAP = [
   { path: '/terms/',          changefreq: 'yearly',  priority: '0.4' },
   { path: '/learning-guide/', changefreq: 'monthly', priority: '0.8' },
   { path: '/faq/',            changefreq: 'monthly', priority: '0.7' },
+  { path: '/editorial-policy/', changefreq: 'monthly', priority: '0.6' },
 ];
 
 const today = new Date().toISOString().split('T')[0];
