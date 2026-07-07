@@ -563,7 +563,7 @@ const SITES_REGISTRY: Site[] = [
     sitemapMeta: 'スプラウトの栽培ガイド・7記事／約1週間の育て方・根毛とカビの見分け・食中毒予防・選び方・調理',
     sitemapPages: [
       { label: 'トップ（栽培ステッパーと判別）', subpath: '' },
-      { label: 'スプラウトとは', subpath: 'about/' },
+      { label: 'スプラウトとは', subpath: 'intro/' },
       { label: 'スプラウトと育苗のちがい', subpath: 'vs-seedling/' },
       { label: '栽培の手順', subpath: 'grow/' },
       { label: '根毛とカビの見分け', subpath: 'discern/' },
