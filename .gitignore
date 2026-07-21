@@ -43,33 +43,17 @@ docs/syllabus.md
 docs/exam-scope.md
 docs/ROADMAP.md
 
-# One-time migration / debug / analysis scripts and artifacts
-scripts/analyze-*
-scripts/audit_*
-scripts/check_*
-scripts/debug-*
-scripts/extract_*
-scripts/extracted_*
-scripts/find_*
-scripts/fix_*
-scripts/inject_*
-scripts/measure-*
-scripts/patch_*
-scripts/quality_*
-scripts/read_*
-scripts/rebuild_*
-scripts/reconstruct_*
-scripts/renumber-*
-scripts/reorder-*
-scripts/show_*
-scripts/sort-*
-scripts/split-*
-scripts/chunk*.txt
-scripts/modules_*.txt
-scripts/modules_array.txt
-scripts/modules_raw.txt
-scripts/kurtosis_check.txt
-scripts/module*_check.md
+# scripts/ は「本番に要るものだけ許可」の allowlist（2026-07-20 反転）
+# 旧方式＝接頭辞のブロックリスト（find_* / fix_* …）は、命名が違うだけで漏れた：
+#   find-render-issues.js / full-render-scan.js / restructure-chapters.js が
+#   ハイフン命名のため素通りし、GitHub に公開されてしまった（絶対NG 2 違反）。
+# 新しい内部スクリプトを足すときは何も書かなくてよい（自動で無視される）。
+# 本番で必要なスクリプトを新設したときだけ、下に ! で1行足す。
+scripts/*
+!scripts/deploy-root.ts
+!scripts/prerender.ts
+!scripts/static-content.ts
+!scripts/validate-data.js
 
 # Backup files
 *.bak
