@@ -159,14 +159,14 @@ const SITES_REGISTRY: Site[] = [
     name: '統計検定 準1級 学習リファレンス',
     shortName: '統計検定 準1級 学習リファレンス',
     tag: '統計検定',
-    target: '統計学を体系的に学びたい社会人・大学生 / 36モジュール・360問',
+    target: '統計学を体系的に学びたい社会人・大学生',
     desc: '確率分布・推測統計・多変量解析・ベイズ統計・時系列分析の全範囲を、インタラクティブなグラフと数式で解説。最尤推定・主成分分析・MCMC まで踏み込みます。',
     features: [
       'スライダーで分布の形を動かせるインタラクティブグラフ',
-      '各モジュールに10問の確認クイズ',
+      '各モジュールに確認クイズ',
       '用語集・公式集・全範囲ランダムクイズ付き',
     ],
-    sitemapMeta: '全36モジュール・360問のクイズ・インタラクティブグラフ／確率分布・推測統計・多変量解析・ベイズ統計・時系列分析',
+    sitemapMeta: '全モジュールのクイズ・インタラクティブグラフ／確率分布・推測統計・多変量解析・ベイズ統計・時系列分析',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -178,9 +178,9 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '大学院・実務レベルの統計学。多変量解析・ベイズ統計・時系列まで網羅する36モジュール。インタラクティブグラフあり。',
+    aboutDesc: '大学院・実務レベルの統計学。多変量解析・ベイズ統計・時系列まで網羅するモジュール構成。インタラクティブグラフあり。',
     useCaseLabel: '上級・実務レベルの統計学を学びたい方',
-    useCaseDetail: '<a href="/stats-pre1/">統計検定準1級</a>で多変量解析・ベイズ統計・時系列分析まで網羅しています。全範囲ランダムクイズ（360問）で弱点を炙り出せます。',
+    useCaseDetail: '<a href="/stats-pre1/">統計検定準1級</a>で多変量解析・ベイズ統計・時系列分析まで網羅しています。全範囲ランダムクイズで弱点を炙り出せます。',
     changefreq: 'weekly',
     priority: '0.9',
   },
@@ -189,13 +189,13 @@ const SITES_REGISTRY: Site[] = [
     name: '統計検定 2級 学習リファレンス',
     shortName: '統計検定 2級 学習リファレンス',
     tag: '統計検定',
-    target: '大学初年級レベルの統計学 / 14モジュール',
+    target: '大学初年級レベルの統計学',
     desc: '記述統計・確率分布・推定・検定・回帰分析を、図解と練習問題で身につけます。準1級に進む前の橋渡しとしても利用できます。',
     features: [
-      '14モジュール構成、各10問のクイズ付き',
+      'モジュール構成・各モジュールにクイズ付き',
       'KaTeX による数式表示・Recharts による作図',
     ],
-    sitemapMeta: '学部レベルの統計学・14モジュール／確率分布・推定・検定・回帰分析',
+    sitemapMeta: '学部レベルの統計学／確率分布・推定・検定・回帰分析',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -204,7 +204,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '大学初年級レベルの推測統計。記述統計・確率分布・推定・検定・回帰分析を14モジュールで整理。',
+    aboutDesc: '大学初年級レベルの推測統計。記述統計・確率分布・推定・検定・回帰分析をモジュール単位で整理。',
     useCaseLabel: '学部レベルの推測統計を学びたい方',
     useCaseDetail: '<a href="/stats-g2/">統計検定2級</a>で推定・検定・回帰分析を扱います。',
     changefreq: 'weekly',
@@ -215,13 +215,13 @@ const SITES_REGISTRY: Site[] = [
     name: '統計検定 3級 学習リファレンス',
     shortName: '統計検定 3級 学習リファレンス',
     tag: '統計検定',
-    target: '高校レベルの統計学 / 13モジュール',
+    target: '高校レベルの統計学',
     desc: 'データの整理・代表値・散らばり・確率の基礎・標本調査など、統計検定3級の出題範囲を高校生でも読める言葉でまとめています。',
     features: [
-      '13モジュール構成、各10問のクイズ付き',
+      'モジュール構成・各モジュールにクイズ付き',
       '高校の「データの分析」分野の総まとめにも使えます',
     ],
-    sitemapMeta: '高校レベルの統計学・13モジュール／データの整理・代表値・確率の基礎',
+    sitemapMeta: '高校レベルの統計学／データの整理・代表値・確率の基礎',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -230,7 +230,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '高校レベルの統計学。データの整理・代表値・散らばり・確率の基礎・標本調査を13モジュールで整理。',
+    aboutDesc: '高校レベルの統計学。データの整理・代表値・散らばり・確率の基礎・標本調査をモジュール単位で整理。',
     useCaseLabel: '高校レベルの統計を確認したい方',
     useCaseDetail: '<a href="/stats-g3/">統計検定3級</a>でデータの整理・代表値・確率の基礎を扱います。高校の「データの分析」分野の総まとめとしても使えます。',
     changefreq: 'weekly',
@@ -241,13 +241,13 @@ const SITES_REGISTRY: Site[] = [
     name: 'メンタルヘルスマネジメント検定 Ⅲ種',
     shortName: 'メンタルヘルスマネジメント検定 Ⅲ種 学習サイト',
     tag: 'こころ・健康',
-    target: 'セルフケアコース（社会人初学者向け）/ 7モジュール',
+    target: 'セルフケアコース（社会人初学者向け）',
     desc: 'ストレスのメカニズム、セルフケア、職場で利用できる相談窓口など、Ⅲ種試験（セルフケアコース）の出題範囲を平易な言葉で整理しました。',
     features: [
-      'Chapter 1〜6 を7モジュールに整理',
+      'Chapter 1〜6 をモジュールに整理',
       '用語集・全範囲ランダムクイズ・試験ガイド付き',
     ],
-    sitemapMeta: 'セルフケアコース・7モジュール／ストレスの仕組み・気づき方・対処法・相談窓口',
+    sitemapMeta: 'セルフケアコース／ストレスの仕組み・気づき方・対処法・相談窓口',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -256,7 +256,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: 'メンタルヘルスマネジメント検定Ⅲ種（セルフケアコース）の出題範囲を7モジュールで整理。ストレス対処と相談窓口の使い方を扱う。',
+    aboutDesc: 'メンタルヘルスマネジメント検定Ⅲ種（セルフケアコース）の出題範囲をモジュール単位で整理。ストレス対処と相談窓口の使い方を扱う。',
     useCaseLabel: '仕事のストレスや職場の不調に関心のある方',
     useCaseDetail: '<a href="/mhm-g3/">メンタルヘルスマネジメント検定Ⅲ種</a>でセルフケア・ストレスへの気づき・相談窓口の使い方を扱います。資格取得の有無に関わらず役立ちます。',
     changefreq: 'weekly',
@@ -267,13 +267,13 @@ const SITES_REGISTRY: Site[] = [
     name: 'ビジネス実務法務検定 3級',
     shortName: 'ビジネス実務法務検定 3級 学習サイト',
     tag: 'ビジネス法務',
-    target: 'はじめてビジネス法務を学ぶ社会人 / 18モジュール・180問',
+    target: 'はじめてビジネス法務を学ぶ社会人',
     desc: '民法・商法・会社法・労働法・知的財産権など、ビジネスの現場で必要な法律知識を3級レベルでまとめました。条文の暗記ではなく「なぜそのルールがあるか」を理解する構成です。',
     features: [
-      '18モジュール・180問の確認クイズ',
+      '全モジュールに確認クイズ',
       '身近な契約・労務トラブルの事例を多数収録',
     ],
-    sitemapMeta: '18モジュール・180問のクイズ／民法・商法・会社法・労働法・知的財産権・倒産法',
+    sitemapMeta: '全モジュールのクイズ／民法・商法・会社法・労働法・知的財産権・倒産法',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -282,7 +282,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: 'ビジネス実務法務検定3級の出題範囲。民法・商法・会社法・労働法・知的財産権の基本を18モジュール・180問で整理。',
+    aboutDesc: 'ビジネス実務法務検定3級の出題範囲。民法・商法・会社法・労働法・知的財産権の基本をモジュールと確認クイズで整理。',
     useCaseLabel: 'ビジネスで法律トラブルを避けたい方',
     useCaseDetail: '<a href="/bizlaw-g3/">ビジネス実務法務検定3級</a>で契約・労務・著作権など、社会人なら知っておきたい基本知識をカバーします。',
     changefreq: 'weekly',
@@ -293,14 +293,14 @@ const SITES_REGISTRY: Site[] = [
     name: '色彩検定3級 学習ノート',
     shortName: '色彩検定3級 学習ノート',
     tag: '色彩・デザイン',
-    target: '色彩検定3級を独学する方 / 6章17モジュール・170問',
-    desc: '光と色のしくみ、PCCSの色相環とトーン、対比・同化、配色技法、慣用色名まで。色彩検定3級の出題範囲を、自作の色相環・トーンマップ図と各10問の確認問題でやさしく解説します。',
+    target: '色彩検定3級を独学する方',
+    desc: '光と色のしくみ、PCCSの色相環とトーン、対比・同化、配色技法、慣用色名まで。色彩検定3級の出題範囲を、自作の色相環・トーンマップ図と各モジュールの確認問題でやさしく解説します。',
     features: [
-      '6章17モジュール・170問の確認クイズ',
+      '章立てで整理・全モジュールに確認クイズ',
       'PCCSの色相環・トーンマップをSVG図で可視化',
       '混同しやすい用語（対比と同化・配色技法）の区別を整理',
     ],
-    sitemapMeta: '6章17モジュール・170問のクイズ／光と色・PCCS色相環とトーン・色彩心理・配色技法・慣用色名',
+    sitemapMeta: '章立てのモジュールとクイズ／光と色・PCCS色相環とトーン・色彩心理・配色技法・慣用色名',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -308,7 +308,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '色彩検定3級の出題範囲。光と色・PCCSの色相環とトーン・色彩心理・配色技法・慣用色名を6章17モジュール・170問で整理。色相環とトーンマップの図つき。',
+    aboutDesc: '色彩検定3級の出題範囲。光と色・PCCSの色相環とトーン・色彩心理・配色技法・慣用色名を章立てのモジュールと確認クイズで整理。色相環とトーンマップの図つき。',
     useCaseLabel: '色彩・配色の基礎を学びたい方',
     useCaseDetail: '<a href="/color-g3/">色彩検定3級</a>でPCCSの色相環・トーン、配色技法、慣用色名を扱います。色相環・トーンマップの図で配色問題の土台を固められます。',
     changefreq: 'weekly',
@@ -319,20 +319,20 @@ const SITES_REGISTRY: Site[] = [
     name: 'まぎらわしい英単語ノート',
     shortName: 'まぎらわしい英単語ノート',
     tag: '英語・語彙',
-    target: '大学受験・TOEIC・英検の学習者 / 51組の混同ペア',
+    target: '大学受験・TOEIC・英検の学習者 / スペル・意味・品詞・発音の4カテゴリ',
     desc: 'affect/effect、lie/lay、breed/bleed…スペル・意味・品詞・発音が似て混同しやすい英単語を、引いてすぐ違いと使い分けがわかる逆引きの比較リファレンス。比較表と例文つき。',
     features: [
-      '51組の混同ペアを比較表で見分け',
+      '混同ペアごとの比較表で違いを見分け',
       '単語で検索・カテゴリで絞り込める逆引き形式',
       '各ペアに例文・覚え方・確認問題つき',
     ],
-    sitemapMeta: '51組の混同ペアの比較／スペル・意味・品詞・発音が似た英単語の違いと使い分け',
+    sitemapMeta: '混同ペアの比較／スペル・意味・品詞・発音が似た英単語の違いと使い分け',
     sitemapPages: [
       { label: 'トップ・検索', subpath: '' },
       { label: 'このサイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '混同しやすい英単語51組を、スペル・意味・品詞・発音の4カテゴリで整理。1ペア1ページの比較表で違いと使い分けを引ける逆引きリファレンス。',
+    aboutDesc: '混同しやすい英単語を、スペル・意味・品詞・発音の4カテゴリで整理。1ペア1ページの比較表で違いと使い分けを引ける逆引きリファレンス。',
     useCaseLabel: '似た英単語の使い分けを確認したい方',
     useCaseDetail: '<a href="/eng-confusables/">まぎらわしい英単語ノート</a>で affect/effect・lie/lay などの違いを、比較表と例文で引いて確認できます。',
     changefreq: 'weekly',
@@ -343,14 +343,14 @@ const SITES_REGISTRY: Site[] = [
     name: '色彩検定UC級 学習ノート',
     shortName: '色彩検定UC級 学習ノート',
     tag: '色彩・デザイン',
-    target: '色彩検定UC級を独学する方 / 6章15モジュール・120問',
+    target: '色彩検定UC級を独学する方',
     desc: '色のユニバーサルデザイン（UC級）を基礎から。色覚タイプや加齢による見え方の違い、だれにでも伝わる配色の工夫を、図と確認問題でやさしく解説します。色覚の記述は公的・学術的な解説に基づき中立に。',
     features: [
-      '6章15モジュール・120問の確認クイズ',
+      '章立てで整理・全モジュールに確認クイズ',
       '色覚タイプ・高齢者の見え方を出典に基づき中立に解説',
       'CUD改善前後・明度差・PCCS色相環をSVG図で可視化',
     ],
-    sitemapMeta: '6章15モジュール・120問のクイズ／色のUD・色覚タイプ・高齢者の見え方・だれにでも伝わる配色',
+    sitemapMeta: '章立てのモジュールとクイズ／色のUD・色覚タイプ・高齢者の見え方・だれにでも伝わる配色',
     sitemapPages: [
       { label: 'トップ・モジュール一覧', subpath: '' },
       { label: '用語集', subpath: 'glossary/' },
@@ -358,7 +358,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '色彩検定UC級（色のユニバーサルデザイン）の出題範囲。色覚タイプ・高齢者の見え方・だれにでも伝わる配色を6章15モジュール・120問で整理。色覚の記述は公的・学術的解説に基づき中立。',
+    aboutDesc: '色彩検定UC級（色のユニバーサルデザイン）の出題範囲。色覚タイプ・高齢者の見え方・だれにでも伝わる配色を章立てのモジュールと確認クイズで整理。色覚の記述は公的・学術的解説に基づき中立。',
     useCaseLabel: '色のユニバーサルデザインを学びたい方',
     useCaseDetail: '<a href="/color-uc/">色彩検定UC級</a>で色覚タイプ・高齢者の見え方・CUDの配色を扱います。色彩検定3級と共通の基礎は相互にリンクしています。',
     changefreq: 'weekly',
@@ -369,10 +369,10 @@ const SITES_REGISTRY: Site[] = [
     name: '亀戸の歴史と文化ガイド',
     shortName: '亀戸の歴史と文化ガイド',
     tag: '歴史・文化',
-    target: '亀戸の歴史・文化に興味のある方・観光や散策の前に / 9記事',
+    target: '亀戸の歴史・文化に興味のある方・観光や散策の前に',
     desc: '東京・下町の亀戸（江東区）の歴史と文化を、公的・一次資料で確かめながらやさしく紹介。地名の由来、「武」の香取神社と「文」の天神社、江戸東京野菜の亀戸大根、船橋屋のくず餅、歌川広重の浮世絵まで。',
     features: [
-      '地名の由来・歴史・二つの神社・名物・浮世絵の9記事',
+      '地名の由来・歴史・二つの神社・名物・浮世絵の記事',
       '江東区・各神社・JA東京・船橋屋・東京富士美術館の情報で事実確認',
       '太鼓橋やくず餅の製法などを自作SVG図で図解',
     ],
@@ -388,7 +388,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '東京・下町の亀戸（江東区）の歴史と文化を、公的・一次資料で確かめながら紹介。地名の由来・天神社と香取神社・亀戸大根・船橋屋のくず餅・広重の浮世絵を9記事で整理。',
+    aboutDesc: '東京・下町の亀戸（江東区）の歴史と文化を、公的・一次資料で確かめながら紹介。地名の由来・天神社と香取神社・亀戸大根・船橋屋のくず餅・広重の浮世絵を記事にまとめて整理。',
     useCaseLabel: '亀戸の歴史と文化を知りたい方',
     useCaseDetail: '<a href="/kameido-history/">亀戸の歴史と文化ガイド</a>で、地名の由来・二つの神社・亀戸大根・くず餅・広重の浮世絵を、公的資料に基づいて紹介します。',
     changefreq: 'monthly',
@@ -399,10 +399,10 @@ const SITES_REGISTRY: Site[] = [
     name: 'ガジュマルの育て方・種類ガイド',
     shortName: 'ガジュマルの育て方・種類ガイド',
     tag: '園芸・植物',
-    target: 'ガジュマルを育てる人・ペットと暮らす家庭 / 10記事',
+    target: 'ガジュマルを育てる人・ペットと暮らす家庭',
     desc: '観葉植物ガジュマル（Ficus microcarpa）を植物学的な深さで。絞め殺しの木としての生態、品種と育て方、ASPCAに基づくペット安全性、沖縄のキジムナー伝承と風水の文化までを、信頼できる出典で確かめながら解説します。',
     features: [
-      '基礎から絞め殺しの木の生態、品種、育て方、増やし方まで10記事',
+      '基礎から絞め殺しの木の生態、品種、育て方、増やし方まで',
       'ペットへの毒性をASPCAの記載に基づき正確に解説',
       '沖縄のキジムナー伝承と風水を、事実と言い伝えに分けて紹介',
     ],
@@ -418,7 +418,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '観葉植物ガジュマル（Ficus microcarpa）を植物学的な深さで。絞め殺しの木の生態、品種と育て方、ASPCAに基づくペット安全性、沖縄のキジムナー伝承と風水までを10記事で解説。',
+    aboutDesc: '観葉植物ガジュマル（Ficus microcarpa）を植物学的な深さで。絞め殺しの木の生態、品種と育て方、ASPCAに基づくペット安全性、沖縄のキジムナー伝承と風水までを記事で解説。',
     useCaseLabel: 'ガジュマルを育てたい・知りたい方',
     useCaseDetail: '<a href="/gajumaru-info/">ガジュマルの育て方・種類ガイド</a>で、絞め殺しの木の生態や品種、育て方、ペットへの注意、キジムナー伝承までを出典つきで紹介します。',
     changefreq: 'monthly',
@@ -429,7 +429,7 @@ const SITES_REGISTRY: Site[] = [
     name: '古墳の入門ガイド',
     shortName: '古墳の入門ガイド',
     tag: '歴史・文化',
-    target: '古墳をはじめて学ぶ人・古墳めぐりの前に / 7記事',
+    target: '古墳をはじめて学ぶ人・古墳めぐりの前に',
     desc: '古墳をはじめて学ぶ人のための入門ガイド。前方後円墳などの墳形、竪穴式と横穴式の石室、古墳時代の流れ、百舌鳥・古市古墳群と仁徳天皇陵古墳、世界三大墳墓の規模比較までを、図解と公的な出典で解説します。',
     features: [
       '墳形5種と石室の構造、古墳時代の流れを図解',
@@ -448,7 +448,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '古墳の入門ガイド。前方後円墳などの墳形、竪穴式と横穴式の石室、古墳時代の流れ、仁徳天皇陵古墳、世界三大墳墓の規模比較を、公的な出典と図解で7記事にまとめる。',
+    aboutDesc: '古墳の入門ガイド。前方後円墳などの墳形、竪穴式と横穴式の石室、古墳時代の流れ、仁徳天皇陵古墳、世界三大墳墓の規模比較を、公的な出典と図解でまとめる。',
     useCaseLabel: '古墳を学びたい・訪ねたい方',
     useCaseDetail: '<a href="/kofun-guide/">古墳の入門ガイド</a>で、前方後円墳の形や石室の構造、仁徳天皇陵古墳、世界三大墳墓の規模くらべを、図解と公的な出典で紹介します。',
     changefreq: 'monthly',
@@ -459,7 +459,7 @@ const SITES_REGISTRY: Site[] = [
     name: '二十四節気・七十二候ガイド',
     shortName: '二十四節気・七十二候ガイド',
     tag: '暦・季節',
-    target: '季節の言葉や暦に興味のある方・今日の候を知りたい方 / 7記事',
+    target: '季節の言葉や暦に興味のある方・今日の候を知りたい方',
     desc: '二十四節気と七十二候を、国立天文台などの一次資料で確かめながら紹介。トップでは今日の節気と候を示し、各節気の意味と太陽の動き、七十二候の日本と中国の対比、暦のしくみ、雑節までを扱います。',
     features: [
       'トップで今日の節気と候を表示（季節リングつき）',
@@ -478,7 +478,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '二十四節気と七十二候を国立天文台などの一次資料で。今日の節気と候、各節気の意味と太陽の動き、日本と中国の候の対比、暦のしくみ、雑節を7記事で扱う。',
+    aboutDesc: '二十四節気と七十二候を国立天文台などの一次資料で。今日の節気と候、各節気の意味と太陽の動き、日本と中国の候の対比、暦のしくみ、雑節を記事にまとめて扱う。',
     useCaseLabel: '今日の節気や候を知りたい方',
     useCaseDetail: '<a href="/sekki-guide/">二十四節気・七十二候ガイド</a>で、今日の候や各節気の意味、七十二候の日本と中国の対比、暦のしくみを、国立天文台などの一次資料で紹介します。',
     changefreq: 'daily',
@@ -489,7 +489,7 @@ const SITES_REGISTRY: Site[] = [
     name: '潮の満ち引きガイド',
     shortName: '潮の満ち引きガイド',
     tag: '暦・季節',
-    target: '潮の満ち引きの仕組みや今日の潮回りを知りたい方 / 8記事',
+    target: '潮の満ち引きの仕組みや今日の潮回りを知りたい方',
     desc: '潮の満ち引き（潮汐）を、気象庁や海上保安庁、国立天文台などの一次資料で確かめながら紹介。トップでは今日の潮回りを示し、起潮力と潮汐バルジ、大潮と小潮、地域で違う干満差、潮汐表と基準面の読み方、高潮や津波との違いまでを扱います。',
     features: [
       'トップで今日の潮回りを表示（月と地球と太陽の配置図つき）',
@@ -510,7 +510,7 @@ const SITES_REGISTRY: Site[] = [
       { label: 'サイトについて', subpath: 'about/' },
       { label: 'プライバシーポリシー', subpath: 'privacy/' },
     ],
-    aboutDesc: '潮の満ち引き（潮汐）を気象庁や海上保安庁などの一次資料で。今日の潮回り、起潮力と潮汐バルジ、大潮と小潮、地域で違う干満差、潮汐表と基準面、高潮や津波との違いを8記事で扱う。',
+    aboutDesc: '潮の満ち引き（潮汐）を気象庁や海上保安庁などの一次資料で。今日の潮回り、起潮力と潮汐バルジ、大潮と小潮、地域で違う干満差、潮汐表と基準面、高潮や津波との違いを記事にまとめて扱う。',
     useCaseLabel: '今日の潮回りや潮の仕組みを知りたい方',
     useCaseDetail: '<a href="/tide-guide/">潮の満ち引きガイド</a>で、今日の潮回りや起潮力と潮汐バルジ、大潮と小潮、地域で違う干満差、高潮や津波との違いを、気象庁や海上保安庁などの一次資料で紹介します。',
     changefreq: 'daily',
@@ -521,7 +521,7 @@ const SITES_REGISTRY: Site[] = [
     name: 'マケドニア史ガイド',
     shortName: 'マケドニア史ガイド',
     tag: '歴史・文化',
-    target: '古代マケドニア王国やアレクサンドロス大王に興味のある方 / 8記事',
+    target: '古代マケドニア王国やアレクサンドロス大王に興味のある方',
     desc: '古代マケドニア王国を中心に、フィリッポス2世の軍制改革、アレクサンドロス大王の東征、ヴェルギナの王墓、そして現代の北マケドニア共和国と国名問題までを、信頼できる史料で確かめながら紹介します。',
     features: [
       'トップは古代から現代までを結ぶ「マケドニアを貫く年表」',
@@ -553,14 +553,14 @@ const SITES_REGISTRY: Site[] = [
     name: 'スプラウト栽培ノート',
     shortName: 'スプラウト栽培ノート',
     tag: '食・栽培',
-    target: 'ブロッコリースプラウトを家庭で育てたい方 / 7記事',
+    target: 'ブロッコリースプラウトを家庭で育てたい方',
     desc: 'ブロッコリースプラウトを中心に、家庭での水耕栽培を約1週間の手順で解説。トップでは種まきから収穫までの日ごとの作業と、根毛とカビの見分けを示し、生食の食中毒予防、選び方や調理までを、農林水産省や種苗メーカーの公開情報で確かめながらまとめています。',
     features: [
       'トップは「約1週間」の日ごとの栽培ステッパー',
       '根元の白いふわふわを、根毛とカビで見分ける判別カード',
       '衛生は農林水産省の指針、栽培は種苗メーカーの育て方にもとづく',
     ],
-    sitemapMeta: 'スプラウトの栽培ガイド・7記事／約1週間の育て方・根毛とカビの見分け・食中毒予防・選び方・調理',
+    sitemapMeta: 'スプラウトの栽培ガイド／約1週間の育て方・根毛とカビの見分け・食中毒予防・選び方・調理',
     sitemapPages: [
       { label: 'トップ（栽培ステッパーと判別）', subpath: '' },
       { label: 'スプラウトとは', subpath: 'intro/' },
@@ -648,11 +648,11 @@ const SITES_REGISTRY: Site[] = [
     name: 'チョークラボ',
     shortName: 'チョークラボ',
     tag: '科学・雑学',
-    target: 'チョークの雑学に興味のある全年齢 / よみもの8本＋図鑑17種＋検定',
+    target: 'チョークの雑学に興味のある全年齢 / よみもの＋図鑑＋検定',
     desc: 'チョークの成分・種類・作り方・歴史（伝説の羽衣チョーク）・白亜と白亜紀の関係・スポーツ用まで、読んで・解いて・集めて学べる情報サイト。チョーク図鑑のカードを集めながら楽しめます。',
     features: [
-      'チョークの科学・歴史・トリビアを8本のよみもので解説',
-      '読むと集まる「チョーク図鑑」（全17種）＋全10問のチョーク検定',
+      'チョークの科学・歴史・トリビアをよみもので解説',
+      '読むと集まる「チョーク図鑑」＋チョーク検定',
     ],
     sitemapMeta: '情報サイト・全年齢／チョークの成分・種類・作り方・羽衣チョーク・白亜・スポーツ用＋図鑑コレクション',
     sitemapPages: [
@@ -683,19 +683,19 @@ const SITES_REGISTRY: Site[] = [
     shortName: 'でんしゃあそび（幼児・小学生向けミニゲーム集）',
     tag: 'こども向け',
     tagModifier: 'kids',
-    target: '幼稚園〜小学3年生 / 12種のミニゲーム',
+    target: '幼稚園〜小学3年生 / ミニゲーム集',
     desc: '電車での移動中の暇つぶし用に作った、ひらがな探し・時計の読み・暗算・記憶ゲームなどのミニゲーム集です。PWA対応でオフラインでも遊べます。',
     features: [
       '12ゲーム：ひらがな・時計・算数・記憶など',
       'オフライン対応（PWA）・スマホ／タブレット推奨',
     ],
-    sitemapMeta: 'こども向け（幼稚園〜小学3年生）・12種のミニゲーム／オフライン対応（PWA）',
+    sitemapMeta: 'こども向け（幼稚園〜小学3年生）・ミニゲーム／オフライン対応（PWA）',
     sitemapPages: [
       { label: 'トップ・ゲーム一覧', subpath: '' },
     ],
-    aboutDesc: '幼稚園〜小学3年生向けの12種のミニゲーム集。PWA対応でオフライン利用可。',
+    aboutDesc: '幼稚園〜小学3年生向けのミニゲーム集。PWA対応でオフライン利用可。',
     useCaseLabel: '子どもとの移動時間を有効活用したい方',
-    useCaseDetail: '<a href="/densha_asobi/">でんしゃあそび</a>はひらがな探し・時計の読み・暗算・記憶ゲームなど12種のミニゲーム集です。PWA対応でオフラインでも遊べます。',
+    useCaseDetail: '<a href="/densha_asobi/">でんしゃあそび</a>はひらがな探し・時計の読み・暗算・記憶ゲームなどミニゲーム集です。PWA対応でオフラインでも遊べます。',
     changefreq: 'weekly',
     priority: '0.8',
   },
@@ -845,17 +845,32 @@ const portalIndexPath = path.join(PORTAL_DIR, 'index.html');
 if (fs.existsSync(portalIndexPath)) {
   let portalIndex = fs.readFileSync(portalIndexPath, 'utf-8');
 
-  // JSON-LD ItemList: "itemListElement": [...] の配列内容を再生成
-  const itemListJson = SITES_REGISTRY.map((s, i) =>
+  // カテゴリ定義（学習→情報→ゲームの3ブロック。順序は build-loop.md 凍結タスク4）
+  const CATEGORIES: { label: string; ids: string[] }[] = [
+    { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
+    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide'] },
+    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku'] },
+  ];
+  const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
+  const orderedSites = CATEGORIES.flatMap((c) => c.ids.map(findSite).filter((s): s is Site => !!s));
+  const uncategorized = SITES_REGISTRY.filter((s) => !orderedSites.includes(s));
+  if (uncategorized.length) console.warn(`⚠️  未分類サイト（カテゴリ順に追加を）: ${uncategorized.map((s) => s.id).join(', ')}`);
+
+  // JSON-LD ItemList: カテゴリ順（学習→情報→ゲーム）で position を再生成
+  const jsonSites = [...orderedSites, ...uncategorized];
+  const itemListJson = jsonSites.map((s, i) =>
     `            { "@type": "ListItem", "position": ${i + 1}, "name": "${s.shortName}", "url": "${BASE_URL}/${s.id}/" }`
   ).join(',\n');
   portalIndex = portalIndex.replace(
     /("itemListElement"\s*:\s*\[)[\s\S]*?(\s*\])/,
     `$1\n${itemListJson}\n          $2`
   );
+  // 3カテゴリになったので JSON-LD name と見出しから「学習」限定を外す（静的部・冪等）
+  portalIndex = portalIndex.replace(/"name":\s*"study-apps\.com の学習サイト一覧"/, '"name": "study-apps.com のサイト一覧"');
+  portalIndex = portalIndex.replace(/(<h2 id="sites-h">)学習サイト一覧(<span class="ja-sub">SITES<\/span><\/h2>)/, '$1サイト一覧$2');
 
-  // サイトカード: <div class="cards"> ... </div> の中身を全て置換
-  const cardsHtml = SITES_REGISTRY.map((s) => `
+  // サイトカード: 単一 .cards グリッド内に「カテゴリ見出し（全幅）＋そのカテゴリのカード」を3ブロック
+  const renderCard = (s: Site) => `
             <article class="card">
               <span class="tag${s.tagModifier ? ' ' + s.tagModifier : ''}">${s.tag}</span>
               <h3>${s.name}</h3>
@@ -865,7 +880,13 @@ if (fs.existsSync(portalIndexPath)) {
 ${s.features.map(f => `                <li>${f}</li>`).join('\n')}
               </ul>
               <a class="open" href="/${s.id}/">サイトを開く</a>
-            </article>`).join('\n');
+            </article>`;
+  const catHeading = (label: string, n: number) =>
+    `\n            <h3 class="cat-heading" style="grid-column:1/-1;margin:26px 0 2px;padding-bottom:7px;border-bottom:2px solid #cbd5e1;font-size:1.12rem;color:#0f172a;letter-spacing:.02em;">${label} <span style="font-weight:400;color:#64748b;font-size:.78em;">${n}件</span></h3>`;
+  const cardsHtml = CATEGORIES.map((c) => {
+    const sites = c.ids.map(findSite).filter((s): s is Site => !!s);
+    return catHeading(c.label, sites.length) + '\n' + sites.map(renderCard).join('\n');
+  }).join('\n');
   const cardsBlock = `<div class="cards">\n            <!-- AUTO_SITES_START -->${cardsHtml}\n            <!-- AUTO_SITES_END -->\n          </div>`;
   portalIndex = portalIndex.replace(
     /<div class="cards">[\s\S]*?<\/div>\s*<\/section>/,

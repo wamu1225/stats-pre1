@@ -99,7 +99,7 @@ function App() {
     setRqResults([]);
     setRqDone(false);
     setView('randomquiz');
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
   const rqHandleSelect = (idx: number) => {
@@ -118,11 +118,11 @@ function App() {
       setRqIdx(rqIdx + 1);
       setRqSelected(null);
       setRqIsCorrect(null);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
       setRqResults(newResults);
       setRqDone(true);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
@@ -140,7 +140,7 @@ function App() {
       setView('dashboard');
     }
     setQuizCompleted(false);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
   const switchView = useCallback((newView: View) => {
@@ -149,7 +149,7 @@ function App() {
     const basePath = window.location.pathname.startsWith('/stats-pre1/') ? '/stats-pre1' : '';
     const newPath = newView === 'dashboard' ? `${basePath}/` : `${basePath}/${newView}/`;
     window.history.pushState(null, '', newPath);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
   const handleQuizComplete = useCallback((moduleId: string, score: number, total: number) => {
@@ -197,7 +197,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\])/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
       const parts = t.split(regex);
       return (
         <>
@@ -207,6 +207,17 @@ function App() {
             if (part.startsWith('$$') && part.endsWith('$$')) return <MathDisplay key={key} formula={part.slice(2, -2)} block={true} />;
             if (part.startsWith('$') && part.endsWith('$')) return <MathDisplay key={key} formula={part.slice(1, -1)} />;
             if (part.startsWith('**') && part.endsWith('**')) return <strong key={key}>{parseInline(part.slice(2, -2))}</strong>;
+            // [ラベル](URL) — 主に study-apps.com 内の姉妹サイトへ渡すための記法。
+            // サイト内の移動は [[term:]] とモジュールナビが担うため、ここでは
+            // preventDefault せずブラウザに通常遷移させる（SPA ルータに渡さない）。
+            {
+              const link = part.match(/^\[([^\]\n]+)\]\(([^)\n]+)\)$/);
+              if (link) {
+                const [, label, url] = link;
+                const external = /^https?:\/\//.test(url);
+                return <a key={key} href={url} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{parseInline(label)}</a>;
+              }
+            }
             if (part.startsWith('[[term:')) {
               const idMatch = part.match(/\[\[term:(.*?)\]\]/);
               const contentMatch = part.match(/\]\]([\s\S]*?)\[\[\/term\]\]/);
