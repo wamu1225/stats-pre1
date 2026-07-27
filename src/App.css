@@ -343,38 +343,28 @@
 }
 .module-key-formula-math { flex: 1; overflow-x: auto; }
 
-/* ── Callouts: 💡 ヒント / 🎯 使いどころ ─────── */
+/* ── Callouts: 💡 ヒント / 🎯 使いどころ（塗り・角丸のカード風は使わず、細い罫のみ） ─────── */
 .callout-tip,
-.callout-target {
-  border-left: 3px solid;
-  padding: 0.6rem 0.85rem;
-  margin: 0.75rem 0;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+.callout-target,
+.callout-warning {
+  border-left: 2px solid;
+  padding: 0.1rem 0 0.1rem 0.85rem;
+  margin: 0.85rem 0;
+  border-radius: 0;
   font-size: 0.95rem;
+  background: none;
 }
 .callout-tip {
-  background: rgba(67, 56, 202, 0.06);
   border-color: var(--primary);
   color: var(--text-body);
 }
-:root[data-theme='dark'] .callout-tip {
-  background: rgba(129, 140, 248, 0.1);
-}
 .callout-target {
-  background: rgba(217, 119, 6, 0.08);
   border-color: #d97706;
   color: var(--text-body);
 }
-:root[data-theme='dark'] .callout-target {
-  background: rgba(217, 119, 6, 0.15);
-}
 .callout-warning {
-  background: rgba(220, 38, 38, 0.06);
   border-color: #dc2626;
   color: var(--text-body);
-}
-:root[data-theme='dark'] .callout-warning {
-  background: rgba(248, 113, 113, 0.1);
 }
 
 .content-h3, .content-h4 { scroll-margin-top: 70px; }
