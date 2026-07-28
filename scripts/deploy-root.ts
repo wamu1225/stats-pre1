@@ -794,11 +794,13 @@ const notFoundHtml = `<!doctype html>
     <title>ページが見つかりません｜study-apps.com</title>
     <meta name="description" content="お探しのページが見つかりません。study-apps.com の学習サイト一覧からお探しのコンテンツへお進みください。" />
     <script>
-      // 旧URL（stats-pre1 がルート直下にあった時代の /1.X-name/ や /2.X-name/）→ /stats-pre1/ 配下へ
+      // 旧URL（stats-pre1 がルート直下にあった時代の /1.X-name/ や /2.X-name/ 等）→ /stats-pre1/ 配下へ
       // クライアントリダイレクトで救済（Search Console の 404 を解消し、被リンクの SEO 価値を維持）
+      // ⚠️2026-05-29導入時は[12]（chapter1-2）のみだったが、後日追加されたchapter3（3.1-3.6）が
+      // 404のまま放置されていた（2026-07-28 GSC実測で判明・O-2-7）。[1-9]へ拡張して将来のchapter追加にも対応。
       (function () {
         var p = window.location.pathname;
-        if (/^\\/[12]\\.[0-9]+[a-z]?-[a-z0-9-]+\\/?$/.test(p)) {
+        if (/^\\/[1-9]\\.[0-9]+[a-z]?-[a-z0-9-]+\\/?$/.test(p)) {
           var newPath = '/stats-pre1' + (p.charAt(p.length - 1) === '/' ? p : p + '/');
           window.location.replace(newPath + window.location.search + window.location.hash);
           return;
