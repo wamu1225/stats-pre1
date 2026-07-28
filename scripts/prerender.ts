@@ -18,24 +18,60 @@ const INDEX_HTML_PATH = path.join(DIST_DIR, 'index.html');
 const BASE_URL = 'https://study-apps.com/stats-pre1';
 const BASE = '/stats-pre1';
 
-function stripMarkdown(text: string): string {
-  return text
-    .replace(/\[\[.*?\]\]/g, '')
-    .replace(/\[([^\]\n]+)\]\([^)\n]+\)/g, '$1') // [ラベル](URL) → ラベルだけ残す
-    .replace(/\$\$[\s\S]*?\$\$/g, '')
-    .replace(/\$[^$]+\$/g, '')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.*?)\*/g, '$1')
-    .replace(/^[-*+]\s+/gm, '')
-    .replace(/^\d+\.\s+/gm, '')
-    .replace(/^\|.*\|$/gm, '')
-    .replace(/^[-|:\s]+$/gm, '')
-    .replace(/^---+$/gm, '')
-    .replace(/[\u{1F300}-\u{1FFFF}]/gu, '')
-    .replace(/[💡🎯⚠️✅❌🔴🟡🟢]/g, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+const escHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// 数式($...$)は静的HTMLでは描画できないため既存どおり除去。[[...]]・[ラベル](URL)も同様
+const inlineHtml = (s: string) => escHtml(
+  s.replace(/\[\[.*?\]\]/g, '')
+   .replace(/\[([^\]\n]+)\]\([^)\n]+\)/g, '$1')
+   .replace(/\$\$[\s\S]*?\$\$/g, '')
+   .replace(/\$[^$]+\$/g, '')
+).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+// 表・見出し・リスト・コールアウトを静的HTMLへ変換（旧stripMarkdownは表を丸ごと削除していたため新設）。
+// App.tsx のクラス名（content-h2/content-table/callout-tip等）と揃え、CSSを共有する。
+function mdToHtml(content: string): string {
+  const lines = content.split('\n');
+  const out: string[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const t = lines[i].trim();
+    if (t === '' || /^\[\[.*?\]\]$/.test(t)) { i++; continue; }
+    if (t.startsWith('|')) {
+      const rows: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) { rows.push(lines[i].trim()); i++; }
+      const parsed = rows.map((r) => r.split('|').slice(1, -1).map((c) => c.trim()));
+      const isSep = (r: string[]) => r.every((c) => /^[-:]+$/.test(c));
+      if (parsed.length >= 2) {
+        const [head, ...rest] = parsed;
+        const body = rest.filter((r) => !isSep(r));
+        const th = head.map((c) => `<th>${inlineHtml(c)}</th>`).join('');
+        const trs = body.map((cells) => '<tr>' + cells.map((c) => `<td>${inlineHtml(c)}</td>`).join('') + '</tr>').join('');
+        out.push(`<div class="content-table-wrap"><table class="content-table"><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`);
+      }
+      continue;
+    }
+    if (t.startsWith('#### ')) { out.push(`<h4 class="content-h4">${inlineHtml(t.slice(5))}</h4>`); i++; continue; }
+    if (t.startsWith('### ')) { out.push(`<h3 class="content-h3">${inlineHtml(t.slice(4))}</h3>`); i++; continue; }
+    if (t.startsWith('## ')) { out.push(`<h2 class="content-h2">${inlineHtml(t.slice(3))}</h2>`); i++; continue; }
+    if (/^---+$/.test(t)) { out.push('<hr class="content-hr">'); i++; continue; }
+    if (t.startsWith('💡 ')) { out.push(`<p class="content-p callout-tip">${inlineHtml(t.slice(2))}</p>`); i++; continue; }
+    if (t.startsWith('🎯 ')) { out.push(`<p class="content-p callout-target">${inlineHtml(t.slice(2))}</p>`); i++; continue; }
+    if (t.startsWith('⚠️ ')) { out.push(`<p class="content-p callout-warning">${inlineHtml(t.slice(3))}</p>`); i++; continue; }
+    if (/^\d+\.\s/.test(t)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^\d+\.\s/, '')); i++; }
+      out.push('<ol>' + items.map((it) => `<li>${inlineHtml(it)}</li>`).join('') + '</ol>');
+      continue;
+    }
+    if (/^[-*]\s/.test(t)) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^[-*]\s/, '')); i++; }
+      out.push('<ul>' + items.map((it) => `<li>${inlineHtml(it)}</li>`).join('') + '</ul>');
+      continue;
+    }
+    out.push(`<p class="content-p">${inlineHtml(t)}</p>`); i++;
+  }
+  return out.join('\n');
 }
 
 console.log('--- Starting Static Site Generation (SSG) Pre-rendering ---');
@@ -89,8 +125,8 @@ for (let i = 0; i < modules.length; i++) {
   }
 
   // A2: sections コンテンツも含めた本文
-  const sectionsText = (mod.sections ?? []).map(s => s.title + '\n' + stripMarkdown(s.content)).join('\n\n');
-  const seoText = (stripMarkdown(mod.content) + (sectionsText ? '\n\n' + sectionsText : '')).slice(0, 6000);
+  const sectionsHtml = (mod.sections ?? []).map(s => `<h2 class="content-h2">${escHtml(s.title)}</h2>${mdToHtml(s.content)}`).join('\n');
+  const seoText = mdToHtml(mod.content) + sectionsHtml;
 
   const pageUrl = `${BASE_URL}/${mod.id}/`;
   const pageTitle = `${mod.title} | 統計検定 準1級 学習リファレンス`;

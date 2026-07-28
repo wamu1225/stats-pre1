@@ -369,7 +369,7 @@ export function buildModuleSeoHtml(
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">${title}</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">${description}</p>
-  <div style="white-space:pre-line;color:#333">${seoText}</div>
+  <div style="color:#333">${seoText}</div>
   ${quizSnippet}
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="${base}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
