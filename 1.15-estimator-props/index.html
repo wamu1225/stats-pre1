@@ -74,39 +74,27 @@
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">推定量の性質：不偏性・一致性・有効性の理論</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式——推定量の品質を評価する理論を学びます。</p>
-  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
-
-前のモジュールでは「どうやってパラメータを推定するか」（最尤法・モーメント法）を学びました。このモジュールでは「その推定量は良い推定量か」を評価する4つの性質と、精度の理論的限界（クラーメル・ラオの不等式）を学びます。
-
- ダーツのたとえで4性質を覚える
-
-的の中心が「真の値 」、矢1本1本が「推定値 」とします。
-
-推定量の4つの性質
-
-不偏性（Unbiasedness）：何度も試行したとき矢の重心が的の中心に来ている——。標本平均  は母平均の不偏推定量。標本分散  は不偏でなく、 が不偏分散。
-
-一致性（Consistency）：矢の本数（データ数 ）を増やすほど中心に集まる——（）。大数の法則が典型例。
-
-有効性（Efficiency）：同じ「不偏な」推定量を比べたとき散らばり（分散）が最小——不偏推定量の中で分散が最小のものを最小分散不偏推定量（MVUE: Minimum Variance Unbiased Estimator）と呼びます。ラオ・ブラックウェルの定理は「十分統計量を使って任意の不偏推定量を改良し、MVUEを構成できる」ことを保証します。
-
-推定量の相対効率：2つの不偏推定量 ,  の相対効率 。 なら  のほうが効率的。正規分布で標本平均 vs. 標本中央値の相対効率は ——標本平均のほうが効率的です。
-
- 試験頻出：不偏性と一致性は独立した性質です。「不偏だが不一致」「不偏でないが一致」の推定量が存在します。
-
-ガウス・マルコフの定理
-
-ガウス・マルコフの定理（Gauss-Markov Theorem）：線形モデル （誤差は独立・等分散・期待値0を仮定）のもとで、最小二乗推定量（OLS）は線形不偏推定量の中で分散が最小です（BLUE: Best Linear Unbiased Estimator）。
-
-「BLUEである」＝「線形・不偏・最小分散」の3条件を同時に満たす唯一の推定量がOLSです。誤差の正規性は不要（等分散だけで十分）な点が重要です。
-
-クラーメル・ラオの不等式
-
-クラーメル・ラオの不等式（Cramér-Rao Inequality）は「どんな不偏推定量も超えられない精度の限界」を与えます。フィッシャー情報量が大きい（データが  の変化に敏感に反応する）ほど  を精確に推定できるため、分散の下限  は小さくなります——「情報が多いほど精度の上限も高くなる」という直感を式にしたものです：
-
- はフィッシャー情報量（Fisher Information）——「データが  についてどれだけ情報を持っているか」の指標です。 個の独立観測では下限は ——サンプルが増えるほど精度の限界が上がります。
-
-この下限を達成する不偏推定量を有効推定量（efficient estimator）と呼びます。正規分布の  に対する  が代表例。</div>
+  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
+<p class="content-p">前のモジュールでは「どうやってパラメータを推定するか」（最尤法・モーメント法）を学びました。このモジュールでは「その推定量は良い推定量か」を評価する4つの性質と、精度の理論的限界（クラーメル・ラオの不等式）を学びます。</p>
+<p class="content-p callout-tip"> <strong>ダーツのたとえで4性質を覚える</strong></p>
+<p class="content-p">的の中心が「真の値 」、矢1本1本が「推定値 」とします。</p>
+<hr class="content-hr">
+<h3 class="content-h3">1. 推定量の4つの性質</h3>
+<p class="content-p"><strong>不偏性</strong>（Unbiasedness）：何度も試行したとき矢の<strong>重心</strong>が的の中心に来ている——。標本平均  は母平均の不偏推定量。標本分散  は不偏でなく、 が不偏分散。</p>
+<p class="content-p"><strong>一致性</strong>（Consistency）：矢の本数（データ数 ）を増やすほど中心に集まる——（）。大数の法則が典型例。</p>
+<p class="content-p"><strong>有効性</strong>（Efficiency）：同じ「不偏な」推定量を比べたとき散らばり（分散）が最小——不偏推定量の中で分散が最小のものを<strong>最小分散不偏推定量</strong>（MVUE: Minimum Variance Unbiased Estimator）と呼びます。<strong>ラオ・ブラックウェルの定理</strong>は「十分統計量を使って任意の不偏推定量を改良し、MVUEを構成できる」ことを保証します。</p>
+<p class="content-p"><strong>推定量の相対効率</strong>：2つの不偏推定量 ,  の相対効率 。 なら  のほうが効率的。正規分布で標本平均 vs. 標本中央値の相対効率は ——標本平均のほうが効率的です。</p>
+<p class="content-p callout-target"> <strong>試験頻出</strong>：不偏性と一致性は独立した性質です。「不偏だが不一致」「不偏でないが一致」の推定量が存在します。</p>
+<hr class="content-hr">
+<h3 class="content-h3">2. ガウス・マルコフの定理</h3>
+<p class="content-p"><strong>ガウス・マルコフの定理</strong>（Gauss-Markov Theorem）：線形モデル （誤差は独立・等分散・期待値0を仮定）のもとで、最小二乗推定量（OLS）は<strong>線形不偏推定量の中で分散が最小</strong>です（<strong>BLUE</strong>: Best Linear Unbiased Estimator）。</p>
+<p class="content-p">「BLUEである」＝「線形・不偏・最小分散」の3条件を同時に満たす唯一の推定量がOLSです。誤差の正規性は不要（等分散だけで十分）な点が重要です。</p>
+<hr class="content-hr">
+<h3 class="content-h3">3. クラーメル・ラオの不等式</h3>
+<p class="content-p"><strong>クラーメル・ラオの不等式</strong>（Cramér-Rao Inequality）は「どんな不偏推定量も超えられない精度の限界」を与えます。フィッシャー情報量が大きい（データが  の変化に敏感に反応する）ほど  を精確に推定できるため、分散の下限  は小さくなります——「情報が多いほど精度の上限も高くなる」という直感を式にしたものです：</p>
+<p class="content-p"></p>
+<p class="content-p"> は<strong>フィッシャー情報量</strong>（Fisher Information）——「データが  についてどれだけ情報を持っているか」の指標です。 個の独立観測では下限は ——サンプルが増えるほど精度の限界が上がります。</p>
+<p class="content-p">この下限を達成する不偏推定量を<strong>有効推定量</strong>（efficient estimator）と呼びます。正規分布の  に対する  が代表例。</p></div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">

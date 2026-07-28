@@ -74,79 +74,53 @@
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">検定の実践：正規・適合度・ノンパラメトリック</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">正規分布の各種検定・適合度検定・ノンパラメトリック検定——試験頻出の実践的検定法を学びます。</p>
-  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
-
-前のモジュールで検定の理論的基礎（NP定理・大標本検定）を学びました。このモジュールでは試験頻出の実践的な検定法——正規分布に関する検定・適合度検定・ノンパラメトリック検定——を整理します。
-
-正規分布に関する検定
-
-「薬を飲む前後で血圧が変わったか？」「製品の重さが規格内か？」「2つの工場の不良率に差はあるか？」——状況によって使う検定式が変わります。各式で ・ は「帰無仮説で設定した母平均・母分散の値」です。
-
-母平均の検定（ 既知）：、両側検定で  なら棄却。
-
-母平均の検定（ 未知）：。
-
-母分散の検定：。
-
-2標本問題（等分散仮定あり）：。ここで  はプールした分散。
-
-母相関係数の検定（ のとき）：。
-
-正規性検定：どれを使うか
-
-正規分布を仮定する  検定などの前に「データが本当に正規分布に従うか」を確認するための検定です。
-
- 直感：「正規性の検定で帰無仮説（正規）を棄却できない」は「正規性が確認できた」を意味しません。 が小さければ検出力不足、 が極端に大きいと些細なずれでも棄却される、という二面性があります。Q-Q プロットの目視確認との併用が実務的です。
-
- よくある誤解：「Shapiro-Wilk で  だったから正規性が証明された」と結論するのは誤りです。正規性検定の帰無仮説は「データは正規分布に従う」で、非棄却は「正規性の証明」ではなく「正規性に矛盾する証拠が不十分」を意味するだけです。特に  など小標本では検出力が低く、本当は正規でなくても棄却されにくくなります。逆に  が非常に大きい場合（数千以上）はわずかな逸脱でも棄却されるため、検定だけに頼らず Q-Q プロットや歪度・尖度との総合判断が必要です。
-
-適合度検定と一般の分布の検定
-
-「データが特定の分布に従うか」を調べる検定です。
-
-適合度検定（Goodness-of-fit Test）： カテゴリの観測度数  と期待度数  の乖離を測ります：
-
- はデータから推定したパラメータ数（自由度から引く）。「サイコロは公正か？」「データは正規分布に従うか？」などに使います。二項分布・ポアソン分布などについても同様の  検定が適用できます。
-
-具体例：サイコロは公正か？
-
-サイコロを60回投げた結果、各目の出現回数が以下のとおりでした。
-
-公正なら各目の期待値は 。 統計量を計算します：
-
-自由度 （パラメータ推定なし）。。 なので 棄却できない → 「公正でないとは言えない」と結論します。P値はおよそ 0.64 です。
-
-ノンパラメトリック検定
-
-正規性などの分布の仮定をおかずに使える検定です。外れ値に強いという特長があります。
-
-ウィルコクソンの順位和検定（Wilcoxon 2標本検定）：2標本の分布が等しいかを順位データで検定します（Mann-Whitney の  検定と同値）。
-
-符号付き順位検定（Signed-Rank Test）：対応ありの2標本（前後比較など）で中央値の差を検定します。
-
-クラスカル・ウォリス検定（Kruskal-Wallis Test）：3群以上の比較で分散分析の代替として使います（一元配置 ANOVA のノンパラ版）。
-
-順位相関係数：スピアマンの （：順位の差）。「大小関係だけ」でデータの相関を測ります。
-
-並べ替え検定（Permutation Test）：「 が真なら、2グループへのラベル割り当ては任意のはず」という発想に基づく検定。分布の仮定が一切不要で、小標本でも正確です。
-
-ノンパラ検定の選び方：使い分け表
-
-「パラメトリックの代替として」どれを使うかを整理します。
-
- 直感：ノンパラ検定の核心は「順位（rank）に変換してから扱う」ことです。順位は最大値・最小値の影響を抑えるため、外れ値に頑健になります。一方で連続値の細かい情報を捨てるため、正規分布が本当に成立する状況では検出力がやや劣ります。
-
-検定の選び方フローチャート
-
-実務で「どの検定を使うべきか」迷ったときの判断フロー：
-
-データの構造を確認：独立 or 対応？群の数は？順序データか連続データか？
-正規性検定（Shapiro-Wilk 等）または Q-Q プロットで確認。
-正規性 OK → パラメトリック検定（・ANOVA など）を使う。
-正規性 NG または 順序データ → ノンパラ検定を使う。
-が極端に小さい（ など） → 並べ替え検定や正確検定を検討。
-
- 試験頻出：ノンパラ検定は「分布によらず使える」が「同じ状況なら対応する正規検定より検出力が低い」というトレードオフがあります。「ペアか独立か」「群数は2か3以上か」の2軸で適切な検定を選ぶ問題が頻出です。</div>
+  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
+<p class="content-p">前のモジュールで検定の理論的基礎（NP定理・大標本検定）を学びました。このモジュールでは試験頻出の<strong>実践的な検定法</strong>——正規分布に関する検定・適合度検定・ノンパラメトリック検定——を整理します。</p>
+<hr class="content-hr">
+<h3 class="content-h3">1. 正規分布に関する検定</h3>
+<p class="content-p">「薬を飲む前後で血圧が変わったか？」「製品の重さが規格内か？」「2つの工場の不良率に差はあるか？」——状況によって使う検定式が変わります。各式で ・ は「帰無仮説で設定した母平均・母分散の値」です。</p>
+<p class="content-p"><strong>母平均の検定（ 既知）</strong>：、両側検定で  なら棄却。</p>
+<p class="content-p"><strong>母平均の検定（ 未知）</strong>：。</p>
+<p class="content-p"><strong>母分散の検定</strong>：。</p>
+<p class="content-p"><strong>2標本問題（等分散仮定あり）</strong>：。ここで  はプールした分散。</p>
+<p class="content-p"><strong>母相関係数の検定</strong>（ のとき）：。</p>
+<hr class="content-hr">
+<h3 class="content-h3">2. 正規性検定：どれを使うか</h3>
+<p class="content-p">正規分布を仮定する  検定などの前に「データが本当に正規分布に従うか」を確認するための検定です。</p>
+<div class="content-table-wrap"><table class="content-table"><thead><tr><th>検定</th><th>標本サイズ</th><th>感度の特徴</th><th>推奨場面</th></tr></thead><tbody><tr><td>Shapiro-Wilk</td><td>小〜中（）</td><td>万能で検出力が高い</td><td>一般用途の第一選択</td></tr><tr><td>Anderson-Darling</td><td>中〜大</td><td>裾（外れ値）の逸脱に敏感</td><td>裾の挙動を重視する場合</td></tr><tr><td>Kolmogorov-Smirnov</td><td>大標本</td><td>分布の中央近辺で感度高</td><td>パラメータ既知の理論分布との比較</td></tr><tr><td>Jarque-Bera</td><td>大標本</td><td>歪度・尖度の組合せに着目</td><td>経済データなど</td></tr></tbody></table></div>
+<p class="content-p callout-tip"> <strong>直感</strong>：「正規性の検定で帰無仮説（正規）を棄却できない」は「正規性が確認できた」を意味しません。 が小さければ検出力不足、 が極端に大きいと些細なずれでも棄却される、という二面性があります。Q-Q プロットの目視確認との併用が実務的です。</p>
+<p class="content-p callout-warning"><strong>よくある誤解</strong>：「Shapiro-Wilk で  だったから正規性が証明された」と結論するのは誤りです。正規性検定の帰無仮説は「データは正規分布に従う」で、<strong>非棄却は「正規性の証明」ではなく「正規性に矛盾する証拠が不十分」を意味するだけ</strong>です。特に  など小標本では検出力が低く、本当は正規でなくても棄却されにくくなります。逆に  が非常に大きい場合（数千以上）はわずかな逸脱でも棄却されるため、検定だけに頼らず Q-Q プロットや歪度・尖度との総合判断が必要です。</p>
+<hr class="content-hr">
+<h3 class="content-h3">3. 適合度検定と一般の分布の検定</h3>
+<p class="content-p">「データが特定の分布に従うか」を調べる検定です。</p>
+<p class="content-p"><strong>適合度検定</strong>（Goodness-of-fit Test）： カテゴリの観測度数  と期待度数  の乖離を測ります：</p>
+<p class="content-p"></p>
+<p class="content-p"> はデータから推定したパラメータ数（自由度から引く）。「サイコロは公正か？」「データは正規分布に従うか？」などに使います。二項分布・ポアソン分布などについても同様の  検定が適用できます。</p>
+<p class="content-p"><strong>具体例：サイコロは公正か？</strong></p>
+<p class="content-p">サイコロを60回投げた結果、各目の出現回数が以下のとおりでした。</p>
+<div class="content-table-wrap"><table class="content-table"><thead><tr><th>目</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody><tr><td>観測 </td><td>8</td><td>12</td><td>14</td><td>9</td><td>7</td><td>10</td></tr><tr><td>期待 </td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td><td>10</td></tr></tbody></table></div>
+<p class="content-p">公正なら各目の期待値は 。 統計量を計算します：</p>
+<p class="content-p"></p>
+<p class="content-p"></p>
+<p class="content-p">自由度 （パラメータ推定なし）。。 なので <strong>棄却できない</strong> → 「公正でないとは言えない」と結論します。P値はおよそ 0.64 です。</p>
+<hr class="content-hr">
+<h3 class="content-h3">4. ノンパラメトリック検定</h3>
+<p class="content-p">正規性などの分布の仮定をおかずに使える検定です。外れ値に強いという特長があります。</p>
+<p class="content-p"><strong>ウィルコクソンの順位和検定</strong>（Wilcoxon 2標本検定）：2標本の分布が等しいかを順位データで検定します（Mann-Whitney の  検定と同値）。</p>
+<p class="content-p"><strong>符号付き順位検定</strong>（Signed-Rank Test）：対応ありの2標本（前後比較など）で中央値の差を検定します。</p>
+<p class="content-p"><strong>クラスカル・ウォリス検定</strong>（Kruskal-Wallis Test）：3群以上の比較で分散分析の代替として使います（一元配置 ANOVA のノンパラ版）。</p>
+<p class="content-p"><strong>順位相関係数</strong>：スピアマンの （：順位の差）。「大小関係だけ」でデータの相関を測ります。</p>
+<p class="content-p"><strong>並べ替え検定</strong>（Permutation Test）：「 が真なら、2グループへのラベル割り当ては任意のはず」という発想に基づく検定。分布の仮定が一切不要で、小標本でも正確です。</p>
+<hr class="content-hr">
+<h3 class="content-h3">5. ノンパラ検定の選び方：使い分け表</h3>
+<p class="content-p">「パラメトリックの代替として」どれを使うかを整理します。</p>
+<div class="content-table-wrap"><table class="content-table"><thead><tr><th>データ構造</th><th>パラメトリック</th><th>ノンパラ代替</th><th>用途</th></tr></thead><tbody><tr><td>独立2群</td><td>2標本  検定</td><td>Mann-Whitney （= Wilcoxon 順位和）</td><td> 検定の代替</td></tr><tr><td>対応2群（前後比較）</td><td>対応  検定</td><td>Wilcoxon 符号付き順位</td><td>対応  の代替</td></tr><tr><td>3群以上（独立）</td><td>一元配置 ANOVA</td><td>Kruskal-Wallis</td><td>ANOVA の代替</td></tr><tr><td>3群以上（対応）</td><td>反復測定 ANOVA</td><td>Friedman 検定</td><td>反復測定の代替</td></tr><tr><td>2変数の関係</td><td>Pearson 相関</td><td>Spearman 順位相関</td><td>相関の代替</td></tr></tbody></table></div>
+<p class="content-p callout-tip"> <strong>直感</strong>：ノンパラ検定の核心は「順位（rank）に変換してから扱う」ことです。順位は最大値・最小値の影響を抑えるため、外れ値に頑健になります。一方で連続値の細かい情報を捨てるため、正規分布が本当に成立する状況では検出力がやや劣ります。</p>
+<hr class="content-hr">
+<h3 class="content-h3">6. 検定の選び方フローチャート</h3>
+<p class="content-p">実務で「どの検定を使うべきか」迷ったときの判断フロー：</p>
+<ol><li><strong>データの構造を確認</strong>：独立 or 対応？群の数は？順序データか連続データか？</li><li><strong>正規性検定</strong>（Shapiro-Wilk 等）または Q-Q プロットで確認。</li><li><strong>正規性 OK</strong> → パラメトリック検定（・ANOVA など）を使う。</li><li><strong>正規性 NG</strong> または <strong>順序データ</strong> → ノンパラ検定を使う。</li><li><strong> が極端に小さい</strong>（ など） → 並べ替え検定や正確検定を検討。</li></ol>
+<p class="content-p callout-target"> <strong>試験頻出</strong>：ノンパラ検定は「分布によらず使える」が「同じ状況なら対応する正規検定より検出力が低い」というトレードオフがあります。「ペアか独立か」「群数は2か3以上か」の2軸で適切な検定を選ぶ問題が頻出です。</p></div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">

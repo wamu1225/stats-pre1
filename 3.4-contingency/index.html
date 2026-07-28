@@ -74,68 +74,43 @@
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">分割表の解析</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">カテゴリデータの関連性を測るオッズ比・連関係数から、対数線形モデルまで学びます。</p>
-  <div style="white-space:pre-line;color:#333">このモジュールで学ぶこと
-
-「喫煙と肺がんの関連はどのくらい強いか？」「新聞購読と政治的意見は関連しているか？」——カテゴリ変数どうしの関係を分析するのが分割表の解析です。連続変数の相関係数に相当するものとして、オッズ比・連関係数・対数線形モデルを学びます。
-
- 分割表：カテゴリ×カテゴリのクロス集計
-
-2つのカテゴリ変数を縦軸・横軸にとってカウントした表を分割表（Contingency Table）と呼びます。最もシンプルな2×2分割表の例：「喫煙×肺がん」
-
-喫煙者 かつ 肺がん有： 人
-喫煙者 かつ 肺がん無： 人
-非喫煙者 かつ 肺がん有： 人
-非喫煙者 かつ 肺がん無： 人
-
-オッズ比と連関係数
-
-オッズ比（Odds Ratio, OR）は2×2分割表の最重要指標です。喫煙→肺がんのオッズ比：
-
-：2変数は関連なし（独立）
-：リスク因子（喫煙者は非喫煙者より肺がんになりやすい）
-：保護因子
-
-対数オッズ比  は正規分布で近似しやすく、信頼区間の計算に使われます：
-
-ファイ係数（）：2×2表の相関係数の類似物：。（ が 0.1 前後は弱い関連、0.3 前後は中程度、0.5 以上は強い関連の目安）。
-
-クラメルのV： 表の連関の強さ：。
-
-分割表の独立性検定
-
-「2変数が独立かどうか」を 検定で判断します。
-
- 検定：独立の帰無仮説のもとで期待度数 （行総計×列総計/全体）を計算し：
-
-（二乗する理由：正と負の差が相殺しないため。 で割る理由：期待度数が大きいセルでは同じ「ズレ」でも相対的に小さいため、各セルを公平に評価するよう正規化する）
-
-自由度は （行数-1）×（列数-1）。
-
-注意：期待度数が5未満のセルがある場合は 近似が不適切で、フィッシャーの正確検定を使います。
-
-対数線形モデル
-
-2変数の独立性検定を超えて、3変数以上のカテゴリ間の複雑な関係を記述するのが対数線形モデルです。
-
-2変数 ,  の2×2表で、独立モデルの対数線形表現：
-
-交互作用を加えると：
-
-（すべての ）なら独立モデルです。
-
-階層モデル（Hierarchical Model）：高次の交互作用項が含まれるなら、それより低次の項も必ず含めるモデルです。実用上ほとんどの対数線形モデルは階層モデルです。
-
-条件付き独立性とグラフィカルモデル
-
-条件付き独立性（Conditional Independence）：第3の変数  を与えたとき、 と  が独立になる性質。
-
-例：「地域」を固定すれば「犯罪率」と「アイスクリームの売上」は独立（夏という共通原因が関係していた）。
-
-グラフィカルモデル（Graphical Model）：変数を頂点、条件付き依存関係を辺とするグラフで分布の構造を表現します。辺のないペアは条件付き独立です。
-
- 分割表の残差分析：ピアソン残差  が絶対値2以上のセルは独立から大きく外れています。
-
- 試験頻出：オッズ比の計算  と独立性検定の自由度  は確実に覚えましょう。</div>
+  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
+<p class="content-p">「喫煙と肺がんの関連はどのくらい強いか？」「新聞購読と政治的意見は関連しているか？」——カテゴリ変数どうしの関係を分析するのが<strong>分割表の解析</strong>です。連続変数の相関係数に相当するものとして、オッズ比・連関係数・対数線形モデルを学びます。</p>
+<p class="content-p callout-tip"> <strong>分割表：カテゴリ×カテゴリのクロス集計</strong></p>
+<p class="content-p">2つのカテゴリ変数を縦軸・横軸にとってカウントした表を<strong>分割表</strong>（Contingency Table）と呼びます。最もシンプルな2×2分割表の例：「喫煙×肺がん」</p>
+<ul><li>喫煙者 かつ 肺がん有： 人</li><li>喫煙者 かつ 肺がん無： 人</li><li>非喫煙者 かつ 肺がん有： 人</li><li>非喫煙者 かつ 肺がん無： 人</li></ul>
+<hr class="content-hr">
+<h3 class="content-h3">1. オッズ比と連関係数</h3>
+<p class="content-p"><strong>オッズ比</strong>（Odds Ratio, OR）は2×2分割表の最重要指標です。喫煙→肺がんのオッズ比：</p>
+<p class="content-p"></p>
+<ul><li>：2変数は関連なし（独立）</li><li>：リスク因子（喫煙者は非喫煙者より肺がんになりやすい）</li><li>：保護因子</li></ul>
+<p class="content-p">対数オッズ比  は正規分布で近似しやすく、信頼区間の計算に使われます：</p>
+<p class="content-p"></p>
+<p class="content-p"><strong>ファイ係数</strong>（）：2×2表の相関係数の類似物：。（ が 0.1 前後は弱い関連、0.3 前後は中程度、0.5 以上は強い関連の目安）。</p>
+<p class="content-p"><strong>クラメルのV</strong>： 表の連関の強さ：。</p>
+<hr class="content-hr">
+<h3 class="content-h3">2. 分割表の独立性検定</h3>
+<p class="content-p">「2変数が独立かどうか」を 検定で判断します。</p>
+<p class="content-p"><strong> 検定</strong>：独立の帰無仮説のもとで期待度数 （行総計×列総計/全体）を計算し：</p>
+<p class="content-p"></p>
+<p class="content-p">（二乗する理由：正と負の差が相殺しないため。 で割る理由：期待度数が大きいセルでは同じ「ズレ」でも相対的に小さいため、各セルを公平に評価するよう正規化する）</p>
+<p class="content-p">自由度は （行数-1）×（列数-1）。</p>
+<p class="content-p"><strong>注意</strong>：期待度数が5未満のセルがある場合は 近似が不適切で、フィッシャーの正確検定を使います。</p>
+<hr class="content-hr">
+<h3 class="content-h3">3. 対数線形モデル</h3>
+<p class="content-p">2変数の独立性検定を超えて、3変数以上のカテゴリ間の複雑な関係を記述するのが<strong>対数線形モデル</strong>です。</p>
+<p class="content-p">2変数 ,  の2×2表で、独立モデルの対数線形表現：</p>
+<p class="content-p"></p>
+<p class="content-p">交互作用を加えると：</p>
+<p class="content-p">（すべての ）なら独立モデルです。</p>
+<p class="content-p"><strong>階層モデル</strong>（Hierarchical Model）：高次の交互作用項が含まれるなら、それより低次の項も必ず含めるモデルです。実用上ほとんどの対数線形モデルは階層モデルです。</p>
+<hr class="content-hr">
+<h3 class="content-h3">4. 条件付き独立性とグラフィカルモデル</h3>
+<p class="content-p"><strong>条件付き独立性</strong>（Conditional Independence）：第3の変数  を与えたとき、 と  が独立になる性質。</p>
+<p class="content-p">例：「地域」を固定すれば「犯罪率」と「アイスクリームの売上」は独立（夏という共通原因が関係していた）。</p>
+<p class="content-p"><strong>グラフィカルモデル</strong>（Graphical Model）：変数を頂点、条件付き依存関係を辺とするグラフで分布の構造を表現します。辺のないペアは条件付き独立です。</p>
+<p class="content-p"> 分割表の残差分析：ピアソン残差  が絶対値2以上のセルは独立から大きく外れています。</p>
+<p class="content-p callout-target"> <strong>試験頻出</strong>：オッズ比の計算  と独立性検定の自由度  は確実に覚えましょう。</p></div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
