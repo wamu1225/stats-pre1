@@ -798,11 +798,16 @@ const notFoundHtml = `<!doctype html>
       // クライアントリダイレクトで救済（Search Console の 404 を解消し、被リンクの SEO 価値を維持）
       // ⚠️2026-05-29導入時は[12]（chapter1-2）のみだったが、後日追加されたchapter3（3.1-3.6）が
       // 404のまま放置されていた（2026-07-28 GSC実測で判明・O-2-7）。[1-9]へ拡張して将来のchapter追加にも対応。
+      // ⚠️2026-07-30追加：実在しないidも無条件に転送していた（soft-404。監督実測・O-2-7）ため、
+      // 実在するstats-pre1モジュールidの一覧と照合し、一致しないものは /stats-pre1/ トップへ送る。
+      var STATS_PRE1_IDS = ${JSON.stringify(modules.map((m) => m.id))};
       (function () {
         var p = window.location.pathname;
-        if (/^\\/[1-9]\\.[0-9]+[a-z]?-[a-z0-9-]+\\/?$/.test(p)) {
-          var newPath = '/stats-pre1' + (p.charAt(p.length - 1) === '/' ? p : p + '/');
-          window.location.replace(newPath + window.location.search + window.location.hash);
+        var m = p.match(/^\\/([1-9]\\.[0-9]+[a-z]?-[a-z0-9-]+)\\/?$/);
+        if (m) {
+          var id = m[1];
+          var base = STATS_PRE1_IDS.indexOf(id) >= 0 ? '/stats-pre1/' + id + '/' : '/stats-pre1/';
+          window.location.replace(base + window.location.search + window.location.hash);
           return;
         }
       })();
