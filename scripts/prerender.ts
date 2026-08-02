@@ -517,11 +517,17 @@ for (const [page, config] of Object.entries(staticPageContents)) {
 
   pageHtml = pageHtml.replace('<div id="root"></div>', `<div id="root">${config.bodyHtml}</div>`);
 
-  // B2: glossary に FAQPage JSON-LD
-  if (config.jsonLd) {
-    const jsonLdStr = JSON.stringify(config.jsonLd);
-    pageHtml = pageHtml.replace('</head>', `<script type="application/ld+json">${jsonLdStr}</script>\n  </head>`);
-  }
+  // B2: glossary に FAQPage JSON-LD。個別指定が無いページも WebPage JSON-LD を既定で付与
+  const pageJsonLd = config.jsonLd ?? {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: config.title,
+    description: config.description,
+    url: pageUrl,
+    inLanguage: 'ja',
+    isPartOf: { '@type': 'WebSite', name: '統計検定 準1級 学習リファレンス', url: `${BASE_URL}/` },
+  };
+  pageHtml = pageHtml.replace('</head>', `<script type="application/ld+json">${JSON.stringify(pageJsonLd)}</script>\n  </head>`);
 
   fs.writeFileSync(path.join(pageDir, 'index.html'), pageHtml);
   generatedCount++;
