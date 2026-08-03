@@ -289,11 +289,13 @@ for (let i = 0; i < modules.length; i++) {
   const pageTitle = `${mod.title} | 統計検定 準1級 学習リファレンス`;
 
   // クイズQ&Aスニペット（最初の3問）
+  // クイズ抜粋の数式は削除でなくinlineHtmlで実描画（2026-08-04・O-2-6再監査で発見：
+  // 従来は$...$を丸ごと削除しており、問題文が「n=25、、既知の のとき」のように破綻していた）。
   const quizSnippet = mod.quiz.slice(0, 3).map((q, qi) => {
     const correctAnswer = q.options[q.correctAnswer];
     return `<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
-  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q${qi + 1}. ${q.question.replace(/\$[^$]+\$/g, '').replace(/\*\*(.*?)\*\*/g, '$1')}</p>
-  <p style="margin:0;color:#444;font-size:0.92rem">A. ${correctAnswer.replace(/\$[^$]+\$/g, '').replace(/\*\*(.*?)\*\*/g, '$1')}</p>
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q${qi + 1}. ${inlineHtml(q.question)}</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. ${inlineHtml(correctAnswer)}</p>
 </div>`;
   }).join('\n');
 
