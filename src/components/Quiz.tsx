@@ -66,7 +66,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, sh
             className="btn"
             style={{
               background: selected === i
-                ? (i === question.correctAnswer ? '#22c55e' : '#ef4444')
+                ? (i === question.correctAnswer ? '#166534' : '#b91c1c')
                 : 'var(--card-bg)',
               color: selected === i ? 'white' : 'var(--text)',
               justifyContent: 'space-between',
@@ -95,7 +95,7 @@ export const Quiz: React.FC<Props> = ({ questions, onComplete, renderContent, sh
             style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--bg-warm)', borderRadius: '0.5rem', border: '1px solid var(--border)' }}
           >
             <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
-              <strong style={{ color: isCorrect ? '#22c55e' : '#ef4444' }}>
+              <strong style={{ color: isCorrect ? '#166534' : '#b91c1c' }}>
                 {isCorrect ? '正解！' : '不正解...'}
               </strong><br />
               {renderContent(question.explanation)}
