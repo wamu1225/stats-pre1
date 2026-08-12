@@ -724,6 +724,38 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'weekly',
     priority: '0.8',
   },
+  {
+    id: 'butsuzo-guide',
+    name: '仏像の見分け方ガイド',
+    shortName: '仏像の見分け方ガイド',
+    tag: '文化・宗教美術',
+    target: '寺や博物館で見た仏像の名前を知りたい方',
+    desc: '髪型・印相（手の形）・持物の3つの手がかりから、如来・菩薩・明王・天部のどの尊格かを絞り込める判定ツールが中心。図鑑では代表的な仏や有名な仏像も紹介し、間違えやすい仏どうしの違いも解説します。',
+    features: [
+      'トップは髪型→分類→印相／持物で絞り込む見分けフロー',
+      '印相は手の形そのものを図解（指の重なり・輪・貫通などを再現）',
+      '如来・菩薩・明王・天部の図鑑と、有名な仏像の紹介',
+    ],
+    sitemapMeta: '仏像の見分け方ガイド／髪型・印相・持物から尊格を判定・図鑑・間違えやすい仏の違い',
+    sitemapPages: [
+      { label: 'トップ（見分けフロー）', subpath: '' },
+      { label: '図鑑', subpath: 'zukan/' },
+      { label: '読みもの一覧', subpath: 'articles/' },
+      { label: '仏像の基本（如来・菩薩・明王・天部）', subpath: 'articles/basics/' },
+      { label: '髪型で見分ける', subpath: 'articles/hairstyle/' },
+      { label: '印相（手の形）で見分ける', subpath: 'articles/mudra/' },
+      { label: '持物で見分ける', subpath: 'articles/attributes/' },
+      { label: '間違えやすい仏の違い', subpath: 'articles/confusions/' },
+      { label: 'よくある疑問', subpath: 'articles/faq/' },
+      { label: 'サイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '髪型・印相・持物の3つの手がかりから、如来・菩薩・明王・天部のどの尊格かを絞り込める判定ツール。図鑑と、間違えやすい仏どうしの違いも扱う。',
+    useCaseLabel: '寺や博物館で見た仏像の名前を知りたい方',
+    useCaseDetail: '<a href="/butsuzo-guide/">仏像の見分け方ガイド</a>で、髪型・印相（手の形）・持物の手がかりから尊格を絞り込めます。印相は指の形そのものを図解し、間違えやすい仏どうしの違いも紹介します。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -855,7 +887,7 @@ if (fs.existsSync(portalIndexPath)) {
   // カテゴリ定義（学習→情報→ゲームの3ブロック。順序は build-loop.md 凍結タスク4）
   const CATEGORIES: { label: string; ids: string[] }[] = [
     { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
-    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide'] },
+    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide'] },
     { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku'] },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
