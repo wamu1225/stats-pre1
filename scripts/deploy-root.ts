@@ -756,6 +756,31 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    id: 'todofuken-master',
+    name: '都道府県マスター',
+    shortName: '都道府県マスター（47都道府県の地図学習ゲーム）',
+    tag: '地理ゲーム',
+    tagModifier: 'kids',
+    target: '小学3〜4年生 / 47都道府県の位置と形を覚えたい方',
+    desc: '実際の海岸線・県境データで描いた日本地図をさわりながら、47都道府県の位置と形を覚えるゲームです。名前が見える「さんぽ」、名前だけを頼りに探す「かくれんぼ」、輪郭だけで当てる「かたち」の3つの遊び方が、同じ地図の上でつながっています。',
+    features: [
+      'さんぽ・かくれんぼ・かたちの3モードが同じ地図を共有',
+      '地図はNatural Earthの実座標データを投影（手描きの模式図ではない）',
+      '地方区分での絞り込み表示にも対応',
+    ],
+    sitemapMeta: '47都道府県の地図学習ゲーム／さんぽ・かくれんぼ・かたちの3モード・地方区分フィルタ',
+    sitemapPages: [
+      { label: 'トップ（ゲーム）', subpath: '' },
+      { label: 'サイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '実際の地図データで47都道府県の位置と形を覚えるゲーム。さんぽ・かくれんぼ・かたちの3モードが同じ地図を共有する。',
+    useCaseLabel: 'お子さんの都道府県学習をサポートしたい方',
+    useCaseDetail: '<a href="/todofuken-master/">都道府県マスター</a>で、実際の地図データをさわりながら47都道府県を覚えられます。名前が見える「さんぽ」から、名前を頼りに探す「かくれんぼ」、形だけで当てる「かたち」まで、同じ地図の上で難易度が上がっていきます。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -888,7 +913,7 @@ if (fs.existsSync(portalIndexPath)) {
   const CATEGORIES: { label: string; ids: string[] }[] = [
     { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
     { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide'] },
-    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku'] },
+    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master'] },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
   const orderedSites = CATEGORIES.flatMap((c) => c.ids.map(findSite).filter((s): s is Site => !!s));
