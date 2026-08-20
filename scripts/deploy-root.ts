@@ -781,6 +781,30 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    id: 'snowpark-guide',
+    name: 'Snowpark ⇄ Polars 対応表',
+    shortName: 'Snowpark ⇄ Polars 対応表（DataFrame API 逆引きリファレンス）',
+    tag: '技術リファレンス',
+    target: 'Snowpark PythonとPolarsの間でコードを移行するデータエンジニア・アナリスト',
+    desc: 'Snowpark PythonのDataFrame/Column APIを、Polarsの同等コードと並べて確認できる逆引きリファレンス。挙動の違いと移行時の落とし穴をメソッドごとに解説します。',
+    features: [
+      '1メソッド=1ページ、検索窓とカテゴリ索引から引ける',
+      'Polarsコードは実行確認済み、Snowparkコードは静的検証（inspect.signature/hasattr）済み',
+      '各ページに検証日・ライブラリバージョン・公式リファレンスURLを明記',
+    ],
+    sitemapMeta: 'Snowpark⇄Polars DataFrame API 逆引き比較／射影・選択から順次拡張中',
+    sitemapPages: [
+      { label: 'トップ・検索', subpath: '' },
+      { label: 'このサイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: 'Snowpark PythonとPolarsのDataFrame/Column APIを1メソッド1ページで比較。挙動の違いと移行時の落とし穴、検証済みコード例つき。',
+    useCaseLabel: 'SnowparkとPolarsの間でコードを移行したい方',
+    useCaseDetail: '<a href="/snowpark-guide/">Snowpark ⇄ Polars 対応表</a>で、select・with_columns・group_byなどのメソッドをSnowparkとPolarsのコードを並べて確認できます。',
+    changefreq: 'weekly',
+    priority: '0.8',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -912,7 +936,7 @@ if (fs.existsSync(portalIndexPath)) {
   // カテゴリ定義（学習→情報→ゲームの3ブロック。順序は build-loop.md 凍結タスク4）
   const CATEGORIES: { label: string; ids: string[] }[] = [
     { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
-    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide'] },
+    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide', 'snowpark-guide'] },
     { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master'] },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
