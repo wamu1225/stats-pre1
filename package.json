@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "validate": "node scripts/validate-data.js",
-    "predeploy": "npm run validate && npm run build && npx tsx scripts/prerender.ts",
+    "predeploy": "node ../../_pipeline/tmp-tools/predeploy-guard.mjs && npm run validate && npm run build && npx tsx scripts/prerender.ts",
     "deploy": "gh-pages -d dist",
     "deploy:root": "npx tsx scripts/deploy-root.ts",
     "deploy:all": "npm run validate && npm run build && npx tsx scripts/prerender.ts && gh-pages -d dist && npx tsx scripts/deploy-root.ts"
