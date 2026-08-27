@@ -928,6 +928,61 @@ ${SITES_REGISTRY.map((s) => `        <li><a href="/${s.id}/">${s.name}</a></li>`
 fs.writeFileSync(path.join(PORTAL_DIR, '404.html'), notFoundHtml);
 console.log(`✅ Portal 404.html regenerated (${SITES_REGISTRY.length} sites listed)`);
 
+// ── 5b-2. 旧ルート直下URL（stats-pre1 がルート配信だった時代）の実ファイル転送ページ ──
+//
+// なぜ必要か（2026-08-28・ユーザー提供の GSC カバレッジで発覚）：
+// 404.html のクライアントサイド `location.replace` はブラウザでは正しく動くが、
+// **Googlebot が最初に受け取るのは HTTP 404** なので、検索エンジンから見ると何も解決していない。
+// GSC「見つかりませんでした（404）」に 48ページが 2026/05/02 から 4か月横ばいで残り、
+// 前回クロール日は全て 2026/06 ＝ 07-29 の修正以降 Google は一度もクロールしていなかった。
+//
+// GitHub Pages はサーバーサイドの 301 を返せないため、**実ファイルを置いて HTTP 200 を返し、
+// canonical で正規URLを指す**のが唯一の方法。noindex は付けない（付けると canonical による
+// 評価の移転が働かなくなる）。読者が来ても迷わないよう本文に移転案内とリンクを置く。
+//
+// ⚠️ 実在する37モジュールIDだけを対象にする。存在しないパスを 200 で返すのは soft-404 で
+// かえって有害なので、対象外は 404.html のクライアントリダイレクトに任せる（そちらは残す）。
+{
+  const legacyRedirects = modules.map((m) => ({ id: m.id, title: m.title }));
+  let written = 0;
+  for (const { id, title } of legacyRedirects) {
+    const dir = path.join(PORTAL_DIR, id);
+    const canonical = `https://study-apps.com/stats-pre1/${id}/`;
+    const html = `<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="canonical" href="${canonical}" />
+    <meta http-equiv="refresh" content="0; url=${canonical}" />
+    <title>移転しました：${title}｜統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="このページは ${canonical} へ移転しました。統計検定準1級の「${title}」の解説は移転先でご覧いただけます。" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <style>
+      body{font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+        line-height:1.8;max-width:640px;margin:0 auto;padding:48px 20px;color:#1f2937}
+      a{color:#1d4ed8}
+      .note{background:#f1f5f9;border-left:4px solid #94a3b8;padding:12px 16px;margin:24px 0}
+    </style>
+  </head>
+  <body>
+    <h1>ページが移転しました</h1>
+    <p class="note">
+      統計検定 準1級 学習リファレンスの「${title}」は、以下のURLへ移転しました。
+    </p>
+    <p><a href="${canonical}">${canonical}</a></p>
+    <p>自動で移動しない場合は、上のリンクをクリックしてください。</p>
+    <p><a href="/">study-apps.com のトップへ</a></p>
+  </body>
+</html>
+`;
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), html);
+    written++;
+  }
+  console.log(`✅ Legacy root redirects written as real files (${written} module ids → /stats-pre1/<id>/)`);
+}
+
 // ── 5c. portal index.html のサイトカード + JSON-LD 自動更新 ──
 const portalIndexPath = path.join(PORTAL_DIR, 'index.html');
 if (fs.existsSync(portalIndexPath)) {
