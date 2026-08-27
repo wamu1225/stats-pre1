@@ -855,14 +855,21 @@ ${SITES_REGISTRY.map((s) => `  <sitemap>
 fs.writeFileSync(path.join(PORTAL_DIR, 'sitemap-index.xml'), sitemapIndexXml);
 console.log(`✅ Portal sitemap-index.xml regenerated (${SITES_REGISTRY.length + 1} sitemaps)`);
 
-// ── 5a-3. portal robots.txt（サイトマップインデックスを参照・自動維持）──
+// ── 5a-3. portal robots.txt（サイトマップを列挙・自動維持）──
+// index だけを指していた時期（〜2026-08）に、GSC が sitemap-index.xml を
+// 2026-05-31 以降読み込まず、06-11 以降に公開した17サイト分の
+// サイトマップが一度も検出されないという事故が起きた。
+// robots.txt は index より高頻度で読まれるため、個別サイトマップも全て列挙して
+// 発見経路を二重化する（Sitemap 行の複数指定は sitemaps.org 仕様で許容）。
 const robotsTxt = `User-agent: *
 Allow: /
 
 Sitemap: ${BASE_URL}/sitemap-index.xml
+Sitemap: ${BASE_URL}/sitemap.xml
+${SITES_REGISTRY.map((s) => `Sitemap: ${BASE_URL}/${s.id}/sitemap.xml`).join('\n')}
 `;
 fs.writeFileSync(path.join(PORTAL_DIR, 'robots.txt'), robotsTxt);
-console.log('✅ Portal robots.txt regenerated (points to sitemap-index.xml)');
+console.log(`✅ Portal robots.txt regenerated (${SITES_REGISTRY.length + 2} sitemap lines)`);
 
 // ── 5b. portal 404.html の自動生成 ──────────────
 const notFoundHtml = `<!doctype html>
