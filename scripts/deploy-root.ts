@@ -805,6 +805,31 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'weekly',
     priority: '0.8',
   },
+  {
+    id: 'capital-quiz',
+    name: '世界の首都クイズ',
+    shortName: '世界の首都クイズ（外務省の公表情報にもとづく地理クイズ）',
+    tag: '地理クイズ',
+    target: '世界地理・時事に関心がある方 / 首都名を正確に覚え直したい方',
+    desc: '外務省の公表情報にもとづく世界200の国・地域の首都クイズ。オランダ・ボリビア・南アフリカ・台湾のように、単純な暗記では扱いにくい「訳ありの首都」を主役に据え、解説つきで扱う。',
+    features: [
+      '地域別クイズ（7地域）と、訳ありの首都だけを集めた「首都トリビア」モードの2本柱',
+      '200の国・地域それぞれに個別ページ（首都・正式名称・出典・訳あり解説）',
+      '出典はすべて外務省の公表情報。国ごとにMOFAの一次情報ページへ直接リンク',
+    ],
+    sitemapMeta: '世界の首都クイズ／地域別クイズ7地域＋首都トリビア＋国別ページ200件',
+    sitemapPages: [
+      { label: 'トップ（モード選択）', subpath: '' },
+      { label: '国と首都の一覧', subpath: 'countries/' },
+      { label: 'このサイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '外務省の公表情報にもとづく世界の首都クイズ。憲法上の首都と実際の政府所在地が違う国など「訳あり」の首都を解説つきで扱う。',
+    useCaseLabel: '世界の国と首都を正確に覚え直したい方',
+    useCaseDetail: '<a href="/capital-quiz/">世界の首都クイズ</a>で、7地域の通常クイズに加えて、オランダ・ボリビア・台湾のような「訳ありの首都」だけを集めた首都トリビアに挑戦できます。外務省の公表情報にもとづき、なぜその首都になっているかの解説つきです。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -999,7 +1024,7 @@ if (fs.existsSync(portalIndexPath)) {
   const CATEGORIES: { label: string; ids: string[] }[] = [
     { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
     { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide', 'snowpark-guide'] },
-    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master'] },
+    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master', 'capital-quiz'] },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
   const orderedSites = CATEGORIES.flatMap((c) => c.ids.map(findSite).filter((s): s is Site => !!s));
