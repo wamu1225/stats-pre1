@@ -830,6 +830,31 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    id: 'fukagawa-history',
+    name: '深川さんぽ史',
+    shortName: '深川さんぽ史（街路に残る運河の記憶をたどるガイド）',
+    tag: '歴史・散策',
+    target: '深川を歩く方・江東区の歴史に興味のある方',
+    desc: '東京都江東区・深川地区の不自然に広い道や蛇行する緑地は、江戸時代の運河が埋め立てられた跡。採荼庵跡・富岡八幡宮・木場公園など、実在する7地点をつなぐ散歩ルートで、街の形に残る水路の記憶をたどります。',
+    features: [
+      '採荼庵跡から木場公園まで、実在7地点を地理的順路でつなぐ散歩ルート',
+      '各地点で「かつて何があったか」と「今何が見えるか」を対で提示',
+      '江東区公式・深川江戸資料館・首都高速道路株式会社などの一次情報で事実確認',
+    ],
+    sitemapMeta: '深川さんぽ史／運河跡を歩く散歩ルート・記事8本（採荼庵・富岡八幡宮・木場公園ほか）',
+    sitemapPages: [
+      { label: 'トップ（さんぽルート）', subpath: '' },
+      { label: '記事一覧', subpath: 'articles/' },
+      { label: 'このサイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '深川の街路や公園の形に残る運河の痕跡を、実在7地点をつなぐ散歩ルートで紹介。江東区公式・深川江戸資料館などの一次情報で事実確認。',
+    useCaseLabel: '深川を歩く前に土地の歴史を知りたい方',
+    useCaseDetail: '<a href="/fukagawa-history/">深川さんぽ史</a>で、採荼庵跡・富岡八幡宮・木場公園など7地点をつなぐ散歩ルートをたどりながら、道路や公園の形に残る運河の記憶を知ることができます。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -1023,7 +1048,7 @@ if (fs.existsSync(portalIndexPath)) {
   // カテゴリ定義（学習→情報→ゲームの3ブロック。順序は build-loop.md 凍結タスク4）
   const CATEGORIES: { label: string; ids: string[] }[] = [
     { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
-    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide', 'snowpark-guide'] },
+    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide', 'snowpark-guide', 'fukagawa-history'] },
     { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master', 'capital-quiz'] },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
