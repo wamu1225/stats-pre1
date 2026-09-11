@@ -1071,10 +1071,33 @@ if (fs.existsSync(portalIndexPath)) {
   let portalIndex = fs.readFileSync(portalIndexPath, 'utf-8');
 
   // カテゴリ定義（学習→情報→ゲームの3ブロック。順序は build-loop.md 凍結タスク4）
+  // 🔒 並び順の規則（2026-09-12 ユーザー指摘「ポータルのサイトの並びがぐちゃぐちゃ」）
+  //    **新しいサイトを配列の末尾に足さない**。下の小見出しが示す主題のかたまりの中へ入れる。
+  //    かたまりの中は「入門→専門」「級の易しい順」「対象年齢の低い順」で並べる。
   const CATEGORIES: { label: string; ids: string[] }[] = [
-    { label: '学習サイト', ids: ['stats-g3', 'stats-g2', 'stats-pre1', 'color-g3', 'color-uc', 'bizlaw-g3', 'mhm-g3', 'eng-confusables'] },
-    { label: '情報サイト', ids: ['beets-info', 'sprout-info', 'gajumaru-info', 'monstera-info', 'chalk-lab', 'kameido-history', 'kofun-guide', 'macedonia-info', 'sekki-guide', 'tide-guide', 'butsuzo-guide', 'snowpark-guide', 'fukagawa-history', 'yanaka-history'] },
-    { label: 'ゲーム', ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master', 'capital-quiz'] },
+    {
+      label: '学習サイト',
+      ids: [
+        'stats-g3', 'stats-g2', 'stats-pre1',      // 統計検定（級の易しい順）
+        'color-g3', 'color-uc',                     // 色彩検定
+        'bizlaw-g3', 'mhm-g3',                      // 働くための法務・メンタルヘルス
+        'eng-confusables',                          // 語学
+      ],
+    },
+    {
+      label: '情報サイト',
+      ids: [
+        'kameido-history', 'fukagawa-history', 'yanaka-history',   // 東京の地域史
+        'kofun-guide', 'butsuzo-guide', 'macedonia-info',          // 歴史と文化
+        'sekki-guide', 'tide-guide',                               // 暮らしの中の自然の周期
+        'monstera-info', 'gajumaru-info', 'sprout-info', 'beets-info', // 植物（観葉→育てて食べる）
+        'chalk-lab', 'snowpark-guide',                             // ものと技術
+      ],
+    },
+    {
+      label: 'ゲーム',
+      ids: ['densha_asobi', 'kuku-oukoku', 'todofuken-master', 'capital-quiz'],  // 対象年齢の低い順
+    },
   ];
   const findSite = (id: string) => SITES_REGISTRY.find((s) => s.id === id);
   const orderedSites = CATEGORIES.flatMap((c) => c.ids.map(findSite).filter((s): s is Site => !!s));
