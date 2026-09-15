@@ -11,8 +11,8 @@
     "validate": "node scripts/validate-data.js",
     "predeploy": "node ../../_pipeline/tmp-tools/predeploy-guard.mjs && node ../../_pipeline/tmp-tools/depth-topics-guard.mjs && npm run validate && npm run build && npx tsx scripts/prerender.ts && node ../../_pipeline/tmp-tools/prerender-svg-guard.mjs",
     "deploy": "gh-pages -d dist",
-    "deploy:root": "npx tsx scripts/deploy-root.ts",
-    "deploy:all": "npm run validate && npm run build && npx tsx scripts/prerender.ts && gh-pages -d dist && npx tsx scripts/deploy-root.ts"
+    "deploy:root": "node ../../_pipeline/tmp-tools/portal-freshness-guard.mjs && npx tsx scripts/deploy-root.ts",
+    "deploy:all": "npm run validate && npm run build && npx tsx scripts/prerender.ts && gh-pages -d dist && node ../../_pipeline/tmp-tools/portal-freshness-guard.mjs && npx tsx scripts/deploy-root.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",
