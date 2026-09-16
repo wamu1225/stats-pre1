@@ -907,6 +907,31 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    id: 'tsukuda-history',
+    name: '佃島の歴史と文化ガイド',
+    shortName: '佃島の歴史と文化ガイド（住吉神社・佃煮・リバーシティ21）',
+    tag: '歴史・散策',
+    target: '佃島・月島を歩く方、江戸の漁村と超高層再開発の対比に興味のある方',
+    desc: '東京都中央区の佃島を、摂津の漁民が埋め立てた地名の由来から通史、創建以来続く住吉神社の信仰、佃煮の老舗3軒、石川島造船所からリバーシティ21への変貌まで一次情報で紹介します。元佃の路地とリバーシティ21の超高層群がどれだけ近いかは、境界線を歩く記事でたどれます。',
+    features: [
+      '地名の由来・通史・社寺・名物・産業・文化を9記事で通して読める',
+      'リバーシティ21の3タワー（31階290戸〜54階756戸）の規模比較や、IHIの社名変遷（石川島重工業→石川島播磨重工業→株式会社IHI）など具体的な数値と年で記述',
+      '中央区公式、住吉神社、IHI公式、三井不動産などの一次情報で事実確認',
+    ],
+    sitemapMeta: '佃島の歴史と文化ガイド／地名の由来・通史・社寺・名物・産業・文化の記事9本（住吉神社、佃煮、リバーシティ21ほか）',
+    sitemapPages: [
+      { label: 'トップ（分野別の入口）', subpath: '' },
+      { label: '記事一覧', subpath: 'articles/' },
+      { label: 'このサイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '佃島の地名の由来、通史、住吉神社、佃煮の老舗3軒、石川島造船所からリバーシティ21への変貌を一次情報で紹介。元佃とリバーシティ21の境界線は歩いてたどれる形で解説。',
+    useCaseLabel: '佃島の歴史と文化をひととおり知りたい方',
+    useCaseDetail: '<a href="/tsukuda-history/">佃島の歴史と文化ガイド</a>で、地名の由来から住吉神社の信仰、佃煮の老舗、石川島造船所からリバーシティ21への変貌までを一次情報で確かめながら読めます。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -1114,7 +1139,7 @@ if (fs.existsSync(portalIndexPath)) {
     {
       label: '情報サイト',
       ids: [
-        'kameido-history', 'fukagawa-history', 'yanaka-history', 'oji-history',   // 東京の地域史
+        'kameido-history', 'fukagawa-history', 'yanaka-history', 'oji-history', 'tsukuda-history',   // 東京の地域史
         'kofun-guide', 'butsuzo-guide', 'macedonia-info',          // 歴史と文化
         'sekki-guide', 'tide-guide',                               // 暮らしの中の自然の周期
         'monstera-info', 'gajumaru-info', 'sprout-info', 'beets-info', // 植物（観葉→育てて食べる）
