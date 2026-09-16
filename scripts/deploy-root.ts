@@ -882,6 +882,31 @@ const SITES_REGISTRY: Site[] = [
     changefreq: 'monthly',
     priority: '0.7',
   },
+  {
+    id: 'oji-history',
+    name: '王子の歴史と文化ガイド',
+    shortName: '王子の歴史と文化ガイド（王子田楽・製紙業・狐火伝承）',
+    tag: '歴史・散策',
+    target: '王子を歩く方、近代化産業遺産や東京の下町の歴史に興味のある方',
+    desc: '東京都北区の王子を、若一王子勧請による地名の由来から通史、王子神社・王子稲荷神社と中世様式の王子田楽、渋沢栄一の製紙業と軍需産業、装束稲荷の狐火伝承まで一次情報で紹介します。飛鳥山公園から装束稲荷神社までの6地点は実座標地図つきでたどれます。',
+    features: [
+      '地名の由来・通史・社寺・名物・産業・文化を10記事で通して読める',
+      '抄紙会社の出願(1872)・設立(1873)・操業開始(1875)の3年を峻別するなど、年代の混同を避けて記述',
+      '北区公式、渋沢史料館、文化庁文化財データベース、国立国会図書館デジタルなどの一次情報で事実確認',
+    ],
+    sitemapMeta: '王子の歴史と文化ガイド／地名の由来・通史・社寺・名物・産業・文化の記事10本（王子田楽、製紙業、装束稲荷の狐火伝承ほか）',
+    sitemapPages: [
+      { label: 'トップ（分野別の入口）', subpath: '' },
+      { label: '記事一覧', subpath: 'articles/' },
+      { label: 'このサイトについて', subpath: 'about/' },
+      { label: 'プライバシーポリシー', subpath: 'privacy/' },
+    ],
+    aboutDesc: '王子の地名の由来、通史、王子神社・王子稲荷神社と王子田楽、渋沢栄一の製紙業と軍需産業、装束稲荷の狐火伝承を一次情報で紹介。飛鳥山公園から装束稲荷神社までの6地点は実座標地図つき。',
+    useCaseLabel: '王子の歴史と文化をひととおり知りたい方',
+    useCaseDetail: '<a href="/oji-history/">王子の歴史と文化ガイド</a>で、地名の由来から王子田楽、渋沢栄一の製紙業、装束稲荷の狐火伝承までを一次情報で確かめながら読めます。飛鳥山公園から装束稲荷神社までの6地点は実座標地図つきでたどれます。',
+    changefreq: 'monthly',
+    priority: '0.7',
+  },
 ];
 
 const PORTAL_PAGES_SITEMAP = [
@@ -1089,7 +1114,7 @@ if (fs.existsSync(portalIndexPath)) {
     {
       label: '情報サイト',
       ids: [
-        'kameido-history', 'fukagawa-history', 'yanaka-history',   // 東京の地域史
+        'kameido-history', 'fukagawa-history', 'yanaka-history', 'oji-history',   // 東京の地域史
         'kofun-guide', 'butsuzo-guide', 'macedonia-info',          // 歴史と文化
         'sekki-guide', 'tide-guide',                               // 暮らしの中の自然の周期
         'monstera-info', 'gajumaru-info', 'sprout-info', 'beets-info', // 植物（観葉→育てて食べる）
