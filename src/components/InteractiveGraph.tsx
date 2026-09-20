@@ -10,6 +10,7 @@ import {
   Line,
   ComposedChart,
   Area,
+  Bar,
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { normalPDF, tPDF, chi2PDF, fPDF } from '../utils/math';
@@ -26,11 +27,61 @@ const typeToTitle: Record<string, string> = {
   chi2: 'χ²分布：自由度による形状の変化',
   f: 'F分布：2つの分散の比較',
   pca: '主成分分析：情報の集約',
+  outlier: '判別分析：グループ境界の決まり方',
+  mcmc: 'MCMC：サンプリングで分布を近似する',
   update: 'ベイズ更新：確信度の変化',
   overfit: '過学習：モデルの複雑さと汎化性能',
   multico: '多重共線性：不安定な係数',
   skewkurt: '歪度と尖度：分布の形を読む'
 };
+
+// 固定シードの疑似乱数（mulberry32）。スライダーを動かすたびに点群が
+// 総入れ替えになると「動かして観察する」体験にならないため、独立な
+// 標準正規乱数だけを一度生成し、相関係数はその上への線形変換で表現する。
+function mulberry32(seed: number) {
+  let a = seed;
+  return () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function standardNormalPairs(count: number, seed: number): { z1: number; z2: number }[] {
+  const rand = mulberry32(seed);
+  const out: { z1: number; z2: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    // Box-Muller
+    const u1 = Math.max(rand(), 1e-9);
+    const u2 = rand();
+    const r = Math.sqrt(-2 * Math.log(u1));
+    out.push({ z1: r * Math.cos(2 * Math.PI * u2), z2: r * Math.sin(2 * Math.PI * u2) });
+  }
+  return out;
+}
+
+// MCMC実演用の目標分布（双峰）とメトロポリス法サンプラー。
+// 乱数列は固定シードで一度だけ生成し、スライダーは「先頭から何個使うか」を
+// 動かすだけにする＝サンプルが増えるほどヒストグラムが目標分布に近づく様子を
+// 滑らかに観察できる（毎回再サンプリングすると軌跡が飛んで比較にならない）。
+function mcmcTarget(x: number): number {
+  return 0.5 * normalPDF(x, -2, 0.7) + 0.5 * normalPDF(x, 2, 0.7);
+}
+function runMetropolis(steps: number, seed: number): number[] {
+  const rand = mulberry32(seed);
+  let x = 0;
+  const samples: number[] = [];
+  for (let i = 0; i < steps; i++) {
+    const u1 = Math.max(rand(), 1e-9);
+    const u2 = rand();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    const xProp = x + z * 1.2;
+    const accept = Math.min(1, mcmcTarget(xProp) / Math.max(mcmcTarget(x), 1e-12));
+    if (rand() < accept) x = xProp;
+    samples.push(x);
+  }
+  return samples;
+}
 
 export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const title = typeToTitle[type] || '統計シミュレーター';
@@ -38,6 +89,15 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const [df, setDf] = useState(5);
   const [degree, setDegree] = useState(1);
   const [corr, setCorr] = useState(0.9);
+  const [pcaCorr, setPcaCorr] = useState(0.8);
+  const [ldaCorr, setLdaCorr] = useState(0);
+  const [mcmcN, setMcmcN] = useState(50);
+  const basePairs = useMemo(() => standardNormalPairs(60, 42), []);
+  const mcmcSamples = useMemo(() => runMetropolis(1500, 123), []);
+  const ldaBasePairs = useMemo(
+    () => ({ g1: standardNormalPairs(30, 7), g2: standardNormalPairs(30, 99) }),
+    [],
+  );
 
   // Data generation for charts
   const chartData = useMemo(() => {
@@ -116,9 +176,58 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         line.push({ x, y });
       }
       return { line, dots: basePoints };
+    } else if (type === 'pca') {
+      // 分散1の標準化済み2変数（相関 pcaCorr）。共分散行列 [[1,ρ],[ρ,1]] の固有ベクトルは
+      // 常に (1,1)/√2 と (1,-1)/√2、固有値は 1+ρ と 1-ρ（ρ≥0の場合、第1主成分は(1,1)方向）。
+      const rho = pcaCorr;
+      const points = basePairs.map(({ z1, z2 }) => ({
+        x: z1,
+        y: rho * z1 + Math.sqrt(1 - rho * rho) * z2,
+      }));
+      const dir = { x: Math.SQRT1_2, y: Math.SQRT1_2 }; // 第1主成分の方向（ρ≥0）
+      const span = 2.8;
+      const axis = [
+        { x: -span * dir.x, y: -span * dir.y },
+        { x: span * dir.x, y: span * dir.y },
+      ];
+      const contribution = (1 + rho) / 2;
+      return { points, axis, contribution };
+    } else if (type === 'outlier') {
+      // 判別分析：等分散2群 Σ=[[1,ρ],[ρ,1]]、平均差 μ1-μ2=(-2sep,0) のとき、
+      // フィッシャーの判別方向は w ∝ Σ^-1(μ1-μ2) ∝ (1, -ρ)。境界（wに直交）は方向 (ρ, 1) を通る。
+      const rho = ldaCorr;
+      const sep = 1.4;
+      const transform = (z1: number, z2: number, cx: number) => ({
+        x: cx + z1,
+        y: rho * z1 + Math.sqrt(1 - rho * rho) * z2,
+      });
+      const group1 = ldaBasePairs.g1.map(({ z1, z2 }) => transform(z1, z2, -sep));
+      const group2 = ldaBasePairs.g2.map(({ z1, z2 }) => transform(z1, z2, sep));
+      const span = 3.2;
+      const bLen = Math.sqrt(rho * rho + 1);
+      const boundary = [
+        { x: -span * (rho / bLen), y: -span * (1 / bLen) },
+        { x: span * (rho / bLen), y: span * (1 / bLen) },
+      ];
+      return { group1, group2, boundary };
+    } else if (type === 'mcmc') {
+      const used = mcmcSamples.slice(0, mcmcN);
+      const binWidth = 0.5;
+      const min = -5, max = 5;
+      const binCount = Math.round((max - min) / binWidth);
+      const counts = new Array(binCount).fill(0);
+      for (const s of used) {
+        const idx = Math.min(binCount - 1, Math.max(0, Math.floor((s - min) / binWidth)));
+        counts[idx]++;
+      }
+      const hist = counts.map((c, i) => {
+        const x = min + (i + 0.5) * binWidth;
+        return { x, density: c / (used.length * binWidth), target: mcmcTarget(x) };
+      });
+      return { hist };
     }
     return data;
-  }, [type, n, df, degree]);
+  }, [type, n, df, degree, pcaCorr, basePairs, ldaCorr, ldaBasePairs, mcmcN, mcmcSamples]);
 
   const renderChart = () => {
     if (type === 'overfit') {
@@ -138,6 +247,70 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
               <Scatter data={dots} fill="#1e293b" />
             </ComposedChart>
           </ResponsiveContainer>
+        </div>
+      );
+    }
+
+    if (type === 'pca') {
+      const { points, axis, contribution } = chartData as { points: { x: number; y: number }[]; axis: { x: number; y: number }[]; contribution: number };
+      return (
+        <div style={{ position: 'relative' }}>
+          <div className="stat-badge" style={{ position: 'absolute', top: -10, right: 0, zIndex: 10, background: 'var(--primary)', color: 'white' }}>
+            第1主成分の寄与率: {(contribution * 100).toFixed(0)}%
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ComposedChart margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" dataKey="x" domain={[-3, 3]} hide />
+              <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
+              <Scatter data={points} dataKey="y" fill="var(--primary)" fillOpacity={0.55} isAnimationActive={false} />
+              <Line data={axis} dataKey="y" stroke="#ef4444" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
+            赤線: 第1主成分の方向。相関を強めるとデータが赤線上に集中し、寄与率が上がります。
+          </div>
+        </div>
+      );
+    }
+
+    if (type === 'outlier') {
+      const { group1, group2, boundary } = chartData as { group1: { x: number; y: number }[]; group2: { x: number; y: number }[]; boundary: { x: number; y: number }[] };
+      return (
+        <div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ComposedChart margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" dataKey="x" domain={[-4, 4]} hide />
+              <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
+              <Scatter data={group1} dataKey="y" fill="#3b82f6" fillOpacity={0.6} isAnimationActive={false} />
+              <Scatter data={group2} dataKey="y" fill="#f59e0b" fillOpacity={0.6} isAnimationActive={false} />
+              <Line data={boundary} dataKey="y" stroke="#1e293b" strokeWidth={2.5} strokeDasharray="6 3" dot={false} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
+            破線: 判別境界。2群の分散共分散が同じでも、変数間の相関が変わると境界の傾きが変わります。
+          </div>
+        </div>
+      );
+    }
+
+    if (type === 'mcmc') {
+      const { hist } = chartData as { hist: { x: number; density: number; target: number }[] };
+      return (
+        <div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ComposedChart data={hist} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="x" hide />
+              <YAxis hide />
+              <Bar dataKey="density" fill="var(--primary)" fillOpacity={0.5} isAnimationActive={false} />
+              <Line dataKey="target" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
+            赤線: 目標分布（双峰）。棒: これまでに生成したサンプルのヒストグラム。サンプル数を増やすと棒が赤線に近づきます。
+          </div>
         </div>
       );
     }
@@ -285,6 +458,24 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             <div className="btn-group">
               {[1, 2, 5].map(d => <button key={d} className={`btn-sm ${degree === d ? 'active' : ''}`} onClick={() => setDegree(d)}>{d === 1 ? '直線' : d === 2 ? '曲線' : '複雑'}</button>)}
             </div>
+          </div>
+        )}
+        {type === 'pca' && (
+          <div className="slider-container">
+            <div className="slider-label"><span>2変数の相関</span> <span>{pcaCorr.toFixed(2)}</span></div>
+            <input type="range" min="0" max="0.95" step="0.05" value={pcaCorr} onChange={e => setPcaCorr(parseFloat(e.target.value))} />
+          </div>
+        )}
+        {type === 'outlier' && (
+          <div className="slider-container">
+            <div className="slider-label"><span>2変数の相関（両群共通）</span> <span>{ldaCorr.toFixed(2)}</span></div>
+            <input type="range" min="-0.9" max="0.9" step="0.1" value={ldaCorr} onChange={e => setLdaCorr(parseFloat(e.target.value))} />
+          </div>
+        )}
+        {type === 'mcmc' && (
+          <div className="slider-container">
+            <div className="slider-label"><span>サンプル数</span> <span>{mcmcN}</span></div>
+            <input type="range" min="20" max="1500" step="20" value={mcmcN} onChange={e => setMcmcN(parseInt(e.target.value))} />
           </div>
         )}
         {type === 'multico' && (
