@@ -341,7 +341,37 @@
   flex-shrink: 0;
   min-width: 110px;
 }
-.module-key-formula-math { flex: 1; overflow-x: auto; }
+.module-key-formula-math {
+  flex: 1;
+  /* 🔒 min-width:0 が無いと flex 子要素は既定の min-width:auto で中身より縮まず、
+     親をはみ出して分数が途中で切れる（2026-10-07 ユーザー指摘で発覚）。 */
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* はみ出しているときはスクロールバーを見せる＝「動かせる」ことが分かるように */
+  scrollbar-width: thin;
+  padding-bottom: 0.15rem;
+}
+/* 分数が主なので、この枠だけ KaTeX を既定(1.21em)より少し小さくして横幅を稼ぐ */
+.module-key-formulas .katex { font-size: 1.05em; }
+
+/* 🔒 数式が途中で切れる問題（2026-10-07 ユーザー指摘「数式が途中で切れているように表示される。
+   スクロールで動かすこともできるけど、表示範囲が小さくて見づらい」）。
+   原因＝ラベルが min-width:110px・flex-shrink:0 で固定幅を取るため、390px 幅では
+   コンテナ約350px − ラベル110px − gap16px ＝ **数式に約224px しか残らない**。
+   対策＝狭い画面ではラベルを数式の上に積み、数式に全幅（約350px＝+56%）を渡す。
+   それでも長い式はスクロールするが、切れ方が「分数の途中」ではなくなる。 */
+@media (max-width: 640px) {
+  .module-key-formula-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    padding: 0.6rem 0;
+  }
+  .module-key-formula-label { min-width: 0; }
+  .module-key-formula-math { width: 100%; }
+}
 
 /* ── Callouts: 💡 ヒント / 🎯 使いどころ（塗り・角丸のカード風は使わず、細い罫のみ） ─────── */
 .callout-tip,
