@@ -75,7 +75,7 @@ $$P(A \\cup B) = P(A) + P(B) - P(A \\cap B)$$
 📖 **3事象への拡張**
 
 3つの事象では「2つ重なる部分を引き過ぎた分」をまた足す必要があります：
-$$P(A \\cup B \\cup C) = P(A) + P(B) + P(C) - P(A \\cap B) - P(B \\cap C) - P(A \\cap C) + P(A \\cap B \\cap C)$$
+$$\\begin{aligned}P(A \\cup B \\cup C) =\\;& P(A) + P(B) + P(C) \\\\ &- P(A \\cap B) - P(B \\cap C) - P(A \\cap C) \\\\ &+ P(A \\cap B \\cap C)\\end{aligned}$$
 
 **ド・モルガンの法則**は補事象を組み合わせた変換です。「$A$ か $B$ のどちらも起きない」とは「$A$ が起きない、かつ $B$ が起きない」と同じ意味です。この言い換えを式にすると：
 
@@ -144,7 +144,7 @@ $$P(A \\cap B) = P(B \\mid A) \\cdot P(A)$$
 
 例：袋に赤玉3個・白玉2個。1個取り出して戻さずにもう1個取る。2個とも赤の確率は？
 
-$$P(\\text{1回目赤} \\cap \\text{2回目赤}) = P(\\text{2回目赤} \\mid \\text{1回目赤}) \\cdot P(\\text{1回目赤}) = \\frac{2}{4} \\times \\frac{3}{5} = \\frac{3}{10}$$
+$$\\begin{aligned}P(\\text{1回目赤} \\cap \\text{2回目赤}) &= P(\\text{2回目赤} \\mid \\text{1回目赤}) \\cdot P(\\text{1回目赤}) \\\\ &= \\frac{2}{4} \\times \\frac{3}{5} = \\frac{3}{10}\\end{aligned}$$
 
 次に、互いに排反で全事象を分割する事象の組 $B_1, B_2, \\ldots, B_n$（これを**完全系**と呼びます）を使うと、任意の事象 $A$ の確率を次のように表せます。これが**全確率の定理**（Total Probability Theorem）です：
 
@@ -250,11 +250,11 @@ PMF・PDF・CDF で「どの値がどのくらい出やすいか」という分�
 
 **期待値**（Expected Value）$E[X]$ は確率による加重平均です。サイコロ（1〜6が等確率）の期待値は $(1+2+3+4+5+6)/6 = 3.5$ です。一般形：
 
-$$E[X] = \\sum_x x \\cdot P(X=x) \\quad \\text{（離散）}, \\quad E[X] = \\int_{-\\infty}^{\\infty} x f(x)\\,dx \\quad \\text{（連続）}$$
+$$\\begin{aligned}E[X] &= \\sum_x x \\cdot P(X=x) && \\text{（離散）} \\\\ E[X] &= \\int_{-\\infty}^{\\infty} x f(x)\\,dx && \\text{（連続）}\\end{aligned}$$
 
 **分散**（Variance）$\\text{Var}(X) = E[(X - \\mu)^2]$ は「期待値からのズレの二乗の平均」で、広がりを表します。この定義式を展開すると計算で便利な形が導かれます：
 
-$$\\text{Var}(X) = E[(X-\\mu)^2] = E[X^2 - 2\\mu X + \\mu^2] = E[X^2] - 2\\mu E[X] + \\mu^2 = E[X^2] - (E[X])^2$$
+$$\\begin{aligned}\\text{Var}(X) &= E[(X-\\mu)^2] \\\\ &= E[X^2 - 2\\mu X + \\mu^2] \\\\ &= E[X^2] - 2\\mu E[X] + \\mu^2 \\\\ &= E[X^2] - (E[X])^2\\end{aligned}$$
 
 （途中で $E[X] = \\mu$、$E[2\\mu X] = 2\\mu E[X]$ という期待値の線形性を使っています。）標準偏差は $\\sigma = \\sqrt{\\text{Var}(X)}$ です。
 
@@ -1506,7 +1506,7 @@ $p$ はデータから推定したパラメータ数（自由度から引く）�
 
 公正なら各目の期待値は $60/6 = 10$。$\\chi^2$ 統計量を計算します：
 
-$$\\chi^2 = \\frac{(8-10)^2}{10} + \\frac{(12-10)^2}{10} + \\frac{(14-10)^2}{10} + \\frac{(9-10)^2}{10} + \\frac{(7-10)^2}{10} + \\frac{(10-10)^2}{10}$$
+$$\\begin{aligned}\\chi^2 =\\;& \\frac{(8-10)^2}{10} + \\frac{(12-10)^2}{10} + \\frac{(14-10)^2}{10} \\\\ &+ \\frac{(9-10)^2}{10} + \\frac{(7-10)^2}{10} + \\frac{(10-10)^2}{10}\\end{aligned}$$
 
 $$= 0.4 + 0.4 + 1.6 + 0.1 + 0.9 + 0 = 3.4$$
 

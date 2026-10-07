@@ -604,6 +604,33 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 0.25rem;
+  scrollbar-width: thin;
+}
+
+/* 🔒 数式の横あふれ対策（2026-10-07・ユーザー指摘「他のモジュールでも問題が発生している」）。
+   本番46ページを390px幅で実測したところ **23ページ** ではみ出していた。
+   最大は包除原理の3事象の式で **必要682px 対 画面390px** ＝ 縮小なしでは原理的に収まらない。
+   実際の縮小は MathDisplay が描画後に実測して font-size で行う（下限 62%）。ここはその受け皿。 */
+
+/* インライン経路（主要公式・公式集・用語集はこちらを通る）を測れるようにする。
+   span のままでは clientWidth / scrollWidth が意味を持たず、自動縮小が効かない。 */
+.katex-inline {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+  scrollbar-width: thin;
+}
+
+/* 下限まで縮めても収まらない式。中央寄せのままだと左右とも切れて「途中から」表示され、
+   それが「数式が途中で切れている」の見え方そのものだった。左寄せにして先頭から読ませる。
+   ⚠️ KaTeX は displayMode のとき自分でも `.katex-display` の span を出すので、
+   左寄せは子孫まで届かせる（自分だけに掛けると内側の中央寄せが勝つ）。 */
+.math-overflowing,
+.math-overflowing .katex-display,
+.math-overflowing .katex {
+  text-align: left;
 }
 
 .content-body {
