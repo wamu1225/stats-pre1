@@ -188,7 +188,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.7-multivariate/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.8-sampling/</loc>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
