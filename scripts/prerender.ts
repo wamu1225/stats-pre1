@@ -431,11 +431,11 @@ const randomQuizSampleHtml = `<div style="background:#eff6ff;border-bottom:1px s
 const staticPageContents: Record<string, { title: string; description: string; bodyHtml: string; jsonLd?: object }> = {
   glossary: {
     title: '用語集',
-    description: '統計検定準1級の頻出用語を一覧で解説。確率分布・推測統計・多変量解析・ベイズ統計・時系列分析など試験に出る統計用語を網羅。',
+    description: '統計検定準1級の用語を一覧で解説。確率分布・推測統計・多変量解析・ベイズ統計・時系列分析など試験に出る統計用語を網羅。',
     bodyHtml: `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="${BASE}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:20px">用語集</h1>
-  <p style="color:#555;margin-bottom:24px">統計検定準1級の頻出用語を一覧で解説します。全${glossaryTerms.length}用語を難易度別に表示しています。</p>
+  <p style="color:#555;margin-bottom:24px">統計検定準1級の用語を一覧で解説します。全${glossaryTerms.length}用語を難易度別に表示しています。</p>
 ${glossaryTermsHtml}
 </article>`,
     jsonLd: { '@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': glossaryFaqItems }

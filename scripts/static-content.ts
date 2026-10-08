@@ -8,7 +8,7 @@ export function buildCheatsheetHtml(base: string): string {
   return `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="${base}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:20px">公式集</h1>
-  <p style="color:#555;margin-bottom:24px">統計検定準1級の重要公式を分野別にまとめています。試験で頻出の公式・定理を網羅しています。</p>
+  <p style="color:#555;margin-bottom:24px">統計検定準1級の重要公式を分野別にまとめています。出題範囲に関わる主要な公式・定理をまとめています。</p>
 
   <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">確率の基礎</h2>
   <p style="color:#444"><strong>コルモゴロフの公理</strong>：確率は「非負性 P(A)≥0」「正規化 P(Ω)=1」「加法性（互いに排反な事象の和の確率は各確率の和）」の3条件を満たします。</p>
@@ -167,21 +167,14 @@ export function buildGuideHtml(base: string): string {
     <li><strong>生成AI（ChatGPT / Perplexity）</strong>：ワークブックの難解な数式をステップバイステップで解説させる。証明の行間を埋める24時間家庭教師として活用できる。</li>
   </ul>
 
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">重要出題分野</h2>
-  <ul style="color:#444;padding-left:20px">
-    <li><strong>多変量解析</strong>（最重要）：主成分分析・因子分析・判別分析・クラスター分析。準1級の合否を最も左右するエリア。</li>
-    <li><strong>統計ソフト出力の解釈</strong>（最重要）：R/Pythonの回帰分析・分散分析表の出力からp値・VIF・F値を読み取る問題が増加中。</li>
-    <li><strong>ベイズ統計</strong>（重要）：共役事前分布・事後分布の更新・MCMCの基本的な考え方。</li>
-    <li><strong>時系列解析</strong>（重要）：AR・MAモデル・自己相関・定常性の概念。ARIMA・スペクトル解析。</li>
-    <li><strong>モデル選択・評価</strong>（重要）：AIC・BIC・ROC曲線・AUC。計算だけでなく意味を深く問われる。</li>
-    <li><strong>分散分析（ANOVA）</strong>（標準）：自由度・平均平方・F値の関係性。分散分析表の空欄補充。</li>
-  </ul>
+  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">出題範囲の主な分野</h2>
+  <p style="color:#444">統計検定公式サイトの準1級出題範囲表は、確率と確率変数・統計的推測（推定・検定）・回帰分析・分散分析と実験計画法・多変量解析・時系列解析・分割表・モデル選択・ベイズ法・シミュレーションなど、複数の大項目で構成されています。範囲表は出題の頻度や配点を示すものではないため、このサイトでは分野ごとの重みづけをしていません。最新の範囲は<a href="https://www.toukei-kentei.jp/grade/grade_pre-1">統計検定公式サイトの準1級のページ</a>で確認してください。</p>
 
   <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">本番に向けた実践アドバイス</h2>
   <ul style="color:#444;padding-left:20px">
     <li><strong>時間感覚を身につける：</strong>1問あたり平均3分が目安。解けない問題に時間をかけすぎず、確実に取れる問題から先に解く。</li>
     <li><strong>電卓操作に習熟する：</strong>ルート計算・メモリ機能を含む操作に慣れておく。CBTでは計算ミスが直接失点につながる。</li>
-    <li><strong>優先度をつけて学習する：</strong>多変量解析と統計ソフト出力解釈を最優先に。ただしCBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。</li>
+    <li><strong>優先度をつけて学習する：</strong>出題範囲表の大項目に一通り目を通し、苦手な分野から手厚く進める。CBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。</li>
     <li><strong>数学的基礎を固める：</strong>行列の積・逆行列・固有値分解の理解が多変量解析の理解を劇的に加速させる。</li>
   </ul>
   <p style="color:#166534;background:#f0fdf4;border-radius:8px;padding:10px 14px">このサイトの学習リファレンスは、試験範囲に沿って構成されています。各モジュールの理解度チェックで定着を確認しながら進めましょう。</p>
@@ -209,7 +202,7 @@ export function buildAboutHtml(base: string): string {
       <li><strong>第1章（23モジュール）</strong>：確率論の基礎・各種確率分布・推測統計（推定・検定・漸近理論）</li>
       <li><strong>第2章（7モジュール）</strong>：多変量解析（回帰分析・主成分分析・判別分析・因子分析・クラスター・GLM）</li>
       <li><strong>第3章（6モジュール）</strong>：ベイズ統計・時系列分析・マルコフ連鎖・分割表・生存時間・シミュレーション</li>
-      <li><strong>用語集</strong>：準1級頻出用語の解説（英語名・難易度レベル付き）</li>
+      <li><strong>用語集</strong>：準1級の用語解説（英語名・難易度レベル付き）</li>
       <li><strong>公式集</strong>：全分野の重要公式・定理を一覧（印刷対応）</li>
       <li><strong>試験ガイド</strong>：試験概要・出題範囲・学習の進め方</li>
       <li><strong>検定・分布の使い分けガイド</strong>：状況からどの分布・検定・手法を使うか逆引きできる早見表</li>

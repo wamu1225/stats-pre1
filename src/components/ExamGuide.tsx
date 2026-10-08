@@ -46,19 +46,6 @@ const ResourceItem: React.FC<{ name: string; type: string; desc: string }> = ({ 
   </div>
 );
 
-const FieldItem: React.FC<{ priority: '最重要' | '重要' | '標準'; title: string; detail: string }> = ({ priority, title, detail }) => {
-  const color = priority === '最重要' ? '#ef4444' : priority === '重要' ? '#f59e0b' : '#3b82f6';
-  return (
-    <div style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', alignItems: 'flex-start' }}>
-      <span className="stat-badge" style={{ flexShrink: 0, fontSize: '0.65rem', background: color, color: 'white' }}>{priority}</span>
-      <div>
-        <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{title}</div>
-        <div style={{ fontSize: '0.78rem', color: '#64748b', marginTop: '0.15rem' }}>{detail}</div>
-      </div>
-    </div>
-  );
-};
-
 export const ExamGuide: React.FC = () => (
   <div>
     <div style={{ marginBottom: '1.5rem' }}>
@@ -145,14 +132,11 @@ export const ExamGuide: React.FC = () => (
       <ResourceItem name="生成AI（ChatGPT / Perplexity）" type="AI" desc="ワークブックの難解な数式をステップバイステップで解説させる。証明の行間を埋める24時間家庭教師として活用できる。" />
     </Section>
 
-    {/* 重要出題分野 */}
-    <Section title="重要出題分野">
-      <FieldItem priority="最重要" title="多変量解析" detail="主成分分析・因子分析・判別分析・クラスター分析。準1級の合否を最も左右するエリア。" />
-      <FieldItem priority="最重要" title="統計ソフト出力の解釈" detail="R/Pythonの回帰分析・分散分析表の出力からp値・VIF・F値を読み取る問題が増加中。" />
-      <FieldItem priority="重要" title="ベイズ統計" detail="共役事前分布・事後分布の更新・MCMCの基本的な考え方。" />
-      <FieldItem priority="重要" title="時系列解析" detail="AR・MAモデル・自己相関・定常性の概念。ARIMA・スペクトル解析。" />
-      <FieldItem priority="重要" title="モデル選択・評価" detail="AIC・BIC・ROC曲線・AUC。計算だけでなく意味を深く問われる。" />
-      <FieldItem priority="標準" title="分散分析（ANOVA）" detail="自由度・平均平方・F値の関係性。分散分析表の空欄補充。" />
+    {/* 出題範囲の主な分野 */}
+    <Section title="出題範囲の主な分野">
+      <div style={{ fontSize: '0.8rem', color: '#475569', lineHeight: 1.7 }}>
+        統計検定公式サイトの準1級出題範囲表は、確率と確率変数・統計的推測（推定・検定）・回帰分析・分散分析と実験計画法・多変量解析・時系列解析・分割表・モデル選択・ベイズ法・シミュレーションなど、複数の大項目で構成されています。範囲表は出題の頻度や配点を示すものではないため、このサイトでは分野ごとの重みづけをしていません。最新の範囲は<a href="https://www.toukei-kentei.jp/grade/grade_pre-1" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>統計検定公式サイトの準1級のページ</a>で確認してください。
+      </div>
     </Section>
 
     {/* 実践的アドバイス */}
@@ -160,7 +144,7 @@ export const ExamGuide: React.FC = () => (
       {[
         { icon: '⏱', title: '時間感覚を身につける', body: '1問あたり平均3分が目安。解けない問題に時間をかけすぎず、確実に取れる問題から先に解く。' },
         { icon: '🔢', title: '電卓操作に習熟する', body: 'ルート計算・メモリ機能を含む操作に慣れておく。CBTでは計算ミスが直接失点につながる。' },
-        { icon: '🗂', title: '優先度をつけて学習する', body: '多変量解析と統計ソフト出力解釈を最優先に。ただしCBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。' },
+        { icon: '🗂', title: '優先度をつけて学習する', body: '出題範囲表の大項目に一通り目を通し、苦手な分野から手厚く進める。CBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。' },
         { icon: '📐', title: '数学的基礎を固める', body: '行列の積・逆行列・固有値分解の理解が多変量解析の理解を劇的に加速させる。' },
       ].map(a => (
         <div key={a.title} style={{ display: 'flex', gap: '0.75rem', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
