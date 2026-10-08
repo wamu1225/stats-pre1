@@ -37,15 +37,21 @@ function renderMath(formula: string, block: boolean): string {
 // 残りの地の文はescHtmlし、数式はrenderMathでHTML化（escHtmlしない＝renderMathの出力はそのまま埋め込む）。
 const inlineHtml = (raw: string): string => {
   const s = raw.replace(/\[\[.*?\]\]/g, '').replace(/\[([^\]\n]+)\]\([^)\n]+\)/g, '$1');
-  const tokens = s.split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+\$)/g);
+  return renderInline(s);
+};
+// 太字は数式を内包しうる（**一般化したのが$n$次モーメント**）。数式より先に太字を最外で切り、中身を再帰で処理する
+// （数式を先に切ると太字が $...$ の両側に分断され、** が文字として残った＝O-3-47）。
+function renderInline(s: string): string {
+  const tokens = s.split(/(\$\$[\s\S]+?\$\$|\$[^$\n]+\$|\*\*[\s\S]+?\*\*)/g);
   return tokens
     .map((t) => {
       if (t.startsWith('$$') && t.endsWith('$$') && t.length >= 4) return renderMath(t.slice(2, -2), true);
+      if (t.startsWith('**') && t.endsWith('**') && t.length >= 4) return '<strong>' + renderInline(t.slice(2, -2)) + '</strong>';
       if (t.startsWith('$') && t.endsWith('$') && t.length >= 2) return renderMath(t.slice(1, -1), false);
-      return escHtml(t).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      return escHtml(t);
     })
     .join('');
-};
+}
 
 // App.tsx内のJSX図（[[key]]でReact専用に描画されるSVG/表）を静的HTMLでも表示する（2026-07-30・O-2-6続報）。
 // これまで行ごと除去され図が1つも無かった。固定座標・固定数式（props/state非依存）のもののみ複製し、
