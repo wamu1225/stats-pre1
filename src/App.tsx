@@ -1,4 +1,5 @@
 // stats-app/src/App.tsx
+import { covQuadrantsFigure, partialCorrFigure } from './data/corrFigures';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
 import { modules } from './data/modules';
@@ -197,7 +198,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[cov-quadrants\]\]|\[\[resid-steps\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
       const parts = t.split(regex);
       return (
         <>
@@ -303,6 +304,8 @@ function App() {
                 </figcaption>
               </figure>
             );
+            if (part === '[[cov-quadrants]]') return <div key={key} dangerouslySetInnerHTML={{ __html: covQuadrantsFigure() }} />;
+            if (part === '[[resid-steps]]') return <div key={key} dangerouslySetInnerHTML={{ __html: partialCorrFigure() }} />;
             if (part === '[[ci-coverage]]') {
               const trueX = 182;
               const intervals: [number, number][] = [
