@@ -91,7 +91,7 @@ export function covQuadrantsFigure(): string {
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 x（平均 x̄ より右ほど x−x̄ が正）／縦軸 y</text>
   </svg>`;
 
-  const cap = `各点について (x−x̄)(y−ȳ) を作る。平均の位置（点線の交点）を原点にすると、これは<strong>点と原点を結ぶ長方形の、符号つきの面積</strong>になる。右上と左下の点は面積が正（青）、左上と右下の点は負（橙）。共分散はこの面積を全点で平均したもの。この例では${n}点中${inPos}点が右上か左下にあり、Cov = ${f2(cov(xs, ys))}（相関係数 r = ${f2(corr(xs, ys))}）と正になる。点が左上から右下へ並べば負の点が増えて、Cov は負になる。`;
+  const cap = `各点について (x−x̄)(y−ȳ) を作ります。平均の位置（点線の交点）を原点にすると、これは<strong>点と原点を結ぶ長方形の、符号つきの面積</strong>になります。右上と左下の点は面積が正（青）、左上と右下の点は負（橙）です。共分散は、この面積を全点で平均したものです。この例では${n}点中${inPos}点が右上か左下にあり、Cov = ${f2(cov(xs, ys))}（相関係数 r = ${f2(corr(xs, ys))}）と正になります。点が左上から右下へ並べば負の点が増え、Cov は負になります。`;
   return `<figure class="venn-figure">${svg}<figcaption class="venn-caption">${cap}</figcaption></figure>`;
 }
 
@@ -151,6 +151,6 @@ export function partialCorrFigure(): string {
     ${panel(x1, y2, `③ Z で Y を説明`, `橙の線＝残差 e_Y`, zs, ys, { color: INDIGO, line: fy, resid: true })}
     ${panel(x2, y2, `④ 残差 e_X と e_Y`, `r = ${f2(pr)}（偏相関）`, rx, ry, { color: AMBER, zero: true })}
   </svg>`;
-  const cap = `X（アイスの売上）と Y（溺死者数）はどちらも Z（気温）に引っぱられて動く。① そのままでは r = ${f2(rXY)} と強い正の相関に見える。② ③ Z で X と Y をそれぞれ直線で説明し（Z との相関は r(X,Z) = ${f2(rXZ)}、r(Y,Z) = ${f2(rYZ)}）、直線で説明できなかった差（橙の線）を残差 e_X、e_Y とする。④ 気温の影響を引いた残差どうしを散布図にすると、相関は r = ${f2(pr)} までほぼ消える。この ④ の相関が偏相関係数 r(XY·Z) で、前の式の結果と一致する。`;
+  const cap = `X（アイスの売上）と Y（溺死者数）は、どちらも Z（気温）に引っぱられて動きます。① そのままでは r = ${f2(rXY)} と、強い正の相関に見えます。② ③ Z で X と Y をそれぞれ直線で説明し（Z との相関は r(X,Z) = ${f2(rXZ)}、r(Y,Z) = ${f2(rYZ)}）、直線で説明しきれなかった差（橙の線）を残差 e_X、e_Y とします。④ 気温の影響を引いた残差どうしを散布図にすると、相関は r = ${f2(pr)} までほぼ消えます。この ④ の相関が偏相関係数 r(XY·Z) で、前の式で計算した値と一致します。`;
   return `<figure class="venn-figure">${svg}<figcaption class="venn-caption">${cap}</figcaption></figure>`;
 }
