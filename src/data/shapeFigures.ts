@@ -742,12 +742,84 @@ function monteCarloPi(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.6 節1：離散一様分布（サイコロ） ============
+function uniformDice(): string {
+  const W = 340, H = 200;
+  const b: Box = { x: 30, y: 26, w: 296, h: 120, xMin: 0.5, xMax: 6.5, yMax: 0.25 };
+  const mean = 3.5, v = 35 / 12;
+  const svg = `${svgOpen(W, H, 'サイコロの目は1から6まで同じ確率1/6の離散一様分布')}
+    ${axes(b, [1, 2, 3, 4, 5, 6])}
+    ${bars(b, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.4)}
+    <text x="${b.x - 4}" y="${f1(PY(b, 1 / 6) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">1/6</text>
+    <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, mean))}" y="${b.y - 8}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
+    <line x1="${f1(PX(b, mean - Math.sqrt(v)))}" y1="${b.y + b.h + 26}" x2="${f1(PX(b, mean + Math.sqrt(v)))}" y2="${b.y + b.h + 26}" stroke="${TEAL}" stroke-width="2" />
+    <text x="${f1(PX(b, mean))}" y="${b.y + b.h + 42}" text-anchor="middle" font-size="11" fill="${TEAL}">平均 ± 標準偏差 √(35/12) ≈ ${f2(Math.sqrt(v))}</text>
+  </svg>`;
+  const cap = `サイコロの目の分布です。棒の高さはどれも 1/6 で、山も谷もない平らな形が<strong>一様</strong>という名前の意味です。平均 (6+1)/2 = 3.5 は棒の真ん中の位置で、実際には出ない値です。分散は (6² − 1)/12 = 35/12 ≈ ${f2(v)}、標準偏差は約 ${f2(Math.sqrt(v))} で、緑の線の幅がそのおおよその広がりです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.6 節2：ベルヌーイ分布と分散 p(1−p) ============
+function bernoulli(): string {
+  const W = 350, H = 220;
+  const L: Box = { x: 22, y: 36, w: 120, h: 130, xMin: -0.5, xMax: 1.5, yMax: 1 };
+  const R: Box = { x: 186, y: 36, w: 150, h: 130, xMin: 0, xMax: 1, yMax: 0.3 };
+  const p = 0.3;
+  const svg = `${svgOpen(W, H, 'ベルヌーイ分布は0と1の2本の棒。分散 p(1−p) は p=0.5 で最大の0.25')}
+    <text x="${L.x}" y="16" font-size="12" font-weight="700" fill="${INK}">p = ${p} のとき</text>
+    ${axes(L, [0, 1])}
+    ${bars(L, [0, 1], [1 - p, p], INDIGO, 0.45)}
+    <text x="${f1(PX(L, 0))}" y="${f1(PY(L, 1 - p) - 6)}" text-anchor="middle" font-size="12" fill="${INK}">${1 - p}</text>
+    <text x="${f1(PX(L, 1))}" y="${f1(PY(L, p) - 6)}" text-anchor="middle" font-size="12" fill="${INK}">${p}</text>
+    <text x="${f1(PX(L, 0))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">失敗</text>
+    <text x="${f1(PX(L, 1))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">成功</text>
+    <text x="${R.x}" y="16" font-size="12" font-weight="700" fill="${INK}">分散 p(1−p) と p の関係</text>
+    ${axes(R, [0, 0.5, 1])}
+    ${curve(R, (x) => x * (1 - x), TEAL)}
+    <circle cx="${f1(PX(R, 0.5))}" cy="${f1(PY(R, 0.25))}" r="3.5" fill="${TEAL}" />
+    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.25) - 8)}" text-anchor="middle" font-size="11" fill="${TEAL}">p=0.5 で最大 0.25</text>
+    <circle cx="${f1(PX(R, p))}" cy="${f1(PY(R, p * (1 - p)))}" r="3.5" fill="${INDIGO}" />
+    <text x="${f1(PX(R, p) - 6)}" y="${f1(PY(R, p * (1 - p)) + 16)}" text-anchor="end" font-size="11" fill="${INDIGO}">${f2(p * (1 - p))}</text>
+    <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 ＝ 成功確率 p</text>
+  </svg>`;
+  const cap = `左はベルヌーイ分布そのもので、値は0（失敗）と1（成功）の2つだけです。p = ${p} なら成功の棒が ${p}、失敗の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたもので、p = 0.5（どちらが出るか最も読めない）で最大の 0.25 になり、p が0や1に近づくほど結果が決まりきって分散は0に近づきます。p = ${p} の分散は ${f2(p * (1 - p))} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.6 節4：超幾何分布と二項分布 ============
+function hypergeo(): string {
+  const N = 15, K = 5, n = 4;
+  const hg = (k: number) => (choose(K, k) * choose(N - K, n - k)) / choose(N, n);
+  const bn = (k: number) => binom(n, K / N, k);
+  const ks = range(0, n);
+  const W = 340, H = 220;
+  const b: Box = { x: 30, y: 30, w: 296, h: 140, xMin: -0.5, xMax: 4.5, yMax: 0.5 };
+  const w = (PX(b, 1) - PX(b, 0)) * 0.34;
+  const bar = (k: number, v: number, dx: number, c: string) => { const y = PY(b, v); return `<rect x="${f1(PX(b, k) + dx)}" y="${f1(y)}" width="${f1(w)}" height="${f1(b.y + b.h - y)}" fill="${c}" fill-opacity="0.8" />`; };
+  const vh = n * (K / N) * ((N - K) / N) * ((N - n) / (N - 1));
+  const vb = n * (K / N) * (1 - K / N);
+  const svg = `${svgOpen(W, H, '赤玉5個・青玉10個から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較')}
+    ${axes(b, ks)}
+    ${ks.map((k) => bar(k, hg(k), -w, INDIGO) + bar(k, bn(k), 0, AMBER)).join('')}
+    ${ks.map((k) => `<text x="${f1(PX(b, k) - w / 2)}" y="${f1(PY(b, hg(k)) - 4)}" text-anchor="middle" font-size="10.5" fill="${INDIGO}">${hg(k) < 0.01 ? hg(k).toFixed(3) : f2(hg(k))}</text>`).join('')}
+    <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="11" fill="${INK}">戻さない（超幾何）</text>
+    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="11" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 ＝ 4個のうちの赤玉の数 k</text>
+  </svg>`;
+  const cap = `本文の例（赤玉${K}個・青玉${N - K}個の計${N}個から${n}個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。平均はどちらも ${n} × ${K}/${N} ≈ ${f2((n * K) / N)} ですが、戻さない方が両端（0個・${n}個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${f2(vh)}、二項 ${f2(vb)} で、比 ${f2(vh / vb)} がちょうど有限母集団修正 (${N}−${n})/(${N}−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf-pdf': pmfPdf,
   'f-survival': survival,
   'f-same-moments': sameMomentsDifferentShape,
   'f-linear-transform': linearTransform,
   'f-binomial': binomialShapes,
+  'f-uniform': uniformDice,
+  'f-bernoulli': bernoulli,
+  'f-hypergeo': hypergeo,
   'f-poisson': poissonShapes,
   'f-continuous': continuousShapes,
   'f-normal-areas': normalAreas,
