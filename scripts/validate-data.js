@@ -41,6 +41,13 @@ function checkFile(filePath) {
     }
   });
 
+  // 2b. Single backslash before LaTeX spacing (\, \; \! \:) — in a template literal it collapses to the bare
+  //     punctuation, so a thin space shows up on screen as a stray comma (2026-10-12 nCk)
+  const spacing = raw.match(/(?<!\\)\\[,;!:]/g);
+  if (spacing) {
+    errors.push(`[Error] Single backslash before LaTeX spacing (${[...new Set(spacing)].join(' ')}) in ${filePath}. Use \\\\, etc.`);
+  }
+
   // 3. Quiz count check
   if (filePath.includes('modules.ts')) {
     const moduleMatches = raw.match(/\{\s*id:[\s\S]*?quiz:\s*\[([\s\S]*?)\]\s*\}/g);
