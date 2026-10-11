@@ -21,7 +21,7 @@ export function buildCheatsheetHtml(base: string): string {
 
   <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">主要な確率分布</h2>
   <p style="color:#444"><strong>正規分布 N(μ,σ²)</strong>：期待値μ、分散σ²の釣り鐘型分布。μ±σに68.3%、μ±2σに95.4%、μ±3σに99.7%が入ります。標準正規分布N(0,1)に標準化：Z=(X−μ)/σ。</p>
-  <p style="color:#444"><strong>二項分布 B(n,p)</strong>：n回のベルヌーイ試行で成功がk回起きる確率 P(X=k)=C(n,k)p^k(1−p)^(n−k)。期待値E[X]=np、分散Var(X)=np(1−p)。</p>
+  <p style="color:#444"><strong>二項分布 B(n,p)</strong>：n回のベルヌーイ試行で成功がk回起きる確率 P(X=k)=ₙCₖ·p^k(1−p)^(n−k)。期待値E[X]=np、分散Var(X)=np(1−p)。</p>
   <p style="color:#444"><strong>ポアソン分布 Po(λ)</strong>：P(X=k)=e^(−λ)λ^k/k!。期待値=分散=λ。稀な事象の件数モデル。二項分布でn→∞, p→0, np=λ の極限。</p>
   <p style="color:#444"><strong>超幾何分布</strong>：N個中K個の当たりがある母集団からn個を非復元抽出したときの当たり数。期待値E[X]=nK/N、分散は有限修正係数(N−n)/(N−1)が付きます。</p>
   <p style="color:#444"><strong>幾何分布</strong>：初めて成功するまでの試行回数。P(X=k)=(1−p)^(k−1)p、期待値1/p。無記憶性：P(X&gt;s+t|X&gt;s)=P(X&gt;t)。</p>

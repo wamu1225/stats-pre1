@@ -182,7 +182,7 @@ export const glossary: Record<string, Term> = {
   'binomial': {
     id: 'binomial',
     term: '二項分布 (Binomial Distribution)',
-    explanation: 'n回のベルヌーイ試行（成功確率p）で成功回数kが従う分布。P(X=k)=C(n,k)p^k(1-p)^(n-k)。期待値np、分散np(1-p)。サンプルサイズが大きいと正規近似できます。',
+    explanation: 'n回のベルヌーイ試行（成功確率p）で成功回数kが従う分布。P(X=k)=ₙCₖ·p^k(1-p)^(n-k)。期待値np、分散np(1-p)。サンプルサイズが大きいと正規近似できます。',
     level: '中級',
     relatedTerms: ['poisson', 'normal-dist']
   },
