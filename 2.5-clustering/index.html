@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BUqTEDL-.js"></script>
+    <script type="module" crossorigin src="../assets/index-BkM2B5pr.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -108,7 +108,7 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </svg><figcaption class="venn-caption">左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 0.64 の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 1.4 以下でまとまりますが、2つの群どうしは距離 5.5 になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。</figcaption></figure>
 <p class="content-p">クラスター間の距離の定義（<strong>リンク法</strong>）：</p>
 <ul><li><strong>ウォード法</strong>（Ward's Method）：クラスター内の偏差平方和の増分を最小化します。最もよく使われ、コンパクトなクラスターを作ります</li><li><strong>完全リンク法</strong>：2クラスター内の最大距離（最も遠いペア）で定義します。外れ値に対してロバストです</li><li><strong>単リンク法</strong>：2クラスター内の最小距離（最も近いペア）です。くさり状のクラスターになりやすい</li><li><strong>群平均法</strong>：全ペアの平均距離</li></ul>
-<p class="content-p callout-target"> <strong>押さえどころ</strong>：ウォード法は、最もよく使われるリンク法の1つです。「クラスター内平方和の増加を最小化する」という性質を覚えましょう。</p>
+<p class="content-p callout-target"> <strong>押さえどころ</strong>：ウォード法は、最もよく使われるリンク法の1つです。「クラスター内平方和の増加を最小化する」という性質があり、大きさのそろった、まとまりのよい群ができやすい方法です。</p>
 <hr class="content-hr">
 <h3 class="content-h3">2. k-means 法</h3>
 <p class="content-p">10,000人の顧客を「買い物パターンで3タイプに分けたい」とします。階層型は全ペアの距離を計算するため計算量が膨大になりがちです。一方、「<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span> と最初から決めて分ける」ことで大規模データにも対応できるのが<strong>k-means 法</strong>です。</p>
