@@ -838,6 +838,71 @@ function hypergeo(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.22：対数尤度の曲がり具合（フィッシャー情報量） ============
+function logLikCurvature(): string {
+  const W = 350, H = 236;
+  const b: Box = { x: 30, y: 24, w: 304, h: 144, xMin: 0.4, xMax: 0.95, yMax: 6 };
+  const ph = 0.7;
+  // 最大値を 0 にそろえた対数尤度 l(p) - l(p̂)。縦軸は上端が 0・下に伸びる値を 6 + l で描く
+  const rel = (n: number) => (p: number) => Math.max(0, 6 + n * (ph * Math.log(p / ph) + (1 - ph) * Math.log((1 - p) / (1 - ph))));
+  const curv = (n: number) => n / (ph * (1 - ph));
+  const svg = `${svgOpen(W, H, '対数尤度の曲がり具合：同じ 7 割でも、100回のデータの山は10回のデータの山より鋭く、曲率が10倍になる')}
+    ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9])}
+    ${curve(b, rel(10), INDIGO, 0.4, 0.95, 2.4)}
+    ${curve(b, rel(100), AMBER, 0.4, 0.95, 2.4)}
+    <line x1="${f1(PX(b, ph))}" y1="${b.y}" x2="${f1(PX(b, ph))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, ph) + 5)}" y="${b.y + 12}" font-size="12.4" fill="${ROSE}">頂上 ${ph}</text>
+    <text x="${f1(PX(b, 0.41))}" y="${f1(PY(b, 5.4))}" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
+    <text x="${f1(PX(b, 0.69))}" y="${f1(PY(b, 1.0))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
+    <text x="${b.x + b.w / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を 0 とし、下は −6 で打ち切り）</text>
+  </svg>`;
+  const cap = `同じ「表が7割」のデータでも、回数で山の鋭さが変わります。対数尤度は頂上付近で放物線に近く、その<strong>曲がり具合（頂上での曲率）</strong>が、実測データで見た情報量です。ここでは 10回で ${f1(curv(10))}、100回で ${f1(curv(100))} と、観測数に比例して 10 倍になります。山が鋭いほど、頂上から少し p をずらしただけで尤度が急に下がるので、頂上の位置を狭い範囲に絞り込めます。観測1回あたりでは ${f1(curv(1))} で、これが 1 回分のフィッシャー情報量 I(p) = 1/(p(1−p)) にあたります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.20：正規 Q-Q プロット ============
+function qqPlot(): string {
+  const W = 350, H = 276;
+  const n = 30;
+  const rnd = gaussFrom(mulberry32(7));
+  const normalSample = Array.from({ length: n }, () => rnd()).sort((a, b) => a - b);
+  // 右に裾の長いデータ：指数分布の分位点（確率 (i-0.5)/n）
+  const skewSample = Array.from({ length: n }, (_, i) => -Math.log(1 - (i + 0.5) / n)).sort((a, b) => a - b);
+  const zq = (p: number) => {
+    let lo = -6, hi = 6;
+    for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  };
+  const theo = Array.from({ length: n }, (_, i) => zq((i + 0.5) / n));
+  const std = (a: number[]) => {
+    const m = a.reduce((s, x) => s + x, 0) / a.length;
+    const sd = Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1));
+    return a.map((x) => (x - m) / sd);
+  };
+  const ys1 = std(normalSample), ys2 = std(skewSample);
+  const L = 40, T = 22, S = 200;
+  const lim = 3;
+  const px = (v: number) => L + ((v + lim) / (2 * lim)) * S;
+  const py = (v: number) => T + S - ((v + lim) / (2 * lim)) * S;
+  const dots = (ys: number[], color: string) => ys.map((y, i) => `<circle cx="${f1(px(theo[i]))}" cy="${f1(py(Math.max(-lim, Math.min(lim, y))))}" r="3" fill="${color}" fill-opacity="0.8" />`).join('');
+  const ticks = [-2, 0, 2];
+  const svg = `${svgOpen(W, H, '正規 Q-Q プロット：正規分布のデータは直線上に並び、右に裾の長いデータは右上で直線から上にはずれる')}
+    <rect x="${L}" y="${T}" width="${S}" height="${S}" fill="none" stroke="${SLATE}" stroke-width="1" />
+    <line x1="${px(-lim)}" y1="${py(-lim)}" x2="${px(lim)}" y2="${py(lim)}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    ${ticks.map((t) => `<text x="${f1(px(t))}" y="${T + S + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text><text x="${L - 6}" y="${f1(py(t) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    ${dots(ys1, INDIGO)}${dots(ys2, AMBER)}
+    <text x="${L + S + 10}" y="${T + 40}" font-size="13.2" font-weight="700" fill="${INDIGO}">正規データ</text>
+    <text x="${L + S + 10}" y="${T + 58}" font-size="12.4" fill="${INDIGO}">直線上に並ぶ</text>
+    <text x="${L + S + 10}" y="${T + 100}" font-size="13.2" font-weight="700" fill="#b45309">右に裾が長い</text>
+    <text x="${L + S + 10}" y="${T + 118}" font-size="12.4" fill="#b45309">右上で上にそる</text>
+    <text x="${L + S / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝正規分布の理論分位点</text>
+    <text x="${L + S / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝標準化したデータの分位点</text>
+  </svg>`;
+  const cap = `Q-Q プロットは、データを小さい順に並べた値（縦軸）を、正規分布なら同じ順位に来るはずの値（横軸）に対して描いた図です。データが正規分布に従えば点は破線の直線上に並びます。青は正規乱数 ${n} 個で、ほぼ直線上です。橙は右に裾の長い（指数分布の）データで、右上の大きい値が直線より上にそれます。検定の p 値だけでは分からない「どこがどうずれているか」が見えるのが利点です。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -865,4 +930,6 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-timeseries': timeSeries,
   'f-km': kaplanMeier,
   'f-montecarlo': monteCarloPi,
+  'f-loglik': logLikCurvature,
+  'f-qq': qqPlot,
 };

@@ -153,10 +153,10 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       const kurtData: { x: string; normal: number; fat: number }[] = [];
       const kurtTail: { x: string; normal: number; fat: number }[] = [];
       for (let x = -4; x <= 5; x += 0.12) {
-        const rU = x + 1;
-        const lU = 1 - x;
-        const right = rU > 0 ? rU * Math.exp(-rU) * Math.E : 0;
-        const left = lU > 0 ? lU * Math.exp(-lU) * Math.E : 0;
+        const rU = x + 2;
+        const lU = 2 - x;
+        const right = rU > 0 ? (rU * rU * Math.exp(-rU)) / (4 * Math.exp(-2)) : 0;
+        const left = lU > 0 ? (lU * lU * Math.exp(-lU)) / (4 * Math.exp(-2)) : 0;
         const sym = normalPDF(x, 0, 1.4) * 1.4 * Math.sqrt(2 * Math.PI);
         skewData.push({ x: x.toFixed(1), sym, right, left });
       }
@@ -460,10 +460,10 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
     const data = chartData as { x: string | number; [key: string]: unknown }[];
     return (
       <ResponsiveContainer width="100%" height={200}>
-        <ComposedChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+        <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="x" hide />
-          <YAxis hide />
+          <XAxis dataKey="x" tick={{ fontSize: 11, fill: '#64748b' }} interval="preserveStartEnd" minTickGap={28} tickFormatter={(v) => (typeof v === 'number' ? String(Math.round(v * 100) / 100) : v)} />
+          <YAxis width={38} tick={{ fontSize: 11, fill: '#64748b' }} tickFormatter={(v) => (typeof v === 'number' ? String(Math.round(v * 100) / 100) : v)} />
           <Tooltip />
           {type === 'update' ? (
             <>
