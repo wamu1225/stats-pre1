@@ -87,33 +87,59 @@ const fig = (svg: string, cap: string) => `<figure class="venn-figure">${svg}<fi
 const svgOpen = (W: number, H: number, label: string) => `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="venn-svg">`;
 const range = (a: number, z: number) => Array.from({ length: z - a + 1 }, (_, i) => a + i);
 
-// ============ 1.4 節1：PMF と PDF ============
-function pmfPdf(): string {
-  const W = 350, H = 230;
-  const L: Box = { x: 22, y: 40, w: 140, h: 140, xMin: 0.5, xMax: 6.5, yMax: 0.3 };
-  const R: Box = { x: 196, y: 40, w: 140, h: 140, xMin: 0, xMax: 1.5, yMax: 2.1 };
-  const lam = 2;
-  const pdf = (x: number) => lam * Math.exp(-lam * x);
-  const a = 0.25, z = 0.75;
-  const prob = Math.exp(-lam * a) - Math.exp(-lam * z);
-  const svg = `${svgOpen(W, H, '離散型の確率質量関数は棒の高さが確率、連続型の確率密度関数は面積が確率')}
-    <text x="${L.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">PMF（サイコロ）</text>
-    <text x="${R.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">PDF（指数分布 λ=${lam}）</text>
-    ${axes(L, [1, 2, 3, 4, 5, 6])}
-    ${bars(L, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.35)}
-    <line x1="${L.x}" y1="${f1(PY(L, 1 / 6))}" x2="${L.x + L.w}" y2="${f1(PY(L, 1 / 6))}" stroke="${INK}" stroke-width="1" stroke-dasharray="3 3" />
-    <text x="${L.x + 2}" y="${f1(PY(L, 1 / 6) - 6)}" font-size="13.2" fill="${INK}">高さ 1/6 ＝ 確率</text>
-    <text x="${L.x + L.w / 2}" y="${H - 16}" text-anchor="middle" font-size="13.2" fill="${INDIGO}">6本の高さの合計 ＝ 1</text>
-    ${axes(R, [0, 0.5, 1, 1.5])}
-    ${area(R, pdf, a, z, AMBER, 0.35)}
-    ${curve(R, pdf, AMBER, 0, 1.5)}
-    <line x1="${R.x}" y1="${f1(PY(R, 1))}" x2="${R.x + R.w}" y2="${f1(PY(R, 1))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 3" />
-    <text x="${R.x + R.w}" y="${f1(PY(R, 1) - 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">高さ 1</text>
-    <text x="${R.x + 4}" y="${f1(PY(R, 2) + 4)}" font-size="13.2" fill="${INK}">f(0) = ${lam}（1を超える）</text>
-    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.3))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ${f2(prob)}</text>
-    <text x="${R.x + R.w / 2}" y="${H - 16}" text-anchor="middle" font-size="13.2" fill="#b45309">曲線の下の面積の合計 ＝ 1</text>
+// ============ 1.4 節1：PMF（サイコロ） ============
+function pmfDice(): string {
+  const W = 340, H = 190;
+  const b: Box = { x: 40, y: 30, w: 286, h: 120, xMin: 0.5, xMax: 6.5, yMax: 0.25 };
+  const svg = `${svgOpen(W, H, 'サイコロの確率質量関数：6本の棒の高さがそれぞれ確率1/6')}
+    ${axes(b, [1, 2, 3, 4, 5, 6])}
+    ${bars(b, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.35)}
+    <line x1="${b.x}" y1="${f1(PY(b, 1 / 6))}" x2="${b.x + b.w}" y2="${f1(PY(b, 1 / 6))}" stroke="${INK}" stroke-width="1" stroke-dasharray="3 3" />
+    <text x="${b.x - 6}" y="${f1(PY(b, 1 / 6) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1/6</text>
+    <text x="${b.x + b.w / 2}" y="${f1(PY(b, 1 / 6) - 8)}" text-anchor="middle" font-size="13.2" fill="${INK}">P(X = x) ＝ 棒の高さ ＝ 1/6</text>
+    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${INDIGO}">横軸 ＝ 出た目 x　6本の高さの合計 ＝ 1</text>
   </svg>`;
-  const cap = `左は離散型の<strong>確率質量関数</strong>で、棒の<strong>高さ</strong>がそのまま確率（どの目も 1/6）です。右は連続型の<strong>確率密度関数</strong>で、確率は曲線の下の<strong>面積</strong>です。${a} から ${z} の間に入る確率は塗った面積 ${f2(prob)} です。右の曲線は x = 0 で高さ ${lam} と1を超えますが、高さは確率ではないので問題ありません。1点ちょうどの面積は幅が0なので、確率も0です。`;
+  const cap = `サイコロの目の確率質量関数です。とりうる値（1〜6）ごとに棒が1本立ち、その<strong>高さ</strong>がそのまま確率 P(X = x) です。6本の高さを足すと 6 × 1/6 = 1 になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.4 節1：PDF（身長） ============
+function pdfHeight(): string {
+  const W = 340, H = 210;
+  const m = 170, s = 6;
+  const b: Box = { x: 14, y: 34, w: 312, h: 130, xMin: 152, xMax: 188, yMax: 0.075 };
+  const f = (x: number) => normPdf(x, m, s);
+  const a = 170, z = 172;
+  const prob = Phi((z - m) / s) - Phi((a - m) / s);
+  const svg = `${svgOpen(W, H, '身長の確率密度関数：170から172cmに入る確率は曲線の下の塗った面積')}
+    ${axes(b, [155, 160, 165, 170, 175, 180, 185])}
+    ${area(b, f, a, z, AMBER, 0.55)}
+    ${curve(b, f, AMBER)}
+    <line x1="${f1(PX(b, a))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, a))}" y2="${f1(PY(b, f(a)) - 10)}" stroke="${INK}" stroke-width="1" />
+    <line x1="${f1(PX(b, z))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, z))}" y2="${f1(PY(b, f(a)) - 10)}" stroke="${INK}" stroke-width="1" />
+    <text x="${f1(PX(b, z) + 6)}" y="${f1(PY(b, f(a)) - 2)}" font-size="13.2" font-weight="700" fill="#b45309">170〜172cm の面積 ＝ ${f2(prob)}</text>
+    <text x="${f1(PX(b, 179))}" y="${f1(PY(b, f(179)) - 18)}" font-size="13.2" fill="${INK}">曲線 f(x)</text>
+    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">横軸 ＝ 身長 x（cm）　曲線の下の面積の合計 ＝ 1</text>
+  </svg>`;
+  const cap = `身長の分布を、平均 ${m}cm・標準偏差 ${s}cm の正規分布と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${f2(prob)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.4 節1：密度は1を超えてよい ============
+function densityOver1(): string {
+  const W = 340, H = 180;
+  const b: Box = { x: 40, y: 30, w: 286, h: 110, xMin: -0.25, xMax: 1.25, yMax: 2.4 };
+  const svg = `${svgOpen(W, H, '0から0.5の一様分布では密度の高さが2になるが、面積は1')}
+    ${axes(b, [0, 0.5, 1])}
+    <rect x="${f1(PX(b, 0))}" y="${f1(PY(b, 2))}" width="${f1(PX(b, 0.5) - PX(b, 0))}" height="${f1(PY(b, 0) - PY(b, 2))}" fill="${AMBER}" fill-opacity="0.35" stroke="${AMBER}" stroke-width="2" />
+    <line x1="${b.x}" y1="${f1(PY(b, 1))}" x2="${b.x + b.w}" y2="${f1(PY(b, 1))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
+    <text x="${b.x - 6}" y="${f1(PY(b, 1) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1</text>
+    <text x="${b.x - 6}" y="${f1(PY(b, 2) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">2</text>
+    <text x="${f1(PX(b, 0.25))}" y="${f1(PY(b, 0.8))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ＝ 0.5 × 2 ＝ 1</text>
+    <text x="${f1(PX(b, 0.55))}" y="${f1(PY(b, 2) + 4)}" font-size="13.2" fill="${INK}">高さ 2（1を超える）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">0〜0.5 の一様分布</text>
+  </svg>`;
+  const cap = `0〜0.5 のどこかに一様に出る値の確率密度関数です。幅が 0.5 しかないので、面積を1にするには高さが2必要です。高さ（密度）は1を超えていますが、確率はどの区間でも面積で測るので1を超えることはありません。`;
   return fig(svg, cap);
 }
 
@@ -812,7 +838,9 @@ function hypergeo(): string {
 }
 
 export const SHAPE_FIGS: Record<string, () => string> = {
-  'f-pmf-pdf': pmfPdf,
+  'f-pmf': pmfDice,
+  'f-pdf': pdfHeight,
+  'f-density-over-1': densityOver1,
   'f-survival': survival,
   'f-same-moments': sameMomentsDifferentShape,
   'f-linear-transform': linearTransform,
