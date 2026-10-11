@@ -58,7 +58,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${J(e,t,P)}
     <line x1="${z(G(e,170))}" y1="${z(K(e,0))}" x2="${z(G(e,170))}" y2="${z(K(e,t(170))-10)}" stroke="${R}" stroke-width="1" />
     <line x1="${z(G(e,172))}" y1="${z(K(e,0))}" x2="${z(G(e,172))}" y2="${z(K(e,t(170))-10)}" stroke="${R}" stroke-width="1" />
-    <text x="${z(G(e,172)+6)}" y="${z(K(e,t(170))-2)}" font-size="13.2" font-weight="700" fill="#b45309">170〜172cm の面積 ＝ ${B(n)}</text>
+    <text x="${z(G(e,171))}" y="${e.y-14}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">170〜172cm の面積 ＝ ${B(n)}</text>
     <text x="${z(G(e,179))}" y="${z(K(e,t(179))-18)}" font-size="13.2" fill="${R}">曲線 f(x)</text>
     <text x="${e.x+e.w/2}" y="204" text-anchor="middle" font-size="13.2" fill="${L}">横軸 ＝ 身長 x（cm）　曲線の下の面積の合計 ＝ 1</text>
   </svg>`,`身長の分布を、平均 170cm・標準偏差 6cm の正規分布と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${B(n)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`)}function xe(){let e={x:40,y:30,w:286,h:110,xMin:-.25,xMax:1.25,yMax:2.4};return Y(`${X(340,180,`0から0.5の一様分布では密度の高さが2になるが、面積は1`)}
@@ -67,7 +67,8 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <line x1="${e.x}" y1="${z(K(e,1))}" x2="${e.x+e.w}" y2="${z(K(e,1))}" stroke="${L}" stroke-width="1" stroke-dasharray="3 3" />
     <text x="${e.x-6}" y="${z(K(e,1)+4)}" text-anchor="end" font-size="12.4" fill="${L}">1</text>
     <text x="${e.x-6}" y="${z(K(e,2)+4)}" text-anchor="end" font-size="12.4" fill="${L}">2</text>
-    <text x="${z(G(e,.25))}" y="${z(K(e,.8))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ＝ 0.5 × 2 ＝ 1</text>
+    <text x="${z(G(e,.25))}" y="${z(K(e,.45))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 1</text>
+    <text x="${z(G(e,.58))}" y="${z(K(e,1.45))}" font-size="13.2" fill="#b45309">幅 0.5 × 高さ 2 ＝ 1</text>
     <text x="${z(G(e,.55))}" y="${z(K(e,2)+4)}" font-size="13.2" fill="${R}">高さ 2（1を超える）</text>
     <text x="${e.x+e.w/2}" y="174" text-anchor="middle" font-size="13.2" fill="${L}">0〜0.5 の一様分布</text>
   </svg>`,`0〜0.5 のどこかに一様に出る値の確率密度関数です。幅が 0.5 しかないので、面積を1にするには高さが2必要です。高さ（密度）は1を超えていますが、確率はどの区間でも面積で測るので1を超えることはありません。`)}function Se(){let e={x:34,y:20,w:290,h:150,xMin:0,xMax:3,yMax:1.05},t=e=>1-Math.exp(-e),n=e=>Math.exp(-e),r=Math.log(2);return Y(`${X(340,210,`累積分布関数と生存関数は足すと常に1になり、中央値で交わる`)}
