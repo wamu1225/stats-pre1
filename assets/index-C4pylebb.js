@@ -44,37 +44,37 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${j(n(1.6))}" y="${j(i(.17))}" font-size="12" fill="${A}">破線の傾き = f(1) = ${M(l)}</text>
     <text x="${j(370/2)}" y="382" text-anchor="middle" font-size="12" fill="${ae}">横軸 x（指数分布 λ = 1）</text>
   </svg>`}<figcaption class="venn-caption">${`指数分布（λ = 1）で、同じ x = 1 を2つの図で見ています。上の図で 0 から 1 までの<strong>面積</strong>（青）は ${M(t(1))} で、これが下の図の F(1) = ${M(t(1))}、つまり<strong>曲線の高さ</strong>になります。逆に、下の図の曲線の<strong>傾き</strong>（破線）は ${M(l)} で、これが上の図の f(1) = ${M(e(1))} という高さです。「PDF を積分すると CDF、CDF を微分すると PDF」は、面積と傾きの往復を言っています。`}</figcaption></figure>`}var N=`#4338ca`,P=`#d97706`,F=`#0f766e`,I=`#be123c`,L=`#64748b`,R=`#1e293b`,z=e=>e.toFixed(1),B=e=>e.toFixed(2),V=(e,t=1)=>(e*100).toFixed(t)+`%`,H=e=>String(Math.round(e*10)/10);function U(e){let t=[.9999999999998099,676.5203681218851,-1259.1392167224028,771.3234287776531,-176.61503916999186,12.507343278686905,-.13857109526572012,9984369578019572e-21,1.5056327351493116e-7];if(e<.5)return Math.log(Math.PI/Math.sin(Math.PI*e))-U(1-e);--e;let n=t[0];for(let r=1;r<9;r++)n+=t[r]/(e+r);let r=e+7.5;return .5*Math.log(2*Math.PI)+(e+.5)*Math.log(r)-r+Math.log(n)}var se=(e,t)=>Math.exp(U(e+1)-U(t+1)-U(e-t+1)),ce=(e,t,n)=>se(e,n)*t**n*(1-t)**(e-n),le=(e,t)=>Math.exp(-e+t*Math.log(e)-U(t+1)),W=(e,t=0,n=1)=>Math.exp(-.5*((e-t)/n)**2)/(n*Math.sqrt(2*Math.PI));function ue(e){let t=Math.sign(e);e=Math.abs(e);let n=1/(1+.3275911*e);return t*(1-((((1.061405429*n-1.453152027)*n+1.421413741)*n-.284496736)*n+.254829592)*n*Math.exp(-e*e))}var de=e=>.5*(1+ue(e/Math.SQRT2)),fe=e=>t=>t<=0?e===1?1:0:Math.exp((e-1)*Math.log(t)-t-U(e)),pe=(e,t)=>n=>n<=0||n>=1?0:Math.exp((e-1)*Math.log(n)+(t-1)*Math.log(1-n)-(U(e)+U(t)-U(e+t))),me=e=>t=>t<=0?0:Math.exp(-.5*(Math.log(t)/e)**2)/(t*e*Math.sqrt(2*Math.PI)),he=e=>1/(Math.PI*(1+e*e)),G=(e,t)=>e.x+(t-e.xMin)/(e.xMax-e.xMin)*e.w,K=(e,t)=>e.y+e.h-Math.min(t,e.yMax)/e.yMax*e.h;function q(e,t,n){let r=e.y+e.h;return`<line x1="${e.x}" y1="${r}" x2="${e.x+e.w}" y2="${r}" stroke="${L}" stroke-width="1" />
-    ${t.map(t=>`<text x="${z(G(e,t))}" y="${r+14}" text-anchor="middle" font-size="11" fill="${L}">${t}</text>`).join(``)}
-    ${n?`<text x="${e.x}" y="${e.y-4}" font-size="11" fill="${L}">${n}</text>`:``}`}function J(e,t,n,r=e.xMin,i=e.xMax,a=2,o=``){let s=[];for(let n=0;n<=120;n++){let a=r+(i-r)*n/120,o=t(a);isFinite(o)&&s.push(`${z(G(e,a))},${z(K(e,o))}`)}return`<polyline points="${s.join(` `)}" fill="none" stroke="${n}" stroke-width="${a}"${o?` stroke-dasharray="${o}"`:``} />`}function ge(e,t,n,r,i,a=.22){let o=[`${z(G(e,n))},${z(K(e,0))}`];for(let i=0;i<=80;i++){let a=n+(r-n)*i/80;o.push(`${z(G(e,a))},${z(K(e,t(a)))}`)}return o.push(`${z(G(e,r))},${z(K(e,0))}`),`<polygon points="${o.join(` `)}" fill="${i}" fill-opacity="${a}" />`}function _e(e,t,n,r,i=.18){let a=(G(e,1)-G(e,0))*(1-i);return t.map((t,i)=>{let o=G(e,t)-a/2,s=K(e,n[i]);return`<rect x="${z(o)}" y="${z(s)}" width="${z(a)}" height="${z(e.y+e.h-s)}" fill="${r}" fill-opacity="0.75" />`}).join(``)}var Y=(e,t)=>`<figure class="venn-figure">${e}<figcaption class="venn-caption">${t}</figcaption></figure>`,X=(e,t,n)=>`<svg viewBox="0 0 ${e} ${t}" role="img" aria-label="${n}" class="venn-svg">`,ve=(e,t)=>Array.from({length:t-e+1},(t,n)=>e+n);function ye(){let e={x:22,y:40,w:140,h:140,xMin:.5,xMax:6.5,yMax:.3},t={x:196,y:40,w:140,h:140,xMin:0,xMax:1.5,yMax:2.1},n=e=>2*Math.exp(-2*e),r=.25,i=.75,a=Math.exp(-2*r)-Math.exp(-2*i);return Y(`${X(350,230,`離散型の確率質量関数は棒の高さが確率、連続型の確率密度関数は面積が確率`)}
-    <text x="${e.x}" y="16" font-size="12" font-weight="700" fill="${R}">PMF（サイコロ）</text>
-    <text x="${t.x}" y="16" font-size="12" font-weight="700" fill="${R}">PDF（指数分布 λ=2）</text>
+    ${t.map(t=>`<text x="${z(G(e,t))}" y="${r+14}" text-anchor="middle" font-size="12.4" fill="${L}">${t}</text>`).join(``)}
+    ${n?`<text x="${e.x}" y="${e.y-4}" font-size="12.4" fill="${L}">${n}</text>`:``}`}function J(e,t,n,r=e.xMin,i=e.xMax,a=2,o=``){let s=[];for(let n=0;n<=120;n++){let a=r+(i-r)*n/120,o=t(a);isFinite(o)&&s.push(`${z(G(e,a))},${z(K(e,o))}`)}return`<polyline points="${s.join(` `)}" fill="none" stroke="${n}" stroke-width="${a}"${o?` stroke-dasharray="${o}"`:``} />`}function ge(e,t,n,r,i,a=.22){let o=[`${z(G(e,n))},${z(K(e,0))}`];for(let i=0;i<=80;i++){let a=n+(r-n)*i/80;o.push(`${z(G(e,a))},${z(K(e,t(a)))}`)}return o.push(`${z(G(e,r))},${z(K(e,0))}`),`<polygon points="${o.join(` `)}" fill="${i}" fill-opacity="${a}" />`}function _e(e,t,n,r,i=.18){let a=(G(e,1)-G(e,0))*(1-i);return t.map((t,i)=>{let o=G(e,t)-a/2,s=K(e,n[i]);return`<rect x="${z(o)}" y="${z(s)}" width="${z(a)}" height="${z(e.y+e.h-s)}" fill="${r}" fill-opacity="0.75" />`}).join(``)}var Y=(e,t)=>`<figure class="venn-figure">${e}<figcaption class="venn-caption">${t}</figcaption></figure>`,X=(e,t,n)=>`<svg viewBox="0 0 ${e} ${t}" role="img" aria-label="${n}" class="venn-svg">`,ve=(e,t)=>Array.from({length:t-e+1},(t,n)=>e+n);function ye(){let e={x:22,y:40,w:140,h:140,xMin:.5,xMax:6.5,yMax:.3},t={x:196,y:40,w:140,h:140,xMin:0,xMax:1.5,yMax:2.1},n=e=>2*Math.exp(-2*e),r=.25,i=.75,a=Math.exp(-2*r)-Math.exp(-2*i);return Y(`${X(350,230,`離散型の確率質量関数は棒の高さが確率、連続型の確率密度関数は面積が確率`)}
+    <text x="${e.x}" y="16" font-size="13.2" font-weight="700" fill="${R}">PMF（サイコロ）</text>
+    <text x="${t.x}" y="16" font-size="13.2" font-weight="700" fill="${R}">PDF（指数分布 λ=2）</text>
     ${q(e,[1,2,3,4,5,6])}
     ${_e(e,[1,2,3,4,5,6],[,,,,,,].fill(1/6),N,.35)}
     <line x1="${e.x}" y1="${z(K(e,1/6))}" x2="${e.x+e.w}" y2="${z(K(e,1/6))}" stroke="${R}" stroke-width="1" stroke-dasharray="3 3" />
-    <text x="${e.x+2}" y="${z(K(e,1/6)-6)}" font-size="12" fill="${R}">高さ 1/6 ＝ 確率</text>
-    <text x="${e.x+e.w/2}" y="214" text-anchor="middle" font-size="12" fill="${N}">6本の高さの合計 ＝ 1</text>
+    <text x="${e.x+2}" y="${z(K(e,1/6)-6)}" font-size="13.2" fill="${R}">高さ 1/6 ＝ 確率</text>
+    <text x="${e.x+e.w/2}" y="214" text-anchor="middle" font-size="13.2" fill="${N}">6本の高さの合計 ＝ 1</text>
     ${q(t,[0,.5,1,1.5])}
     ${ge(t,n,r,i,P,.35)}
     ${J(t,n,P,0,1.5)}
     <line x1="${t.x}" y1="${z(K(t,1))}" x2="${t.x+t.w}" y2="${z(K(t,1))}" stroke="${L}" stroke-width="1" stroke-dasharray="2 3" />
-    <text x="${t.x+t.w}" y="${z(K(t,1)-4)}" text-anchor="end" font-size="11" fill="${L}">高さ 1</text>
-    <text x="${t.x+4}" y="${z(K(t,2)+4)}" font-size="12" fill="${R}">f(0) = 2（1を超える）</text>
-    <text x="${z(G(t,.5))}" y="${z(K(t,.3))}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">面積 ${B(a)}</text>
-    <text x="${t.x+t.w/2}" y="214" text-anchor="middle" font-size="12" fill="#b45309">曲線の下の面積の合計 ＝ 1</text>
+    <text x="${t.x+t.w}" y="${z(K(t,1)-4)}" text-anchor="end" font-size="12.4" fill="${L}">高さ 1</text>
+    <text x="${t.x+4}" y="${z(K(t,2)+4)}" font-size="13.2" fill="${R}">f(0) = 2（1を超える）</text>
+    <text x="${z(G(t,.5))}" y="${z(K(t,.3))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ${B(a)}</text>
+    <text x="${t.x+t.w/2}" y="214" text-anchor="middle" font-size="13.2" fill="#b45309">曲線の下の面積の合計 ＝ 1</text>
   </svg>`,`左は離散型の<strong>確率質量関数</strong>で、棒の<strong>高さ</strong>がそのまま確率（どの目も 1/6）です。右は連続型の<strong>確率密度関数</strong>で、確率は曲線の下の<strong>面積</strong>です。${r} から ${i} の間に入る確率は塗った面積 ${B(a)} です。右の曲線は x = 0 で高さ 2 と1を超えますが、高さは確率ではないので問題ありません。1点ちょうどの面積は幅が0なので、確率も0です。`)}function be(){let e={x:34,y:20,w:290,h:150,xMin:0,xMax:3,yMax:1.05},t=e=>1-Math.exp(-e),n=e=>Math.exp(-e),r=Math.log(2);return Y(`${X(340,210,`累積分布関数と生存関数は足すと常に1になり、中央値で交わる`)}
     ${q(e,[0,1,2,3])}
-    <text x="${e.x-6}" y="${z(K(e,1)+4)}" text-anchor="end" font-size="11" fill="${L}">1</text>
-    <text x="${e.x-6}" y="${z(K(e,.5)+4)}" text-anchor="end" font-size="11" fill="${L}">0.5</text>
+    <text x="${e.x-6}" y="${z(K(e,1)+4)}" text-anchor="end" font-size="12.4" fill="${L}">1</text>
+    <text x="${e.x-6}" y="${z(K(e,.5)+4)}" text-anchor="end" font-size="12.4" fill="${L}">0.5</text>
     ${J(e,t,P)}
     ${J(e,n,F)}
     <line x1="${z(G(e,2))}" y1="${z(K(e,0))}" x2="${z(G(e,2))}" y2="${z(K(e,1))}" stroke="${L}" stroke-width="1" stroke-dasharray="3 3" />
-    <text x="${z(G(e,2)+5)}" y="${z(K(e,t(2))+14)}" font-size="12" fill="#b45309">F(2) = ${B(t(2))}</text>
-    <text x="${z(G(e,2)+5)}" y="${z(K(e,n(2))-6)}" font-size="12" fill="${F}">S(2) = ${B(n(2))}</text>
+    <text x="${z(G(e,2)+5)}" y="${z(K(e,t(2))+14)}" font-size="13.2" fill="#b45309">F(2) = ${B(t(2))}</text>
+    <text x="${z(G(e,2)+5)}" y="${z(K(e,n(2))-6)}" font-size="13.2" fill="${F}">S(2) = ${B(n(2))}</text>
     <circle cx="${z(G(e,r))}" cy="${z(K(e,.5))}" r="3.5" fill="${R}" />
-    <text x="${z(G(e,r)+6)}" y="${z(K(e,.5)-6)}" font-size="12" fill="${R}">x = ${B(r)} で交わる（中央値）</text>
-    <text x="${z(G(e,2.55))}" y="${z(K(e,t(2.55))-6)}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">F(x)</text>
-    <text x="${z(G(e,.35))}" y="${z(K(e,n(.35))-6)}" font-size="12" font-weight="700" fill="${F}">S(x)</text>
-    <text x="${e.x+e.w/2}" y="206" text-anchor="middle" font-size="11" fill="${L}">横軸 x（指数分布 λ = 1。例：故障までの年数）</text>
+    <text x="${z(G(e,r)+6)}" y="${z(K(e,.5)-6)}" font-size="13.2" fill="${R}">x = ${B(r)} で交わる（中央値）</text>
+    <text x="${z(G(e,2.55))}" y="${z(K(e,t(2.55))-6)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">F(x)</text>
+    <text x="${z(G(e,.35))}" y="${z(K(e,n(.35))-6)}" font-size="13.2" font-weight="700" fill="${F}">S(x)</text>
+    <text x="${e.x+e.w/2}" y="206" text-anchor="middle" font-size="12.4" fill="${L}">横軸 x（指数分布 λ = 1。例：故障までの年数）</text>
   </svg>`,`同じ指数分布で、<strong>F(x)</strong>（x 以下で終わる確率）と<strong>S(x)</strong>（x を超えて続く確率）を重ねました。どの x でも2本の高さを足すと1です（x = 2 なら ${B(t(2))} + ${B(n(2))} = 1）。F は0から1へ上がり、S は1から0へ下がり、両者は確率がちょうど半々になる中央値 x = ${B(r)} で交わります。`)}function xe(){let e={x:30,y:24,w:294,h:146,xMin:-3,xMax:4,yMax:1.05},t=e=>W(e);return Y(`${X(340,210,`平均0・分散1が同じでも、歪度が違う2つの分布`)}
     ${q(e,[-3,-2,-1,0,1,2,3,4])}
     <line x1="${z(G(e,0))}" y1="${e.y}" x2="${z(G(e,0))}" y2="${e.y+e.h}" stroke="${L}" stroke-width="1" stroke-dasharray="3 3" />
@@ -82,54 +82,54 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${J(e,t,N)}
     ${J(e,e=>e<-1?0:Math.exp(-(e+1)),P,-1,4)}
     <line x1="${z(G(e,-1))}" y1="${z(K(e,0))}" x2="${z(G(e,-1))}" y2="${z(K(e,1))}" stroke="${P}" stroke-width="2" />
-    <text x="${z(G(e,-1.12))}" y="${z(K(e,.62))}" text-anchor="end" font-size="12" font-weight="700" fill="${N}">正規分布</text>
-    <text x="${z(G(e,-1.12))}" y="${z(K(e,.62)+15)}" text-anchor="end" font-size="12" fill="${N}">歪度 0・尖度 3</text>
-    <text x="${z(G(e,1.3))}" y="${z(K(e,.42))}" font-size="12" font-weight="700" fill="#b45309">右に裾が長い分布</text>
-    <text x="${z(G(e,1.3))}" y="${z(K(e,.42)+15)}" font-size="12" fill="#b45309">歪度 2・尖度 9</text>
-    <text x="${z(G(e,0)+4)}" y="${e.y+10}" font-size="11" fill="${L}">平均 0</text>
-    <text x="${e.x+e.w/2}" y="206" text-anchor="middle" font-size="11" fill="${L}">どちらも 平均 0・分散 1（1次と2次のモーメントが同じ）</text>
+    <text x="${z(G(e,-1.12))}" y="${z(K(e,.62))}" text-anchor="end" font-size="13.2" font-weight="700" fill="${N}">正規分布</text>
+    <text x="${z(G(e,-1.12))}" y="${z(K(e,.62)+15)}" text-anchor="end" font-size="13.2" fill="${N}">歪度 0・尖度 3</text>
+    <text x="${z(G(e,1.3))}" y="${z(K(e,.42))}" font-size="13.2" font-weight="700" fill="#b45309">右に裾が長い分布</text>
+    <text x="${z(G(e,1.3))}" y="${z(K(e,.42)+15)}" font-size="13.2" fill="#b45309">歪度 2・尖度 9</text>
+    <text x="${z(G(e,0)+4)}" y="${e.y+10}" font-size="12.4" fill="${L}">平均 0</text>
+    <text x="${e.x+e.w/2}" y="206" text-anchor="middle" font-size="12.4" fill="${L}">どちらも 平均 0・分散 1（1次と2次のモーメントが同じ）</text>
   </svg>`,`青は標準正規分布、橙は指数分布を1だけ左にずらしたもの（X − 1、X は λ = 1 の指数分布）です。どちらも<strong>平均 0・分散 1</strong>で、期待値と分散だけでは区別できません。違いが出るのは3次と4次の中心モーメントで、歪度は 0 と 2、尖度は 3 と 9 です。「次数を上げるほど形を細かく区別できる」とはこのことです。`)}function Se(){let e={x:20,y:30,w:304,h:140,xMin:0,xMax:16,yMax:.45},t=e=>W(e,5,1),n=e=>W(e,8,1),r=e=>W(e,10,2);return Y(`${X(340,220,`定数を足すと分布は形を変えずに平行移動し、定数倍すると横に伸びて低くなる`)}
     ${q(e,[0,2,4,6,8,10,12,14,16])}
     ${J(e,t,N)}
     ${J(e,n,F,e.xMin,e.xMax,2,`5 3`)}
     ${J(e,r,P)}
-    <text x="${z(G(e,4.3))}" y="${z(K(e,t(5))+4)}" text-anchor="end" font-size="12" font-weight="700" fill="${N}">X</text>
-    <text x="${z(G(e,4.3))}" y="${z(K(e,t(5))+18)}" text-anchor="end" font-size="11" fill="${N}">平均5・SD1</text>
-    <text x="${z(G(e,8.7))}" y="${z(K(e,n(8))+4)}" font-size="12" font-weight="700" fill="${F}">X + 3</text>
-    <text x="${z(G(e,8.7))}" y="${z(K(e,n(8))+18)}" font-size="11" fill="${F}">平均8・SD1</text>
-    <text x="${z(G(e,13))}" y="${z(K(e,r(12))-4)}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">2X</text>
-    <text x="${z(G(e,13.6))}" y="${z(K(e,r(12))+11)}" text-anchor="middle" font-size="11" fill="#b45309">平均10・SD2</text>
-  </svg>`,`X（平均5・標準偏差1）に<strong>3を足す</strong>と、山はそのまま右へ3ずれるだけで幅は変わりません（分散は1のまま）。<strong>2倍する</strong>と平均は10になり、幅は2倍、そのぶん山は半分の高さになります。分散は 2² = 4 倍です。Var(aX + b) = a²Var(X) の b が消えて a が2乗で効くのは、この「ずらしても幅は変わらない・伸ばすと幅が a 倍」の言い換えです。`)}function Ce(){let e=[{n:10,p:.2},{n:10,p:.5},{n:10,p:.8},{n:50,p:.2}],t=t=>{let n=t%2,r=Math.floor(t/2);return e[t].n===50?{x:194,y:44+r*162,w:146,h:100,xMin:-.5,xMax:25.5,yMax:.32}:{x:18+n*176,y:44+r*162,w:146,h:100,xMin:-.5,xMax:10.5,yMax:.32}},n=e.map((e,n)=>{let r=t(n),i=e.n===50?ve(0,25):ve(0,10),a=i.map(t=>ce(e.n,e.p,t)),o=e.n*e.p,s=Math.sqrt(e.n*e.p*(1-e.p)),c=e.n===50?[0,5,10,15,20,25]:[0,2,4,6,8,10];return`<text x="${r.x}" y="${r.y-22}" font-size="12" font-weight="700" fill="${R}">B(${e.n}, ${e.p})</text>
-      <text x="${r.x}" y="${r.y-7}" font-size="11" fill="${L}">平均 ${o}・SD ${B(s)}</text>
+    <text x="${z(G(e,4.3))}" y="${z(K(e,t(5))+4)}" text-anchor="end" font-size="13.2" font-weight="700" fill="${N}">X</text>
+    <text x="${z(G(e,4.3))}" y="${z(K(e,t(5))+18)}" text-anchor="end" font-size="12.4" fill="${N}">平均5・SD1</text>
+    <text x="${z(G(e,8.7))}" y="${z(K(e,n(8))+4)}" font-size="13.2" font-weight="700" fill="${F}">X + 3</text>
+    <text x="${z(G(e,8.7))}" y="${z(K(e,n(8))+18)}" font-size="12.4" fill="${F}">平均8・SD1</text>
+    <text x="${z(G(e,13))}" y="${z(K(e,r(12))-4)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">2X</text>
+    <text x="${z(G(e,13.6))}" y="${z(K(e,r(12))+11)}" text-anchor="middle" font-size="12.4" fill="#b45309">平均10・SD2</text>
+  </svg>`,`X（平均5・標準偏差1）に<strong>3を足す</strong>と、山はそのまま右へ3ずれるだけで幅は変わりません（分散は1のまま）。<strong>2倍する</strong>と平均は10になり、幅は2倍、そのぶん山は半分の高さになります。分散は 2² = 4 倍です。Var(aX + b) = a²Var(X) の b が消えて a が2乗で効くのは、この「ずらしても幅は変わらない・伸ばすと幅が a 倍」の言い換えです。`)}function Ce(){let e=[{n:10,p:.2},{n:10,p:.5},{n:10,p:.8},{n:50,p:.2}],t=t=>{let n=t%2,r=Math.floor(t/2);return e[t].n===50?{x:194,y:44+r*162,w:146,h:100,xMin:-.5,xMax:25.5,yMax:.32}:{x:18+n*176,y:44+r*162,w:146,h:100,xMin:-.5,xMax:10.5,yMax:.32}},n=e.map((e,n)=>{let r=t(n),i=e.n===50?ve(0,25):ve(0,10),a=i.map(t=>ce(e.n,e.p,t)),o=e.n*e.p,s=Math.sqrt(e.n*e.p*(1-e.p)),c=e.n===50?[0,5,10,15,20,25]:[0,2,4,6,8,10];return`<text x="${r.x}" y="${r.y-22}" font-size="13.2" font-weight="700" fill="${R}">B(${e.n}, ${e.p})</text>
+      <text x="${r.x}" y="${r.y-7}" font-size="12.4" fill="${L}">平均 ${o}・SD ${B(s)}</text>
       ${q(r,c)}
       ${_e(r,i,a,e.n===50?F:N,e.n===50?.25:.3)}
       <line x1="${z(G(r,o))}" y1="${r.y}" x2="${z(G(r,o))}" y2="${r.y+r.h}" stroke="${P}" stroke-width="1.4" stroke-dasharray="3 2" />`}).join(``),r=`${X(350,350,`二項分布の形：p が小さいと右に裾、p=0.5 で左右対称、p が大きいと左に裾、n を大きくすると釣鐘形に近づく`)}${n}
-    <text x="${350/2}" y="344" text-anchor="middle" font-size="11" fill="${L}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
+    <text x="${350/2}" y="344" text-anchor="middle" font-size="12.4" fill="${L}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
   </svg>`,i=ce(10,.2,0),a=ce(10,.2,2),o=Math.max(...ve(0,50).map(e=>ce(50,.2,e)));return Y(r,`成功確率 p が小さい B(10, 0.2) は0〜2回に山があり、右に裾を引きます（0回の確率 ${B(i)}、2回が最大で ${B(a)}）。p = 0.5 で左右対称、p = 0.8 では鏡に映したように左へ裾を引きます。同じ p = 0.2 でも n を 50 に増やすと、山は平均 np = 10 に移り、左右がほぼ対称な釣鐘形になります（最も高い棒は ${B(o)}）。これが後で学ぶ「二項分布の正規近似」が n の大きいときに使える理由です。`)}function we(){let e={x:26,y:26,w:312,h:160,xMin:-.5,xMax:18.5,yMax:.4},t=[{l:1,c:N},{l:4,c:P},{l:10,c:F}],n=ve(0,18),r=(G(e,1)-G(e,0))*.26,i=t.map(({l:t,c:i},a)=>n.map(n=>{let o=K(e,le(t,n));return`<rect x="${z(G(e,n)-1.5*r+a*r)}" y="${z(o)}" width="${z(r)}" height="${z(e.y+e.h-o)}" fill="${i}" fill-opacity="0.8" />`}).join(``)).join(``),a=n.map(t=>`<circle cx="${z(G(e,t))}" cy="${z(K(e,ce(100,.04,t)))}" r="2.6" fill="none" stroke="${R}" stroke-width="1.2" />`).join(``),o=`${X(350,240,`ポアソン分布の形：λ が大きいほど山が右に移り、低く広がる。二項分布 B(100,0.04) はポアソン分布 λ=4 とほぼ重なる`)}
     ${q(e,[0,2,4,6,8,10,12,14,16,18])}
     ${i}${a}
-    <text x="${z(G(e,1)+6)}" y="${z(K(e,le(1,0))+2)}" font-size="12" font-weight="700" fill="${N}">λ = 1</text>
-    <text x="${z(G(e,4)+8)}" y="${z(K(e,le(4,4))-8)}" font-size="12" font-weight="700" fill="#b45309">λ = 4</text>
-    <text x="${z(G(e,10)+6)}" y="${z(K(e,le(10,10))-8)}" font-size="12" font-weight="700" fill="${F}">λ = 10</text>
-    <text x="${e.x+e.w}" y="${e.y+4}" text-anchor="end" font-size="11" fill="${R}">○ ＝ 二項分布 B(100, 0.04)</text>
-    <text x="${e.x+e.w/2}" y="236" text-anchor="middle" font-size="11" fill="${L}">横軸 k（一定時間に起きる回数）／棒の高さ ＝ P(X = k)</text>
-  </svg>`,s=Math.max(...n.map(e=>Math.abs(ce(100,.04,e)-le(4,e))));return Y(o,`λ = 1 では0回と1回が同じ高さ（どちらも ${B(le(1,0))}）で、そこから急に減ります。λ = 4、10 と大きくなるにつれて山は右へ移り、低く広がって左右対称に近づきます。平均も分散も λ なので、山の位置と広がりが一緒に大きくなります。○ は二項分布 B(100, 0.04)（np = 4）で、λ = 4 の棒とほぼ重なります（各 k での差は最大 ${s.toFixed(3)}）。n が大きく p が小さいときにポアソン分布で近似できる、という少数法則を図で見たものです。`)}function Te(){let e=(e,t,n,r)=>({x:18+e%2*176,y:40+Math.floor(e/2)*190,w:150,h:120,xMin:t,xMax:n,yMax:r}),t=e(0,0,12,1.05),n=e(1,0,1,3),r=e(2,0,5,1),i=e(3,-6,6,.42),a=(e,t,n,r,i)=>`<text x="${z(G(e,t))}" y="${z(K(e,n))}" font-size="11" font-weight="700" fill="${i}">${r}</text>`,o=`${X(350,410,`連続型分布の形：ガンマ、ベータ、対数正規、コーシーと正規の比較`)}
-    <text x="${t.x}" y="${t.y-18}" font-size="12" font-weight="700" fill="${R}">指数・ガンマ（λ = 1）</text>
+    <text x="${z(G(e,1)+6)}" y="${z(K(e,le(1,0))+2)}" font-size="13.2" font-weight="700" fill="${N}">λ = 1</text>
+    <text x="${z(G(e,4)+8)}" y="${z(K(e,le(4,4))-8)}" font-size="13.2" font-weight="700" fill="#b45309">λ = 4</text>
+    <text x="${z(G(e,10)+6)}" y="${z(K(e,le(10,10))-8)}" font-size="13.2" font-weight="700" fill="${F}">λ = 10</text>
+    <text x="${e.x+e.w}" y="${e.y+4}" text-anchor="end" font-size="12.4" fill="${R}">○ ＝ 二項分布 B(100, 0.04)</text>
+    <text x="${e.x+e.w/2}" y="236" text-anchor="middle" font-size="12.4" fill="${L}">横軸 k（一定時間に起きる回数）／棒の高さ ＝ P(X = k)</text>
+  </svg>`,s=Math.max(...n.map(e=>Math.abs(ce(100,.04,e)-le(4,e))));return Y(o,`λ = 1 では0回と1回が同じ高さ（どちらも ${B(le(1,0))}）で、そこから急に減ります。λ = 4、10 と大きくなるにつれて山は右へ移り、低く広がって左右対称に近づきます。平均も分散も λ なので、山の位置と広がりが一緒に大きくなります。○ は二項分布 B(100, 0.04)（np = 4）で、λ = 4 の棒とほぼ重なります（各 k での差は最大 ${s.toFixed(3)}）。n が大きく p が小さいときにポアソン分布で近似できる、という少数法則を図で見たものです。`)}function Te(){let e=(e,t,n,r)=>({x:18+e%2*176,y:40+Math.floor(e/2)*190,w:150,h:120,xMin:t,xMax:n,yMax:r}),t=e(0,0,12,1.05),n=e(1,0,1,3),r=e(2,0,5,1),i=e(3,-6,6,.42),a=(e,t,n,r,i)=>`<text x="${z(G(e,t))}" y="${z(K(e,n))}" font-size="12.4" font-weight="700" fill="${i}">${r}</text>`,o=`${X(350,410,`連続型分布の形：ガンマ、ベータ、対数正規、コーシーと正規の比較`)}
+    <text x="${t.x}" y="${t.y-18}" font-size="13.2" font-weight="700" fill="${R}">指数・ガンマ（λ = 1）</text>
     ${q(t,[0,4,8,12])}
     ${J(t,fe(1),N,0,12)}${J(t,fe(2),P,0,12)}${J(t,fe(5),F,0,12)}
     ${a(t,.6,.9,`α=1（指数）`,N)}${a(t,1.6,.42,`α=2`,`#b45309`)}${a(t,6.2,.2,`α=5`,F)}
 
-    <text x="${n.x}" y="${n.y-18}" font-size="12" font-weight="700" fill="${R}">ベータ（α, β）0〜1</text>
+    <text x="${n.x}" y="${n.y-18}" font-size="13.2" font-weight="700" fill="${R}">ベータ（α, β）0〜1</text>
     ${q(n,[0,.5,1])}
     ${J(n,pe(2,5),N,.001,.999)}${J(n,pe(5,2),P,.001,.999)}${J(n,pe(2,2),F,.001,.999)}${J(n,()=>1,L,0,1,1.5,`4 3`)}
-    ${a(n,.02,2.75,`(2,5)`,N)}${a(n,.8,2.75,`(5,2)`,`#b45309`)}${a(n,.38,1.7,`(2,2)`,F)}<text x="${n.x}" y="${n.y+n.h+30}" font-size="11" fill="${L}">点線 (1,1) ＝ 一様分布</text>
+    ${a(n,.02,2.75,`(2,5)`,N)}${a(n,.8,2.75,`(5,2)`,`#b45309`)}${a(n,.38,1.7,`(2,2)`,F)}<text x="${n.x}" y="${n.y+n.h+30}" font-size="12.4" fill="${L}">点線 (1,1) ＝ 一様分布</text>
 
-    <text x="${r.x}" y="${r.y-18}" font-size="12" font-weight="700" fill="${R}">対数正規（log X が正規）</text>
+    <text x="${r.x}" y="${r.y-18}" font-size="13.2" font-weight="700" fill="${R}">対数正規（log X が正規）</text>
     ${q(r,[0,1,2,3,4,5])}
     ${J(r,me(.5),N,.01,5)}${J(r,me(1),P,.01,5)}
     ${a(r,1.3,.85,`σ=0.5`,N)}${a(r,.05,.75,`σ=1`,`#b45309`)}
 
-    <text x="${i.x}" y="${i.y-18}" font-size="12" font-weight="700" fill="${R}">コーシー と 正規</text>
+    <text x="${i.x}" y="${i.y-18}" font-size="13.2" font-weight="700" fill="${R}">コーシー と 正規</text>
     ${q(i,[-6,-3,0,3,6])}
     ${J(i,e=>W(e),N)}${J(i,he,I)}
     ${a(i,.7,.37,`正規`,N)}${a(i,2.2,.1,`コーシー`,I)}
@@ -137,163 +137,163 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${n.map((n,i)=>ge(e,t,170-n*6,170+n*6,r[i],.9)).join(``)}
     ${J(e,t,N)}
     ${q(e,[152,158,164,170,176,182,188])}
-    <text x="${z(G(e,170))}" y="${z(K(e,t(170)*.35))}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">±1σ ${V(i(1))}</text>
-    <text x="${z(G(e,170-1.5*6))}" y="${z(K(e,t(170)*.08))}" text-anchor="middle" font-size="11" font-weight="700" fill="${R}">±2σ</text>
-    <text x="${z(G(e,185.3))}" y="${z(K(e,t(170)*.2))}" text-anchor="middle" font-size="11" fill="${R}">±3σ</text>
-    <text x="${350/2}" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">±1σ：${V(i(1))}　±2σ：${V(i(2))}　±3σ：${V(i(3))}</text>
-    <text x="${350/2}" y="31" text-anchor="middle" font-size="12" fill="${I}">ちょうど95%になるのは ±1.96σ（158.2〜181.8cm）</text>
+    <text x="${z(G(e,170))}" y="${z(K(e,t(170)*.35))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#fff">±1σ ${V(i(1))}</text>
+    <text x="${z(G(e,170-1.5*6))}" y="${z(K(e,t(170)*.08))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${R}">±2σ</text>
+    <text x="${z(G(e,185.3))}" y="${z(K(e,t(170)*.2))}" text-anchor="middle" font-size="12.4" fill="${R}">±3σ</text>
+    <text x="${350/2}" y="14" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">±1σ：${V(i(1))}　±2σ：${V(i(2))}　±3σ：${V(i(3))}</text>
+    <text x="${350/2}" y="31" text-anchor="middle" font-size="13.2" fill="${I}">ちょうど95%になるのは ±1.96σ（158.2〜181.8cm）</text>
     <line x1="${z(G(e,170-1.96*6))}" y1="${e.y}" x2="${z(G(e,170-1.96*6))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.2" stroke-dasharray="3 2" />
     <line x1="${z(G(e,181.76))}" y1="${e.y}" x2="${z(G(e,181.76))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.2" stroke-dasharray="3 2" />
-    <text x="${e.x+e.w/2}" y="246" text-anchor="middle" font-size="11" fill="${L}">身長（cm）。平均 170・標準偏差 6</text>
+    <text x="${e.x+e.w/2}" y="246" text-anchor="middle" font-size="12.4" fill="${L}">身長（cm）。平均 170・標準偏差 6</text>
   </svg>`,`本文の身長の例（平均 170cm・標準偏差 6cm）を描いたものです。濃い順に、平均から ±1σ（164〜176cm）に ${V(i(1))}、±2σ（158〜182cm）までに ${V(i(2))}、±3σ（152〜188cm）までに ${V(i(3))} が入ります。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`)}function De(){let e=1e3,t=.01,n=.95,r=.9,i=Math.round(e*t),a=e-i,o=Math.round(i*n*10)/10,s=Math.round((i-o)*10)/10,c=Math.round(a*(1-r)*10)/10,l=Math.round((a-c)*10)/10,u=Math.round((o+c)*10)/10,d=o/(o+c),f=(e,t,n,r,i,a)=>`<rect x="${e}" y="${t}" width="${n}" height="40" rx="4" fill="${a}" fill-opacity="0.14" stroke="${a}" stroke-width="1.2" />
-     <text x="${e+n/2}" y="${t+17}" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">${r}</text>
-     <text x="${e+n/2}" y="${t+33}" text-anchor="middle" font-size="12" fill="${R}">${i}</text>`,p=(e,t,n,r,i)=>`<line x1="${e}" y1="${t}" x2="${n}" y2="${r}" stroke="${L}" stroke-width="1.2" /><text x="${(e+n)/2+(n>e?4:-4)}" y="${(t+r)/2}" text-anchor="${n>e?`start`:`end`}" font-size="11" fill="${L}">${i}</text>`;return Y(`${X(350,250,`1000人の検査を樹形図で数える`)}
+     <text x="${e+n/2}" y="${t+17}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">${r}</text>
+     <text x="${e+n/2}" y="${t+33}" text-anchor="middle" font-size="13.2" fill="${R}">${i}</text>`,p=(e,t,n,r,i)=>`<line x1="${e}" y1="${t}" x2="${n}" y2="${r}" stroke="${L}" stroke-width="1.2" /><text x="${(e+n)/2+(n>e?4:-4)}" y="${(t+r)/2}" text-anchor="${n>e?`start`:`end`}" font-size="12.4" fill="${L}">${i}</text>`;return Y(`${X(350,250,`1000人の検査を樹形図で数える`)}
     ${f(125,4,100,`検査を受ける`,`${e}人`,L)}
     ${p(150,44,80,80,`有病率 ${V(t,0)}`)}${p(200,44,270,80,``)}
     ${f(20,80,110,`病気`,`${i}人`,I)}${f(220,80,110,`健康`,`${a}人`,F)}
-    ${p(55,120,40,160,``)}${p(95,120,110,160,``)}<text x="75" y="146" text-anchor="middle" font-size="11" fill="${L}">感度 ${V(n,0)}</text>
-    ${p(255,120,240,160,``)}${p(295,120,310,160,``)}<text x="275" y="146" text-anchor="middle" font-size="11" fill="${L}">特異度 ${V(r,0)}</text>
+    ${p(55,120,40,160,``)}${p(95,120,110,160,``)}<text x="75" y="146" text-anchor="middle" font-size="12.4" fill="${L}">感度 ${V(n,0)}</text>
+    ${p(255,120,240,160,``)}${p(295,120,310,160,``)}<text x="275" y="146" text-anchor="middle" font-size="12.4" fill="${L}">特異度 ${V(r,0)}</text>
     ${f(4,160,72,`陽性`,`${H(o)}人`,I)}${f(80,160,62,`陰性`,`${H(s)}人`,L)}
     ${f(206,160,72,`陽性`,`${H(c)}人`,P)}${f(282,160,64,`陰性`,`${H(l)}人`,L)}
-    <text x="${350/2}" y="228" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">陽性 ${H(u)}人のうち、病気は ${H(o)}人</text>
-    <text x="${350/2}" y="245" text-anchor="middle" font-size="12" font-weight="700" fill="${I}">P(病気 ∣ 陽性) = ${H(o)} ÷ ${H(u)} ≈ ${V(d)}</text>
-  </svg>`,`${e}人で数えると、病気の${i}人からは${H(o)}人が陽性、健康な${a}人からも${H(c)}人が誤って陽性になります。陽性の${H(u)}人のうち本当に病気なのは${H(o)}人だけなので、陽性とわかっても病気である確率は約 ${V(d)} です。健康な人が圧倒的に多いため、わずか ${V(1-r,0)} の誤りでも陽性の大半を占めます。ベイズの定理の分母（全確率）は、この図の「陽性の合計」にあたります。`)}function Oe(){let e=[{x:140,y:95,n:`A`,col:N},{x:200,y:95,n:`B`,col:P},{x:170,y:147,n:`C`,col:F}],t=(e,t,n,r=400)=>`<text x="${e}" y="${t}" text-anchor="middle" font-size="11" font-weight="${r}" fill="${R}">${n}</text>`;return Y(`${X(340,250,`3つの事象のベン図：各領域が何回数えられるか`)}
+    <text x="${350/2}" y="228" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">陽性 ${H(u)}人のうち、病気は ${H(o)}人</text>
+    <text x="${350/2}" y="245" text-anchor="middle" font-size="13.2" font-weight="700" fill="${I}">P(病気 ∣ 陽性) = ${H(o)} ÷ ${H(u)} ≈ ${V(d)}</text>
+  </svg>`,`${e}人で数えると、病気の${i}人からは${H(o)}人が陽性、健康な${a}人からも${H(c)}人が誤って陽性になります。陽性の${H(u)}人のうち本当に病気なのは${H(o)}人だけなので、陽性とわかっても病気である確率は約 ${V(d)} です。健康な人が圧倒的に多いため、わずか ${V(1-r,0)} の誤りでも陽性の大半を占めます。ベイズの定理の分母（全確率）は、この図の「陽性の合計」にあたります。`)}function Oe(){let e=[{x:140,y:95,n:`A`,col:N},{x:200,y:95,n:`B`,col:P},{x:170,y:147,n:`C`,col:F}],t=(e,t,n,r=400)=>`<text x="${e}" y="${t}" text-anchor="middle" font-size="12.4" font-weight="${r}" fill="${R}">${n}</text>`;return Y(`${X(340,250,`3つの事象のベン図：各領域が何回数えられるか`)}
     ${e.map(e=>`<circle cx="${e.x}" cy="${e.y}" r="62" fill="${e.col}" fill-opacity="0.13" stroke="${e.col}" stroke-width="1.5" />`).join(``)}
     ${e.map((e,t)=>`<text x="${e.x+[-58,58,-66][t]}" y="${e.y+[-48,-48,50][t]}" text-anchor="middle" font-size="16" font-weight="700" fill="${e.col}">${e.n}</text>`).join(``)}
     ${t(112,82,`1`)}${t(228,82,`1`)}${t(170,186,`1`)}
     ${t(170,72,`2−1`)}${t(136,136,`2−1`)}${t(204,136,`2−1`)}
     ${t(170,113,`3−3+1`,700)}
-    <text x="${340/2}" y="228" text-anchor="middle" font-size="12" fill="${R}">数字 ＝ 足す・引く・足すで、その領域を何回数えたか</text>
-    <text x="${340/2}" y="244" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">最後はどの領域もちょうど1回になる</text>
+    <text x="${340/2}" y="228" text-anchor="middle" font-size="13.2" fill="${R}">数字 ＝ 足す・引く・足すで、その領域を何回数えたか</text>
+    <text x="${340/2}" y="244" text-anchor="middle" font-size="13.2" font-weight="700" fill="${N}">最後はどの領域もちょうど1回になる</text>
   </svg>`,`P(A) + P(B) + P(C) と足すと、2つが重なる部分は2回、3つが重なる中心は3回数えられます。2つずつの重なり3つを引くと、2つの重なりは 2 − 1 = 1 回に直りますが、中心は3回引かれて 3 − 3 = 0 回、つまり<strong>引き過ぎ</strong>になります。そこで最後に P(A∩B∩C) を1回足し戻すと、すべての領域がちょうど1回になります。`)}function ke(e){return()=>{e|=0,e=e+1831565813|0;let t=Math.imul(e^e>>>15,1|e);return t=t+Math.imul(t^t>>>7,61|t)^t,((t^t>>>14)>>>0)/4294967296}}function Ae(e){return()=>Math.sqrt(-2*Math.log(1-e()))*Math.cos(2*Math.PI*e())}function je(e,t){let n=t.length,r=e.map((e,n)=>[...e,t[n]]);for(let e=0;e<n;e++){let t=e;for(let i=e+1;i<n;i++)Math.abs(r[i][e])>Math.abs(r[t][e])&&(t=i);[r[e],r[t]]=[r[t],r[e]];for(let t=e+1;t<n;t++){let i=r[t][e]/r[e][e];for(let a=e;a<=n;a++)r[t][a]-=i*r[e][a]}}let i=Array(n).fill(0);for(let e=n-1;e>=0;e--){let t=r[e][n];for(let a=e+1;a<n;a++)t-=r[e][a]*i[a];i[e]=t/r[e][e]}return i}function Me(e,t,n){let r=n+1,i=e.map(e=>Array.from({length:r},(t,n)=>e**n));return r===e.length?je(i,t):je(Array.from({length:r},(e,t)=>Array.from({length:r},(e,n)=>i.reduce((e,r)=>e+r[t]*r[n],0))),Array.from({length:r},(e,n)=>i.reduce((e,r,i)=>e+r[n]*t[i],0)))}var Ne=(e,t)=>e.reduce((e,n,r)=>e+n*t**r,0),Pe=(e,t,n)=>Math.sqrt(t.reduce((t,r,i)=>t+(n[i]-Ne(e,r))**2,0)/t.length);function Fe(){let e=e=>.5+1.2*e-1.5*e*e,t=Ae(ke(20261011)),n=.25,r=Array.from({length:10},(e,t)=>-.9+.2*t),i=r.map(r=>e(r)+n*t()),a=Array.from({length:10},(e,t)=>-.95+.2*t);return{truth:e,xs:r,ys:i,tx:a,ty:a.map(r=>e(r)+n*t())}}function Ie(){let{xs:e,ys:t,tx:n,ty:r}=Fe(),i=[{d:1,name:`直線（1次）`},{d:2,name:`曲線（2次）`},{d:9,name:`9次式（10点すべてを通る）`}].map(i=>{let a=Me(e,t,i.d);return{...i,coef:a,tr:Pe(a,e,t),te:Pe(a,n,r)}}),a=`${X(350,470,`同じ10点に直線・2次式・9次式を当てはめると、9次式は学習データを完全に通るがテストデータで大きく外れる`)}
-    ${i.map((i,a)=>{let o={x:26,y:34+a*148,w:310,h:96,xMin:-1,xMax:1,yMax:1},s=-2.6,c=1.2,l=e=>o.y+o.h-(Math.max(s,Math.min(c,e))-s)/(c-s)*o.h,u=[];for(let e=0;e<=200;e++){let t=-1+2*e/200;u.push(`${z(G(o,t))},${z(l(Ne(i.coef,t)))}`)}let d=i.te>i.tr*2.5?I:N;return`<text x="${o.x}" y="${o.y-18}" font-size="12" font-weight="700" fill="${R}">${i.name}</text>
-      <text x="${o.x}" y="${o.y-4}" font-size="11" fill="${L}">学習データの誤差 ${B(i.tr)}　テストの誤差 <tspan font-weight="700" fill="${d}">${B(i.te)}</tspan></text>
+    ${i.map((i,a)=>{let o={x:26,y:34+a*148,w:310,h:96,xMin:-1,xMax:1,yMax:1},s=-2.6,c=1.2,l=e=>o.y+o.h-(Math.max(s,Math.min(c,e))-s)/(c-s)*o.h,u=[];for(let e=0;e<=200;e++){let t=-1+2*e/200;u.push(`${z(G(o,t))},${z(l(Ne(i.coef,t)))}`)}let d=i.te>i.tr*2.5?I:N;return`<text x="${o.x}" y="${o.y-18}" font-size="13.2" font-weight="700" fill="${R}">${i.name}</text>
+      <text x="${o.x}" y="${o.y-4}" font-size="12.4" fill="${L}">学習データの誤差 ${B(i.tr)}　テストの誤差 <tspan font-weight="700" fill="${d}">${B(i.te)}</tspan></text>
       <rect x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" fill="none" stroke="#e2e8f0" />
       <polyline points="${u.join(` `)}" fill="none" stroke="${d}" stroke-width="2" />
       ${e.map((e,n)=>`<circle cx="${z(G(o,e))}" cy="${z(l(t[n]))}" r="3.4" fill="${R}" />`).join(``)}
       ${n.map((e,t)=>`<circle cx="${z(G(o,e))}" cy="${z(l(r[t]))}" r="3.4" fill="#fff" stroke="${P}" stroke-width="1.6" />`).join(``)}`}).join(``)}
-    <circle cx="40" cy="456" r="3.4" fill="${R}" /><text x="48" y="460" font-size="11" fill="${R}">学習データ（当てはめに使う10点）</text>
-    <circle cx="232" cy="456" r="3.4" fill="#fff" stroke="${P}" stroke-width="1.6" /><text x="240" y="460" font-size="11" fill="${R}">テスト用の10点</text>
+    <circle cx="40" cy="456" r="3.4" fill="${R}" /><text x="48" y="460" font-size="12.4" fill="${R}">学習データ（当てはめに使う10点）</text>
+    <circle cx="232" cy="456" r="3.4" fill="#fff" stroke="${P}" stroke-width="1.6" /><text x="240" y="460" font-size="12.4" fill="${R}">テスト用の10点</text>
   </svg>`,[o,s,c]=i;return Y(a,`真の関係が2次式のデータ（黒の10点）に、3通りの式を最小二乗法で当てはめました。誤差は各点のずれの二乗平均の平方根です。直線は曲がりを表せず、学習データでも ${B(o.tr)} ずれます。2次式は学習 ${B(s.tr)}、テスト ${B(s.te)} と、どちらも小さく収まります。9次式は10点すべてを通るので学習データの誤差は ${B(c.tr)} ですが、点と点の間で大きく波打ち、同じ仕組みで作った別の10点（白丸）では誤差が ${B(c.te)} と、2次式の約 ${Math.round(c.te/s.te)} 倍になります。手元のデータへの当てはまりだけでモデルを選ぶと、この9次式を選んでしまいます。`)}function Le(){let e=Ae(ke(8)),t=(t,n)=>{let r={x:n,y:30,w:150,h:150,xMin:-3,xMax:3,yMax:1},i=e=>r.y+r.h/2-e/3*(r.h/2),a=Array.from({length:150},()=>{let n=e(),r=e();return[n,t*n+Math.sqrt(1-t*t)*r]}),o=e=>{let n=[];for(let a=0;a<=72;a++){let o=2*Math.PI*a/72,s=e*Math.sqrt(1+t)*Math.cos(o),c=e*Math.sqrt(1-t)*Math.sin(o),l=(s-c)/Math.SQRT2,u=(s+c)/Math.SQRT2;n.push(`${z(G(r,l))},${z(i(u))}`)}return`<polygon points="${n.join(` `)}" fill="none" stroke="${N}" stroke-width="1.6" />`},s=(()=>{let e=a.length,t=a.reduce((e,t)=>e+t[0],0)/e,n=a.reduce((e,t)=>e+t[1],0)/e,r=0,i=0,o=0;return a.forEach(([e,a])=>{r+=(e-t)*(a-n),i+=(e-t)**2,o+=(a-n)**2}),r/Math.sqrt(i*o)})();return`<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="none" stroke="#e2e8f0" />
       ${a.map(([e,t])=>`<circle cx="${z(G(r,Math.max(-3,Math.min(3,e))))}" cy="${z(i(Math.max(-3,Math.min(3,t))))}" r="1.8" fill="${L}" fill-opacity="0.55" />`).join(``)}
       ${o(1)}${o(2)}
-      <text x="${r.x+r.w/2}" y="${r.y-10}" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">相関 ρ = ${t}</text>
-      <text x="${r.x+r.w/2}" y="${r.y+r.h+16}" text-anchor="middle" font-size="11" fill="${L}">150点の標本相関 ${B(s)}</text>`};return Y(`${X(350,230,`2変量正規分布の等確率線：相関0なら円、相関0.7なら右上がりの楕円`)}${t(0,12)}${t(.7,188)}
-    <text x="${350/2}" y="226" text-anchor="middle" font-size="11" fill="${L}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`,`どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。多変量正規分布は「平均ベクトル（山の中心）」と「分散共分散行列（楕円の向きと太さ）」で形が決まります。`)}function Re(){let e={x:34,y:30,w:300,h:154,xMin:0,xMax:3,yMax:1},t=t=>e.y+e.h-(Math.max(2,Math.min(5,t))-2)/3*e.h,n=[1101,2202,3303].map(e=>{let t=ke(e),n=0;return Array.from({length:1e3},(e,r)=>(n+=1+Math.floor(t()*6),n/(r+1)))}),r=[N,P,F],i=n.map((n,i)=>`<polyline points="${n.map((n,r)=>`${z(G(e,Math.log10(r+1)))},${z(t(n))}`).join(` `)}" fill="none" stroke="${r[i]}" stroke-width="1.6" />`).join(``),a=`${X(350,230,`サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく`)}
-    ${[2,3,4,5].map(n=>`<text x="${e.x-6}" y="${z(t(n)+4)}" text-anchor="end" font-size="11" fill="${L}">${n}</text>`).join(``)}
+      <text x="${r.x+r.w/2}" y="${r.y-10}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">相関 ρ = ${t}</text>
+      <text x="${r.x+r.w/2}" y="${r.y+r.h+16}" text-anchor="middle" font-size="12.4" fill="${L}">150点の標本相関 ${B(s)}</text>`};return Y(`${X(350,230,`2変量正規分布の等確率線：相関0なら円、相関0.7なら右上がりの楕円`)}${t(0,12)}${t(.7,188)}
+    <text x="${350/2}" y="226" text-anchor="middle" font-size="12.4" fill="${L}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`,`どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。多変量正規分布は「平均ベクトル（山の中心）」と「分散共分散行列（楕円の向きと太さ）」で形が決まります。`)}function Re(){let e={x:34,y:30,w:300,h:154,xMin:0,xMax:3,yMax:1},t=t=>e.y+e.h-(Math.max(2,Math.min(5,t))-2)/3*e.h,n=[1101,2202,3303].map(e=>{let t=ke(e),n=0;return Array.from({length:1e3},(e,r)=>(n+=1+Math.floor(t()*6),n/(r+1)))}),r=[N,P,F],i=n.map((n,i)=>`<polyline points="${n.map((n,r)=>`${z(G(e,Math.log10(r+1)))},${z(t(n))}`).join(` `)}" fill="none" stroke="${r[i]}" stroke-width="1.6" />`).join(``),a=`${X(350,230,`サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく`)}
+    ${[2,3,4,5].map(n=>`<text x="${e.x-6}" y="${z(t(n)+4)}" text-anchor="end" font-size="12.4" fill="${L}">${n}</text>`).join(``)}
     <line x1="${e.x}" y1="${z(t(3.5))}" x2="${e.x+e.w}" y2="${z(t(3.5))}" stroke="${I}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${e.x+e.w}" y="${e.y-8}" text-anchor="end" font-size="11" fill="${I}">赤の点線＝期待値 3.5</text>
+    <text x="${e.x+e.w}" y="${e.y-8}" text-anchor="end" font-size="12.4" fill="${I}">赤の点線＝期待値 3.5</text>
     ${i}
     <line x1="${e.x}" y1="${e.y+e.h}" x2="${e.x+e.w}" y2="${e.y+e.h}" stroke="${L}" />
-    ${[[0,`1`],[1,`10`],[2,`100`],[3,`1000`]].map(([t,n])=>`<text x="${z(G(e,t))}" y="${e.y+e.h+14}" text-anchor="middle" font-size="11" fill="${L}">${n}</text>`).join(``)}
-    <text x="${e.x+e.w/2}" y="224" text-anchor="middle" font-size="11" fill="${L}">振った回数（目盛りは10倍ごと）／縦軸＝それまでの目の平均</text>
+    ${[[0,`1`],[1,`10`],[2,`100`],[3,`1000`]].map(([t,n])=>`<text x="${z(G(e,t))}" y="${e.y+e.h+14}" text-anchor="middle" font-size="12.4" fill="${L}">${n}</text>`).join(``)}
+    <text x="${e.x+e.w/2}" y="224" text-anchor="middle" font-size="12.4" fill="${L}">振った回数（目盛りは10倍ごと）／縦軸＝それまでの目の平均</text>
   </svg>`,o=e=>n.map(t=>t[e-1].toFixed(2)).join(`・`);return Y(a,`3人が別々にサイコロを1000回振り、それまでに出た目の平均を追いかけました。10回目の平均は ${o(10)} とばらばらですが、100回目には ${o(100)}、1000回目には ${o(1e3)} と、3本とも期待値 3.5 のまわりに集まります。どこで止めても平均が3.5ちょうどになるわけではなく、「ずれが大きくなる確率」が回数とともに小さくなる、というのが大数の法則の主張です。`)}function ze(){let e={x:30,y:24,w:304,h:150,xMin:0,xMax:1,yMax:1.08},t=(e,t)=>n=>Math.exp(t*Math.log(n)+(e-t)*Math.log(1-n)-(t*Math.log(t/e)+(e-t)*Math.log(1-t/e)));return Y(`${X(350,220,`尤度関数：10回中7回表なら p=0.7 で最大、100回中70回なら同じ場所でずっと鋭い山になる`)}
     ${q(e,[0,.2,.4,.6,.8,1])}
     ${ge(e,t(10,7),.001,.999,N,.12)}
     ${J(e,t(10,7),N,.001,.999)}
     ${J(e,t(100,70),P,.001,.999)}
     <line x1="${z(G(e,.7))}" y1="${e.y}" x2="${z(G(e,.7))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${z(G(e,.7)+4)}" y="${e.y+10}" font-size="11" fill="${I}">p̂ = 0.7</text>
-    <text x="${z(G(e,.3))}" y="${z(K(e,.62))}" text-anchor="middle" font-size="12" font-weight="700" fill="${N}">10回中7回</text>
-    <text x="${z(G(e,.84))}" y="${z(K(e,.9))}" font-size="12" font-weight="700" fill="#b45309">100回中70回</text>
-    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="11" fill="${L}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
+    <text x="${z(G(e,.7)+4)}" y="${e.y+10}" font-size="12.4" fill="${I}">p̂ = 0.7</text>
+    <text x="${z(G(e,.3))}" y="${z(K(e,.62))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${N}">10回中7回</text>
+    <text x="${z(G(e,.84))}" y="${z(K(e,.9))}" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
+    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${L}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
   </svg>`,`横軸に表の確率 p の候補を並べ、それぞれの p で「今のデータが出る確率」を描いたものが尤度関数です。10回中7回表なら、山の頂上は p = 0.7 で、これが最尤推定値です。同じ7割でも100回中70回なら、頂上の位置は変わらずに山がずっと鋭くなります。山が鋭いほど p の候補を狭く絞り込めるということで、この「山の鋭さ」を数にしたものが後の章のフィッシャー情報量です。`)}function Be(){let e=Ae(ke(1515)),t=[{bx:0,by:0,sd:.12,t:`偏りなし・ばらつき小`,s:`不偏で有効`},{bx:0,by:0,sd:.34,t:`偏りなし・ばらつき大`,s:`不偏だが有効でない`},{bx:.42,by:-.3,sd:.12,t:`偏りあり・ばらつき小`,s:`精度は高いが的外れ`},{bx:.42,by:-.3,sd:.34,t:`偏りあり・ばらつき大`,s:`最悪`}].map((t,n)=>{let r=92+n%2*170,i=92+Math.floor(n/2)*150,a=Array.from({length:12},()=>[t.bx+t.sd*e(),t.by+t.sd*e()]),o=a.reduce((e,t)=>e+t[0],0)/12,s=a.reduce((e,t)=>e+t[1],0)/12;return`${[1,.66,.33].map(e=>`<circle cx="${r}" cy="${i}" r="${z(56*e)}" fill="none" stroke="#cbd5e1" />`).join(``)}
       <circle cx="${r}" cy="${i}" r="2.5" fill="${I}" />
       ${a.map(([e,t])=>`<circle cx="${z(r+e*56)}" cy="${z(i-t*56)}" r="2.6" fill="${N}" />`).join(``)}
       <path d="M${z(r+o*56-5)},${z(i-s*56)} h10 M${z(r+o*56)},${z(i-s*56-5)} v10" stroke="${P}" stroke-width="2" />
-      <text x="${r}" y="${i+56+16}" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">${t.t}</text>
-      <text x="${r}" y="${i+56+30}" text-anchor="middle" font-size="11" fill="${L}">${t.s}</text>`}).join(``);return Y(`${X(350,330,`ダーツのたとえ：偏りの有無とばらつきの大小の4通り`)}${t}</svg>`,`赤い点が的の中心（真の値 θ）、青い点が1本ずつの矢（データから計算した推定値 θ̂）、橙の十字が矢の平均の位置です。上の段は矢の平均が中心に来ている＝<strong>不偏</strong>、左の列は矢がまとまっている＝分散が小さい（<strong>有効</strong>）です。左下は矢がまとまっていても中心からずれ続けるので、いくら投げても真の値に届きません。不偏性と有効性は別々の性質で、両方そろうのは左上だけです。`)}function Ve(){let e={x:14,y:30,w:322,h:140,xMin:-4,xMax:4,yMax:.44},t=2.17,n=2*(1-de(t));return Y(`${X(350,220,`P値は帰無仮説のもとでの分布で、観測値より極端な側の面積`)}
+      <text x="${r}" y="${i+56+16}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">${t.t}</text>
+      <text x="${r}" y="${i+56+30}" text-anchor="middle" font-size="12.4" fill="${L}">${t.s}</text>`}).join(``);return Y(`${X(350,330,`ダーツのたとえ：偏りの有無とばらつきの大小の4通り`)}${t}</svg>`,`赤い点が的の中心（真の値 θ）、青い点が1本ずつの矢（データから計算した推定値 θ̂）、橙の十字が矢の平均の位置です。上の段は矢の平均が中心に来ている＝<strong>不偏</strong>、左の列は矢がまとまっている＝分散が小さい（<strong>有効</strong>）です。左下は矢がまとまっていても中心からずれ続けるので、いくら投げても真の値に届きません。不偏性と有効性は別々の性質で、両方そろうのは左上だけです。`)}function Ve(){let e={x:14,y:30,w:322,h:140,xMin:-4,xMax:4,yMax:.44},t=2.17,n=2*(1-de(t));return Y(`${X(350,220,`P値は帰無仮説のもとでの分布で、観測値より極端な側の面積`)}
     ${ge(e,W,-4,-t,I,.45)}${ge(e,W,t,4,I,.45)}
     ${ge(e,W,-1.96,1.96,N,.08)}
     ${J(e,W,N)}
     ${q(e,[-4,-3,-2,-1,0,1,2,3,4])}
     <line x1="${z(G(e,t))}" y1="${e.y+6}" x2="${z(G(e,t))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.6" />
-    <text x="${z(G(e,t)+4)}" y="${e.y+16}" font-size="12" font-weight="700" fill="${I}">観測値 ${t}</text>
+    <text x="${z(G(e,t)+4)}" y="${e.y+16}" font-size="13.2" font-weight="700" fill="${I}">観測値 ${t}</text>
     <line x1="${z(G(e,-t))}" y1="${e.y+40}" x2="${z(G(e,-t))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1" stroke-dasharray="3 2" />
-    <text x="${z(G(e,3.1))}" y="${z(K(e,.06))}" text-anchor="middle" font-size="11" fill="${I}">${(1-de(t)).toFixed(3)}</text>
-    <text x="${z(G(e,-3.1))}" y="${z(K(e,.06))}" text-anchor="middle" font-size="11" fill="${I}">${(1-de(t)).toFixed(3)}</text>
-    <text x="${z(G(e,0))}" y="${z(K(e,.14))}" text-anchor="middle" font-size="11" fill="${N}">「差がない」なら普通に出る範囲</text>
-    <text x="${350/2}" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">P値 ＝ 赤い面積の合計 ＝ ${B(n)}</text>
-    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="11" fill="${L}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
+    <text x="${z(G(e,3.1))}" y="${z(K(e,.06))}" text-anchor="middle" font-size="12.4" fill="${I}">${(1-de(t)).toFixed(3)}</text>
+    <text x="${z(G(e,-3.1))}" y="${z(K(e,.06))}" text-anchor="middle" font-size="12.4" fill="${I}">${(1-de(t)).toFixed(3)}</text>
+    <text x="${z(G(e,0))}" y="${z(K(e,.14))}" text-anchor="middle" font-size="12.4" fill="${N}">「差がない」なら普通に出る範囲</text>
+    <text x="${350/2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">P値 ＝ 赤い面積の合計 ＝ ${B(n)}</text>
+    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${L}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
   </svg>`,`曲線は「本当に差がない」と仮定したときに、検定統計量がとる値の分布です。今回の観測値が ${t} だったとすると、P値はそれより極端な側（両側なので左右とも）の面積で、${B(n)} です。P値は「帰無仮説が正しい確率」ではなく、「帰無仮説が正しいとしたら、これ以上に極端な結果がどれだけ出にくいか」をこの面積で表したものです。`)}function He(){let e=Object.entries({煮玉子:[52,48,55,51,49],チャーシュー:[58,61,57,60,59],メンマ:[50,52,48,51,49]}).map(([e,t])=>{let n=t.reduce((e,t)=>e+t,0)/t.length;return[e,[...t,...t.map(e=>2*n-e)]]}),t=e.flatMap(([,e])=>e),n=t.reduce((e,t)=>e+t,0)/t.length,r=e.map(([,e])=>e.reduce((e,t)=>e+t,0)/e.length),i=e.reduce((e,[,t],i)=>e+t.length*(r[i]-n)**2,0),a=e.reduce((e,[,t],n)=>e+t.reduce((e,t)=>e+(t-r[n])**2,0),0),o=e.length,s=t.length,c=i/(o-1)/(a/(s-o)),l={x:40,y:24,w:296,h:170,xMin:0,xMax:3,yMax:1},u=e=>l.y+l.h-(e-44)/20*l.h,d=[P,I,F],f=e.map(([e,t],n)=>{let i=G(l,n+.5),a={};return`${t.map(e=>{let t=(a[e]=(a[e]||0)+1)-1;return`<circle cx="${z(i-12+t*7)}" cy="${z(u(e))}" r="3.2" fill="${d[n]}" fill-opacity="0.8" />`}).join(``)}
       <line x1="${z(i-34)}" y1="${z(u(r[n]))}" x2="${z(i+34)}" y2="${z(u(r[n]))}" stroke="${d[n]}" stroke-width="2.4" />
-      <text x="${z(i)}" y="${l.y+l.h+16}" text-anchor="middle" font-size="12" font-weight="700" fill="${R}">${e}</text>
-      <text x="${z(i+36)}" y="${z(u(r[n])+4)}" font-size="11" fill="${d[n]}">${r[n]}</text>`}).join(``);return Y(`${X(350,250,`3つのトッピングの日ごとの売上：群の平均どうしの離れ方（群間）と、群の中の散らばり（群内）`)}
-    ${[45,50,55,60].map(e=>`<text x="${l.x-6}" y="${z(u(e)+4)}" text-anchor="end" font-size="11" fill="${L}">${e}</text><line x1="${l.x}" y1="${z(u(e))}" x2="${l.x+l.w}" y2="${z(u(e))}" stroke="#f1f5f9" />`).join(``)}
+      <text x="${z(i)}" y="${l.y+l.h+16}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${R}">${e}</text>
+      <text x="${z(i+36)}" y="${z(u(r[n])+4)}" font-size="12.4" fill="${d[n]}">${r[n]}</text>`}).join(``);return Y(`${X(350,250,`3つのトッピングの日ごとの売上：群の平均どうしの離れ方（群間）と、群の中の散らばり（群内）`)}
+    ${[45,50,55,60].map(e=>`<text x="${l.x-6}" y="${z(u(e)+4)}" text-anchor="end" font-size="12.4" fill="${L}">${e}</text><line x1="${l.x}" y1="${z(u(e))}" x2="${l.x+l.w}" y2="${z(u(e))}" stroke="#f1f5f9" />`).join(``)}
     <line x1="${l.x}" y1="${z(u(n))}" x2="${l.x+l.w}" y2="${z(u(n))}" stroke="${L}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${l.x+2}" y="${z(u(n)-4)}" font-size="11" fill="${L}">全体平均 ${z(n)}</text>
+    <text x="${l.x+2}" y="${z(u(n)-4)}" font-size="12.4" fill="${L}">全体平均 ${z(n)}</text>
     ${f}
-    <text x="${350/2}" y="244" text-anchor="middle" font-size="11" fill="${L}">点＝1日の売上（万円）・太線＝そのトッピングの平均</text>
+    <text x="${350/2}" y="244" text-anchor="middle" font-size="12.4" fill="${L}">点＝1日の売上（万円）・太線＝そのトッピングの平均</text>
   </svg>`,`点は1日ごとの売上、太線は各トッピングの平均です。<strong>群間変動</strong>は太線が全体平均（点線）からどれだけ離れているか、<strong>群内変動</strong>は同じ色の点が太線のまわりにどれだけ散らばっているかです。この10日ずつのデータで計算すると、群間平方和 ${z(i)}、群内平方和 ${z(a)}、F = (${z(i)} ÷ ${o-1}) ÷ (${z(a)} ÷ ${s-o}) ≈ ${z(c)} です。チャーシューの太線だけが群内の散らばりよりはるかに大きく離れているので、F が大きくなります。`)}function Ue(){let e=[[`A`,1,1],[`B`,1.5,1.4],[`C`,1.2,2.2],[`D`,5,5],[`E`,5.6,4.6],[`F`,5.2,6.2]],t=e.map((e,t)=>({ids:[t],h:0})),n=(t,n)=>Math.hypot(e[t][1]-e[n][1],e[t][2]-e[n][2]),r=(e,t)=>{let r=0;return e.ids.forEach(e=>t.ids.forEach(t=>r+=n(e,t))),r/(e.ids.length*t.ids.length)},i=[];for(;t.length>1;){let e=[0,1],n=1/0;for(let i=0;i<t.length;i++)for(let a=i+1;a<t.length;a++){let o=r(t[i],t[a]);o<n&&(n=o,e=[i,a])}let[a,o]=e,s={ids:[...t[a].ids,...t[o].ids],h:n,l:t[a],r:t[o]};i.push(n),t=t.filter((e,t)=>t!==a&&t!==o).concat(s)}let a=t[0],o=[],s=e=>{e.l?(s(e.l),s(e.r)):o.push(e.ids[0])};s(a);let c={x:16,y:34,w:130,h:130,xMin:0,xMax:7,yMax:7},l={x:176,y:34,w:160,h:150},u=a.h*1.1,d=e=>l.y+l.h-e/u*l.h,f=t=>l.x+10+o.indexOf(t)*(l.w-20)/(e.length-1),p=e=>{if(!e.l)return e.x=f(e.ids[0]),``;let t=p(e.l),n=p(e.r);return e.x=(e.l.x+e.r.x)/2,t+n+`<path d="M${z(e.l.x)},${z(d(e.l.h))} V${z(d(e.h))} H${z(e.r.x)} V${z(d(e.r.h))}" fill="none" stroke="${N}" stroke-width="1.6" />`},m=p(a),h=(a.h+a.l.h+0)/2>Math.max(a.l.h,a.r.h)?(a.h+Math.max(a.l.h,a.r.h))/2:a.h*.6;return Y(`${X(350,250,`6人の顧客の散布図と、近い順に併合していくデンドログラム`)}
-    <text x="${c.x}" y="${c.y-12}" font-size="12" font-weight="700" fill="${R}">顧客の位置（2つの指標）</text>
+    <text x="${c.x}" y="${c.y-12}" font-size="13.2" font-weight="700" fill="${R}">顧客の位置（2つの指標）</text>
     <rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" fill="none" stroke="#e2e8f0" />
-    ${e.map(([e,t,n],r)=>`<circle cx="${z(G(c,t))}" cy="${z(c.y+c.h-n/7*c.h)}" r="4" fill="${r<3?P:F}" /><text x="${z(G(c,t)+7)}" y="${z(c.y+c.h-n/7*c.h+4)}" font-size="12" fill="${R}">${e}</text>`).join(``)}
-    <text x="${l.x}" y="${l.y-12}" font-size="12" font-weight="700" fill="${R}">デンドログラム</text>
+    ${e.map(([e,t,n],r)=>`<circle cx="${z(G(c,t))}" cy="${z(c.y+c.h-n/7*c.h)}" r="4" fill="${r<3?P:F}" /><text x="${z(G(c,t)+7)}" y="${z(c.y+c.h-n/7*c.h+4)}" font-size="13.2" fill="${R}">${e}</text>`).join(``)}
+    <text x="${l.x}" y="${l.y-12}" font-size="13.2" font-weight="700" fill="${R}">デンドログラム</text>
     ${m}
     <line x1="${l.x}" y1="${z(d(h))}" x2="${l.x+l.w}" y2="${z(d(h))}" stroke="${I}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${l.x+l.w}" y="${z(d(h)-4)}" text-anchor="end" font-size="11" fill="${I}">ここで切ると2群</text>
-    ${e.map(([e],t)=>`<text x="${z(f(t))}" y="${l.y+l.h+14}" text-anchor="middle" font-size="12" fill="${R}">${e}</text>`).join(``)}
-    <text x="${l.x-4}" y="${z(d(0)+4)}" text-anchor="end" font-size="11" fill="${L}">0</text>
-    <text x="${l.x-4}" y="${z(d(a.h)+4)}" text-anchor="end" font-size="11" fill="${L}">${z(a.h)}</text>
-    <text x="${350/2}" y="244" text-anchor="middle" font-size="11" fill="${L}">縦軸＝併合したときの距離（群平均法）</text>
+    <text x="${l.x+l.w}" y="${z(d(h)-4)}" text-anchor="end" font-size="12.4" fill="${I}">ここで切ると2群</text>
+    ${e.map(([e],t)=>`<text x="${z(f(t))}" y="${l.y+l.h+14}" text-anchor="middle" font-size="13.2" fill="${R}">${e}</text>`).join(``)}
+    <text x="${l.x-4}" y="${z(d(0)+4)}" text-anchor="end" font-size="12.4" fill="${L}">0</text>
+    <text x="${l.x-4}" y="${z(d(a.h)+4)}" text-anchor="end" font-size="12.4" fill="${L}">${z(a.h)}</text>
+    <text x="${350/2}" y="244" text-anchor="middle" font-size="12.4" fill="${L}">縦軸＝併合したときの距離（群平均法）</text>
   </svg>`,`左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 ${B([...i].sort((e,t)=>e-t)[0])} の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 ${z(Math.max(a.l.h,a.r.h))} 以下でまとまりますが、2つの群どうしは距離 ${z(a.h)} になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。`)}function We(){let e=331.25,t=1.25,n=n=>e+t*n-181.25*Math.cos(2*Math.PI*n/12),r={x:40,y:24,w:296,h:150,xMin:0,xMax:35,yMax:1},i=e=>r.y+r.h-(e-0)/600*r.h,a=Array.from({length:36},(e,t)=>`${z(G(r,t))},${z(i(n(t)))}`).join(` `);return Y(`${X(350,230,`アイスクリームの月次売上：夏に高く冬に低い季節性と、少しずつ伸びるトレンド`)}
-    ${[100,300,500].map(e=>`<text x="${r.x-6}" y="${z(i(e)+4)}" text-anchor="end" font-size="11" fill="${L}">${e}</text><line x1="${r.x}" y1="${z(i(e))}" x2="${r.x+r.w}" y2="${z(i(e))}" stroke="#f1f5f9" />`).join(``)}
+    ${[100,300,500].map(e=>`<text x="${r.x-6}" y="${z(i(e)+4)}" text-anchor="end" font-size="12.4" fill="${L}">${e}</text><line x1="${r.x}" y1="${z(i(e))}" x2="${r.x+r.w}" y2="${z(i(e))}" stroke="#f1f5f9" />`).join(``)}
     <polyline points="${a}" fill="none" stroke="${N}" stroke-width="2" />
     ${Array.from({length:36},(e,t)=>`<circle cx="${z(G(r,t))}" cy="${z(i(n(t)))}" r="2.2" fill="${N}" />`).join(``)}
     <line x1="${z(G(r,0))}" y1="${z(i(e))}" x2="${z(G(r,35))}" y2="${z(i(e+t*35))}" stroke="${P}" stroke-width="1.8" stroke-dasharray="5 3" />
-    <text x="${z(G(r,35))}" y="${z(i(e+t*35)-6)}" text-anchor="end" font-size="11" fill="#b45309">トレンド</text>
-    ${[0,12,24].map((e,t)=>`<text x="${z(G(r,e))}" y="${r.y+r.h+14}" text-anchor="middle" font-size="11" fill="${L}">${t+1}年目1月</text>`).join(``)}
-    <text x="${z(G(r,6))}" y="${z(i(n(6))-8)}" text-anchor="middle" font-size="11" fill="${R}">7月 ${Math.round(n(6))}</text>
-    <text x="${z(G(r,0)+4)}" y="${z(i(n(0))+16)}" font-size="11" fill="${R}">1月 ${Math.round(n(0))}</text>
-    <text x="${r.x+r.w/2}" y="226" text-anchor="middle" font-size="11" fill="${L}">月次売上（万円）の3年分</text>
+    <text x="${z(G(r,35))}" y="${z(i(e+t*35)-6)}" text-anchor="end" font-size="12.4" fill="#b45309">トレンド</text>
+    ${[0,12,24].map((e,t)=>`<text x="${z(G(r,e))}" y="${r.y+r.h+14}" text-anchor="middle" font-size="12.4" fill="${L}">${t+1}年目1月</text>`).join(``)}
+    <text x="${z(G(r,6))}" y="${z(i(n(6))-8)}" text-anchor="middle" font-size="12.4" fill="${R}">7月 ${Math.round(n(6))}</text>
+    <text x="${z(G(r,0)+4)}" y="${z(i(n(0))+16)}" font-size="12.4" fill="${R}">1月 ${Math.round(n(0))}</text>
+    <text x="${r.x+r.w/2}" y="226" text-anchor="middle" font-size="12.4" fill="${L}">月次売上（万円）の3年分</text>
   </svg>`,`本文の数字（1月 ${Math.round(n(0))}万円・7月 ${Math.round(n(6))}万円・翌1月 ${Math.round(n(12))}万円）に合わせて3年分を描いたものです。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。12か月前の値と今の値がよく似ているので、ラグ12の自己相関が高くなります。トレンドがある系列は平均が時間とともに変わるので、そのままでは定常ではありません。差分をとると、この右上がりが取り除かれます。`)}function Ge(){let e=[...[[.8,!0],[1.2,!1],[1.5,!0],[2,!0],[2.4,!1],[3.1,!0],[3.5,!1],[4,!0],[4.6,!1],[5,!1]]].sort((e,t)=>e[0]-t[0]),t=1,n=e.length,r=[[0,1]],i=[],a=[];for(let[o,s]of e){if(s){let e=t;t*=1-1/n,r.push([o,t]),a.push(`${o}年 ${n}人中1人 → ${B(e)}×(1−1/${n}) = ${B(t)}`)}else i.push([o,t]);n--}let o={x:36,y:20,w:296,h:160,xMin:0,xMax:5.2,yMax:1.05},s=`M${z(G(o,0))},${z(K(o,1))}`;for(let e=1;e<r.length;e++)s+=` H${z(G(o,r[e][0]))} V${z(K(o,r[e][1]))}`;return s+=` H${z(G(o,5.2))}`,Y(`${X(350,230,`カプラン・マイヤー曲線：死亡のたびに階段状に下がり、打ち切りは印だけで下がらない`)}
     ${q(o,[0,1,2,3,4,5])}
-    ${[0,.5,1].map(e=>`<text x="${o.x-6}" y="${z(K(o,e)+4)}" text-anchor="end" font-size="11" fill="${L}">${e}</text>`).join(``)}
+    ${[0,.5,1].map(e=>`<text x="${o.x-6}" y="${z(K(o,e)+4)}" text-anchor="end" font-size="12.4" fill="${L}">${e}</text>`).join(``)}
     <path d="${s}" fill="none" stroke="${N}" stroke-width="2.2" />
     ${i.map(([e,t])=>`<line x1="${z(G(o,e))}" y1="${z(K(o,t)-6)}" x2="${z(G(o,e))}" y2="${z(K(o,t)+6)}" stroke="${P}" stroke-width="2" />`).join(``)}
-    <text x="${o.x+o.w}" y="${o.y+12}" text-anchor="end" font-size="11" fill="#b45309">｜＝打ち切り（その時点まで生存）</text>
-    <text x="${o.x+o.w/2}" y="226" text-anchor="middle" font-size="11" fill="${L}">横軸＝追跡年数／縦軸＝推定した生存割合 Ŝ(t)</text>
+    <text x="${o.x+o.w}" y="${o.y+12}" text-anchor="end" font-size="12.4" fill="#b45309">｜＝打ち切り（その時点まで生存）</text>
+    <text x="${o.x+o.w/2}" y="226" text-anchor="middle" font-size="12.4" fill="${L}">横軸＝追跡年数／縦軸＝推定した生存割合 Ŝ(t)</text>
   </svg>`,`10人を最長5年追跡した例です。死亡が起きた時点でだけ、そのときまだ観察中の人数（リスク集合）を分母にして曲線が下がります（${a.slice(0,2).join(`、`)} …）。橙の縦線は打ち切りで、その人は以後の分母から外れますが、曲線は下がりません。5年時点の推定生存割合は ${B(t)} です。打ち切りを「死亡」として数えると下がり過ぎ、「最初からいなかった」として除くと分母を誤ります。`)}function Ke(){let e=ke(3606),t=Array.from({length:500},()=>[e(),e()]),n=t.filter(([e,t])=>e*e+t*t<=1).length,r=4*n/500,i=Array.from({length:61},(e,t)=>{let n=Math.PI/2*(t/60);return`${z(20+Math.cos(n)*190)},${z(210-Math.sin(n)*190)}`}).join(` `);return Y(`${X(340,250,`正方形に500点を打ち、四分円の内側に入った割合から円周率を推定する`)}
     <rect x="20" y="20" width="190" height="190" fill="none" stroke="${L}" />
     <polyline points="${i}" fill="none" stroke="${R}" stroke-width="1.6" />
     ${t.map(([e,t])=>`<circle cx="${z(20+e*190)}" cy="${z(210-t*190)}" r="1.7" fill="${e*e+t*t<=1?N:P}" />`).join(``)}
-    <text x="224" y="40" font-size="12" fill="${R}">点の数 500</text>
-    <text x="224" y="60" font-size="12" fill="${N}">内側 ${n}</text>
-    <text x="224" y="80" font-size="12" fill="#b45309">外側 ${500-n}</text>
-    <text x="224" y="112" font-size="12" font-weight="700" fill="${R}">4 × ${n} ÷ 500</text>
-    <text x="224" y="130" font-size="12" font-weight="700" fill="${R}">＝ ${r.toFixed(3)}</text>
-    <text x="224" y="154" font-size="11" fill="${L}">（π ＝ 3.142）</text>
+    <text x="224" y="40" font-size="13.2" fill="${R}">点の数 500</text>
+    <text x="224" y="60" font-size="13.2" fill="${N}">内側 ${n}</text>
+    <text x="224" y="80" font-size="13.2" fill="#b45309">外側 ${500-n}</text>
+    <text x="224" y="112" font-size="13.2" font-weight="700" fill="${R}">4 × ${n} ÷ 500</text>
+    <text x="224" y="130" font-size="13.2" font-weight="700" fill="${R}">＝ ${r.toFixed(3)}</text>
+    <text x="224" y="154" font-size="12.4" fill="${L}">（π ＝ 3.142）</text>
   </svg>`,`一辺1の正方形に 500 個の点を一様にばらまき、半径1の四分円の内側に落ちた点（青）を数えました。四分円の面積は π/4 なので、内側に落ちる割合の4倍が π の推定値になり、今回は 4 × ${n} ÷ 500 = ${r.toFixed(3)} です。点を増やすほど推定値は π に近づきますが、誤差は点の数の平方根に反比例してしか減りません（点を100倍にして誤差がようやく1/10）。`)}function qe(){let e={x:30,y:26,w:296,h:120,xMin:.5,xMax:6.5,yMax:.25},t=3.5,n=35/12;return Y(`${X(340,200,`サイコロの目は1から6まで同じ確率1/6の離散一様分布`)}
     ${q(e,[1,2,3,4,5,6])}
     ${_e(e,[1,2,3,4,5,6],[,,,,,,].fill(1/6),N,.4)}
-    <text x="${e.x-4}" y="${z(K(e,1/6)+4)}" text-anchor="end" font-size="11" fill="${L}">1/6</text>
+    <text x="${e.x-4}" y="${z(K(e,1/6)+4)}" text-anchor="end" font-size="12.4" fill="${L}">1/6</text>
     <line x1="${z(G(e,t))}" y1="${e.y}" x2="${z(G(e,t))}" y2="${e.y+e.h}" stroke="${P}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="${z(G(e,t))}" y="${e.y-8}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
+    <text x="${z(G(e,t))}" y="${e.y-8}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
     <line x1="${z(G(e,t-Math.sqrt(n)))}" y1="${e.y+e.h+26}" x2="${z(G(e,t+Math.sqrt(n)))}" y2="${e.y+e.h+26}" stroke="${F}" stroke-width="2" />
-    <text x="${z(G(e,t))}" y="${e.y+e.h+42}" text-anchor="middle" font-size="11" fill="${F}">平均 ± 標準偏差 √(35/12) ≈ ${B(Math.sqrt(n))}</text>
+    <text x="${z(G(e,t))}" y="${e.y+e.h+42}" text-anchor="middle" font-size="12.4" fill="${F}">平均 ± 標準偏差 √(35/12) ≈ ${B(Math.sqrt(n))}</text>
   </svg>`,`サイコロの目の分布です。棒の高さはどれも 1/6 で、山も谷もない平らな形が<strong>一様</strong>という名前の意味です。平均 (6+1)/2 = 3.5 は棒の真ん中の位置で、実際には出ない値です。分散は (6² − 1)/12 = 35/12 ≈ ${B(n)}、標準偏差は約 ${B(Math.sqrt(n))} で、緑の線の幅がそのおおよその広がりです。`)}function Je(){let e={x:22,y:36,w:120,h:130,xMin:-.5,xMax:1.5,yMax:1},t={x:186,y:36,w:150,h:130,xMin:0,xMax:1,yMax:.3},n=.3;return Y(`${X(350,220,`ベルヌーイ分布は0と1の2本の棒。分散 p(1−p) は p=0.5 で最大の0.25`)}
-    <text x="${e.x}" y="16" font-size="12" font-weight="700" fill="${R}">p = ${n} のとき</text>
+    <text x="${e.x}" y="16" font-size="13.2" font-weight="700" fill="${R}">p = ${n} のとき</text>
     ${q(e,[0,1])}
     ${_e(e,[0,1],[1-n,n],N,.45)}
-    <text x="${z(G(e,0))}" y="${z(K(e,1-n)-6)}" text-anchor="middle" font-size="12" fill="${R}">${1-n}</text>
-    <text x="${z(G(e,1))}" y="${z(K(e,n)-6)}" text-anchor="middle" font-size="12" fill="${R}">${n}</text>
-    <text x="${z(G(e,0))}" y="${e.y+e.h+28}" text-anchor="middle" font-size="11" fill="${L}">失敗</text>
-    <text x="${z(G(e,1))}" y="${e.y+e.h+28}" text-anchor="middle" font-size="11" fill="${L}">成功</text>
-    <text x="${t.x}" y="16" font-size="12" font-weight="700" fill="${R}">分散 p(1−p) と p の関係</text>
+    <text x="${z(G(e,0))}" y="${z(K(e,1-n)-6)}" text-anchor="middle" font-size="13.2" fill="${R}">${1-n}</text>
+    <text x="${z(G(e,1))}" y="${z(K(e,n)-6)}" text-anchor="middle" font-size="13.2" fill="${R}">${n}</text>
+    <text x="${z(G(e,0))}" y="${e.y+e.h+28}" text-anchor="middle" font-size="12.4" fill="${L}">失敗</text>
+    <text x="${z(G(e,1))}" y="${e.y+e.h+28}" text-anchor="middle" font-size="12.4" fill="${L}">成功</text>
+    <text x="${t.x}" y="16" font-size="13.2" font-weight="700" fill="${R}">分散 p(1−p) と p の関係</text>
     ${q(t,[0,.5,1])}
     ${J(t,e=>e*(1-e),F)}
     <circle cx="${z(G(t,.5))}" cy="${z(K(t,.25))}" r="3.5" fill="${F}" />
-    <text x="${z(G(t,.5))}" y="${z(K(t,.25)-8)}" text-anchor="middle" font-size="11" fill="${F}">p=0.5 で最大 0.25</text>
+    <text x="${z(G(t,.5))}" y="${z(K(t,.25)-8)}" text-anchor="middle" font-size="12.4" fill="${F}">p=0.5 で最大 0.25</text>
     <circle cx="${z(G(t,n))}" cy="${z(K(t,n*(1-n)))}" r="3.5" fill="${N}" />
-    <text x="${z(G(t,n)-6)}" y="${z(K(t,n*(1-n))+16)}" text-anchor="end" font-size="11" fill="${N}">${B(n*(1-n))}</text>
-    <text x="${t.x+t.w/2}" y="${t.y+t.h+28}" text-anchor="middle" font-size="11" fill="${L}">横軸 ＝ 成功確率 p</text>
+    <text x="${z(G(t,n)-6)}" y="${z(K(t,n*(1-n))+16)}" text-anchor="end" font-size="12.4" fill="${N}">${B(n*(1-n))}</text>
+    <text x="${t.x+t.w/2}" y="${t.y+t.h+28}" text-anchor="middle" font-size="12.4" fill="${L}">横軸 ＝ 成功確率 p</text>
   </svg>`,`左はベルヌーイ分布そのもので、値は0（失敗）と1（成功）の2つだけです。p = ${n} なら成功の棒が ${n}、失敗の棒が ${1-n} です。右は分散 p(1−p) を p の関数として描いたもので、p = 0.5（どちらが出るか最も読めない）で最大の 0.25 になり、p が0や1に近づくほど結果が決まりきって分散は0に近づきます。p = ${n} の分散は ${B(n*(1-n))} です。`)}function Ye(){let e=e=>se(5,e)*se(10,4-e)/se(15,4),t=e=>ce(4,5/15,e),n=ve(0,4),r={x:30,y:30,w:296,h:140,xMin:-.5,xMax:4.5,yMax:.5},i=(G(r,1)-G(r,0))*.34,a=(e,t,n,a)=>{let o=K(r,t);return`<rect x="${z(G(r,e)+n)}" y="${z(o)}" width="${z(i)}" height="${z(r.y+r.h-o)}" fill="${a}" fill-opacity="0.8" />`},o=5/15*4*(10/15)*(11/14),s=5/15*4*(1-5/15);return Y(`${X(340,220,`赤玉5個・青玉10個から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較`)}
     ${q(r,n)}
     ${n.map(n=>a(n,e(n),-i,N)+a(n,t(n),0,P)).join(``)}
-    ${n.map(t=>`<text x="${z(G(r,t)-i/2)}" y="${z(K(r,e(t))-4)}" text-anchor="middle" font-size="10.5" fill="${N}">${e(t)<.01?e(t).toFixed(3):B(e(t))}</text>`).join(``)}
-    <rect x="${r.x+150}" y="${r.y-2}" width="10" height="10" fill="${N}" /><text x="${r.x+164}" y="${r.y+7}" font-size="11" fill="${R}">戻さない（超幾何）</text>
-    <rect x="${r.x+150}" y="${r.y+14}" width="10" height="10" fill="${P}" /><text x="${r.x+164}" y="${r.y+23}" font-size="11" fill="${R}">戻す（二項 B(4, 1/3)）</text>
-    <text x="${r.x+r.w/2}" y="216" text-anchor="middle" font-size="11" fill="${L}">横軸 ＝ 4個のうちの赤玉の数 k</text>
+    ${n.map(t=>`<text x="${z(G(r,t)-i/2)}" y="${z(K(r,e(t))-4)}" text-anchor="middle" font-size="12.4" fill="${N}">${e(t)<.01?e(t).toFixed(3):B(e(t))}</text>`).join(``)}
+    <rect x="${r.x+150}" y="${r.y-2}" width="10" height="10" fill="${N}" /><text x="${r.x+164}" y="${r.y+7}" font-size="12.4" fill="${R}">戻さない（超幾何）</text>
+    <rect x="${r.x+150}" y="${r.y+14}" width="10" height="10" fill="${P}" /><text x="${r.x+164}" y="${r.y+23}" font-size="12.4" fill="${R}">戻す（二項 B(4, 1/3)）</text>
+    <text x="${r.x+r.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${L}">横軸 ＝ 4個のうちの赤玉の数 k</text>
   </svg>`,`本文の例（赤玉5個・青玉10個の計15個から4個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(4, 1/3)）です。平均はどちらも 4 × 5/15 ≈ ${B(20/15)} ですが、戻さない方が両端（0個・4個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${B(o)}、二項 ${B(s)} で、比 ${B(o/s)} がちょうど有限母集団修正 (15−4)/(15−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`)}var Xe={"f-pmf-pdf":ye,"f-survival":be,"f-same-moments":xe,"f-linear-transform":Se,"f-binomial":Ce,"f-uniform":qe,"f-bernoulli":Je,"f-hypergeo":Ye,"f-poisson":we,"f-continuous":Te,"f-normal-areas":Ee,"f-bayes-tree":De,"f-venn3":Oe,"f-overfit":Ie,"f-bivariate":Le,"f-lln":Re,"f-likelihood":ze,"f-darts":Be,"f-pvalue":Ve,"f-anova":He,"f-dendrogram":Ue,"f-timeseries":We,"f-km":Ge,"f-montecarlo":Ke},Z=[{id:`1.1-probability`,updatedAt:`2026-06-25`,title:`確率の公理と包除原理`,chapter:1,description:`コルモゴロフの公理・補事象・包除原理で、確率論の数学的基礎を学びます。`,content:`💡 **このモジュールで学ぶこと**
 
 「サイコロで偶数か3の倍数が出る確率は？」この問いを正確に解くには、確率の数学的な定義（公理）と、複数の事象を組み合わせるルールが必要です。このモジュールでは確率論の土台となる**コルモゴロフの公理**と**包除原理**を、具体例とともに習得します。条件付き確率・独立については次のモジュールで扱います。
