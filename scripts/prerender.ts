@@ -6,6 +6,7 @@ import { modules } from '../src/data/modules';
 import { glossary } from '../src/data/glossary';
 import { covQuadrantsFigure, partialCorrFigure } from '../src/data/corrFigures';
 import { cdfPdfFigure } from '../src/data/distFigures';
+import { SHAPE_FIGS } from '../src/data/shapeFigures';
 import { buildUsecaseHtml } from '../src/data/usecaseGuide';
 import {
   buildCheatsheetHtml,
@@ -122,6 +123,7 @@ function logisticSigmoidSvg(): string {
 
 const FIGURES: Record<string, string> = {
   'cdf-pdf': cdfPdfFigure(),
+  ...Object.fromEntries(Object.entries(SHAPE_FIGS).map(([k, f]) => [k, f()])),
   'cov-quadrants': covQuadrantsFigure(),
   'resid-steps': partialCorrFigure(),
   'venn-inclusion': `<figure class="venn-figure"><svg viewBox="0 0 340 200" role="img" aria-label="包除原理のベン図：A と B の重なりを一度だけ引く" class="venn-svg">

@@ -1,6 +1,7 @@
 // stats-app/src/App.tsx
 import { covQuadrantsFigure, partialCorrFigure } from './data/corrFigures';
 import { cdfPdfFigure } from './data/distFigures';
+import { SHAPE_FIGS } from './data/shapeFigures';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
 import { modules } from './data/modules';
@@ -199,7 +200,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[cov-quadrants\]\]|\[\[cdf-pdf\]\]|\[\[resid-steps\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[cov-quadrants\]\]|\[\[cdf-pdf\]\]|\[\[f-[a-z0-9-]+\]\]|\[\[resid-steps\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
       const parts = t.split(regex);
       return (
         <>
@@ -305,6 +306,7 @@ function App() {
                 </figcaption>
               </figure>
             );
+            if (/^\[\[f-[a-z0-9-]+\]\]$/.test(part) && SHAPE_FIGS[part.slice(2, -2)]) return <div key={key} dangerouslySetInnerHTML={{ __html: SHAPE_FIGS[part.slice(2, -2)]() }} />;
             if (part === '[[cdf-pdf]]') return <div key={key} dangerouslySetInnerHTML={{ __html: cdfPdfFigure() }} />;
             if (part === '[[cov-quadrants]]') return <div key={key} dangerouslySetInnerHTML={{ __html: covQuadrantsFigure() }} />;
             if (part === '[[resid-steps]]') return <div key={key} dangerouslySetInnerHTML={{ __html: partialCorrFigure() }} />;

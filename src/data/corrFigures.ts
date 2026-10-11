@@ -91,7 +91,7 @@ export function covQuadrantsFigure(): string {
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 x（平均 x̄ より右ほど x−x̄ が正）／縦軸 y</text>
   </svg>`;
 
-  const cap = `各点について (x−x̄)(y−ȳ) を作ります。平均の位置（点線の交点）を原点にすると、これは<strong>点と原点を結ぶ長方形の、符号つきの面積</strong>になります。右上と左下の点は面積が正（青）、左上と右下の点は負（橙）です。共分散は、この面積を全点で平均したものです。この例では${n}点中${inPos}点が右上か左下にあり、Cov = ${f2(cov(xs, ys))}（相関係数 r = ${f2(corr(xs, ys))}）と正になります。点が左上から右下へ並べば負の点が増え、Cov は負になります。`;
+  const cap = `青は面積が正の点（右上と左下）、橙は負の点（左上と右下）です。この例では${n}点中${inPos}点が右上か左下にあり、Cov = ${f2(cov(xs, ys))}（相関係数 r = ${f2(corr(xs, ys))}）と正になります。点が左上から右下へ並べば負の点が増え、Cov は負になります。`;
   return `<figure class="venn-figure">${svg}<figcaption class="venn-caption">${cap}</figcaption></figure>`;
 }
 
