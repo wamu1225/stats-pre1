@@ -121,7 +121,7 @@ function pdfHeight(): string {
     <text x="${f1(PX(b, 179))}" y="${f1(PY(b, f(179)) - 18)}" font-size="13.2" fill="${INK}">曲線 f(x)</text>
     <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">横軸 ＝ 身長 x（cm）　曲線の下の面積の合計 ＝ 1</text>
   </svg>`;
-  const cap = `身長の分布を、平均 ${m}cm・標準偏差 ${s}cm の正規分布と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${f2(prob)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`;
+  const cap = `身長の分布を、平均 ${m}cm・標準偏差 ${s}cm の正規分布（左右対称の釣鐘形の分布。1.10 で詳しく学びます）と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${f2(prob)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`;
   return fig(svg, cap);
 }
 
@@ -166,7 +166,7 @@ function survival(): string {
     <text x="${f1(PX(b, 0.35))}" y="${f1(PY(b, S(0.35)) - 6)}" font-size="13.2" font-weight="700" fill="${TEAL}">S(x)</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x（指数分布 λ = 1。例：故障までの年数）</text>
   </svg>`;
-  const cap = `同じ指数分布で、<strong>F(x)</strong>（x 以下で終わる確率）と<strong>S(x)</strong>（x を超えて続く確率）を重ねました。どの x でも2本の高さを足すと1です（x = 2 なら ${f2(F(x2))} + ${f2(S(x2))} = 1）。F は0から1へ上がり、S は1から0へ下がり、両者は確率がちょうど半々になる中央値 x = ${f2(med)} で交わります。`;
+  const cap = `指数分布（λ = 1）で、<strong>F(x)</strong>（x 以下で終わる確率）と<strong>S(x)</strong>（x を超えて続く確率）を重ねました。どの x でも2本の高さを足すと1です（x = 2 なら ${f2(F(x2))} + ${f2(S(x2))} = 1）。F は0から1へ上がり、S は1から0へ下がり、両者は確率がちょうど半々になる中央値 x = ${f2(med)} で交わります。`;
   return fig(svg, cap);
 }
 
@@ -190,7 +190,7 @@ function sameMomentsDifferentShape(): string {
     <text x="${f1(PX(b, 0) + 4)}" y="${b.y + 10}" font-size="12.4" fill="${SLATE}">平均 0</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">どちらも 平均 0・分散 1（1次と2次のモーメントが同じ）</text>
   </svg>`;
-  const cap = `青は標準正規分布、橙は指数分布を1だけ左にずらしたもの（X − 1、X は λ = 1 の指数分布）です。どちらも<strong>平均 0・分散 1</strong>で、期待値と分散だけでは区別できません。違いが出るのは3次と4次の中心モーメントで、歪度は 0 と 2、尖度は 3 と 9 です。「次数を上げるほど形を細かく区別できる」とはこのことです。`;
+  const cap = `青は平均0・分散1の正規分布、橙は指数分布（本文の節2で使った待ち時間の分布）を1だけ左にずらしたもの（X − 1、X は λ = 1 の指数分布）です。どちらも<strong>平均 0・分散 1</strong>で、期待値と分散だけでは区別できません。違いが出るのは3次と4次の中心モーメントで、歪度は 0 と 2、尖度は 3 と 9 です。「次数を上げるほど形を細かく区別できる」とはこのことです。`;
   return fig(svg, cap);
 }
 
