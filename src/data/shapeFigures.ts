@@ -52,8 +52,8 @@ const PY = (b: Box, y: number) => b.y + b.h - (Math.min(y, b.yMax) / b.yMax) * b
 function axes(b: Box, xTicks: number[], yLabel?: string) {
   const base = b.y + b.h;
   return `<line x1="${b.x}" y1="${base}" x2="${b.x + b.w}" y2="${base}" stroke="${SLATE}" stroke-width="1" />
-    ${xTicks.map((t) => `<text x="${f1(PX(b, t))}" y="${base + 14}" text-anchor="middle" font-size="11" fill="${SLATE}">${t}</text>`).join('')}
-    ${yLabel ? `<text x="${b.x}" y="${b.y - 4}" font-size="11" fill="${SLATE}">${yLabel}</text>` : ''}`;
+    ${xTicks.map((t) => `<text x="${f1(PX(b, t))}" y="${base + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    ${yLabel ? `<text x="${b.x}" y="${b.y - 4}" font-size="12.4" fill="${SLATE}">${yLabel}</text>` : ''}`;
 }
 function curve(b: Box, fn: (x: number) => number, color: string, a = b.xMin, z = b.xMax, width = 2, dash = '') {
   const n = 120;
@@ -97,21 +97,21 @@ function pmfPdf(): string {
   const a = 0.25, z = 0.75;
   const prob = Math.exp(-lam * a) - Math.exp(-lam * z);
   const svg = `${svgOpen(W, H, '離散型の確率質量関数は棒の高さが確率、連続型の確率密度関数は面積が確率')}
-    <text x="${L.x}" y="16" font-size="12" font-weight="700" fill="${INK}">PMF（サイコロ）</text>
-    <text x="${R.x}" y="16" font-size="12" font-weight="700" fill="${INK}">PDF（指数分布 λ=${lam}）</text>
+    <text x="${L.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">PMF（サイコロ）</text>
+    <text x="${R.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">PDF（指数分布 λ=${lam}）</text>
     ${axes(L, [1, 2, 3, 4, 5, 6])}
     ${bars(L, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.35)}
     <line x1="${L.x}" y1="${f1(PY(L, 1 / 6))}" x2="${L.x + L.w}" y2="${f1(PY(L, 1 / 6))}" stroke="${INK}" stroke-width="1" stroke-dasharray="3 3" />
-    <text x="${L.x + 2}" y="${f1(PY(L, 1 / 6) - 6)}" font-size="12" fill="${INK}">高さ 1/6 ＝ 確率</text>
-    <text x="${L.x + L.w / 2}" y="${H - 16}" text-anchor="middle" font-size="12" fill="${INDIGO}">6本の高さの合計 ＝ 1</text>
+    <text x="${L.x + 2}" y="${f1(PY(L, 1 / 6) - 6)}" font-size="13.2" fill="${INK}">高さ 1/6 ＝ 確率</text>
+    <text x="${L.x + L.w / 2}" y="${H - 16}" text-anchor="middle" font-size="13.2" fill="${INDIGO}">6本の高さの合計 ＝ 1</text>
     ${axes(R, [0, 0.5, 1, 1.5])}
     ${area(R, pdf, a, z, AMBER, 0.35)}
     ${curve(R, pdf, AMBER, 0, 1.5)}
     <line x1="${R.x}" y1="${f1(PY(R, 1))}" x2="${R.x + R.w}" y2="${f1(PY(R, 1))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 3" />
-    <text x="${R.x + R.w}" y="${f1(PY(R, 1) - 4)}" text-anchor="end" font-size="11" fill="${SLATE}">高さ 1</text>
-    <text x="${R.x + 4}" y="${f1(PY(R, 2) + 4)}" font-size="12" fill="${INK}">f(0) = ${lam}（1を超える）</text>
-    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.3))}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">面積 ${f2(prob)}</text>
-    <text x="${R.x + R.w / 2}" y="${H - 16}" text-anchor="middle" font-size="12" fill="#b45309">曲線の下の面積の合計 ＝ 1</text>
+    <text x="${R.x + R.w}" y="${f1(PY(R, 1) - 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">高さ 1</text>
+    <text x="${R.x + 4}" y="${f1(PY(R, 2) + 4)}" font-size="13.2" fill="${INK}">f(0) = ${lam}（1を超える）</text>
+    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.3))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ${f2(prob)}</text>
+    <text x="${R.x + R.w / 2}" y="${H - 16}" text-anchor="middle" font-size="13.2" fill="#b45309">曲線の下の面積の合計 ＝ 1</text>
   </svg>`;
   const cap = `左は離散型の<strong>確率質量関数</strong>で、棒の<strong>高さ</strong>がそのまま確率（どの目も 1/6）です。右は連続型の<strong>確率密度関数</strong>で、確率は曲線の下の<strong>面積</strong>です。${a} から ${z} の間に入る確率は塗った面積 ${f2(prob)} です。右の曲線は x = 0 で高さ ${lam} と1を超えますが、高さは確率ではないので問題ありません。1点ちょうどの面積は幅が0なので、確率も0です。`;
   return fig(svg, cap);
@@ -126,18 +126,18 @@ function survival(): string {
   const med = Math.log(2), x2 = 2;
   const svg = `${svgOpen(W, H, '累積分布関数と生存関数は足すと常に1になり、中央値で交わる')}
     ${axes(b, [0, 1, 2, 3])}
-    <text x="${b.x - 6}" y="${f1(PY(b, 1) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">1</text>
-    <text x="${b.x - 6}" y="${f1(PY(b, 0.5) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">0.5</text>
+    <text x="${b.x - 6}" y="${f1(PY(b, 1) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1</text>
+    <text x="${b.x - 6}" y="${f1(PY(b, 0.5) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">0.5</text>
     ${curve(b, F, AMBER)}
     ${curve(b, S, TEAL)}
     <line x1="${f1(PX(b, x2))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, x2))}" y2="${f1(PY(b, 1))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
-    <text x="${f1(PX(b, x2) + 5)}" y="${f1(PY(b, F(x2)) + 14)}" font-size="12" fill="#b45309">F(2) = ${f2(F(x2))}</text>
-    <text x="${f1(PX(b, x2) + 5)}" y="${f1(PY(b, S(x2)) - 6)}" font-size="12" fill="${TEAL}">S(2) = ${f2(S(x2))}</text>
+    <text x="${f1(PX(b, x2) + 5)}" y="${f1(PY(b, F(x2)) + 14)}" font-size="13.2" fill="#b45309">F(2) = ${f2(F(x2))}</text>
+    <text x="${f1(PX(b, x2) + 5)}" y="${f1(PY(b, S(x2)) - 6)}" font-size="13.2" fill="${TEAL}">S(2) = ${f2(S(x2))}</text>
     <circle cx="${f1(PX(b, med))}" cy="${f1(PY(b, 0.5))}" r="3.5" fill="${INK}" />
-    <text x="${f1(PX(b, med) + 6)}" y="${f1(PY(b, 0.5) - 6)}" font-size="12" fill="${INK}">x = ${f2(med)} で交わる（中央値）</text>
-    <text x="${f1(PX(b, 2.55))}" y="${f1(PY(b, F(2.55)) - 6)}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">F(x)</text>
-    <text x="${f1(PX(b, 0.35))}" y="${f1(PY(b, S(0.35)) - 6)}" font-size="12" font-weight="700" fill="${TEAL}">S(x)</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 x（指数分布 λ = 1。例：故障までの年数）</text>
+    <text x="${f1(PX(b, med) + 6)}" y="${f1(PY(b, 0.5) - 6)}" font-size="13.2" fill="${INK}">x = ${f2(med)} で交わる（中央値）</text>
+    <text x="${f1(PX(b, 2.55))}" y="${f1(PY(b, F(2.55)) - 6)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">F(x)</text>
+    <text x="${f1(PX(b, 0.35))}" y="${f1(PY(b, S(0.35)) - 6)}" font-size="13.2" font-weight="700" fill="${TEAL}">S(x)</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x（指数分布 λ = 1。例：故障までの年数）</text>
   </svg>`;
   const cap = `同じ指数分布で、<strong>F(x)</strong>（x 以下で終わる確率）と<strong>S(x)</strong>（x を超えて続く確率）を重ねました。どの x でも2本の高さを足すと1です（x = 2 なら ${f2(F(x2))} + ${f2(S(x2))} = 1）。F は0から1へ上がり、S は1から0へ下がり、両者は確率がちょうど半々になる中央値 x = ${f2(med)} で交わります。`;
   return fig(svg, cap);
@@ -156,12 +156,12 @@ function sameMomentsDifferentShape(): string {
     ${curve(b, norm, INDIGO)}
     ${curve(b, sexp, AMBER, -1, 4)}
     <line x1="${f1(PX(b, -1))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, -1))}" y2="${f1(PY(b, 1))}" stroke="${AMBER}" stroke-width="2" />
-    <text x="${f1(PX(b, -1.12))}" y="${f1(PY(b, 0.62))}" text-anchor="end" font-size="12" font-weight="700" fill="${INDIGO}">正規分布</text>
-    <text x="${f1(PX(b, -1.12))}" y="${f1(PY(b, 0.62) + 15)}" text-anchor="end" font-size="12" fill="${INDIGO}">歪度 0・尖度 3</text>
-    <text x="${f1(PX(b, 1.3))}" y="${f1(PY(b, 0.42))}" font-size="12" font-weight="700" fill="#b45309">右に裾が長い分布</text>
-    <text x="${f1(PX(b, 1.3))}" y="${f1(PY(b, 0.42) + 15)}" font-size="12" fill="#b45309">歪度 2・尖度 9</text>
-    <text x="${f1(PX(b, 0) + 4)}" y="${b.y + 10}" font-size="11" fill="${SLATE}">平均 0</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">どちらも 平均 0・分散 1（1次と2次のモーメントが同じ）</text>
+    <text x="${f1(PX(b, -1.12))}" y="${f1(PY(b, 0.62))}" text-anchor="end" font-size="13.2" font-weight="700" fill="${INDIGO}">正規分布</text>
+    <text x="${f1(PX(b, -1.12))}" y="${f1(PY(b, 0.62) + 15)}" text-anchor="end" font-size="13.2" fill="${INDIGO}">歪度 0・尖度 3</text>
+    <text x="${f1(PX(b, 1.3))}" y="${f1(PY(b, 0.42))}" font-size="13.2" font-weight="700" fill="#b45309">右に裾が長い分布</text>
+    <text x="${f1(PX(b, 1.3))}" y="${f1(PY(b, 0.42) + 15)}" font-size="13.2" fill="#b45309">歪度 2・尖度 9</text>
+    <text x="${f1(PX(b, 0) + 4)}" y="${b.y + 10}" font-size="12.4" fill="${SLATE}">平均 0</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">どちらも 平均 0・分散 1（1次と2次のモーメントが同じ）</text>
   </svg>`;
   const cap = `青は標準正規分布、橙は指数分布を1だけ左にずらしたもの（X − 1、X は λ = 1 の指数分布）です。どちらも<strong>平均 0・分散 1</strong>で、期待値と分散だけでは区別できません。違いが出るのは3次と4次の中心モーメントで、歪度は 0 と 2、尖度は 3 と 9 です。「次数を上げるほど形を細かく区別できる」とはこのことです。`;
   return fig(svg, cap);
@@ -179,12 +179,12 @@ function linearTransform(): string {
     ${curve(b, X, INDIGO)}
     ${curve(b, Xb, TEAL, b.xMin, b.xMax, 2, '5 3')}
     ${curve(b, aX, AMBER)}
-    <text x="${f1(PX(b, 4.3))}" y="${f1(PY(b, X(5)) + 4)}" text-anchor="end" font-size="12" font-weight="700" fill="${INDIGO}">X</text>
-    <text x="${f1(PX(b, 4.3))}" y="${f1(PY(b, X(5)) + 18)}" text-anchor="end" font-size="11" fill="${INDIGO}">平均5・SD1</text>
-    <text x="${f1(PX(b, 8.7))}" y="${f1(PY(b, Xb(8)) + 4)}" font-size="12" font-weight="700" fill="${TEAL}">X + 3</text>
-    <text x="${f1(PX(b, 8.7))}" y="${f1(PY(b, Xb(8)) + 18)}" font-size="11" fill="${TEAL}">平均8・SD1</text>
-    <text x="${f1(PX(b, 13))}" y="${f1(PY(b, aX(12)) - 4)}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">2X</text>
-    <text x="${f1(PX(b, 13.6))}" y="${f1(PY(b, aX(12)) + 11)}" text-anchor="middle" font-size="11" fill="#b45309">平均10・SD2</text>
+    <text x="${f1(PX(b, 4.3))}" y="${f1(PY(b, X(5)) + 4)}" text-anchor="end" font-size="13.2" font-weight="700" fill="${INDIGO}">X</text>
+    <text x="${f1(PX(b, 4.3))}" y="${f1(PY(b, X(5)) + 18)}" text-anchor="end" font-size="12.4" fill="${INDIGO}">平均5・SD1</text>
+    <text x="${f1(PX(b, 8.7))}" y="${f1(PY(b, Xb(8)) + 4)}" font-size="13.2" font-weight="700" fill="${TEAL}">X + 3</text>
+    <text x="${f1(PX(b, 8.7))}" y="${f1(PY(b, Xb(8)) + 18)}" font-size="12.4" fill="${TEAL}">平均8・SD1</text>
+    <text x="${f1(PX(b, 13))}" y="${f1(PY(b, aX(12)) - 4)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">2X</text>
+    <text x="${f1(PX(b, 13.6))}" y="${f1(PY(b, aX(12)) + 11)}" text-anchor="middle" font-size="12.4" fill="#b45309">平均10・SD2</text>
   </svg>`;
   const cap = `X（平均5・標準偏差1）に<strong>3を足す</strong>と、山はそのまま右へ3ずれるだけで幅は変わりません（分散は1のまま）。<strong>2倍する</strong>と平均は10になり、幅は2倍、そのぶん山は半分の高さになります。分散は 2² = 4 倍です。Var(aX + b) = a²Var(X) の b が消えて a が2乗で効くのは、この「ずらしても幅は変わらない・伸ばすと幅が a 倍」の言い換えです。`;
   return fig(svg, cap);
@@ -209,14 +209,14 @@ function binomialShapes(): string {
     const ps = ks.map((k) => binom(c.n, c.p, k));
     const mean = c.n * c.p, sd = Math.sqrt(c.n * c.p * (1 - c.p));
     const ticks = c.n === 50 ? [0, 5, 10, 15, 20, 25] : [0, 2, 4, 6, 8, 10];
-    return `<text x="${b.x}" y="${b.y - 22}" font-size="12" font-weight="700" fill="${INK}">B(${c.n}, ${c.p})</text>
-      <text x="${b.x}" y="${b.y - 7}" font-size="11" fill="${SLATE}">平均 ${mean}・SD ${f2(sd)}</text>
+    return `<text x="${b.x}" y="${b.y - 22}" font-size="13.2" font-weight="700" fill="${INK}">B(${c.n}, ${c.p})</text>
+      <text x="${b.x}" y="${b.y - 7}" font-size="12.4" fill="${SLATE}">平均 ${mean}・SD ${f2(sd)}</text>
       ${axes(b, ticks)}
       ${bars(b, ks, ps, c.n === 50 ? TEAL : INDIGO, c.n === 50 ? 0.25 : 0.3)}
       <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.4" stroke-dasharray="3 2" />`;
   }).join('');
   const svg = `${svgOpen(W, H, '二項分布の形：p が小さいと右に裾、p=0.5 で左右対称、p が大きいと左に裾、n を大きくすると釣鐘形に近づく')}${parts}
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="11" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
   </svg>`;
   const p0 = binom(10, 0.2, 0), p2 = binom(10, 0.2, 2), pmax50 = Math.max(...range(0, 50).map((k) => binom(50, 0.2, k)));
   const cap = `成功確率 p が小さい B(10, 0.2) は0〜2回に山があり、右に裾を引きます（0回の確率 ${f2(p0)}、2回が最大で ${f2(p2)}）。p = 0.5 で左右対称、p = 0.8 では鏡に映したように左へ裾を引きます。同じ p = 0.2 でも n を 50 に増やすと、山は平均 np = 10 に移り、左右がほぼ対称な釣鐘形になります（最も高い棒は ${f2(pmax50)}）。これが後で学ぶ「二項分布の正規近似」が n の大きいときに使える理由です。`;
@@ -239,11 +239,11 @@ function poissonShapes(): string {
   const svg = `${svgOpen(W, H, 'ポアソン分布の形：λ が大きいほど山が右に移り、低く広がる。二項分布 B(100,0.04) はポアソン分布 λ=4 とほぼ重なる')}
     ${axes(b, [0, 2, 4, 6, 8, 10, 12, 14, 16, 18])}
     ${groups}${bin}
-    <text x="${f1(PX(b, 1) + 6)}" y="${f1(PY(b, pois(1, 0)) + 2)}" font-size="12" font-weight="700" fill="${INDIGO}">λ = 1</text>
-    <text x="${f1(PX(b, 4) + 8)}" y="${f1(PY(b, pois(4, 4)) - 8)}" font-size="12" font-weight="700" fill="#b45309">λ = 4</text>
-    <text x="${f1(PX(b, 10) + 6)}" y="${f1(PY(b, pois(10, 10)) - 8)}" font-size="12" font-weight="700" fill="${TEAL}">λ = 10</text>
-    <text x="${b.x + b.w}" y="${b.y + 4}" text-anchor="end" font-size="11" fill="${INK}">○ ＝ 二項分布 B(100, 0.04)</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 k（一定時間に起きる回数）／棒の高さ ＝ P(X = k)</text>
+    <text x="${f1(PX(b, 1) + 6)}" y="${f1(PY(b, pois(1, 0)) + 2)}" font-size="13.2" font-weight="700" fill="${INDIGO}">λ = 1</text>
+    <text x="${f1(PX(b, 4) + 8)}" y="${f1(PY(b, pois(4, 4)) - 8)}" font-size="13.2" font-weight="700" fill="#b45309">λ = 4</text>
+    <text x="${f1(PX(b, 10) + 6)}" y="${f1(PY(b, pois(10, 10)) - 8)}" font-size="13.2" font-weight="700" fill="${TEAL}">λ = 10</text>
+    <text x="${b.x + b.w}" y="${b.y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">○ ＝ 二項分布 B(100, 0.04)</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（一定時間に起きる回数）／棒の高さ ＝ P(X = k)</text>
   </svg>`;
   const maxDiff = Math.max(...ks.map((k) => Math.abs(binom(100, 0.04, k) - pois(4, k))));
   const cap = `λ = 1 では0回と1回が同じ高さ（どちらも ${f2(pois(1, 0))}）で、そこから急に減ります。λ = 4、10 と大きくなるにつれて山は右へ移り、低く広がって左右対称に近づきます。平均も分散も λ なので、山の位置と広がりが一緒に大きくなります。○ は二項分布 B(100, 0.04)（np = 4）で、λ = 4 の棒とほぼ重なります（各 k での差は最大 ${maxDiff.toFixed(3)}）。n が大きく p が小さいときにポアソン分布で近似できる、という少数法則を図で見たものです。`;
@@ -255,24 +255,24 @@ function continuousShapes(): string {
   const W = 350, H = 410;
   const P = (i: number, xMin: number, xMax: number, yMax: number): Box => ({ x: 18 + (i % 2) * 176, y: 40 + Math.floor(i / 2) * 190, w: 150, h: 120, xMin, xMax, yMax });
   const g = P(0, 0, 12, 1.05), be = P(1, 0, 1, 3), ln = P(2, 0, 5, 1.0), ca = P(3, -6, 6, 0.42);
-  const lbl = (b: Box, x: number, y: number, t: string, c: string) => `<text x="${f1(PX(b, x))}" y="${f1(PY(b, y))}" font-size="11" font-weight="700" fill="${c}">${t}</text>`;
+  const lbl = (b: Box, x: number, y: number, t: string, c: string) => `<text x="${f1(PX(b, x))}" y="${f1(PY(b, y))}" font-size="12.4" font-weight="700" fill="${c}">${t}</text>`;
   const svg = `${svgOpen(W, H, '連続型分布の形：ガンマ、ベータ、対数正規、コーシーと正規の比較')}
-    <text x="${g.x}" y="${g.y - 18}" font-size="12" font-weight="700" fill="${INK}">指数・ガンマ（λ = 1）</text>
+    <text x="${g.x}" y="${g.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">指数・ガンマ（λ = 1）</text>
     ${axes(g, [0, 4, 8, 12])}
     ${curve(g, gammaPdf(1), INDIGO, 0, 12)}${curve(g, gammaPdf(2), AMBER, 0, 12)}${curve(g, gammaPdf(5), TEAL, 0, 12)}
     ${lbl(g, 0.6, 0.9, 'α=1（指数）', INDIGO)}${lbl(g, 1.6, 0.42, 'α=2', '#b45309')}${lbl(g, 6.2, 0.2, 'α=5', TEAL)}
 
-    <text x="${be.x}" y="${be.y - 18}" font-size="12" font-weight="700" fill="${INK}">ベータ（α, β）0〜1</text>
+    <text x="${be.x}" y="${be.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">ベータ（α, β）0〜1</text>
     ${axes(be, [0, 0.5, 1])}
     ${curve(be, betaPdf(2, 5), INDIGO, 0.001, 0.999)}${curve(be, betaPdf(5, 2), AMBER, 0.001, 0.999)}${curve(be, betaPdf(2, 2), TEAL, 0.001, 0.999)}${curve(be, () => 1, SLATE, 0, 1, 1.5, '4 3')}
-    ${lbl(be, 0.02, 2.75, '(2,5)', INDIGO)}${lbl(be, 0.8, 2.75, '(5,2)', '#b45309')}${lbl(be, 0.38, 1.7, '(2,2)', TEAL)}<text x="${be.x}" y="${be.y + be.h + 30}" font-size="11" fill="${SLATE}">点線 (1,1) ＝ 一様分布</text>
+    ${lbl(be, 0.02, 2.75, '(2,5)', INDIGO)}${lbl(be, 0.8, 2.75, '(5,2)', '#b45309')}${lbl(be, 0.38, 1.7, '(2,2)', TEAL)}<text x="${be.x}" y="${be.y + be.h + 30}" font-size="12.4" fill="${SLATE}">点線 (1,1) ＝ 一様分布</text>
 
-    <text x="${ln.x}" y="${ln.y - 18}" font-size="12" font-weight="700" fill="${INK}">対数正規（log X が正規）</text>
+    <text x="${ln.x}" y="${ln.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">対数正規（log X が正規）</text>
     ${axes(ln, [0, 1, 2, 3, 4, 5])}
     ${curve(ln, lognormPdf(0.5), INDIGO, 0.01, 5)}${curve(ln, lognormPdf(1), AMBER, 0.01, 5)}
     ${lbl(ln, 1.3, 0.85, 'σ=0.5', INDIGO)}${lbl(ln, 0.05, 0.75, 'σ=1', '#b45309')}
 
-    <text x="${ca.x}" y="${ca.y - 18}" font-size="12" font-weight="700" fill="${INK}">コーシー と 正規</text>
+    <text x="${ca.x}" y="${ca.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">コーシー と 正規</text>
     ${axes(ca, [-6, -3, 0, 3, 6])}
     ${curve(ca, (x) => normPdf(x), INDIGO)}${curve(ca, cauchyPdf, ROSE)}
     ${lbl(ca, 0.7, 0.37, '正規', INDIGO)}${lbl(ca, 2.2, 0.1, 'コーシー', ROSE)}
@@ -295,14 +295,14 @@ function normalAreas(): string {
     ${ks.map((k, i) => area(b, pdf, mu - k * sd, mu + k * sd, cols[i], 0.9)).join('')}
     ${curve(b, pdf, INDIGO)}
     ${axes(b, [152, 158, 164, 170, 176, 182, 188])}
-    <text x="${f1(PX(b, mu))}" y="${f1(PY(b, pdf(mu) * 0.35))}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">±1σ ${pct(p(1))}</text>
-    <text x="${f1(PX(b, mu - 1.5 * sd))}" y="${f1(PY(b, pdf(mu) * 0.08))}" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">±2σ</text>
-    <text x="${f1(PX(b, mu + 2.55 * sd))}" y="${f1(PY(b, pdf(mu) * 0.2))}" text-anchor="middle" font-size="11" fill="${INK}">±3σ</text>
-    <text x="${W / 2}" y="14" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">±1σ：${pct(p(1))}　±2σ：${pct(p(2))}　±3σ：${pct(p(3))}</text>
-    <text x="${W / 2}" y="31" text-anchor="middle" font-size="12" fill="${ROSE}">ちょうど95%になるのは ±1.96σ（158.2〜181.8cm）</text>
+    <text x="${f1(PX(b, mu))}" y="${f1(PY(b, pdf(mu) * 0.35))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#fff">±1σ ${pct(p(1))}</text>
+    <text x="${f1(PX(b, mu - 1.5 * sd))}" y="${f1(PY(b, pdf(mu) * 0.08))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">±2σ</text>
+    <text x="${f1(PX(b, mu + 2.55 * sd))}" y="${f1(PY(b, pdf(mu) * 0.2))}" text-anchor="middle" font-size="12.4" fill="${INK}">±3σ</text>
+    <text x="${W / 2}" y="14" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">±1σ：${pct(p(1))}　±2σ：${pct(p(2))}　±3σ：${pct(p(3))}</text>
+    <text x="${W / 2}" y="31" text-anchor="middle" font-size="13.2" fill="${ROSE}">ちょうど95%になるのは ±1.96σ（158.2〜181.8cm）</text>
     <line x1="${f1(PX(b, mu - 1.96 * sd))}" y1="${b.y}" x2="${f1(PX(b, mu - 1.96 * sd))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="3 2" />
     <line x1="${f1(PX(b, mu + 1.96 * sd))}" y1="${b.y}" x2="${f1(PX(b, mu + 1.96 * sd))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="3 2" />
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">身長（cm）。平均 170・標準偏差 6</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">身長（cm）。平均 170・標準偏差 6</text>
   </svg>`;
   const cap = `本文の身長の例（平均 170cm・標準偏差 6cm）を描いたものです。濃い順に、平均から ±1σ（164〜176cm）に ${pct(p(1))}、±2σ（158〜182cm）までに ${pct(p(2))}、±3σ（152〜188cm）までに ${pct(p(3))} が入ります。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`;
   return fig(svg, cap);
@@ -318,20 +318,20 @@ function bayesTree(): string {
   const post = tp / (tp + fp);
   const box = (x: number, y: number, w: number, t1: string, t2: string, c: string) =>
     `<rect x="${x}" y="${y}" width="${w}" height="40" rx="4" fill="${c}" fill-opacity="0.14" stroke="${c}" stroke-width="1.2" />
-     <text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${t1}</text>
-     <text x="${x + w / 2}" y="${y + 33}" text-anchor="middle" font-size="12" fill="${INK}">${t2}</text>`;
+     <text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${t1}</text>
+     <text x="${x + w / 2}" y="${y + 33}" text-anchor="middle" font-size="13.2" fill="${INK}">${t2}</text>`;
   const ln = (x1: number, y1: number, x2: number, y2: number, t: string) =>
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SLATE}" stroke-width="1.2" /><text x="${(x1 + x2) / 2 + (x2 > x1 ? 4 : -4)}" y="${(y1 + y2) / 2}" text-anchor="${x2 > x1 ? 'start' : 'end'}" font-size="11" fill="${SLATE}">${t}</text>`;
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SLATE}" stroke-width="1.2" /><text x="${(x1 + x2) / 2 + (x2 > x1 ? 4 : -4)}" y="${(y1 + y2) / 2}" text-anchor="${x2 > x1 ? 'start' : 'end'}" font-size="12.4" fill="${SLATE}">${t}</text>`;
   const svg = `${svgOpen(W, H, '1000人の検査を樹形図で数える')}
     ${box(125, 4, 100, '検査を受ける', `${N}人`, SLATE)}
     ${ln(150, 44, 80, 80, `有病率 ${pct(prev, 0)}`)}${ln(200, 44, 270, 80, '')}
     ${box(20, 80, 110, '病気', `${sick}人`, ROSE)}${box(220, 80, 110, '健康', `${healthy}人`, TEAL)}
-    ${ln(55, 120, 40, 160, '')}${ln(95, 120, 110, 160, '')}<text x="75" y="146" text-anchor="middle" font-size="11" fill="${SLATE}">感度 ${pct(sens, 0)}</text>
-    ${ln(255, 120, 240, 160, '')}${ln(295, 120, 310, 160, '')}<text x="275" y="146" text-anchor="middle" font-size="11" fill="${SLATE}">特異度 ${pct(spec, 0)}</text>
+    ${ln(55, 120, 40, 160, '')}${ln(95, 120, 110, 160, '')}<text x="75" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}">感度 ${pct(sens, 0)}</text>
+    ${ln(255, 120, 240, 160, '')}${ln(295, 120, 310, 160, '')}<text x="275" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}">特異度 ${pct(spec, 0)}</text>
     ${box(4, 160, 72, '陽性', `${num(tp)}人`, ROSE)}${box(80, 160, 62, '陰性', `${num(fn)}人`, SLATE)}
     ${box(206, 160, 72, '陽性', `${num(fp)}人`, AMBER)}${box(282, 160, 64, '陰性', `${num(tn)}人`, SLATE)}
-    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">陽性 ${num(pos)}人のうち、病気は ${num(tp)}人</text>
-    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12" font-weight="700" fill="${ROSE}">P(病気 ∣ 陽性) = ${num(tp)} ÷ ${num(pos)} ≈ ${pct(post)}</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">陽性 ${num(pos)}人のうち、病気は ${num(tp)}人</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${ROSE}">P(病気 ∣ 陽性) = ${num(tp)} ÷ ${num(pos)} ≈ ${pct(post)}</text>
   </svg>`;
   const cap = `${N}人で数えると、病気の${sick}人からは${num(tp)}人が陽性、健康な${healthy}人からも${num(fp)}人が誤って陽性になります。陽性の${num(pos)}人のうち本当に病気なのは${num(tp)}人だけなので、陽性とわかっても病気である確率は約 ${pct(post)} です。健康な人が圧倒的に多いため、わずか ${pct(1 - spec, 0)} の誤りでも陽性の大半を占めます。ベイズの定理の分母（全確率）は、この図の「陽性の合計」にあたります。`;
   return fig(svg, cap);
@@ -342,15 +342,15 @@ function venn3(): string {
   const W = 340, H = 250;
   const c = [{ x: 140, y: 95, n: 'A', col: INDIGO }, { x: 200, y: 95, n: 'B', col: AMBER }, { x: 170, y: 147, n: 'C', col: TEAL }];
   const r = 62;
-  const t = (x: number, y: number, s: string, w = 400) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="11" font-weight="${w}" fill="${INK}">${s}</text>`;
+  const t = (x: number, y: number, s: string, w = 400) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="12.4" font-weight="${w}" fill="${INK}">${s}</text>`;
   const svg = `${svgOpen(W, H, '3つの事象のベン図：各領域が何回数えられるか')}
     ${c.map((k) => `<circle cx="${k.x}" cy="${k.y}" r="${r}" fill="${k.col}" fill-opacity="0.13" stroke="${k.col}" stroke-width="1.5" />`).join('')}
     ${c.map((k, i) => `<text x="${k.x + [-58, 58, -66][i]}" y="${k.y + [-48, -48, 50][i]}" text-anchor="middle" font-size="16" font-weight="700" fill="${k.col}">${k.n}</text>`).join('')}
     ${t(112, 82, '1')}${t(228, 82, '1')}${t(170, 186, '1')}
     ${t(170, 72, '2−1')}${t(136, 136, '2−1')}${t(204, 136, '2−1')}
     ${t(170, 113, '3−3+1', 700)}
-    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${INK}">数字 ＝ 足す・引く・足すで、その領域を何回数えたか</text>
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">最後はどの領域もちょうど1回になる</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="13.2" fill="${INK}">数字 ＝ 足す・引く・足すで、その領域を何回数えたか</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">最後はどの領域もちょうど1回になる</text>
   </svg>`;
   const cap = `P(A) + P(B) + P(C) と足すと、2つが重なる部分は2回、3つが重なる中心は3回数えられます。2つずつの重なり3つを引くと、2つの重なりは 2 − 1 = 1 回に直りますが、中心は3回引かれて 3 − 3 = 0 回、つまり<strong>引き過ぎ</strong>になります。そこで最後に P(A∩B∩C) を1回足し戻すと、すべての領域がちょうど1回になります。`;
   return fig(svg, cap);
@@ -428,8 +428,8 @@ function overfit(): string {
       pts.push(`${f1(PX(b, x))},${f1(py(polyAt(r.coef, x)))}`);
     }
     const col = r.te > r.tr * 2.5 ? ROSE : INDIGO;
-    return `<text x="${b.x}" y="${b.y - 18}" font-size="12" font-weight="700" fill="${INK}">${r.name}</text>
-      <text x="${b.x}" y="${b.y - 4}" font-size="11" fill="${SLATE}">学習データの誤差 ${f2(r.tr)}　テストの誤差 <tspan font-weight="700" fill="${col}">${f2(r.te)}</tspan></text>
+    return `<text x="${b.x}" y="${b.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">${r.name}</text>
+      <text x="${b.x}" y="${b.y - 4}" font-size="12.4" fill="${SLATE}">学習データの誤差 ${f2(r.tr)}　テストの誤差 <tspan font-weight="700" fill="${col}">${f2(r.te)}</tspan></text>
       <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
       <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="2" />
       ${xs.map((x, k) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(ys[k]))}" r="3.4" fill="${INK}" />`).join('')}
@@ -437,8 +437,8 @@ function overfit(): string {
   };
   const svg = `${svgOpen(W, H, '同じ10点に直線・2次式・9次式を当てはめると、9次式は学習データを完全に通るがテストデータで大きく外れる')}
     ${rows.map(panel).join('')}
-    <circle cx="40" cy="${H - 14}" r="3.4" fill="${INK}" /><text x="48" y="${H - 10}" font-size="11" fill="${INK}">学習データ（当てはめに使う10点）</text>
-    <circle cx="232" cy="${H - 14}" r="3.4" fill="#fff" stroke="${AMBER}" stroke-width="1.6" /><text x="240" y="${H - 10}" font-size="11" fill="${INK}">テスト用の10点</text>
+    <circle cx="40" cy="${H - 14}" r="3.4" fill="${INK}" /><text x="48" y="${H - 10}" font-size="12.4" fill="${INK}">学習データ（当てはめに使う10点）</text>
+    <circle cx="232" cy="${H - 14}" r="3.4" fill="#fff" stroke="${AMBER}" stroke-width="1.6" /><text x="240" y="${H - 10}" font-size="12.4" fill="${INK}">テスト用の10点</text>
   </svg>`;
   const [r1, r2, r9] = rows;
   const cap = `真の関係が2次式のデータ（黒の10点）に、3通りの式を最小二乗法で当てはめました。誤差は各点のずれの二乗平均の平方根です。直線は曲がりを表せず、学習データでも ${f2(r1.tr)} ずれます。2次式は学習 ${f2(r2.tr)}、テスト ${f2(r2.te)} と、どちらも小さく収まります。9次式は10点すべてを通るので学習データの誤差は ${f2(r9.tr)} ですが、点と点の間で大きく波打ち、同じ仕組みで作った別の10点（白丸）では誤差が ${f2(r9.te)} と、2次式の約 ${Math.round(r9.te / r2.te)} 倍になります。手元のデータへの当てはまりだけでモデルを選ぶと、この9次式を選んでしまいます。`;
@@ -468,11 +468,11 @@ function bivariateNormal(): string {
     return `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
       ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, Math.max(-3, Math.min(3, x))))}" cy="${f1(py(Math.max(-3, Math.min(3, y))))}" r="1.8" fill="${SLATE}" fill-opacity="0.55" />`).join('')}
       ${ell(1)}${ell(2)}
-      <text x="${b.x + b.w / 2}" y="${b.y - 10}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">相関 ρ = ${rho}</text>
-      <text x="${b.x + b.w / 2}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="11" fill="${SLATE}">150点の標本相関 ${f2(r)}</text>`;
+      <text x="${b.x + b.w / 2}" y="${b.y - 10}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">相関 ρ = ${rho}</text>
+      <text x="${b.x + b.w / 2}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">150点の標本相関 ${f2(r)}</text>`;
   };
   const svg = `${svgOpen(W, H, '2変量正規分布の等確率線：相関0なら円、相関0.7なら右上がりの楕円')}${panel(0, 12)}${panel(0.7, 188)}
-    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`;
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`;
   const cap = `どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。多変量正規分布は「平均ベクトル（山の中心）」と「分散共分散行列（楕円の向きと太さ）」で形が決まります。`;
   return fig(svg, cap);
 }
@@ -491,13 +491,13 @@ function lln(): string {
   const cols = [INDIGO, AMBER, TEAL];
   const lines = runs.map((m, j) => `<polyline points="${m.map((v, i) => `${f1(PX(b, Math.log10(i + 1)))},${f1(py(v))}`).join(' ')}" fill="none" stroke="${cols[j]}" stroke-width="1.6" />`).join('');
   const svg = `${svgOpen(W, H, 'サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく')}
-    ${[2, 3, 4, 5].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">${v}</text>`).join('')}
+    ${[2, 3, 4, 5].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <line x1="${b.x}" y1="${f1(py(3.5))}" x2="${b.x + b.w}" y2="${f1(py(3.5))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${b.x + b.w}" y="${b.y - 8}" text-anchor="end" font-size="11" fill="${ROSE}">赤の点線＝期待値 3.5</text>
+    <text x="${b.x + b.w}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">赤の点線＝期待値 3.5</text>
     ${lines}
     <line x1="${b.x}" y1="${b.y + b.h}" x2="${b.x + b.w}" y2="${b.y + b.h}" stroke="${SLATE}" />
-    ${[[0, '1'], [1, '10'], [2, '100'], [3, '1000']].map(([v, t]) => `<text x="${f1(PX(b, v as number))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="11" fill="${SLATE}">${t}</text>`).join('')}
-    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="11" fill="${SLATE}">振った回数（目盛りは10倍ごと）／縦軸＝それまでの目の平均</text>
+    ${[[0, '1'], [1, '10'], [2, '100'], [3, '1000']].map(([v, t]) => `<text x="${f1(PX(b, v as number))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">振った回数（目盛りは10倍ごと）／縦軸＝それまでの目の平均</text>
   </svg>`;
   const at = (k: number) => runs.map((m) => m[k - 1].toFixed(2)).join('・');
   const cap = `3人が別々にサイコロを1000回振り、それまでに出た目の平均を追いかけました。10回目の平均は ${at(10)} とばらばらですが、100回目には ${at(100)}、1000回目には ${at(1000)} と、3本とも期待値 3.5 のまわりに集まります。どこで止めても平均が3.5ちょうどになるわけではなく、「ずれが大きくなる確率」が回数とともに小さくなる、というのが大数の法則の主張です。`;
@@ -515,10 +515,10 @@ function likelihood(): string {
     ${curve(b, L(10, 7), INDIGO, 0.001, 0.999)}
     ${curve(b, L(100, 70), AMBER, 0.001, 0.999)}
     <line x1="${f1(PX(b, 0.7))}" y1="${b.y}" x2="${f1(PX(b, 0.7))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${f1(PX(b, 0.7) + 4)}" y="${b.y + 10}" font-size="11" fill="${ROSE}">p̂ = 0.7</text>
-    <text x="${f1(PX(b, 0.3))}" y="${f1(PY(b, 0.62))}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">10回中7回</text>
-    <text x="${f1(PX(b, 0.84))}" y="${f1(PY(b, 0.9))}" font-size="12" font-weight="700" fill="#b45309">100回中70回</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
+    <text x="${f1(PX(b, 0.7) + 4)}" y="${b.y + 10}" font-size="12.4" fill="${ROSE}">p̂ = 0.7</text>
+    <text x="${f1(PX(b, 0.3))}" y="${f1(PY(b, 0.62))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
+    <text x="${f1(PX(b, 0.84))}" y="${f1(PY(b, 0.9))}" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
   </svg>`;
   const cap = `横軸に表の確率 p の候補を並べ、それぞれの p で「今のデータが出る確率」を描いたものが尤度関数です。10回中7回表なら、山の頂上は p = 0.7 で、これが最尤推定値です。同じ7割でも100回中70回なら、頂上の位置は変わらずに山がずっと鋭くなります。山が鋭いほど p の候補を狭く絞り込めるということで、この「山の鋭さ」を数にしたものが後の章のフィッシャー情報量です。`;
   return fig(svg, cap);
@@ -542,8 +542,8 @@ function darts(): string {
       <circle cx="${cx}" cy="${cy}" r="2.5" fill="${ROSE}" />
       ${pts.map(([x, y]) => `<circle cx="${f1(cx + x * R)}" cy="${f1(cy - y * R)}" r="2.6" fill="${INDIGO}" />`).join('')}
       <path d="M${f1(cx + mx * R - 5)},${f1(cy - my * R)} h10 M${f1(cx + mx * R)},${f1(cy - my * R - 5)} v10" stroke="${AMBER}" stroke-width="2" />
-      <text x="${cx}" y="${cy + R + 16}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${c.t}</text>
-      <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="11" fill="${SLATE}">${c.s}</text>`;
+      <text x="${cx}" y="${cy + R + 16}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${c.t}</text>
+      <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${c.s}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, 'ダーツのたとえ：偏りの有無とばらつきの大小の4通り')}${body}</svg>`;
   const cap = `赤い点が的の中心（真の値 θ）、青い点が1本ずつの矢（データから計算した推定値 θ̂）、橙の十字が矢の平均の位置です。上の段は矢の平均が中心に来ている＝<strong>不偏</strong>、左の列は矢がまとまっている＝分散が小さい（<strong>有効</strong>）です。左下は矢がまとまっていても中心からずれ続けるので、いくら投げても真の値に届きません。不偏性と有効性は別々の性質で、両方そろうのは左上だけです。`;
@@ -562,13 +562,13 @@ function pValue(): string {
     ${curve(b, normPdf, INDIGO)}
     ${axes(b, [-4, -3, -2, -1, 0, 1, 2, 3, 4])}
     <line x1="${f1(PX(b, z))}" y1="${b.y + 6}" x2="${f1(PX(b, z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.6" />
-    <text x="${f1(PX(b, z) + 4)}" y="${b.y + 16}" font-size="12" font-weight="700" fill="${ROSE}">観測値 ${z}</text>
+    <text x="${f1(PX(b, z) + 4)}" y="${b.y + 16}" font-size="13.2" font-weight="700" fill="${ROSE}">観測値 ${z}</text>
     <line x1="${f1(PX(b, -z))}" y1="${b.y + 40}" x2="${f1(PX(b, -z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="3 2" />
-    <text x="${f1(PX(b, 3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="11" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
-    <text x="${f1(PX(b, -3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="11" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
-    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.14))}" text-anchor="middle" font-size="11" fill="${INDIGO}">「差がない」なら普通に出る範囲</text>
-    <text x="${W / 2}" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${f2(p)}</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
+    <text x="${f1(PX(b, 3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
+    <text x="${f1(PX(b, -3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.14))}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">「差がない」なら普通に出る範囲</text>
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${f2(p)}</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
   </svg>`;
   const cap = `曲線は「本当に差がない」と仮定したときに、検定統計量がとる値の分布です。今回の観測値が ${z} だったとすると、P値はそれより極端な側（両側なので左右とも）の面積で、${f2(p)} です。P値は「帰無仮説が正しい確率」ではなく、「帰無仮説が正しいとしたら、これ以上に極端な結果がどれだけ出にくいか」をこの面積で表したものです。`;
   return fig(svg, cap);
@@ -595,15 +595,15 @@ function anovaDots(): string {
     const seen: Record<number, number> = {};
     return `${v.map((y) => { const j = (seen[y] = (seen[y] || 0) + 1) - 1; return `<circle cx="${f1(cx - 12 + j * 7)}" cy="${f1(py(y))}" r="3.2" fill="${cols[i]}" fill-opacity="0.8" />`; }).join('')}
       <line x1="${f1(cx - 34)}" y1="${f1(py(means[i]))}" x2="${f1(cx + 34)}" y2="${f1(py(means[i]))}" stroke="${cols[i]}" stroke-width="2.4" />
-      <text x="${f1(cx)}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${name}</text>
-      <text x="${f1(cx + 36)}" y="${f1(py(means[i]) + 4)}" font-size="11" fill="${cols[i]}">${means[i]}</text>`;
+      <text x="${f1(cx)}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${name}</text>
+      <text x="${f1(cx + 36)}" y="${f1(py(means[i]) + 4)}" font-size="12.4" fill="${cols[i]}">${means[i]}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, '3つのトッピングの日ごとの売上：群の平均どうしの離れ方（群間）と、群の中の散らばり（群内）')}
-    ${[45, 50, 55, 60].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">${v}</text><line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#f1f5f9" />`).join('')}
+    ${[45, 50, 55, 60].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text><line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#f1f5f9" />`).join('')}
     <line x1="${b.x}" y1="${f1(py(G))}" x2="${b.x + b.w}" y2="${f1(py(G))}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${b.x + 2}" y="${f1(py(G) - 4)}" font-size="11" fill="${SLATE}">全体平均 ${f1(G)}</text>
+    <text x="${b.x + 2}" y="${f1(py(G) - 4)}" font-size="12.4" fill="${SLATE}">全体平均 ${f1(G)}</text>
     ${dots}
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="11" fill="${SLATE}">点＝1日の売上（万円）・太線＝そのトッピングの平均</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">点＝1日の売上（万円）・太線＝そのトッピングの平均</text>
   </svg>`;
   const cap = `点は1日ごとの売上、太線は各トッピングの平均です。<strong>群間変動</strong>は太線が全体平均（点線）からどれだけ離れているか、<strong>群内変動</strong>は同じ色の点が太線のまわりにどれだけ散らばっているかです。この10日ずつのデータで計算すると、群間平方和 ${f1(ssb)}、群内平方和 ${f1(ssw)}、F = (${f1(ssb)} ÷ ${k - 1}) ÷ (${f1(ssw)} ÷ ${n - k}) ≈ ${f1(F)} です。チャーシューの太線だけが群内の散らばりよりはるかに大きく離れているので、F が大きくなります。`;
   return fig(svg, cap);
@@ -645,17 +645,17 @@ function dendrogram(): string {
   const tree = draw(root);
   const cut = (root.h + root.l!.h + 0.0) / 2 > Math.max(root.l!.h, root.r!.h) ? (root.h + Math.max(root.l!.h, root.r!.h)) / 2 : root.h * 0.6;
   const svg = `${svgOpen(W, H, '6人の顧客の散布図と、近い順に併合していくデンドログラム')}
-    <text x="${S.x}" y="${S.y - 12}" font-size="12" font-weight="700" fill="${INK}">顧客の位置（2つの指標）</text>
+    <text x="${S.x}" y="${S.y - 12}" font-size="13.2" font-weight="700" fill="${INK}">顧客の位置（2つの指標）</text>
     <rect x="${S.x}" y="${S.y}" width="${S.w}" height="${S.h}" fill="none" stroke="#e2e8f0" />
-    ${pts.map(([n, x, y], i) => `<circle cx="${f1(PX(S, x))}" cy="${f1(S.y + S.h - (y / 7) * S.h)}" r="4" fill="${i < 3 ? AMBER : TEAL}" /><text x="${f1(PX(S, x) + 7)}" y="${f1(S.y + S.h - (y / 7) * S.h + 4)}" font-size="12" fill="${INK}">${n}</text>`).join('')}
-    <text x="${D.x}" y="${D.y - 12}" font-size="12" font-weight="700" fill="${INK}">デンドログラム</text>
+    ${pts.map(([n, x, y], i) => `<circle cx="${f1(PX(S, x))}" cy="${f1(S.y + S.h - (y / 7) * S.h)}" r="4" fill="${i < 3 ? AMBER : TEAL}" /><text x="${f1(PX(S, x) + 7)}" y="${f1(S.y + S.h - (y / 7) * S.h + 4)}" font-size="13.2" fill="${INK}">${n}</text>`).join('')}
+    <text x="${D.x}" y="${D.y - 12}" font-size="13.2" font-weight="700" fill="${INK}">デンドログラム</text>
     ${tree}
     <line x1="${D.x}" y1="${f1(dy(cut))}" x2="${D.x + D.w}" y2="${f1(dy(cut))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${D.x + D.w}" y="${f1(dy(cut) - 4)}" text-anchor="end" font-size="11" fill="${ROSE}">ここで切ると2群</text>
-    ${pts.map(([n], i) => `<text x="${f1(lx(i))}" y="${D.y + D.h + 14}" text-anchor="middle" font-size="12" fill="${INK}">${n}</text>`).join('')}
-    <text x="${D.x - 4}" y="${f1(dy(0) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">0</text>
-    <text x="${D.x - 4}" y="${f1(dy(root.h) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">${f1(root.h)}</text>
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="11" fill="${SLATE}">縦軸＝併合したときの距離（群平均法）</text>
+    <text x="${D.x + D.w}" y="${f1(dy(cut) - 4)}" text-anchor="end" font-size="12.4" fill="${ROSE}">ここで切ると2群</text>
+    ${pts.map(([n], i) => `<text x="${f1(lx(i))}" y="${D.y + D.h + 14}" text-anchor="middle" font-size="13.2" fill="${INK}">${n}</text>`).join('')}
+    <text x="${D.x - 4}" y="${f1(dy(0) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">0</text>
+    <text x="${D.x - 4}" y="${f1(dy(root.h) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${f1(root.h)}</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝併合したときの距離（群平均法）</text>
   </svg>`;
   const sm = [...merges].sort((a, b) => a - b);
   const cap = `左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 ${f2(sm[0])} の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 ${f1(Math.max(root.l!.h, root.r!.h))} 以下でまとまりますが、2つの群どうしは距離 ${f1(root.h)} になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。`;
@@ -672,15 +672,15 @@ function timeSeries(): string {
   const py = (v: number) => b.y + b.h - ((v - yMin) / (yMax - yMin)) * b.h;
   const pts = Array.from({ length: 36 }, (_, t) => `${f1(PX(b, t))},${f1(py(y(t)))}`).join(' ');
   const svg = `${svgOpen(W, H, 'アイスクリームの月次売上：夏に高く冬に低い季節性と、少しずつ伸びるトレンド')}
-    ${[100, 300, 500].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">${v}</text><line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#f1f5f9" />`).join('')}
+    ${[100, 300, 500].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text><line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#f1f5f9" />`).join('')}
     <polyline points="${pts}" fill="none" stroke="${INDIGO}" stroke-width="2" />
     ${Array.from({ length: 36 }, (_, t) => `<circle cx="${f1(PX(b, t))}" cy="${f1(py(y(t)))}" r="2.2" fill="${INDIGO}" />`).join('')}
     <line x1="${f1(PX(b, 0))}" y1="${f1(py(base))}" x2="${f1(PX(b, 35))}" y2="${f1(py(base + s * 35))}" stroke="${AMBER}" stroke-width="1.8" stroke-dasharray="5 3" />
-    <text x="${f1(PX(b, 35))}" y="${f1(py(base + s * 35) - 6)}" text-anchor="end" font-size="11" fill="#b45309">トレンド</text>
-    ${[0, 12, 24].map((t, i) => `<text x="${f1(PX(b, t))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="11" fill="${SLATE}">${i + 1}年目1月</text>`).join('')}
-    <text x="${f1(PX(b, 6))}" y="${f1(py(y(6)) - 8)}" text-anchor="middle" font-size="11" fill="${INK}">7月 ${Math.round(y(6))}</text>
-    <text x="${f1(PX(b, 0) + 4)}" y="${f1(py(y(0)) + 16)}" font-size="11" fill="${INK}">1月 ${Math.round(y(0))}</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">月次売上（万円）の3年分</text>
+    <text x="${f1(PX(b, 35))}" y="${f1(py(base + s * 35) - 6)}" text-anchor="end" font-size="12.4" fill="#b45309">トレンド</text>
+    ${[0, 12, 24].map((t, i) => `<text x="${f1(PX(b, t))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${i + 1}年目1月</text>`).join('')}
+    <text x="${f1(PX(b, 6))}" y="${f1(py(y(6)) - 8)}" text-anchor="middle" font-size="12.4" fill="${INK}">7月 ${Math.round(y(6))}</text>
+    <text x="${f1(PX(b, 0) + 4)}" y="${f1(py(y(0)) + 16)}" font-size="12.4" fill="${INK}">1月 ${Math.round(y(0))}</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">月次売上（万円）の3年分</text>
   </svg>`;
   const cap = `本文の数字（1月 ${Math.round(y(0))}万円・7月 ${Math.round(y(6))}万円・翌1月 ${Math.round(y(12))}万円）に合わせて3年分を描いたものです。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。12か月前の値と今の値がよく似ているので、ラグ12の自己相関が高くなります。トレンドがある系列は平均が時間とともに変わるので、そのままでは定常ではありません。差分をとると、この右上がりが取り除かれます。`;
   return fig(svg, cap);
@@ -707,11 +707,11 @@ function kaplanMeier(): string {
   path += ` H${f1(PX(b, 5.2))}`;
   const svg = `${svgOpen(W, H, 'カプラン・マイヤー曲線：死亡のたびに階段状に下がり、打ち切りは印だけで下がらない')}
     ${axes(b, [0, 1, 2, 3, 4, 5])}
-    ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">${v}</text>`).join('')}
+    ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <path d="${path}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
     ${cens.map(([t, s]) => `<line x1="${f1(PX(b, t))}" y1="${f1(PY(b, s) - 6)}" x2="${f1(PX(b, t))}" y2="${f1(PY(b, s) + 6)}" stroke="${AMBER}" stroke-width="2" />`).join('')}
-    <text x="${b.x + b.w}" y="${b.y + 12}" text-anchor="end" font-size="11" fill="#b45309">｜＝打ち切り（その時点まで生存）</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸＝追跡年数／縦軸＝推定した生存割合 Ŝ(t)</text>
+    <text x="${b.x + b.w}" y="${b.y + 12}" text-anchor="end" font-size="12.4" fill="#b45309">｜＝打ち切り（その時点まで生存）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝追跡年数／縦軸＝推定した生存割合 Ŝ(t)</text>
   </svg>`;
   const cap = `10人を最長5年追跡した例です。死亡が起きた時点でだけ、そのときまだ観察中の人数（リスク集合）を分母にして曲線が下がります（${rows.slice(0, 2).join('、')} …）。橙の縦線は打ち切りで、その人は以後の分母から外れますが、曲線は下がりません。5年時点の推定生存割合は ${f2(S)} です。打ち切りを「死亡」として数えると下がり過ぎ、「最初からいなかった」として除くと分母を誤ります。`;
   return fig(svg, cap);
@@ -731,12 +731,12 @@ function monteCarloPi(): string {
     <rect x="${x0}" y="${y0}" width="${S}" height="${S}" fill="none" stroke="${SLATE}" />
     <polyline points="${arc}" fill="none" stroke="${INK}" stroke-width="1.6" />
     ${pts.map(([x, y]) => `<circle cx="${f1(x0 + x * S)}" cy="${f1(y0 + S - y * S)}" r="1.7" fill="${x * x + y * y <= 1 ? INDIGO : AMBER}" />`).join('')}
-    <text x="${x0 + S + 14}" y="${y0 + 20}" font-size="12" fill="${INK}">点の数 ${N}</text>
-    <text x="${x0 + S + 14}" y="${y0 + 40}" font-size="12" fill="${INDIGO}">内側 ${inside}</text>
-    <text x="${x0 + S + 14}" y="${y0 + 60}" font-size="12" fill="#b45309">外側 ${N - inside}</text>
-    <text x="${x0 + S + 14}" y="${y0 + 92}" font-size="12" font-weight="700" fill="${INK}">4 × ${inside} ÷ ${N}</text>
-    <text x="${x0 + S + 14}" y="${y0 + 110}" font-size="12" font-weight="700" fill="${INK}">＝ ${est.toFixed(3)}</text>
-    <text x="${x0 + S + 14}" y="${y0 + 134}" font-size="11" fill="${SLATE}">（π ＝ 3.142）</text>
+    <text x="${x0 + S + 14}" y="${y0 + 20}" font-size="13.2" fill="${INK}">点の数 ${N}</text>
+    <text x="${x0 + S + 14}" y="${y0 + 40}" font-size="13.2" fill="${INDIGO}">内側 ${inside}</text>
+    <text x="${x0 + S + 14}" y="${y0 + 60}" font-size="13.2" fill="#b45309">外側 ${N - inside}</text>
+    <text x="${x0 + S + 14}" y="${y0 + 92}" font-size="13.2" font-weight="700" fill="${INK}">4 × ${inside} ÷ ${N}</text>
+    <text x="${x0 + S + 14}" y="${y0 + 110}" font-size="13.2" font-weight="700" fill="${INK}">＝ ${est.toFixed(3)}</text>
+    <text x="${x0 + S + 14}" y="${y0 + 134}" font-size="12.4" fill="${SLATE}">（π ＝ 3.142）</text>
   </svg>`;
   const cap = `一辺1の正方形に ${N} 個の点を一様にばらまき、半径1の四分円の内側に落ちた点（青）を数えました。四分円の面積は π/4 なので、内側に落ちる割合の4倍が π の推定値になり、今回は 4 × ${inside} ÷ ${N} = ${est.toFixed(3)} です。点を増やすほど推定値は π に近づきますが、誤差は点の数の平方根に反比例してしか減りません（点を100倍にして誤差がようやく1/10）。`;
   return fig(svg, cap);
@@ -750,11 +750,11 @@ function uniformDice(): string {
   const svg = `${svgOpen(W, H, 'サイコロの目は1から6まで同じ確率1/6の離散一様分布')}
     ${axes(b, [1, 2, 3, 4, 5, 6])}
     ${bars(b, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.4)}
-    <text x="${b.x - 4}" y="${f1(PY(b, 1 / 6) + 4)}" text-anchor="end" font-size="11" fill="${SLATE}">1/6</text>
+    <text x="${b.x - 4}" y="${f1(PY(b, 1 / 6) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1/6</text>
     <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="${f1(PX(b, mean))}" y="${b.y - 8}" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
+    <text x="${f1(PX(b, mean))}" y="${b.y - 8}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
     <line x1="${f1(PX(b, mean - Math.sqrt(v)))}" y1="${b.y + b.h + 26}" x2="${f1(PX(b, mean + Math.sqrt(v)))}" y2="${b.y + b.h + 26}" stroke="${TEAL}" stroke-width="2" />
-    <text x="${f1(PX(b, mean))}" y="${b.y + b.h + 42}" text-anchor="middle" font-size="11" fill="${TEAL}">平均 ± 標準偏差 √(35/12) ≈ ${f2(Math.sqrt(v))}</text>
+    <text x="${f1(PX(b, mean))}" y="${b.y + b.h + 42}" text-anchor="middle" font-size="12.4" fill="${TEAL}">平均 ± 標準偏差 √(35/12) ≈ ${f2(Math.sqrt(v))}</text>
   </svg>`;
   const cap = `サイコロの目の分布です。棒の高さはどれも 1/6 で、山も谷もない平らな形が<strong>一様</strong>という名前の意味です。平均 (6+1)/2 = 3.5 は棒の真ん中の位置で、実際には出ない値です。分散は (6² − 1)/12 = 35/12 ≈ ${f2(v)}、標準偏差は約 ${f2(Math.sqrt(v))} で、緑の線の幅がそのおおよその広がりです。`;
   return fig(svg, cap);
@@ -767,21 +767,21 @@ function bernoulli(): string {
   const R: Box = { x: 186, y: 36, w: 150, h: 130, xMin: 0, xMax: 1, yMax: 0.3 };
   const p = 0.3;
   const svg = `${svgOpen(W, H, 'ベルヌーイ分布は0と1の2本の棒。分散 p(1−p) は p=0.5 で最大の0.25')}
-    <text x="${L.x}" y="16" font-size="12" font-weight="700" fill="${INK}">p = ${p} のとき</text>
+    <text x="${L.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">p = ${p} のとき</text>
     ${axes(L, [0, 1])}
     ${bars(L, [0, 1], [1 - p, p], INDIGO, 0.45)}
-    <text x="${f1(PX(L, 0))}" y="${f1(PY(L, 1 - p) - 6)}" text-anchor="middle" font-size="12" fill="${INK}">${1 - p}</text>
-    <text x="${f1(PX(L, 1))}" y="${f1(PY(L, p) - 6)}" text-anchor="middle" font-size="12" fill="${INK}">${p}</text>
-    <text x="${f1(PX(L, 0))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">失敗</text>
-    <text x="${f1(PX(L, 1))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">成功</text>
-    <text x="${R.x}" y="16" font-size="12" font-weight="700" fill="${INK}">分散 p(1−p) と p の関係</text>
+    <text x="${f1(PX(L, 0))}" y="${f1(PY(L, 1 - p) - 6)}" text-anchor="middle" font-size="13.2" fill="${INK}">${1 - p}</text>
+    <text x="${f1(PX(L, 1))}" y="${f1(PY(L, p) - 6)}" text-anchor="middle" font-size="13.2" fill="${INK}">${p}</text>
+    <text x="${f1(PX(L, 0))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">失敗</text>
+    <text x="${f1(PX(L, 1))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">成功</text>
+    <text x="${R.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">分散 p(1−p) と p の関係</text>
     ${axes(R, [0, 0.5, 1])}
     ${curve(R, (x) => x * (1 - x), TEAL)}
     <circle cx="${f1(PX(R, 0.5))}" cy="${f1(PY(R, 0.25))}" r="3.5" fill="${TEAL}" />
-    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.25) - 8)}" text-anchor="middle" font-size="11" fill="${TEAL}">p=0.5 で最大 0.25</text>
+    <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.25) - 8)}" text-anchor="middle" font-size="12.4" fill="${TEAL}">p=0.5 で最大 0.25</text>
     <circle cx="${f1(PX(R, p))}" cy="${f1(PY(R, p * (1 - p)))}" r="3.5" fill="${INDIGO}" />
-    <text x="${f1(PX(R, p) - 6)}" y="${f1(PY(R, p * (1 - p)) + 16)}" text-anchor="end" font-size="11" fill="${INDIGO}">${f2(p * (1 - p))}</text>
-    <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 ＝ 成功確率 p</text>
+    <text x="${f1(PX(R, p) - 6)}" y="${f1(PY(R, p * (1 - p)) + 16)}" text-anchor="end" font-size="12.4" fill="${INDIGO}">${f2(p * (1 - p))}</text>
+    <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 成功確率 p</text>
   </svg>`;
   const cap = `左はベルヌーイ分布そのもので、値は0（失敗）と1（成功）の2つだけです。p = ${p} なら成功の棒が ${p}、失敗の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたもので、p = 0.5（どちらが出るか最も読めない）で最大の 0.25 になり、p が0や1に近づくほど結果が決まりきって分散は0に近づきます。p = ${p} の分散は ${f2(p * (1 - p))} です。`;
   return fig(svg, cap);
@@ -802,10 +802,10 @@ function hypergeo(): string {
   const svg = `${svgOpen(W, H, '赤玉5個・青玉10個から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較')}
     ${axes(b, ks)}
     ${ks.map((k) => bar(k, hg(k), -w, INDIGO) + bar(k, bn(k), 0, AMBER)).join('')}
-    ${ks.map((k) => `<text x="${f1(PX(b, k) - w / 2)}" y="${f1(PY(b, hg(k)) - 4)}" text-anchor="middle" font-size="10.5" fill="${INDIGO}">${hg(k) < 0.01 ? hg(k).toFixed(3) : f2(hg(k))}</text>`).join('')}
-    <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="11" fill="${INK}">戻さない（超幾何）</text>
-    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="11" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="11" fill="${SLATE}">横軸 ＝ 4個のうちの赤玉の数 k</text>
+    ${ks.map((k) => `<text x="${f1(PX(b, k) - w / 2)}" y="${f1(PY(b, hg(k)) - 4)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">${hg(k) < 0.01 ? hg(k).toFixed(3) : f2(hg(k))}</text>`).join('')}
+    <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="12.4" fill="${INK}">戻さない（超幾何）</text>
+    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 4個のうちの赤玉の数 k</text>
   </svg>`;
   const cap = `本文の例（赤玉${K}個・青玉${N - K}個の計${N}個から${n}個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。平均はどちらも ${n} × ${K}/${N} ≈ ${f2((n * K) / N)} ですが、戻さない方が両端（0個・${n}個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${f2(vh)}、二項 ${f2(vb)} で、比 ${f2(vh / vb)} がちょうど有限母集団修正 (${N}−${n})/(${N}−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`;
   return fig(svg, cap);
