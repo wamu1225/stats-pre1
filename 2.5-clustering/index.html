@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CBtR7k2k.js"></script>
+    <script type="module" crossorigin src="../assets/index-DV651JFC.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -93,6 +93,19 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <h3 class="content-h3">1. 階層型クラスター分析とデンドログラム</h3>
 <p class="content-p">50人の顧客の購買データがあるとします。最初は全員を「別々の50グループ」として出発し、最も似た2人を1グループに統合、また最も似たペア（またはグループ）を統合……という作業を繰り返すと、最終的に全員が1グループになります。この「くっつけていく」過程を追うのが<strong>階層型クラスター分析</strong>（Hierarchical Clustering）です（凝集型）。</p>
 <p class="content-p">結果は<strong>デンドログラム</strong>（樹形図）で表されます。横軸がデータ、縦軸が併合されたときの距離（非類似度）です。デンドログラムの「枝の高さ」でカットすることで任意のクラスター数を得られます。</p>
+<figure class="venn-figure"><svg viewBox="0 0 350 250" role="img" aria-label="6人の顧客の散布図と、近い順に併合していくデンドログラム" class="venn-svg">
+    <text x="16" y="22" font-size="12" font-weight="700" fill="#1e293b">顧客の位置（2つの指標）</text>
+    <rect x="16" y="34" width="130" height="130" fill="none" stroke="#e2e8f0" />
+    <circle cx="34.6" cy="145.4" r="4" fill="#d97706" /><text x="41.6" y="149.4" font-size="12" fill="#1e293b">A</text><circle cx="43.9" cy="138.0" r="4" fill="#d97706" /><text x="50.9" y="142.0" font-size="12" fill="#1e293b">B</text><circle cx="38.3" cy="123.1" r="4" fill="#d97706" /><text x="45.3" y="127.1" font-size="12" fill="#1e293b">C</text><circle cx="108.9" cy="71.1" r="4" fill="#0f766e" /><text x="115.9" y="75.1" font-size="12" fill="#1e293b">D</text><circle cx="120.0" cy="78.6" r="4" fill="#0f766e" /><text x="127.0" y="82.6" font-size="12" fill="#1e293b">E</text><circle cx="112.6" cy="48.9" r="4" fill="#0f766e" /><text x="119.6" y="52.9" font-size="12" fill="#1e293b">F</text>
+    <text x="176" y="22" font-size="12" font-weight="700" fill="#1e293b">デンドログラム</text>
+    <path d="M214.0,184.0 V168.2 H242.0 V184.0" fill="none" stroke="#4338ca" stroke-width="1.6" /><path d="M186.0,184.0 V158.5 H228.0 V168.2" fill="none" stroke="#4338ca" stroke-width="1.6" /><path d="M298.0,184.0 V166.2 H326.0 V184.0" fill="none" stroke="#4338ca" stroke-width="1.6" /><path d="M270.0,184.0 V148.7 H312.0 V166.2" fill="none" stroke="#4338ca" stroke-width="1.6" /><path d="M207.0,158.5 V47.6 H291.0 V148.7" fill="none" stroke="#4338ca" stroke-width="1.6" />
+    <line x1="176" y1="98.2" x2="336" y2="98.2" stroke="#be123c" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="336" y="94.2" text-anchor="end" font-size="11" fill="#be123c">ここで切ると2群</text>
+    <text x="214.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">A</text><text x="242.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">B</text><text x="186.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">C</text><text x="298.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">D</text><text x="326.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">E</text><text x="270.0" y="198" text-anchor="middle" font-size="12" fill="#1e293b">F</text>
+    <text x="172" y="188.0" text-anchor="end" font-size="11" fill="#64748b">0</text>
+    <text x="172" y="51.6" text-anchor="end" font-size="11" fill="#64748b">5.5</text>
+    <text x="175" y="244" text-anchor="middle" font-size="11" fill="#64748b">縦軸＝併合したときの距離（群平均法）</text>
+  </svg><figcaption class="venn-caption">左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 0.64 の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 1.4 以下でまとまりますが、2つの群どうしは距離 5.5 になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。</figcaption></figure>
 <p class="content-p">クラスター間の距離の定義（<strong>リンク法</strong>）：</p>
 <ul><li><strong>ウォード法</strong>（Ward's Method）：クラスター内の偏差平方和の増分を最小化します。最もよく使われ、コンパクトなクラスターを作ります</li><li><strong>完全リンク法</strong>：2クラスター内の最大距離（最も遠いペア）で定義します。外れ値に対してロバストです</li><li><strong>単リンク法</strong>：2クラスター内の最小距離（最も近いペア）です。くさり状のクラスターになりやすい</li><li><strong>群平均法</strong>：全ペアの平均距離</li></ul>
 <p class="content-p callout-target"> <strong>押さえどころ</strong>：ウォード法は、最もよく使われるリンク法の1つです。「クラスター内平方和の増加を最小化する」という性質を覚えましょう。</p>
