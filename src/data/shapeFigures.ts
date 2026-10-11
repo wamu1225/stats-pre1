@@ -117,7 +117,7 @@ function pdfHeight(): string {
     ${curve(b, f, AMBER)}
     <line x1="${f1(PX(b, a))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, a))}" y2="${f1(PY(b, f(a)) - 10)}" stroke="${INK}" stroke-width="1" />
     <line x1="${f1(PX(b, z))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, z))}" y2="${f1(PY(b, f(a)) - 10)}" stroke="${INK}" stroke-width="1" />
-    <text x="${f1(PX(b, z) + 6)}" y="${f1(PY(b, f(a)) - 2)}" font-size="13.2" font-weight="700" fill="#b45309">170〜172cm の面積 ＝ ${f2(prob)}</text>
+    <text x="${f1(PX(b, 171))}" y="${b.y - 14}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">170〜172cm の面積 ＝ ${f2(prob)}</text>
     <text x="${f1(PX(b, 179))}" y="${f1(PY(b, f(179)) - 18)}" font-size="13.2" fill="${INK}">曲線 f(x)</text>
     <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">横軸 ＝ 身長 x（cm）　曲線の下の面積の合計 ＝ 1</text>
   </svg>`;
@@ -135,7 +135,8 @@ function densityOver1(): string {
     <line x1="${b.x}" y1="${f1(PY(b, 1))}" x2="${b.x + b.w}" y2="${f1(PY(b, 1))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
     <text x="${b.x - 6}" y="${f1(PY(b, 1) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1</text>
     <text x="${b.x - 6}" y="${f1(PY(b, 2) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">2</text>
-    <text x="${f1(PX(b, 0.25))}" y="${f1(PY(b, 0.8))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 ＝ 0.5 × 2 ＝ 1</text>
+    <text x="${f1(PX(b, 0.25))}" y="${f1(PY(b, 0.45))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">面積 1</text>
+    <text x="${f1(PX(b, 0.58))}" y="${f1(PY(b, 1.45))}" font-size="13.2" fill="#b45309">幅 0.5 × 高さ 2 ＝ 1</text>
     <text x="${f1(PX(b, 0.55))}" y="${f1(PY(b, 2) + 4)}" font-size="13.2" fill="${INK}">高さ 2（1を超える）</text>
     <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">0〜0.5 の一様分布</text>
   </svg>`;
