@@ -109,6 +109,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://study-apps.com/stats-pre1/1.22-asymptotic/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://study-apps.com/stats-pre1/1.16-ci/</loc>
     <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
@@ -145,8 +151,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/1.22-asymptotic/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://study-apps.com/stats-pre1/2.1-regression/</loc>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.6-glm/</loc>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -157,19 +169,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/2.1-regression/</loc>
-    <lastmod>2026-07-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://study-apps.com/stats-pre1/2.2-pca/</loc>
-    <lastmod>2026-05-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://study-apps.com/stats-pre1/2.3-discriminant/</loc>
     <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -181,26 +181,20 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/2.5-clustering/</loc>
-    <lastmod>2026-05-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://study-apps.com/stats-pre1/2.6-glm/</loc>
-    <lastmod>2026-06-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://study-apps.com/stats-pre1/2.7-multivariate/</loc>
     <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/2.8-sampling/</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://study-apps.com/stats-pre1/2.3-discriminant/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.5-clustering/</loc>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -211,14 +205,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/3.2-timeseries/</loc>
-    <lastmod>2026-05-29</lastmod>
+    <loc>https://study-apps.com/stats-pre1/3.3-markov/</loc>
+    <lastmod>2026-06-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/3.3-markov/</loc>
-    <lastmod>2026-06-30</lastmod>
+    <loc>https://study-apps.com/stats-pre1/3.2-timeseries/</loc>
+    <lastmod>2026-05-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -231,6 +225,12 @@
   <url>
     <loc>https://study-apps.com/stats-pre1/3.5-survival/</loc>
     <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.8-sampling/</loc>
+    <lastmod>2026-10-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
