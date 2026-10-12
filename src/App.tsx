@@ -987,7 +987,7 @@ function App() {
                 全{modules.length}モジュールのうち{RANDOM_QUIZ_SIZE}モジュールから、1問ずつ出題します。
               </p>
               <MixedQuiz key={`rq-${quizNonce}`} title="全範囲クイズ" draw={drawRandomQuiz}
-                renderContent={parseContent} onOpenModule={updateModuleId} />
+                renderContent={parseContent} renderInline={parseInlineContent} onOpenModule={updateModuleId} />
             </motion.div>
           ) : view === 'chaptertest' && testChapter ? (
             <motion.div key={`ct-${testChapter}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
@@ -1001,7 +1001,7 @@ function App() {
                 </p>
               </div>
               <MixedQuiz key={`ct-${testChapter}-${quizNonce}`} title={`第${testChapter}章のまとめテスト`}
-                draw={() => drawChapterTest(testChapter)} renderContent={parseContent} onOpenModule={updateModuleId}
+                draw={() => drawChapterTest(testChapter)} renderContent={parseContent} renderInline={parseInlineContent} onOpenModule={updateModuleId}
                 onFinish={(score, total) => finishChapterTest(testChapter, score, total)}
                 best={chapterBest[testChapter] ?? null} accent={chapterColors[testChapter].accent} />
             </motion.div>

@@ -12,13 +12,15 @@ interface Props {
   title: string;
   draw: () => MixedItem[];
   renderContent: (text: string) => React.ReactNode;
+  // モジュール名など1行のテキスト用（数式を含む名前があるため）
+  renderInline: (text: string) => React.ReactNode;
   onOpenModule: (id: string) => void;
   onFinish?: (score: number, total: number) => void;
   best?: { score: number; total: number } | null;
   accent?: string;
 }
 
-export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, onOpenModule, onFinish, best, accent }) => {
+export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, renderInline, onOpenModule, onFinish, best, accent }) => {
   const [items, setItems] = useState<MixedItem[]>(draw);
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -73,7 +75,7 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, onOpenM
           {Object.entries(byModule).map(([id, v]) => (
             <div key={id} className="rq-result-row">
               <span className={`rq-result-dot ${v.correct === v.total ? 'ok' : 'ng'}`} />
-              <span style={{ flex: 1, fontSize: '0.85rem' }}>{v.title}</span>
+              <span style={{ flex: 1, fontSize: '0.85rem' }}>{renderInline(v.title)}</span>
               <span style={{ fontSize: '0.8rem', color: v.correct === v.total ? '#16a34a' : '#dc2626', fontWeight: 700 }}>{v.correct}/{v.total}</span>
             </div>
           ))}
@@ -83,7 +85,7 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, onOpenM
               <div className="links-row">
                 {weak.map(([id, v]) => (
                   <button key={id} className="btn-link" onClick={() => onOpenModule(id)}>
-                    {v.title} <ArrowRight size={12} />
+                    {renderInline(v.title)} <ArrowRight size={12} />
                   </button>
                 ))}
               </div>
@@ -105,7 +107,7 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, onOpenM
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '0.5rem' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{title}</h3>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{cur.moduleTitle}</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{renderInline(cur.moduleTitle)}</span>
         </div>
         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', flex: 'none' }}>{idx + 1} / {items.length}</span>
       </div>
