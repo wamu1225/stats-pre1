@@ -602,6 +602,20 @@ export const glossary: Record<string, Term> = {
     level: '上級',
     relatedTerms: ['normal-dist', 'mahalanobis']
   },
+  'marginal-dist': {
+    id: 'marginal-dist',
+    term: '周辺分布 (Marginal Distribution)',
+    explanation: 'いくつかの確率変数をまとめて扱う分布（同時分布）から、1つの変数だけを取り出して見た分布。離散なら他の変数について確率を足し合わせ、連続なら他の変数について積分して求めます。例えば多項分布の各成分の周辺分布は二項分布、多変量正規分布の各成分の周辺分布は正規分布です。',
+    level: '基礎',
+    relatedTerms: ['multinomial', 'multivariate-normal']
+  },
+  'multinomial': {
+    id: 'multinomial',
+    term: '多項分布',
+    explanation: '1回の結果がk種類（確率p₁,…,pₖ）ある試行をn回繰り返したときの、各結果の回数の同時分布。k=2なら二項分布。各成分の周辺分布は二項分布B(n,pᵢ)で、別々の結果の回数どうしは負の相関を持ちます（Cov(Xᵢ,Xⱼ)=−npᵢpⱼ）。',
+    level: '中級',
+    relatedTerms: ['binomial', 'marginal-dist']
+  },
   'inclusion-exclusion': {
     id: 'inclusion-exclusion',
     term: '包除原理',
