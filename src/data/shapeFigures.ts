@@ -426,12 +426,12 @@ function betaShape(): string {
     ${axes(b, [0, 0.25, 0.5, 0.75, 1])}
     ${curve(b, () => 1, SLATE, 0, 1, 1.5, '4 3')}
     ${curve(b, betaPdf(2, 5), INDIGO, 0.001, 0.999, 2.2)}${curve(b, betaPdf(5, 2), AMBER, 0.001, 0.999, 2.2)}${curve(b, betaPdf(2, 2), TEAL, 0.001, 0.999, 2.2)}
-    <text x="${f1(PX(b, 0.21))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="${INDIGO}">(2, 5) 平均 0.29</text>
-    <text x="${f1(PX(b, 0.56))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2) 平均 0.71</text>
-    <text x="${f1(PX(b, 0.5))}" y="${f1(PY(b, 1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">(2, 2) 平均 0.5</text>
+    <text x="${f1(PX(b, 0.1))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="${INDIGO}">(2, 5)</text>
+    <text x="${f1(PX(b, 0.83))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2)</text>
+    <text x="${f1(PX(b, 0.5))}" y="${f1(PY(b, 1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">(2, 2)</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x（割合）／点線 (1, 1) ＝ 一様分布</text>
   </svg>`;
-  const cap = `α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。(1, 1) は0〜1のどこも同じ高さの一様分布です。`;
+  const cap = `α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。平均は α/(α+β) で、(2, 5) は 0.29、(5, 2) は 0.71、(2, 2) は 0.5 です。(1, 1) は0〜1のどこも同じ高さの一様分布です。`;
   return fig(svg, cap);
 }
 
