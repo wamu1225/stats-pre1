@@ -43,7 +43,7 @@ export const glossary: Record<string, Term> = {
   'variance': {
     id: 'variance',
     term: '分散 (Variance)',
-    explanation: '各データが平均からどれだけ離れているかを表す指標。偏差の二乗の平均で求められます。単位が元のデータの二乗になるため、元の単位に戻した「標準偏差」と合わせてよく使われます。',
+    explanation: '各データが平均からどれだけ離れているかを表す指標。偏差（平均との差）を二乗して平均したものです。標本から母集団の分散を推定するときは、n ではなく n−1 で割った不偏分散（上の式）を使います。単位が元のデータの二乗になるため、元の単位に戻した「標準偏差」と合わせてよく使われます。',
     formula: 's^2 = \\frac{1}{n-1}\\sum_{i=1}^n (x_i - \\bar{x})^2',
     level: '基礎',
     relatedTerms: ['mean', 'std-dev']
@@ -147,7 +147,7 @@ export const glossary: Record<string, Term> = {
   'central-limit': {
     id: 'central-limit',
     term: '中心極限定理 (CLT)',
-    explanation: '「どんな分布でも、n が十分大きければ、標本平均の分布は正規分布に近づく」という定理。元のデータがどんなに歪んでいても、大きなサンプルでは正規分布の公式を使えます。',
+    explanation: '「分散が有限な分布なら、n が十分大きいとき、標本平均の分布は正規分布に近づく」という定理。元のデータが歪んでいても、大きなサンプルでは正規分布の公式を使えます。',
     level: '中級',
     relatedTerms: ['sample', 'normal-dist', 'lln']
   },
@@ -240,7 +240,7 @@ export const glossary: Record<string, Term> = {
   'odds': {
     id: 'odds',
     term: 'オッズ比 (Odds Ratio)',
-    explanation: '「ある事象が起こる確率」と「起こらない確率」の比。ロジスティック回帰の係数はオッズ比の対数（log odds）として解釈します。リスク要因の強さを表す疫学でよく使われます。',
+    explanation: 'オッズは「起こる確率 ÷ 起こらない確率」、オッズ比は2つのグループのオッズの比です（例：喫煙者のオッズ ÷ 非喫煙者のオッズ）。1なら関連なし、1より大きければ前者のほうが起こりやすいことを表します。ロジスティック回帰の係数は、説明変数が1増えたときのオッズ比の対数です。疫学でリスク要因の強さを表すのによく使われます。',
     level: '中級',
     relatedTerms: ['logistic']
   },
@@ -276,7 +276,7 @@ export const glossary: Record<string, Term> = {
   'non-parametric': {
     id: 'non-parametric',
     term: 'ノンパラメトリック手法',
-    explanation: 'データの正確な値ではなく「順位」を使う手法。分布の仮定が不要で外れ値に頑健（ロバスト）。ウィルコクソン順位和検定・マン・ホイットニーU検定などが代表例。',
+    explanation: '正規分布など特定の分布を仮定しない手法。多くはデータの値の代わりに「順位」を使うので、外れ値に強い（ロバスト）。ウィルコクソン順位和検定（マン・ホイットニーのU検定と同じもの）、符号付き順位検定、クラスカル・ウォリス検定が代表例。',
     level: '中級',
     relatedTerms: ['hypothesis-test']
   },
@@ -357,7 +357,7 @@ export const glossary: Record<string, Term> = {
   'cr-inequality': {
     id: 'cr-inequality',
     term: 'クラーメル・ラオの下界 (CR Inequality)',
-    explanation: '不偏推定量の分散はフィッシャー情報量の逆数以上（Var(θ̂)≥1/nI(θ)）という下限。この下界を達成する推定量を「有効推定量」と呼び、MLEは漸近的にこれを達成します。',
+    explanation: '不偏推定量の分散はフィッシャー情報量の逆数以上（Var(θ̂)≥1/(nI(θ))、I(θ)は1個のデータあたりのフィッシャー情報量）という下限。この下界を達成する推定量を「有効推定量」と呼び、MLEは漸近的にこれを達成します。',
     level: '上級',
     relatedTerms: ['fisher-info', 'mle', 'unbiasedness']
   },
@@ -402,7 +402,7 @@ export const glossary: Record<string, Term> = {
   'lda': {
     id: 'lda',
     term: '線形判別分析 (LDA)',
-    explanation: 'グループ間分散/グループ内分散を最大化する判別関数を求める手法。等分散仮定で判別境界は線形（LDA）、グループ別分散では二次（QDA）。マハラノビス距離を使った分類と等価です。',
+    explanation: 'グループ間分散/グループ内分散を最大化する判別関数を求める手法。等分散仮定で判別境界は線形（LDA）、グループ別分散では二次（QDA）。2群の分散共分散行列と事前確率が等しいときは、マハラノビス距離が近い群に分類する方法と同じ結果になります。',
     level: '上級',
     relatedTerms: ['pca', 'mahalanobis']
   },
@@ -451,7 +451,7 @@ export const glossary: Record<string, Term> = {
   'markov-chain': {
     id: 'markov-chain',
     term: 'マルコフ連鎖',
-    explanation: '現在の状態だけが次の状態を決めるマルコフ性をもつ確率過程。定常分布πはπP=πを満たします。既約・非周期なら一意な定常分布が存在し、任意の初期分布から収束します。',
+    explanation: '現在の状態だけが次の状態を決めるマルコフ性をもつ確率過程。定常分布πはπP=πを満たします。状態が有限個で既約・非周期なら、一意な定常分布が存在し、任意の初期分布から収束します。',
     level: '上級',
     relatedTerms: ['mcmc', 'stationary']
   },
@@ -478,21 +478,21 @@ export const glossary: Record<string, Term> = {
   'characteristic-fn': {
     id: 'characteristic-fn',
     term: '特性関数 (Characteristic Function)',
-    explanation: 'φ_X(t)=E[e^(itX)]。MGFと異なり常に存在し、分布を一意に決定します。中心極限定理の証明やドメイン収束定理の基礎となります。',
+    explanation: 'φ_X(t)=E[e^(itX)]。MGFと異なり常に存在し、分布を一意に決定します。特性関数の収束は分布収束と同値になる（レヴィの連続性定理）ため、中心極限定理の証明に使われます。',
     level: '上級',
     relatedTerms: ['mgf']
   },
   'sufficient-stat': {
     id: 'sufficient-stat',
     term: '十分統計量',
-    explanation: 'パラメータθに関する情報をすべて持つ統計量。ネイマンの分解定理：T(X)が十分統計量⟺f(x;θ)=g(T(x),θ)h(x)と分解できます。十分統計量に集約することで情報を失いません。',
+    explanation: 'パラメータθに関する情報をすべて持つ統計量。例えば分散が既知の正規分布で平均を推定するなら、データの合計だけ分かれば十分です。フィッシャー・ネイマンの分解定理：T(X)が十分統計量⟺f(x;θ)=g(T(x),θ)h(x)と分解できます。十分統計量に集約することで情報を失いません。',
     level: '上級',
     relatedTerms: ['mle', 'unbiasedness']
   },
   'np-lemma': {
     id: 'np-lemma',
     term: 'ネイマン・ピアソン補題',
-    explanation: '単純仮説H₀:θ=θ₀ vs H₁:θ=θ₁の検定では、尤度比L(θ₁)/L(θ₀)>cの棄却域が一様最強力検定（UMP）を与えるという定理。有意水準一定のもとで検出力を最大にします。',
+    explanation: '単純仮説H₀:θ=θ₀ vs H₁:θ=θ₁の検定では、尤度比L(θ₁)/L(θ₀)>cの棄却域が最強力検定（同じ有意水準の検定の中で検出力が最大）を与えるという定理。',
     level: '上級',
     relatedTerms: ['likelihood', 'power']
   },
@@ -534,16 +534,9 @@ export const glossary: Record<string, Term> = {
   'em-algorithm': {
     id: 'em-algorithm',
     term: 'EMアルゴリズム',
-    explanation: '欠測データや潜在変数がある場合の最尤推定のアルゴリズム。Eステップ（欠測データの期待値を計算）とMステップ（対数尤度を最大化）を繰り返し収束させます。混合正規分布の推定などに使われます。',
+    explanation: '欠測データや潜在変数がある場合の最尤推定のアルゴリズム。Eステップ（今のパラメータのもとで、完全データの対数尤度の条件付き期待値を計算）とMステップ（その期待値を最大にするパラメータに更新）を繰り返し収束させます。混合正規分布の推定などに使われます。',
     level: '上級',
     relatedTerms: ['mle', 'factor-analysis']
-  },
-  'sufficiency': {
-    id: 'sufficiency',
-    term: '十分統計量（ネイマンの分解定理）',
-    explanation: '母数に関する「すべての情報」をギュッと凝縮した統計量。正規分布の平均を推測する際、個々のデータの合計だけ知っていれば十分です。指数型分布族では自然統計量が十分統計量になります。',
-    level: '上級',
-    relatedTerms: ['mle']
   },
   'skewness': {
     id: 'skewness',
@@ -604,7 +597,7 @@ export const glossary: Record<string, Term> = {
   'multivariate-normal': {
     id: 'multivariate-normal',
     term: '多変量正規分布',
-    explanation: 'p変量の正規分布。平均ベクトルμとp×p正定値行列Σ（分散共分散行列）で決まります。相関係数ρ=0⟺独立（正規分布の場合のみ成立する特別な性質）。',
+    explanation: 'p変量の正規分布。平均ベクトルμとp×p正定値行列Σ（分散共分散行列）で決まります。多変量正規分布に従う変数どうしでは、無相関（ρ=0）と独立が同値です（一般の分布では、無相関でも独立とは限りません）。',
     formula: 'f(\\mathbf{x}) = \\frac{1}{(2\\pi)^{p/2}|\\Sigma|^{1/2}} \\exp\\left(-\\frac{1}{2}(\\mathbf{x}-\\mu)^T\\Sigma^{-1}(\\mathbf{x}-\\mu)\\right)',
     level: '上級',
     relatedTerms: ['normal-dist', 'mahalanobis']

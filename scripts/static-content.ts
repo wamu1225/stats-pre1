@@ -5,6 +5,7 @@
  */
 import { modules } from '../src/data/modules';
 import { chapterNames } from '../src/data/chapters';
+import * as guide from '../src/data/examGuide';
 
 // 章ごとのモジュール一覧（章の構成を変えても自動で追従する）
 function chapterListHtml(): string {
@@ -134,65 +135,29 @@ export function buildCheatsheetHtml(base: string): string {
 }
 
 export function buildGuideHtml(base: string): string {
+  // 本文は src/data/examGuide.ts（App の試験ガイドと共用）
+  const h2 = (t: string) => `<h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 8px">${t}</h2>`;
+  const a = (href: string, label: string) => `<a href="${href}" style="color:#2563eb" target="_blank" rel="noopener noreferrer">${label}</a>`;
   return `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="${base}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:8px">試験ガイド</h1>
-  <p style="color:#555;margin-bottom:24px">統計検定準1級の試験概要・学習戦略・推奨リソースをまとめています。</p>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">試験の概要</h2>
-  <table style="width:100%;border-collapse:collapse;font-size:0.9rem;margin-bottom:12px">
-    <tbody>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">実施方式</td><td style="padding:8px 12px;font-weight:700;text-align:right">CBT（Computer Based Testing）— 通年受験可</td></tr>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">出題形式</td><td style="padding:8px 12px;font-weight:700;text-align:right">5肢選択 ＋ 数値入力</td></tr>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">問題数 / 試験時間</td><td style="padding:8px 12px;font-weight:700;text-align:right">25〜30問 / 90分（1問あたり約3分）</td></tr>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">合格基準</td><td style="padding:8px 12px;font-weight:700;text-align:right">100点満点中 60点以上</td></tr>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">受験料</td><td style="padding:8px 12px;font-weight:700;text-align:right">一般 8,000円 / 学割 6,000円（税込）</td></tr>
-      <tr style="border-bottom:1px solid #e2e8f0"><td style="padding:8px 12px;color:#64748b">電卓</td><td style="padding:8px 12px;font-weight:700;text-align:right">持ち込み可（四則演算・ルート・メモリのみ）</td></tr>
-      <tr><td style="padding:8px 12px;color:#64748b">再受験</td><td style="padding:8px 12px;font-weight:700;text-align:right">前回受験終了から7日以上経過後に可</td></tr>
-    </tbody>
-  </table>
-  <p style="color:#92400e;background:#fef9c3;border-radius:8px;padding:10px 14px">90分で30問近くの高度な計算・解釈問題を解くには<strong>解法の自動化</strong>が鍵。理論を理解するだけでなく、典型問題を反射的に解けるまで繰り返す。</p>
-  <p style="color:#888;font-size:0.85rem">※ 受験料・試験形式は変更される場合があります。最新情報は<a href="https://www.toukei-kentei.jp/" style="color:#2563eb" target="_blank" rel="noopener noreferrer">統計検定公式サイト</a>でご確認ください。</p>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">必要な学習時間の目安</h2>
-  <p style="color:#444"><strong>統計の学習経験なし（統計学が初めて）：</strong>400〜500時間（6ヶ月〜1年）</p>
-  <p style="color:#444"><strong>統計の基礎知識あり（統計検定2級合格済み）：</strong>200〜300時間（4〜6ヶ月）</p>
-  <p style="color:#888;font-size:0.85rem">※ 短期合格者の記録に惑わされず、着実に積み上げることが重要。未経験者は数式の背景まで掘り下げると想定以上に時間がかかる傾向がある。線形代数・微積分の素養がある方は2級ルートでもさらに短縮できる場合がある。</p>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">3段階の学習フェーズ</h2>
-  <p style="color:#444"><strong>フェーズ1｜インプット・概観フェーズ：</strong>『統計学実践ワークブック』を一通り読み、試験範囲の全体像を把握する。細かな数式に固執せず、まず「どんな手法があり、どう関連しているか」のマップを頭に入れる。</p>
-  <p style="color:#444"><strong>フェーズ2｜理論深化・ノート作成フェーズ：</strong>各章を精読し、数式の導出を自力で行う。合格者の多くが「自作ノート」を作成している。線形代数・微積分の基礎を固めると多変量解析の理解が加速する。</p>
-  <p style="color:#444"><strong>フェーズ3｜アウトプット・定着フェーズ：</strong>章末問題を解法が自動化されるまで繰り返す（目安5〜6周）。その後、公式過去問集で本番の問い方・時間配分に慣れる。</p>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">推奨書籍</h2>
-  <ul style="color:#444;padding-left:20px">
-    <li><strong>統計学実践ワークブック</strong>（必須・★★★★★）：試験範囲をほぼ網羅。CBT出題のベース。章末問題の習得が合格の絶対条件。</li>
-    <li><strong>統計検定準1級 公式問題集</strong>（必須・★★★★★）：過去の出題パターン確認に不可欠。解説が簡素なためワークブックと併用する。</li>
-    <li><strong>統計学入門（東京大学出版会）</strong>（推奨・★★★★☆）：通称「赤本」。基礎理論を深く理解するための補完書。</li>
-    <li><strong>はじめての多変量解析</strong>（推奨・★★★★☆）：主成分分析・因子分析など難解な多変量手法を平易に解説。</li>
-    <li><strong>道具としてのベイズ統計</strong>（参考・★★★☆☆）：ベイズ統計の入門書。準1級の出題比重に合わせた概念理解に。</li>
-  </ul>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">おすすめ無料リソース</h2>
-  <ul style="color:#444;padding-left:20px">
-    <li><strong>とけたろうチャンネル</strong>（YouTube / note）：準1級の全範囲を網羅した解説動画とチートシート。受験生から「最強の武器」と評される。</li>
-    <li><strong>あつまれ統計の森 / DataArts</strong>（ブログ）：ワークブックの解答例が不十分な箇所の詳細な導出と補足。答え合わせの補助として有用。</li>
-    <li><strong>Yuya Kawaguchi</strong>（YouTube）：数学的な導出をホワイトボードで丁寧に解説。文系出身・数式に不安がある人向け。</li>
-    <li><strong>生成AI（ChatGPT / Perplexity）</strong>：ワークブックの難解な数式をステップバイステップで解説させる。証明の行間を埋める24時間家庭教師として活用できる。</li>
-  </ul>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">出題範囲の主な分野</h2>
-  <p style="color:#444">統計検定公式サイトの準1級出題範囲表は、確率と確率変数・統計的推測（推定・検定）・回帰分析・分散分析と実験計画法・多変量解析・時系列解析・分割表・モデル選択・ベイズ法・シミュレーションなど、複数の大項目で構成されています。範囲表は出題の頻度や配点を示すものではないため、このサイトでは分野ごとの重みづけをしていません。最新の範囲は<a href="https://www.toukei-kentei.jp/grade/grade_pre-1">統計検定公式サイトの準1級のページ</a>で確認してください。</p>
-
-  <h2 style="font-size:1.2rem;font-weight:700;margin:20px 0 8px">本番に向けた実践アドバイス</h2>
-  <ul style="color:#444;padding-left:20px">
-    <li><strong>時間感覚を身につける：</strong>1問あたり平均3分が目安。解けない問題に時間をかけすぎず、確実に取れる問題から先に解く。</li>
-    <li><strong>電卓操作に習熟する：</strong>ルート計算・メモリ機能を含む操作に慣れておく。CBTでは計算ミスが直接失点につながる。</li>
-    <li><strong>優先度をつけて学習する：</strong>出題範囲表の大項目に一通り目を通し、苦手な分野から手厚く進める。CBTは問題のランダム性が高いため、極端な捨て科目はリスクを伴う。</li>
-    <li><strong>数学的基礎を固める：</strong>行列の積・逆行列・固有値分解の理解が多変量解析の理解を劇的に加速させる。</li>
-  </ul>
-  <p style="color:#166534;background:#f0fdf4;border-radius:8px;padding:10px 14px">このサイトの学習リファレンスは、試験範囲に沿って構成されています。各モジュールの理解度チェックで定着を確認しながら進めましょう。</p>
-
+  <p style="color:#555;margin-bottom:24px">統計検定準1級の試験の概要、出題範囲、学習の進め方をまとめています。</p>
+  ${h2('試験の概要')}
+  <dl style="margin:0">${guide.overview.map((r) => `<dt style="color:#64748b;font-size:0.85rem;margin-top:8px">${r.label}</dt><dd style="margin:0;font-weight:700">${r.value}</dd>`).join('')}</dl>
+  <p style="background:#f8fafc;border-radius:8px;padding:10px 14px;margin-top:12px">${guide.overviewTip}</p>
+  <p style="color:#888;font-size:0.85rem">※ ${guide.CHECKED_AT}に${a(guide.OFFICIAL.apply, '統計検定公式サイトの試験要項')}で確認した内容です。受験料や試験形式は変わることがあるので、申し込み前に公式サイトで確かめてください。</p>
+  ${h2('出題範囲')}
+  ${guide.rangeParagraphs.map((p) => `<p style="color:#444">${p}</p>`).join('')}
+  <p style="color:#666;font-size:0.9rem">範囲表：${a(guide.OFFICIAL.range2027, '2027年1月1日からの範囲表（PDF）')}、${a(guide.OFFICIAL.range2018, '2026年12月31日までの範囲表（PDF）')}</p>
+  ${h2('学習の進め方')}
+  <ol style="color:#444;padding-left:20px">${guide.phases.map((p) => `<li><strong>${p.title}：</strong>${p.body}</li>`).join('')}</ol>
+  ${h2('本')}
+  <ul style="color:#444;padding-left:20px">${guide.books.map((bk) => `<li><strong>${bk.title}</strong>（${bk.tag}）：${bk.desc}</li>`).join('')}</ul>
+  ${h2('無料で使える学習の助け')}
+  <ul style="color:#444;padding-left:20px">${guide.resources.map((r) => `<li><strong>${r.name}</strong>（${r.type}）：${r.desc}</li>`).join('')}</ul>
+  ${h2('本番に向けて')}
+  <ul style="color:#444;padding-left:20px">${guide.advice.map((x) => `<li><strong>${x.title}：</strong>${x.body}</li>`).join('')}</ul>
+  <p style="color:#166534;background:#f0fdf4;border-radius:8px;padding:10px 14px">このサイトのモジュールは出題範囲に沿って並んでいます。各モジュールのクイズと章のまとめテストで、理解を確かめながら進めてください。</p>
   <p style="margin-top:16px"><a href="${base}/" style="color:#2563eb">← ホームへ戻る</a></p>
 </article>`;
 }
