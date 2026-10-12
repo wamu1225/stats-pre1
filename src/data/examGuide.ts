@@ -44,7 +44,7 @@ export const studyTimeCases: { hours: string; who: string; href: string; source:
   { hours: '200時間強（2.5〜3か月）', who: '2級取得済み。1回目58点、2回目62点で合格', href: 'https://zenn.dev/naaao9999/articles/a9ea2baf245c06', source: 'Zenn' },
   { hours: '約200時間（約3か月）', who: '期待値・分散も分からない状態から始め、先に2級（約100時間）に合格。63点', href: 'https://qiita.com/kakl_kakler_kaklest/items/ab00d4dfed92d03076a0', source: 'Qiita' },
   { hours: '約300時間（3級・2級を含めると約450時間）', who: '同じ年に3級・2級に合格してから。大学で線形代数・微積分は履修していない', href: 'https://tansan3.com/toukeikentei_jyun1kyu-how-to-study/', source: 'tansan3.com' },
-  { hours: '300〜400時間（約4か月）', who: '2級取得済み。線形代数・微積分を学び直した。1回目50点、2回目61点', href: 'https://note.com/light_whale2482/n/n05908bc2088a', source: 'note' },
+  { hours: '300〜400時間（約4か月）', who: '2級取得済み。線形代数・微積分も学び直し、1回目50点、2回目61点', href: 'https://note.com/light_whale2482/n/n05908bc2088a', source: 'note' },
   { hours: '300〜400時間（約1年）', who: '2級取得済み。うち200時間ほどは数学の復習など。3回目61点', href: 'https://zenn.dev/ziyuu/articles/e37641a5d5ede8', source: 'Zenn' },
 ];
 
