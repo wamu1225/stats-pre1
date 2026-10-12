@@ -1231,6 +1231,56 @@ function mdsMap(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.3：線形判別分析（ユークリッド距離の境界とのちがい） ============
+function ldaBoundary(): string {
+  const W = 350, H = 300;
+  const rho = 0.8;
+  const m1 = [-1.2, 0.6], m2 = [1.2, -0.6];
+  const k = 34, cx = 175, cy = 124;
+  const sx = (x: number) => cx + x * k, sy = (y: number) => cy - y * k;
+  // 共分散 [[1,ρ],[ρ,1]] の等確率楕円（マハラノビス距離 r）：主軸は y=x と y=-x、半軸 r√(1±ρ)
+  const r = 1.8;
+  const a = r * Math.sqrt(1 + rho), b = r * Math.sqrt(1 - rho);
+  const ell = (m: number[], color: string) =>
+    `<ellipse cx="${f1(sx(m[0]))}" cy="${f1(sy(m[1]))}" rx="${f1(a * k)}" ry="${f1(b * k)}" transform="rotate(-45 ${f1(sx(m[0]))} ${f1(sy(m[1]))})" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="1.6" />`;
+  // 標本点（シード固定）
+  const rnd = gaussFrom(mulberry32(11));
+  const sample = (m: number[], n: number) => Array.from({ length: n }, () => {
+    const z1 = rnd(), z2 = rnd();
+    return [m[0] + z1, m[1] + rho * z1 + Math.sqrt(1 - rho * rho) * z2];
+  });
+  const pts = (ps: number[][], color: string) => ps.map((p) => `<circle cx="${f1(sx(p[0]))}" cy="${f1(sy(p[1]))}" r="2.8" fill="${color}" fill-opacity="0.85" />`).join('');
+  // 境界線：LDA は w = Σ⁻¹(μ1−μ2) に垂直で中点を通る。ユークリッドは (μ1−μ2) に垂直で中点を通る
+  const det = 1 - rho * rho;
+  const d = [m1[0] - m2[0], m1[1] - m2[1]];
+  const w = [(d[0] - rho * d[1]) / det, (-rho * d[0] + d[1]) / det];
+  const mid = [(m1[0] + m2[0]) / 2, (m1[1] + m2[1]) / 2];
+  const line = (nv: number[], color: string, dash: string) => {
+    const t = [-nv[1], nv[0]], L = 5 / Math.hypot(t[0], t[1]);
+    const p1 = [mid[0] - t[0] * L, mid[1] - t[1] * L], p2 = [mid[0] + t[0] * L, mid[1] + t[1] * L];
+    return `<line x1="${f1(sx(p1[0]))}" y1="${f1(sy(p1[1]))}" x2="${f1(sx(p2[0]))}" y2="${f1(sy(p2[1]))}" stroke="${color}" stroke-width="2.2" ${dash ? `stroke-dasharray="${dash}"` : ''} />`;
+  };
+  const ang = (v: number[]) => Math.round((Math.atan2(v[1], v[0]) * 180) / Math.PI);
+  const svg = `${svgOpen(W, H, '線形判別分析の境界：2群が同じ向きの楕円状に広がるとき、LDA の境界は中点の垂直二等分線ではなく、楕円の形に合わせて傾く')}
+    <rect x="8" y="14" width="334" height="220" fill="none" stroke="${SLATE}" stroke-width="1" />
+    ${ell(m1, INDIGO)}${ell(m2, AMBER)}
+    ${pts(sample(m1, 16), INDIGO)}${pts(sample(m2, 16), AMBER)}
+    <clipPath id="lda-clip"><rect x="8" y="14" width="334" height="220" /></clipPath>
+    <g clip-path="url(#lda-clip)">${line(d, SLATE, '5 4')}${line(w, ROSE, '')}</g>
+    <circle cx="${f1(sx(m1[0]))}" cy="${f1(sy(m1[1]))}" r="4.5" fill="#ffffff" stroke="${INDIGO}" stroke-width="2" />
+    <circle cx="${f1(sx(m2[0]))}" cy="${f1(sy(m2[1]))}" r="4.5" fill="#ffffff" stroke="${AMBER}" stroke-width="2" />
+    <text x="14" y="30" font-size="13" font-weight="700" fill="${INDIGO}">グループ 1</text>
+    <text x="336" y="226" text-anchor="end" font-size="13" font-weight="700" fill="#b45309">グループ 2</text>
+    <line x1="14" y1="252" x2="40" y2="252" stroke="${ROSE}" stroke-width="2.2" />
+    <text x="46" y="256" font-size="12.4" fill="${INK}">LDA の境界（楕円の形を考慮）</text>
+    <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" />
+    <text x="46" y="276" font-size="12.4" fill="${INK}">2 つの平均の中点で垂直に切る境界</text>
+    <text x="14" y="293" font-size="12" fill="${SLATE}">輪＝各群の平均／楕円＝平均からマハラノビス距離 ${r} の範囲</text>
+  </svg>`;
+  const cap = `2群の広がりが同じ向きの楕円（ここでは相関 ${rho}）のとき、灰の破線のように2つの平均の中点で垂直に切ると、楕円の長軸方向に伸びた裾が相手側にはみ出します。LDA の境界（赤）は、グループ内の分散共分散行列の逆行列を平均の差にかけた方向に垂直な線で、楕円の形に合わせて傾きます。この図では、灰の破線から約 ${Math.abs(ang(w) - ang(d))} 度回っています。楕円はマハラノビス距離が等しい点を結んだ線で、次の節のマハラノビス距離は、この楕円を測る物差しです。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -1263,4 +1313,5 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-factor-path': factorPath,
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
+  'f-lda': ldaBoundary,
 };
