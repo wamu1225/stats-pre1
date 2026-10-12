@@ -368,14 +368,14 @@ function geometricShape(): string {
   const tail = (1 - p) ** 10;
   const svg = `${svgOpen(W, H, 'サイコロで初めて6が出る回数の分布。1回目が最も高く、そこから5/6倍ずつ低くなる。平均は6回目')}
     ${axes(b, [1, 5, 10, 15, 20])}
-    ${bars(b, ks, ps, INDIGO, 0.3)}
+    ${bars(b, ks.slice(0, 10), ps.slice(0, 10), INDIGO, 0.3)}${bars(b, ks.slice(10), ps.slice(10), SLATE, 0.3)}
     <line x1="${f1(PX(b, 6))}" y1="${b.y}" x2="${f1(PX(b, 6))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
     <text x="${f1(PX(b, 6) + 5)}" y="${b.y + 10}" font-size="12.4" font-weight="700" fill="#b45309">平均 1/p ＝ 6 回目</text>
     <text x="${f1(PX(b, 1) + 8)}" y="${f1(PY(b, ps[0]) + 4)}" font-size="12.4" fill="${INDIGO}">1回目 ${f2(ps[0])}</text>
-    <text x="${f1(PX(b, 15))}" y="${f1(PY(b, ps[10]) - 26)}" text-anchor="middle" font-size="12.4" fill="${SLATE}">11回目以降の合計 ${f2(tail)}</text>
+    <text x="${f1(PX(b, 15))}" y="${f1(PY(b, ps[10]) - 26)}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰色（11回目以降）の合計 ${f2(tail)}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（初めて6が出る回）／高さ ＝ P(X = k)</text>
   </svg>`;
-  const cap = `サイコロで初めて6が出る回の分布（p = 1/6）です。いちばん起こりやすいのは1回目（${f2(ps[0])}）で、そこから1回ごとに 5/6 倍ずつ低くなり、右へ長い裾を引きます。平均は6回目ですが、山の頂上は1回目にあり、10回振っても6が出ない確率も ${f2(tail)}（約${Math.round(tail * 100)}%）あります。`;
+  const cap = `サイコロで初めて6が出る回の分布（p = 1/6）です。いちばん起こりやすいのは1回目（${f2(ps[0])}）で、そこから1回ごとに 5/6 倍ずつ低くなり、右へ長い裾を引きます。平均は6回目ですが、山の頂上は1回目にあり、10回振っても6が出ない確率（灰色の棒の合計。表示した20回目より先も含む）も ${f2(tail)}（約${Math.round(tail * 100)}%）あります。`;
   return fig(svg, cap);
 }
 
