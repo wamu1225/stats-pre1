@@ -504,6 +504,7 @@
   line-height: 1.7;
   margin: 0.5rem auto 0;
   max-width: 480px;
+  text-align: left; /* 複数行の説明を中央揃えにすると行頭が揃わず読みにくい */
 }
 
 /* ── Module TOC ──────────────────────────────────── */

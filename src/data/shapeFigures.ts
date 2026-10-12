@@ -121,7 +121,7 @@ function pdfHeight(): string {
     <text x="${f1(PX(b, 179))}" y="${f1(PY(b, f(179)) - 18)}" font-size="13.2" fill="${INK}">曲線 f(x)</text>
     <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" fill="${SLATE}">横軸 ＝ 身長 x（cm）　曲線の下の面積の合計 ＝ 1</text>
   </svg>`;
-  const cap = `身長の分布を、平均 ${m}cm・標準偏差 ${s}cm の正規分布（左右対称の釣鐘形の分布。1.10 で詳しく学びます）と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${f2(prob)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`;
+  const cap = `身長の分布を、平均 ${m}cm・標準偏差 ${s}cm の正規分布（左右対称の釣鐘形の分布。<a href="/stats-pre1/1.10-normal-dist/">正規分布の性質</a>で詳しく学びます）と仮定して描いた確率密度関数です。「170〜172cm に入る確率」は、その区間で曲線の下を塗った<strong>面積</strong>で、約 ${f2(prob)} です。区間の幅を狭めると面積も小さくなり、幅が0の「ぴったり170cm」では面積が0、つまり確率0です。`;
   return fig(svg, cap);
 }
 
