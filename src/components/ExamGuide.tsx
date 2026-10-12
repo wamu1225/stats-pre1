@@ -2,7 +2,7 @@
 // 本文は src/data/examGuide.ts（静的HTMLと共用）。ここは見た目だけを持つ
 import React from 'react';
 import { CheckCircle2, Target, Lightbulb } from 'lucide-react';
-import { CHECKED_AT, OFFICIAL, overview, overviewTip, rangeParagraphs, phases, books, resources, advice } from '../data/examGuide';
+import { CHECKED_AT, OFFICIAL, overview, overviewTip, rangeParagraphs, studyTimeSummary, studyTimeCases, phases, books, resources, advice } from '../data/examGuide';
 
 const muted = 'var(--text-muted)';
 
@@ -52,6 +52,18 @@ export const ExamGuide: React.FC = () => (
       <p style={{ fontSize: '0.8rem', lineHeight: 1.7, margin: 0, color: muted }}>
         範囲表：{link(OFFICIAL.range2027, '2027年1月1日からの範囲表（PDF）')}、{link(OFFICIAL.range2018, '2026年12月31日までの範囲表（PDF）')}（どちらも{link(OFFICIAL.grade, '公式サイトの準1級のページ')}から）
       </p>
+    </Section>
+
+    <Section title="学習時間の目安（合格者の体験記から）">
+      {studyTimeSummary.map((p, i) => (
+        <p key={i} style={{ fontSize: '0.85rem', lineHeight: 1.7, margin: '0 0 0.75rem' }}>{p}</p>
+      ))}
+      {studyTimeCases.map(c => (
+        <div key={c.href} style={{ padding: '0.5rem 0', borderTop: '1px solid var(--border)' }}>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>{c.hours}</div>
+          <div style={{ fontSize: '0.8rem', color: muted, lineHeight: 1.6 }}>{c.who}（{link(c.href, c.source)}）</div>
+        </div>
+      ))}
     </Section>
 
     <Section title="学習の進め方">

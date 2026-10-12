@@ -1,7 +1,7 @@
 // stats-app/src/data/examGuide.ts
 // 試験ガイドの本文（App の ExamGuide.tsx と scripts/static-content.ts の静的HTMLで共用）。
 // 試験の事実は統計検定公式サイトで確かめたものだけを書く（確認日は CHECKED_AT）。
-// 学習時間の目安・合格者の傾向など、出典を確かめられない数字や評判は書かない
+// 出典を確かめられない数字や評判は書かない（学習時間は、本文を確かめた体験記の数字を出典つきで並べる）
 export const CHECKED_AT = '2026年10月12日';
 
 export const OFFICIAL = {
@@ -29,7 +29,26 @@ export const rangeParagraphs: string[] = [
   '2027年1月1日の受験からは、新しい範囲表に変わります。いちばん大きな変更は、「統計的因果推論」（因果ダイアグラム、バックドア基準など）が大項目として加わったことです。ほかにも、スルツキーの補題、バイアス・バリアンス分解、Mallows の Cp 規準、Box-Cox 変換などの用語が加わりました。このサイトでも、新しく加わった項目の解説を追加していきます。',
 ];
 
-export const phases: { title: string; body: string }[] = [
+// 学習時間：公式の目安は無いので、合格者が自分で書いた体験記の数字を、出典つきでそのまま並べる。
+// 各記事は 2026-10-12 に本文を開いて、時間・前提・得点を確かめた（検索結果の要約は使わない）
+export const studyTimeSummary: string[] = [
+  '公式の目安は出ていません。代わりに、合格者が自分で書いた体験記8本の数字を並べます。',
+  '多くは200〜300時間です。統計検定2級の知識がある人で200時間前後、統計がほぼ初めての人は2級の範囲と合わせて300〜450時間かかっています。線形代数や微積分の学び直しが入ると、300〜400時間に増える例が目立ちます。',
+  '得点は61〜67点と、合格点（60点）すれすれの例が多いことにも注意してください。',
+];
+
+export const studyTimeCases: { hours: string; who: string; href: string; source: string }[] = [
+  { hours: '約140時間', who: '証券アナリストの学習で2級程度の統計を学んでいた。微積分と線形代数を学び直して63点', href: 'https://natsuchiyo.com/blog/jssc-pre1-result', source: 'natsuchiyo.com' },
+  { hours: '180〜200時間（約7か月）', who: '統計の知識ゼロから。高校で数学Ⅲを学んでいた。2回目で合格', href: 'https://note.com/serene_harte9023/n/n92e9f5e86e0e', source: 'note' },
+  { hours: '約200時間（約8か月）', who: '2級取得済み、理系の大学出身。67点', href: 'https://qiita.com/badorisu0555/items/76a854ca27ce6da5235b', source: 'Qiita' },
+  { hours: '200時間強（2.5〜3か月）', who: '2級取得済み。1回目58点、2回目62点で合格', href: 'https://zenn.dev/naaao9999/articles/a9ea2baf245c06', source: 'Zenn' },
+  { hours: '約200時間（約3か月）', who: '期待値・分散も分からない状態から始め、先に2級（約100時間）に合格。63点', href: 'https://qiita.com/kakl_kakler_kaklest/items/ab00d4dfed92d03076a0', source: 'Qiita' },
+  { hours: '約300時間（3級・2級を含めると約450時間）', who: '同じ年に3級・2級に合格してから。大学で線形代数・微積分は履修していない', href: 'https://tansan3.com/toukeikentei_jyun1kyu-how-to-study/', source: 'tansan3.com' },
+  { hours: '300〜400時間（約4か月）', who: '2級取得済み。線形代数・微積分を学び直した。1回目50点、2回目61点', href: 'https://note.com/light_whale2482/n/n05908bc2088a', source: 'note' },
+  { hours: '300〜400時間（約1年）', who: '2級取得済み。うち200時間ほどは数学の復習など。3回目61点', href: 'https://zenn.dev/ziyuu/articles/e37641a5d5ede8', source: 'Zenn' },
+];
+
+export const phases:{ title: string; body: string }[] = [
   { title: '全体を見渡す', body: '『統計学実践ワークブック』を一通り読み、どんな手法があって、どうつながっているかをつかみます。細かい式の導出は、この段階では後回しにします。' },
   { title: '理解を深める', body: '各章の式の導出を、自分の手で追います。行列（逆行列・固有値）と微積分の基礎を固めておくと、推定と多変量解析が読みやすくなります。' },
   { title: '問題で定着させる', body: 'ワークブックの問題を、解き方に迷わなくなるまで繰り返します。そのあと公式問題集で、本番の問われ方と時間配分に慣れます。' },

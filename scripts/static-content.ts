@@ -149,6 +149,9 @@ export function buildGuideHtml(base: string): string {
   ${h2('出題範囲')}
   ${guide.rangeParagraphs.map((p) => `<p style="color:#444">${p}</p>`).join('')}
   <p style="color:#666;font-size:0.9rem">範囲表：${a(guide.OFFICIAL.range2027, '2027年1月1日からの範囲表（PDF）')}、${a(guide.OFFICIAL.range2018, '2026年12月31日までの範囲表（PDF）')}</p>
+  ${h2('学習時間の目安（合格者の体験記から）')}
+  ${guide.studyTimeSummary.map((p) => `<p style="color:#444">${p}</p>`).join('')}
+  <ul style="color:#444;padding-left:20px">${guide.studyTimeCases.map((c) => `<li><strong>${c.hours}</strong>：${c.who}（${a(c.href, c.source)}）</li>`).join('')}</ul>
   ${h2('学習の進め方')}
   <ol style="color:#444;padding-left:20px">${guide.phases.map((p) => `<li><strong>${p.title}：</strong>${p.body}</li>`).join('')}</ol>
   ${h2('本')}
