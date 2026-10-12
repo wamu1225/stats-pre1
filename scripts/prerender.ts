@@ -197,7 +197,30 @@ const FIGURES: Record<string, string> = {
 
 // 表・見出し・リスト・コールアウトを静的HTMLへ変換（旧stripMarkdownは表を丸ごと削除していたため新設）。
 // App.tsx のクラス名（content-h2/content-table/callout-tip等）と揃え、CSSを共有する。
+// 「🔍 **見出し**」〜「🔍/」を「参考」ブロック（折りたたみ）にする。App.tsx の splitAsides と同じ規則
 function mdToHtml(content: string): string {
+  if (!content.includes('🔍 ')) return mdToHtmlPlain(content);
+  const out: string[] = [];
+  let buf: string[] = [];
+  let open: { title: string; lines: string[] } | null = null;
+  const flushAside = (o: { title: string; lines: string[] }) =>
+    out.push(`<details class="callout-aside"><summary><span class="aside-tag">参考</span><span class="aside-title">${inlineHtml(o.title)}</span><span class="aside-note">読まなくても先へ進めます</span></summary><div class="aside-body">${mdToHtmlPlain(o.lines.join('\n'))}</div></details>`);
+  for (const line of content.split('\n')) {
+    const t = line.trim();
+    if (!open && t.startsWith('🔍 ')) {
+      if (buf.length) out.push(mdToHtmlPlain(buf.join('\n')));
+      buf = [];
+      open = { title: t.slice(3).replace(/\*\*/g, '').trim(), lines: [] };
+    } else if (open && t === '🔍/') { flushAside(open); open = null; }
+    else if (open) open.lines.push(line);
+    else buf.push(line);
+  }
+  if (open) flushAside(open);
+  if (buf.length) out.push(mdToHtmlPlain(buf.join('\n')));
+  return out.join('\n');
+}
+
+function mdToHtmlPlain(content: string): string {
   const lines = content.split('\n');
   const out: string[] = [];
   let i = 0;

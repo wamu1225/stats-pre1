@@ -397,6 +397,46 @@
   color: var(--text-body);
 }
 
+/* ── 参考ブロック（🔍〜🔍/）：読まなくても先へ進める補足。本文と区別できるよう、点線の罫・小さめの文字・初めは閉じる ── */
+.callout-aside {
+  border-left: 2px dashed var(--text-muted, #64748b);
+  margin: 1rem 0;
+  padding: 0.1rem 0 0.1rem 0.85rem;
+  font-size: 0.92rem;
+}
+.callout-aside > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.5rem;
+  padding: 0.35rem 0;
+}
+.callout-aside > summary::-webkit-details-marker { display: none; }
+.callout-aside > summary::before {
+  content: '▶';
+  font-size: 0.7rem;
+  color: var(--text-muted, #64748b);
+  transition: transform 0.15s;
+}
+.callout-aside[open] > summary::before { transform: rotate(90deg); }
+.callout-aside .aside-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 0 0.3rem;
+  line-height: 1.5;
+}
+.callout-aside .aside-title { font-weight: 700; }
+.callout-aside .aside-note {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+}
+.callout-aside .aside-body { color: var(--text-body); }
+
 .content-h3, .content-h4 { scroll-margin-top: 70px; }
 
 /* ── モジュール左レール（広い画面のみ・中央カラムには干渉しない） ── */

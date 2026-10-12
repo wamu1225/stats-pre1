@@ -60,6 +60,30 @@ function saveProgress(p: Progress) {
 }
 
 // Draw n random items from an array
+// 「🔍 **見出し**」の行から「🔍/」の行までを「参考」ブロックに分ける（scripts/prerender.ts の splitAsides と同じ規則）。
+// 読まなくても先へ進める補足（導出の計算など）を、本文と見た目で区別して折りたたむ
+type ContentSeg = { aside: false; body: string } | { aside: true; title: string; body: string };
+function splitAsides(text: string): ContentSeg[] {
+  const segs: ContentSeg[] = [];
+  let buf: string[] = [];
+  let open: { title: string; lines: string[] } | null = null;
+  for (const line of text.split('\n')) {
+    const t = line.trim();
+    if (!open && t.startsWith('🔍 ')) {
+      if (buf.length) segs.push({ aside: false, body: buf.join('\n') });
+      buf = [];
+      open = { title: t.slice(3).replace(/\*\*/g, '').trim(), lines: [] };
+    } else if (open && t === '🔍/') {
+      segs.push({ aside: true, title: open.title, body: open.lines.join('\n') });
+      open = null;
+    } else if (open) open.lines.push(line);
+    else buf.push(line);
+  }
+  if (open) segs.push({ aside: true, title: open.title, body: open.lines.join('\n') });
+  if (buf.length) segs.push({ aside: false, body: buf.join('\n') });
+  return segs;
+}
+
 function sampleN<T>(arr: T[], n: number): T[] {
   const shuffled = [...arr].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, n);
@@ -635,7 +659,7 @@ function App() {
     return parseInline(text);
   }, [updateModuleId]);
 
-  const parseContent = useCallback((text: string): React.ReactNode => {
+  const parsePlain = useCallback((text: string): React.ReactNode => {
     if (!text) return null;
     const lines = text.split('\n');
     const result: React.ReactNode[] = [];
@@ -714,6 +738,25 @@ function App() {
     flushList('final');
     return <>{result}</>;
   }, [parseInlineContent]);
+
+  const parseContent = useCallback((text: string): React.ReactNode => {
+    if (!text) return null;
+    if (!text.includes('🔍 ')) return parsePlain(text);
+    return (
+      <>
+        {splitAsides(text).map((s, i) => s.aside ? (
+          <details key={`aside-${i}`} className="callout-aside">
+            <summary>
+              <span className="aside-tag">参考</span>
+              <span className="aside-title">{parseInlineContent(s.title)}</span>
+              <span className="aside-note">読まなくても先へ進めます</span>
+            </summary>
+            <div className="aside-body">{parsePlain(s.body)}</div>
+          </details>
+        ) : <React.Fragment key={`seg-${i}`}>{parsePlain(s.body)}</React.Fragment>)}
+      </>
+    );
+  }, [parsePlain, parseInlineContent]);
 
   const filteredModules = useMemo(() => {
     const base = !searchQuery ? modules : modules.filter(m =>
