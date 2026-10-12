@@ -1005,6 +1005,169 @@ function qqPlot(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.4：因子分析のパス図（因子 → 観測変数）と PCA の向きの対比 ============
+function factorPath(): string {
+  const W = 350, H = 300;
+  const lam = [0.8, 0.7, 0.6];
+  const names = ['人前で話せる', '友人が多い', 'パーティー好き'];
+  const ys = [50, 90, 130];
+  const rx = 172, rw = 112, rh = 28;
+  const fcx = 62, fcy = 90;
+  const arrow = (x1: number, y1: number, x2: number, y2: number, color: string) =>
+    `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="${color}" stroke-width="1.8" marker-end="url(#pa-arrow)" />`;
+  const rows = names.map((nm, i) => {
+    const y = ys[i];
+    const mid = { x: (fcx + 38 + rx) / 2, y: (fcy + y) / 2 };
+    return `
+    <rect x="${rx}" y="${y - rh / 2}" width="${rw}" height="${rh}" rx="3" fill="#ffffff" stroke="${INDIGO}" stroke-width="1.6" />
+    <text x="${rx + rw / 2}" y="${y + 4.5}" text-anchor="middle" font-size="12" fill="${INK}">${nm}</text>
+    ${arrow(fcx + 38, fcy + (y - fcy) * 0.35, rx - 1, y, INDIGO)}
+    <text x="${f1(mid.x)}" y="${f1(mid.y - 8)}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">${f1(lam[i])}</text>
+    ${arrow(318 - 16, y, rx + rw + 1, y, AMBER)}
+    <circle cx="322" cy="${y}" r="15" fill="#fff7ed" stroke="${AMBER}" stroke-width="1.6" />
+    <text x="322" y="${y + 4.5}" text-anchor="middle" font-size="12" fill="#b45309">u${i + 1}</text>`;
+  }).join('');
+
+  // PCA（向きが逆）
+  const py0 = 206;
+  const pys = [py0, py0 + 40, py0 + 80];
+  const pcx = 280, pcy = py0 + 40;
+  const pcaRows = names.map((nm, i) => `
+    <rect x="20" y="${pys[i] - rh / 2}" width="${rw}" height="${rh}" rx="3" fill="#ffffff" stroke="${SLATE}" stroke-width="1.6" />
+    <text x="${20 + rw / 2}" y="${pys[i] + 4.5}" text-anchor="middle" font-size="12" fill="${INK}">${nm}</text>
+    ${arrow(20 + rw + 1, pys[i], pcx - 38, pcy + (pys[i] - pcy) * 0.35, SLATE)}`).join('');
+
+  const svg = `${svgOpen(W, H, '因子分析のパス図：潜在因子から各観測変数へ矢印が出て、各変数には独自因子が付く。主成分分析は向きが逆で、観測変数から主成分を作る')}
+    <defs><marker id="pa-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
+    <text x="10" y="16" font-size="13" font-weight="700" fill="${INK}">因子分析：因子が変数を生む</text>
+    <ellipse cx="${fcx}" cy="${fcy}" rx="38" ry="26" fill="#eef2ff" stroke="${INDIGO}" stroke-width="1.8" />
+    <text x="${fcx}" y="${fcy - 2}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">外向性</text>
+    <text x="${fcx}" y="${fcy + 12}" text-anchor="middle" font-size="12" fill="${INDIGO}">（因子 F）</text>
+    ${rows}
+    <text x="10" y="${py0 - 30}" font-size="13" font-weight="700" fill="${INK}">主成分分析：変数から軸を作る</text>
+    ${pcaRows}
+    <ellipse cx="${pcx}" cy="${pcy}" rx="38" ry="26" fill="#f1f5f9" stroke="${SLATE}" stroke-width="1.8" />
+    <text x="${pcx}" y="${pcy + 4.5}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">主成分 Z</text>
+  </svg>`;
+  const comm = lam.map((l) => f2(l * l));
+  const uniq = lam.map((l) => f2(1 - l * l));
+  const cap = `上は因子分析のパス図です。矢印の上の数が因子負荷量 λ で、「外向性が高いほど、その行動をとりやすい」強さを表します。各変数を標準化すると、λ の2乗が因子で説明できる割合（共通性）で、${comm.join('・')} になります。残りの ${uniq.join('・')} は、その変数だけに固有の独自因子 u の分です。下の主成分分析は矢印の向きが逆で、観測変数を合成して主成分を作ります。因子分析は「原因（因子）から結果（変数）」、主成分分析は「結果（変数）から要約（主成分）」の向きです。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.8：層化抽出と集落抽出（同じ8個を、どう抜くか） ============
+function strataVsCluster(): string {
+  const W = 350, H = 286;
+  const SH = ['#60a5fa', '#a78bfa', '#f472b6']; // 値の低・中・高（身長の低・中・高のようなイメージ）
+  const dotsIn = (x0: number, y0: number, shades: number[], picked: boolean[]) => shades.map((s, k) => {
+    const cx = x0 + 12 + (k % 4) * 17, cy = y0 + 16 + Math.floor(k / 4) * 22;
+    return picked[k]
+      ? `<circle cx="${cx}" cy="${cy}" r="6" fill="${SH[s]}" stroke="${INK}" stroke-width="2.2" />`
+      : `<circle cx="${cx}" cy="${cy}" r="6" fill="${SH[s]}" fill-opacity="0.38" />`;
+  }).join('');
+  const box = (x0: number, y0: number, label: string, shades: number[], picked: boolean[], on: boolean) =>
+    `<rect x="${x0}" y="${y0}" width="78" height="58" rx="4" fill="${on ? '#f8fafc' : '#ffffff'}" stroke="${on ? INK : SLATE}" stroke-width="${on ? 2 : 1}" />
+    ${dotsIn(x0, y0, shades, picked)}
+    <text x="${x0 + 39}" y="${y0 + 74}" text-anchor="middle" font-size="12" fill="${SLATE}">${label}</text>`;
+  // 層化：層の中は似ている（同じ色）。各層から 2 個ずつ
+  const strata = [0, 1, 1, 2].map((s) => Array(8).fill(s));
+  const pickedS = (_k: number) => Array.from({ length: 8 }, (_, j) => j === 1 || j === 6);
+  // 集落：どの集落も縮図（3色が混ざる）。1 集落を丸ごと
+  const mix = [0, 1, 2, 1, 0, 2, 1, 1];
+  const xs = [8, 92, 176, 260];
+  const top1 = 28, top2 = 172;
+  const svg = `${svgOpen(W, H, '層化抽出と集落抽出：層化は似たものどうしの層から少しずつ、集落抽出は縮図になっている集落を丸ごと1つ選ぶ')}
+    <text x="8" y="16" font-size="13" font-weight="700" fill="${INK}">層化抽出：各層から 2 個ずつ（計 8 個）</text>
+    ${strata.map((sh, i) => box(xs[i], top1, '層' + 'ABCD'[i], sh, pickedS(i), true)).join('')}
+    <text x="8" y="${top2 - 12}" font-size="13" font-weight="700" fill="${INK}">集落抽出：集落を丸ごと 1 つ選ぶ（計 8 個）</text>
+    ${[0, 1, 2, 3].map((i) => box(xs[i], top2, '集落' + (i + 1), mix, Array(8).fill(i === 2), i === 2)).join('')}
+    <text x="8" y="${H - 6}" font-size="12" fill="${SLATE}">色＝調べたい値（低・中・高）。濃い輪郭が選ばれた個体</text>
+  </svg>`;
+  const cap = `どちらも 32 個の母集団から 8 個を選んでいますが、選び方が違います。上の層化抽出は、層の中が似ている（同じ色）ように分け、各層から2個ずつ抜くので、低・中・高がもれなく入ります。下の集落抽出は、集落ごとに低・中・高が混ざっている（全体の縮図になっている）ことを前提に、1つの集落を丸ごと選びます。層化は<strong>層の中が似ているほど</strong>、集落抽出は<strong>集落の中が全体の縮図であるほど</strong>精度がよくなります。逆に集落の中が似た個体ばかりだと、1つ選んだだけでは偏ります。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.7：多次元尺度法（都市間の距離だけから地図を復元する） ============
+function mdsMap(): string {
+  const W = 350, H = 252;
+  const R = 6371;
+  const cities = [
+    { n: '東京', lat: 35.68, lon: 139.69 },
+    { n: '名古屋', lat: 35.18, lon: 136.91 },
+    { n: '大阪', lat: 34.69, lon: 135.5 },
+    { n: '福岡', lat: 33.59, lon: 130.4 },
+  ];
+  const rad = (d: number) => (d * Math.PI) / 180;
+  const hav = (a: typeof cities[0], b: typeof cities[0]) => {
+    const dl = rad(b.lat - a.lat), dn = rad(b.lon - a.lon);
+    const h = Math.sin(dl / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dn / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  };
+  const n = cities.length;
+  const D = cities.map((a) => cities.map((b) => hav(a, b)));
+  // 古典的MDS：二重中心化 B = -1/2 J D² J の上位2固有ベクトル（べき乗法＋縮約）
+  const D2 = D.map((r) => r.map((v) => v * v));
+  const rowM = D2.map((r) => r.reduce((s, v) => s + v, 0) / n);
+  const totM = rowM.reduce((s, v) => s + v, 0) / n;
+  const B = D2.map((r, i) => r.map((v, j) => -0.5 * (v - rowM[i] - rowM[j] + totM)));
+  const eig: { val: number; vec: number[] }[] = [];
+  let M = B.map((r) => r.slice());
+  for (let k = 0; k < 2; k++) {
+    let v = Array.from({ length: n }, (_, i) => 1 + 0.3 * Math.sin(i * 1.7 + k));
+    let val = 0;
+    for (let it = 0; it < 400; it++) {
+      const w = M.map((r) => r.reduce((s, x, j) => s + x * v[j], 0));
+      const nrm = Math.sqrt(w.reduce((s, x) => s + x * x, 0)) || 1;
+      v = w.map((x) => x / nrm);
+      val = nrm;
+    }
+    eig.push({ val, vec: v });
+    M = M.map((r, i) => r.map((x, j) => x - val * v[i] * v[j]));
+  }
+  const pts = cities.map((_, i) => ({ x: eig[0].vec[i] * Math.sqrt(eig[0].val), y: eig[1].vec[i] * Math.sqrt(eig[1].val) }));
+  // 真の位置（北を上・km）。MDS は回転・反転が決まらないので、真の位置に最も合う向きにそろえて重ねる
+  const lat0 = rad(35);
+  const truth = cities.map((c) => ({ x: R * Math.cos(lat0) * rad(c.lon), y: R * rad(c.lat) }));
+  const cen = (a: { x: number; y: number }[]) => ({ x: a.reduce((s, p) => s + p.x, 0) / n, y: a.reduce((s, p) => s + p.y, 0) / n });
+  const tc = cen(truth), pc = cen(pts);
+  const T = truth.map((p) => ({ x: p.x - tc.x, y: p.y - tc.y }));
+  const align = (flip: boolean) => {
+    const P = pts.map((p) => ({ x: p.x - pc.x, y: flip ? -(p.y - pc.y) : p.y - pc.y }));
+    let s1 = 0, s2 = 0;
+    P.forEach((p, i) => { s1 += p.x * T[i].y - p.y * T[i].x; s2 += p.x * T[i].x + p.y * T[i].y; });
+    const th = Math.atan2(s1, s2);
+    const Q = P.map((p) => ({ x: p.x * Math.cos(th) - p.y * Math.sin(th), y: p.x * Math.sin(th) + p.y * Math.cos(th) }));
+    const err = Q.reduce((s, q, i) => s + (q.x - T[i].x) ** 2 + (q.y - T[i].y) ** 2, 0);
+    return { Q, err };
+  };
+  const a0 = align(false), a1 = align(true);
+  const best = a0.err <= a1.err ? a0 : a1;
+  const maxDev = Math.max(...best.Q.map((q, i) => Math.hypot(q.x - T[i].x, q.y - T[i].y)));
+  const xs = T.map((p) => p.x).concat(best.Q.map((p) => p.x)), ys = T.map((p) => p.y).concat(best.Q.map((p) => p.y));
+  const xMin = Math.min(...xs), xMax = Math.max(...xs), yMin = Math.min(...ys), yMax = Math.max(...ys);
+  const L = 44, Rr = 300, Tt = 34, Bb = 186;
+  const k = Math.min((Rr - L) / (xMax - xMin), (Bb - Tt) / (yMax - yMin));
+  const ox = L + ((Rr - L) - (xMax - xMin) * k) / 2, oy = Tt + ((Bb - Tt) - (yMax - yMin) * k) / 2;
+  const sx = (x: number) => ox + (x - xMin) * k;
+  const sy = (y: number) => oy + (yMax - y) * k;
+  const labelDx = [6, 8, -8, -4];
+  const anchor = ['start', 'start', 'end', 'start'];
+  const dots = best.Q.map((q, i) => `
+    <circle cx="${f1(sx(T[i].x))}" cy="${f1(sy(T[i].y))}" r="7" fill="none" stroke="${SLATE}" stroke-width="1.6" />
+    <circle cx="${f1(sx(q.x))}" cy="${f1(sy(q.y))}" r="4" fill="${INDIGO}" />
+    <text x="${f1(sx(T[i].x) + labelDx[i] * (anchor[i] === 'end' ? 1 : 1.4))}" y="${f1(sy(T[i].y) - 12)}" text-anchor="${anchor[i]}" font-size="12.4" font-weight="700" fill="${INK}">${cities[i].n}</text>`).join('');
+  const dkm = (i: number, j: number) => Math.round(D[i][j] / 10) * 10;
+  const svg = `${svgOpen(W, H, '多次元尺度法：都市間の距離だけから都市の位置を復元すると、実際の地図の位置にほぼ重なる')}
+    <text x="8" y="18" font-size="13" font-weight="700" fill="${INK}">距離（km）だけから位置を復元</text>
+    ${dots}
+    <text x="8" y="${H - 38}" font-size="12.4" fill="${SLATE}">灰の輪＝実際の位置／青の点＝復元した位置</text>
+    <text x="8" y="${H - 22}" font-size="12.4" fill="${SLATE}">入力は 4 都市の距離 6 個だけ（東京−大阪は ${dkm(0, 2)} km など）</text>
+    <text x="8" y="${H - 6}" font-size="12.4" fill="${SLATE}">北は上（向きは実際にそろえた）</text>
+  </svg>`;
+  const cap = `MDS に渡したのは、4都市の間の距離（球面上の最短距離）だけです。地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ平面に並んでいて、2次元で距離をほとんど説明できるからです。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -1034,4 +1197,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
   'f-qq': qqPlot,
+  'f-factor-path': factorPath,
+  'f-strata-cluster': strataVsCluster,
+  'f-mds': mdsMap,
 };
