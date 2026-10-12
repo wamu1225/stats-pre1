@@ -470,7 +470,7 @@ function cauchyShape(): string {
     <text x="${f1(PX(b, 4.5))}" y="${f1(PY(b, 0.13) + 15)}" text-anchor="middle" font-size="12.4" fill="${ROSE}">（両側で ${pct(tailC)}）</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">塗った面積 ＝ |X| が3を超える確率（正規は ${pct(tailN, 2)}）</text>
   </svg>`;
-  const cap = `コーシー分布は真ん中の山が低く、そのぶん裾がゆっくりとしか下がりません。どちらも密度がちょうど0になることはありませんが、正規分布は3の外でほぼ0まで下がるのに対し、コーシー分布は高さが残ります。|X| が3を超える確率は、標準正規分布では ${pct(tailN, 2)} ですが、コーシー分布では ${pct(tailC)} もあります。`;
+  const cap = `コーシー分布は真ん中の山が低く、そのぶん裾がゆっくりとしか下がりません。|X| が3を超える確率は、標準正規分布では ${pct(tailN, 2)} ですが、コーシー分布では ${pct(tailC)} もあります。`;
   return fig(svg, cap);
 }
 
