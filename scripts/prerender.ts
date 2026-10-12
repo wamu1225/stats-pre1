@@ -3,6 +3,7 @@ import * as path from 'path';
 import sharp from 'sharp';
 import katex from 'katex';
 import { modules } from '../src/data/modules';
+import { chapterNames } from '../src/data/chapters';
 import { glossary } from '../src/data/glossary';
 import { covQuadrantsFigure, partialCorrFigure } from '../src/data/corrFigures';
 import { cdfPdfFigure } from '../src/data/distFigures';
@@ -590,18 +591,15 @@ for (const [page, config] of Object.entries(staticPageContents)) {
 // ── 章のまとめテスト（/chapter-N-test/） ──────────
 // 中身はモジュールの問題の再掲なので、検索結果には出さない（noindex・sitemap にも入れない）。
 // ページを置くのは、再読み込みや直接アクセスでもテスト画面を開けるようにするため
-const CHAPTER_NAMES: Record<number, string> = {
-  1: '確率論の基礎', 2: '確率分布', 3: '標本分布と漸近理論', 4: '統計的推測', 5: '多変量解析', 6: 'ベイズ・確率過程・発展',
-};
 for (const ch of [...new Set(modules.map(m => m.chapter))]) {
   const mods = modules.filter(m => m.chapter === ch);
   const page = `chapter-${ch}-test`;
   const pageDir = path.join(DIST_DIR, page);
   fs.mkdirSync(pageDir, { recursive: true });
-  const title = `第${ch}章のまとめテスト（${CHAPTER_NAMES[ch]}） | 統計検定 準1級 学習リファレンス`;
+  const title = `第${ch}章のまとめテスト（${chapterNames[ch]}） | 統計検定 準1級 学習リファレンス`;
   const body = `<article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="${BASE}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
-  <h1 style="font-size:1.4rem;font-weight:700">第${ch}章のまとめテスト：${CHAPTER_NAMES[ch]}</h1>
+  <h1 style="font-size:1.4rem;font-weight:700">第${ch}章のまとめテスト：${chapterNames[ch]}</h1>
   <p style="color:#555">この章の${mods.length}モジュールから、10問をランダムに出題します。テストを始めるには、JavaScriptを有効にしてください。</p>
   <ul>${mods.map(m => `<li><a href="${BASE}/${m.id}/" style="color:#2563eb">${m.title}</a></li>`).join('')}</ul>
 </article>`;

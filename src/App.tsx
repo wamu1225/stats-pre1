@@ -5,6 +5,7 @@ import { SHAPE_FIGS } from './data/shapeFigures';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import './App.css';
 import { modules } from './data/modules';
+import { chapterNames, chapterColors } from './data/chapters';
 import { glossary } from './data/glossary';
 import { InteractiveGraph } from './components/InteractiveGraph';
 import { MathDisplay } from './components/MathDisplay';
@@ -19,23 +20,6 @@ import { buildUsecaseHtml } from './data/usecaseGuide';
 import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const chapterNames: Record<number, string> = {
-  1: '確率論の基礎',
-  2: '確率分布',
-  3: '標本分布と漸近理論',
-  4: '統計的推測',
-  5: '多変量解析',
-  6: 'ベイズ・確率過程・発展',
-};
-
-const chapterColors: Record<number, { bg: string; text: string; accent: string; light: string }> = {
-  1: { bg: '#e0e7ff', text: '#3730a3', accent: '#4338ca', light: '#eef2ff' },  // インディゴ（基礎）
-  2: { bg: '#cffafe', text: '#155e75', accent: '#0891b2', light: '#ecfeff' },  // シアン（分布）
-  3: { bg: '#d1fae5', text: '#065f46', accent: '#059669', light: '#ecfdf5' },  // 緑（標本・漸近）
-  4: { bg: '#fef3c7', text: '#92400e', accent: '#d97706', light: '#fffbeb' },  // 琥珀（推測）
-  5: { bg: '#ede9fe', text: '#5b21b6', accent: '#7c3aed', light: '#f5f3ff' },  // 紫（多変量）
-  6: { bg: '#fce7f3', text: '#9d174d', accent: '#db2777', light: '#fdf2f8' },  // ピンク（発展）
-};
 
 const PROGRESS_KEY = 'stats-pre1-progress';
 const THEME_KEY = 'stats-pre1-theme';
@@ -61,7 +45,7 @@ function saveProgress(p: Progress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
 }
 
-const CHAPTER_TEST_KEY = 'stats-pre1-chapter-tests';
+const CHAPTER_TEST_KEY = 'stats-pre1-chapter-tests-v2';  // 10章に再編（2026-10-12）したため v2
 const CHAPTER_TEST_SIZE = 10;
 const RANDOM_QUIZ_SIZE = 20;
 type ChapterBest = Record<string, { score: number; total: number; completedAt: string }>;
@@ -1027,7 +1011,7 @@ function App() {
                 <h2 style={{ margin: '0 0 0.25rem', fontSize: '1.25rem', fontWeight: 800 }}>公式集</h2>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>試験直前の確認用。各モジュールの重要公式をまとめました。</p>
               </div>
-              {[1, 2, 3].map(ch => (
+              {Object.keys(chapterNames).map(Number).map(ch => (
                 <div key={ch}>
                   <div className="chapter-header">
                     <span className="badge-chapter" style={{ fontSize: '0.7rem' }}>Chapter {ch}</span>

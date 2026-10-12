@@ -3,6 +3,20 @@
  * prerender.ts と deploy-root.ts で共有する静的HTMLコンテンツ。
  * base: リンクのベースパス（stats-pre1側は'/stats-pre1', root側は''）
  */
+import { modules } from '../src/data/modules';
+import { chapterNames } from '../src/data/chapters';
+
+// 章ごとのモジュール一覧（章の構成を変えても自動で追従する）
+function chapterListHtml(): string {
+  return Object.keys(chapterNames).map(Number).map((ch) => {
+    const mods = modules.filter((m) => m.chapter === ch);
+    // 「：」より前の短い名前を使う。数式の括弧書きは外し、短い名前が重なる（信頼区間×2）ときは全体を使う
+    const short = (t: string) => t.split('：')[0].replace(/\s*\(\$[^)]*\$\)/, '');
+    const names = mods.map((m) => short(m.title));
+    const label = mods.map((m, i) => (names.indexOf(names[i]) !== names.lastIndexOf(names[i]) ? m.title : names[i]));
+    return `<li><strong>第${ch}章 ${chapterNames[ch]}（${mods.length}モジュール）</strong>：${label.join('、')}</li>`;
+  }).join('\n      ');
+}
 
 export function buildCheatsheetHtml(base: string): string {
   return `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
@@ -190,7 +204,7 @@ export function buildAboutHtml(base: string): string {
 
   <section style="margin-bottom:28px">
     <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:10px">このサイトについて</h2>
-    <p style="color:#444">「統計検定 準1級 学習リファレンス」は、統計検定準1級の合格を目指す方のために作られた個人運営の学習支援サイトです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など準1級の全出題範囲を36の学習モジュールに分けて解説しています。</p>
+    <p style="color:#444">「統計検定 準1級 学習リファレンス」は、統計検定準1級の合格を目指す方のために作られた個人運営の学習支援サイトです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など準1級の全出題範囲を${modules.length}の学習モジュールに分けて解説しています。</p>
     <p style="color:#444">数学的な素養が中学〜高校レベルの方でも理解できるよう、すべての概念を「具体的な日常の例」から出発し、直感的な説明を経て数式・理論へと進む構成になっています。インタラクティブなグラフで分布の形を視覚的に確認し、各モジュール10問のクイズで理解度を確認できます。</p>
     <p style="color:#888;font-size:0.9rem;border-left:3px solid #fbbf24;padding-left:12px;margin-top:12px">本サイトは個人による学習支援サイトであり、統計質保証推進協会および日本統計学会の公式サイトではありません。掲載内容は個人の見解に基づくものであり、公式の情報を保証するものではありません。</p>
   </section>
@@ -198,10 +212,8 @@ export function buildAboutHtml(base: string): string {
   <section style="margin-bottom:28px">
     <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:10px">コンテンツ構成</h2>
     <ul style="color:#444;padding-left:20px;line-height:2">
-      <li><strong>学習モジュール（全36モジュール・3章構成）</strong>：各モジュールに本文・インタラクティブグラフ・10問クイズ</li>
-      <li><strong>第1章（23モジュール）</strong>：確率論の基礎・各種確率分布・推測統計（推定・検定・漸近理論）</li>
-      <li><strong>第2章（7モジュール）</strong>：多変量解析（回帰分析・主成分分析・判別分析・因子分析・クラスター・GLM）</li>
-      <li><strong>第3章（6モジュール）</strong>：ベイズ統計・時系列分析・マルコフ連鎖・分割表・生存時間・シミュレーション</li>
+      <li><strong>学習モジュール（全${modules.length}モジュール・${Object.keys(chapterNames).length}章構成）</strong>：各モジュールに本文・インタラクティブグラフ・10問クイズ</li>
+      ${chapterListHtml()}
       <li><strong>用語集</strong>：準1級の用語解説（英語名・難易度レベル付き）</li>
       <li><strong>公式集</strong>：全分野の重要公式・定理を一覧（印刷対応）</li>
       <li><strong>試験ガイド</strong>：試験概要・出題範囲・学習の進め方</li>
@@ -239,16 +251,14 @@ export function buildRootStaticContent(base: string, moduleListHtml: string): st
   return `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <h1 style="font-size:1.8rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:16px">統計検定 準1級 学習リファレンス</h1>
 
-  <p style="color:#444;margin-bottom:16px">統計検定準1級の合格を目指す方のための学習サイトです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など全出題範囲を36の学習モジュールに分けて解説しています。数学的な素養が中学〜高校レベルの方でも理解できるよう、すべての概念を日常の具体例から説明します。</p>
+  <p style="color:#444;margin-bottom:16px">統計検定準1級の合格を目指す方のための学習サイトです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など全出題範囲を${modules.length}の学習モジュールに分けて解説しています。数学的な素養が中学〜高校レベルの方でも理解できるよう、すべての概念を日常の具体例から説明します。</p>
 
   <p style="color:#444;margin-bottom:24px">各モジュールにはインタラクティブなグラフ（分布の形をスライダーで確認）と10問の確認クイズが付いています。学習進捗はブラウザに自動保存されます。</p>
 
   <section style="margin-bottom:28px;background:#f0f7ff;padding:16px;border-radius:8px">
     <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">このサイトで学べること</h2>
     <ul style="color:#444;padding-left:20px;margin:0;line-height:2">
-      <li><strong>第1章（23モジュール）</strong>：確率の公理・各種確率分布・標本分布・点推定・区間推定・仮説検定・漸近理論</li>
-      <li><strong>第2章（7モジュール）</strong>：重回帰分析・主成分分析・判別分析・因子分析・クラスター分析・GLM・多変量解析</li>
-      <li><strong>第3章（6モジュール）</strong>：ベイズ統計・時系列分析・マルコフ連鎖・分割表・生存時間解析・シミュレーション</li>
+      ${chapterListHtml()}
     </ul>
   </section>
 
