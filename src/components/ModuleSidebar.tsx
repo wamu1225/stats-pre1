@@ -7,12 +7,14 @@ import type { Module } from '../data/modules';
 interface Props {
   modules: Module[];
   activeId: string | null;
+  activeTest?: number | null;
   onSelect: (id: string) => void;
+  onSelectTest?: (chapter: number) => void;
   chapterNames: Record<number, string>;
   chapterColors: Record<number, { accent: string }>;
 }
 
-export const ModuleSidebar: React.FC<Props> = ({ modules, activeId, onSelect, chapterNames, chapterColors }) => {
+export const ModuleSidebar: React.FC<Props> = ({ modules, activeId, activeTest, onSelect, onSelectTest, chapterNames, chapterColors }) => {
   const chapters = [...new Set(modules.map((m) => m.chapter))].sort((a, b) => a - b);
   return (
     <nav className="module-nav-rail" aria-label="学習モジュール一覧">
@@ -41,6 +43,18 @@ export const ModuleSidebar: React.FC<Props> = ({ modules, activeId, onSelect, ch
                   </li>
                 );
               })}
+            {onSelectTest && (
+              <li>
+                <button
+                  className={`module-nav-link module-nav-test${activeTest === ch ? ' active' : ''}`}
+                  style={activeTest === ch ? { borderLeftColor: chapterColors[ch]?.accent, color: chapterColors[ch]?.accent } : undefined}
+                  onClick={() => onSelectTest(ch)}
+                  aria-current={activeTest === ch ? 'true' : undefined}
+                >
+                  まとめテスト（10問）
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       ))}

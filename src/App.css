@@ -1314,3 +1314,34 @@ input[type="range"] {
     min-height: 32px;
   }
 }
+
+/* ── 章のまとめテスト ── */
+.card-chapter-test {
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
+  border-top: 1px dashed var(--border) !important;
+  background: var(--ch-light, var(--primary-light));
+}
+.card-chapter-test h4 { color: var(--ch-text, var(--text)); }
+.chapter-test-head {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-card);
+  border-left: 4px solid var(--ch-accent, var(--primary));
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.chapter-test-badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 9999px;
+}
+.module-nav-test { font-weight: 600; }
+:root[data-theme='dark'] .card-chapter-test { background: var(--bg-warm); }
+:root[data-theme='dark'] .card-chapter-test h4,
+:root[data-theme='dark'] .chapter-test-title { color: var(--text-heading, var(--text)); }
+.chapter-test-title { margin: 0.35rem 0 0.25rem; font-size: 1.15rem; color: var(--ch-text, var(--text)); }

@@ -13,8 +13,10 @@ import { TermText } from './components/TermGlossary';
 import { DistributionSelector } from './components/DistributionSelector';
 import { ModuleSidebar } from './components/ModuleSidebar';
 import { ExamGuide } from './components/ExamGuide';
+import { MixedQuiz, type MixedItem } from './components/MixedQuiz';
+import { shuffle } from './utils/shuffle';
 import { buildUsecaseHtml } from './data/usecaseGuide';
-import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, CheckCircle2, XCircle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
+import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const chapterNames: Record<number, string> = {
@@ -59,7 +61,34 @@ function saveProgress(p: Progress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
 }
 
-// Draw n random items from an array
+const CHAPTER_TEST_KEY = 'stats-pre1-chapter-tests';
+const CHAPTER_TEST_SIZE = 10;
+const RANDOM_QUIZ_SIZE = 20;
+type ChapterBest = Record<string, { score: number; total: number; completedAt: string }>;
+function loadChapterBest(): ChapterBest {
+  try { return JSON.parse(localStorage.getItem(CHAPTER_TEST_KEY) || '{}'); } catch { return {}; }
+}
+function saveChapterBest(b: ChapterBest) {
+  try { localStorage.setItem(CHAPTER_TEST_KEY, JSON.stringify(b)); } catch { /* noop */ }
+}
+
+// 章のまとめテスト：各モジュールから最低1問、残りは章の全問からランダム（モジュールが偏らないように）
+function drawChapterTest(ch: number): MixedItem[] {
+  const mods = modules.filter(m => m.chapter === ch);
+  const item = (m: typeof modules[0], q: typeof modules[0]['quiz'][0]): MixedItem => ({ q, moduleId: m.id, moduleTitle: m.title });
+  const first = shuffle(mods).slice(0, CHAPTER_TEST_SIZE).map(m => item(m, m.quiz[Math.floor(Math.random() * m.quiz.length)]));
+  const used = new Set(first.map(x => x.q));
+  const rest = shuffle(mods.flatMap(m => m.quiz.filter(q => !used.has(q)).map(q => item(m, q))))
+    .slice(0, Math.max(0, CHAPTER_TEST_SIZE - first.length));
+  return shuffle([...first, ...rest]);
+}
+
+// 全範囲クイズ：違うモジュールから1問ずつ、計20問
+function drawRandomQuiz(): MixedItem[] {
+  return shuffle(modules).slice(0, RANDOM_QUIZ_SIZE)
+    .map(m => ({ q: m.quiz[Math.floor(Math.random() * m.quiz.length)], moduleId: m.id, moduleTitle: m.title }));
+}
+
 // 「🔍 **見出し**」の行から「🔍/」の行までを「参考」ブロックに分ける（scripts/prerender.ts の splitAsides と同じ規則）。
 // 読まなくても先へ進める補足（導出の計算など）を、本文と見た目で区別して折りたたむ
 type ContentSeg = { aside: false; body: string } | { aside: true; title: string; body: string };
@@ -84,12 +113,8 @@ function splitAsides(text: string): ContentSeg[] {
   return segs;
 }
 
-function sampleN<T>(arr: T[], n: number): T[] {
-  const shuffled = [...arr].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, n);
-}
 
-type View = 'dashboard' | 'glossary' | 'cheatsheet' | 'randomquiz' | 'privacy' | 'about' | 'guide' | 'usecase';
+type View = 'dashboard' | 'glossary' | 'cheatsheet' | 'randomquiz' | 'chaptertest' | 'privacy' | 'about' | 'guide' | 'usecase';
 
 function App() {
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
@@ -106,52 +131,19 @@ function App() {
 
   const toggleTheme = useCallback(() => setTheme(t => t === 'light' ? 'dark' : 'light'), []);
 
-  // Random quiz state
-  const [rqQuestions, setRqQuestions] = useState<{ q: typeof modules[0]['quiz'][0]; moduleTitle: string; moduleId: string }[]>([]);
-  const [rqIdx, setRqIdx] = useState(0);
-  const [rqSelected, setRqSelected] = useState<number | null>(null);
-  const [rqIsCorrect, setRqIsCorrect] = useState<boolean | null>(null);
-  const [rqResults, setRqResults] = useState<{ moduleId: string; moduleTitle: string; correct: boolean }[]>([]);
-  const [rqDone, setRqDone] = useState(false);
+  // まとめテスト・全範囲クイズ（開くたびに nonce を変えて出題をやり直す）
+  const [quizNonce, setQuizNonce] = useState(0);
+  const [testChapter, setTestChapter] = useState<number | null>(null);
+  const [chapterBest, setChapterBest] = useState<ChapterBest>(loadChapterBest);
 
-  const startRandomQuiz = useCallback(() => {
-    // Draw 2 questions per module (20 total from 10 modules)
-    const qs = modules.flatMap(m =>
-      sampleN(m.quiz, 2).map(q => ({ q, moduleTitle: m.title, moduleId: m.id }))
-    ).sort(() => Math.random() - 0.5);
-    setRqQuestions(qs);
-    setRqIdx(0);
-    setRqSelected(null);
-    setRqIsCorrect(null);
-    setRqResults([]);
-    setRqDone(false);
-    setView('randomquiz');
-    window.scrollTo({ top: 0, behavior: 'instant' });
+  const finishChapterTest = useCallback((ch: number, score: number, total: number) => {
+    const cur = loadChapterBest();
+    const prev = cur[ch];
+    if (prev && prev.score / prev.total >= score / total) return;
+    const next = { ...cur, [ch]: { score, total, completedAt: new Date().toLocaleDateString('ja-JP') } };
+    saveChapterBest(next);
+    setChapterBest(next);
   }, []);
-
-  const rqHandleSelect = (idx: number) => {
-    if (rqSelected !== null) return;
-    setRqSelected(idx);
-    const correct = idx === rqQuestions[rqIdx].q.correctAnswer;
-    setRqIsCorrect(correct);
-  };
-
-  const rqNext = () => {
-    const cur = rqQuestions[rqIdx];
-    const correct = rqSelected === cur.q.correctAnswer;
-    const newResults = [...rqResults, { moduleId: cur.moduleId, moduleTitle: cur.moduleTitle, correct }];
-    if (rqIdx + 1 < rqQuestions.length) {
-      setRqResults(newResults);
-      setRqIdx(rqIdx + 1);
-      setRqSelected(null);
-      setRqIsCorrect(null);
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    } else {
-      setRqResults(newResults);
-      setRqDone(true);
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  };
 
   const updateModuleId = useCallback((id: string | null) => {
     // pathnameの変更とHistory APIの活用
@@ -179,6 +171,22 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
+  const startRandomQuiz = useCallback(() => {
+    setQuizNonce(n => n + 1);
+    switchView('randomquiz');
+  }, [switchView]);
+
+  const openChapterTest = useCallback((ch: number) => {
+    setActiveModuleId(null);
+    setTestChapter(ch);
+    setView('chaptertest');
+    setQuizNonce(n => n + 1);
+    const basePath = window.location.pathname.startsWith('/stats-pre1/') ? '/stats-pre1' : '';
+    window.history.pushState(null, '', `${basePath}/chapter-${ch}-test/`);
+    document.title = `第${ch}章のまとめテスト（${chapterNames[ch]}） | 統計検定 準1級`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   const handleQuizComplete = useCallback((moduleId: string, score: number, total: number) => {
     setQuizCompleted(true);
     const entry: ProgressEntry = { score, total, completedAt: new Date().toLocaleDateString('ja-JP') };
@@ -192,15 +200,23 @@ function App() {
       const segments = window.location.pathname.split('/').filter(Boolean);
       const lastSegment = segments[segments.length - 1];
       
-      const isCustomView = ['glossary', 'cheatsheet', 'privacy', 'about', 'guide', 'usecase'].includes(lastSegment || '');
+      const isCustomView = ['glossary', 'cheatsheet', 'privacy', 'about', 'guide', 'usecase', 'randomquiz'].includes(lastSegment || '');
+      const testMatch = (lastSegment || '').match(/^chapter-(\d+)-test$/);
 
-      if (isCustomView) {
+      if (testMatch && chapterNames[Number(testMatch[1])]) {
+        const ch = Number(testMatch[1]);
+        setActiveModuleId(null);
+        setTestChapter(ch);
+        setView('chaptertest');
+        document.title = `第${ch}章のまとめテスト（${chapterNames[ch]}） | 統計検定 準1級`;
+      } else if (isCustomView) {
         setView(lastSegment as View);
         setActiveModuleId(null);
         if (lastSegment === 'privacy') document.title = 'プライバシーポリシー | 統計検定 準1級 学習リファレンス';
         else if (lastSegment === 'about') document.title = 'サイトについて | 統計検定 準1級 学習リファレンス';
         else if (lastSegment === 'guide') document.title = '試験ガイド | 統計検定 準1級 学習リファレンス';
         else if (lastSegment === 'usecase') document.title = '検定・分布の使い分けガイド | 統計検定 準1級 学習リファレンス';
+        else if (lastSegment === 'randomquiz') document.title = '全範囲クイズ | 統計検定 準1級 学習リファレンス';
       } else if (lastSegment && lastSegment !== 'stats-pre1') {
         const found = modules.find(m => m.id === lastSegment);
         if (found) {
@@ -769,6 +785,10 @@ function App() {
   }, [searchQuery]);
 
   const activeModule = useMemo(() => modules.find(m => m.id === activeModuleId), [activeModuleId]);
+  const lastInChapter = useMemo(() => {
+    if (!activeModule) return false;
+    return !modules.some((m, i) => m.chapter === activeModule.chapter && i > modules.indexOf(activeModule));
+  }, [activeModule]);
   const nextModule = useMemo(() => {
     if (!activeModuleId) return null;
     const idx = modules.findIndex(m => m.id === activeModuleId);
@@ -855,7 +875,7 @@ function App() {
         <AnimatePresence mode="wait">
           {activeModuleId ? (
             <motion.div key={activeModuleId} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
-              <ModuleSidebar modules={modules} activeId={activeModuleId} onSelect={updateModuleId} chapterNames={chapterNames} chapterColors={chapterColors} />
+              <ModuleSidebar modules={modules} activeId={activeModuleId} onSelect={updateModuleId} onSelectTest={openChapterTest} chapterNames={chapterNames} chapterColors={chapterColors} />
               <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
               <div
                 className="scroll-progress"
@@ -916,6 +936,14 @@ function App() {
                   >
                     <ChevronLeft size={16} /> モジュール一覧へ
                   </button>
+                  {lastInChapter && activeModule && (
+                    <button
+                      className="btn-next-module btn-chapter-test"
+                      onClick={() => openChapterTest(activeModule.chapter)}
+                    >
+                      この章のまとめテストへ（10問） <ArrowRight size={16} />
+                    </button>
+                  )}
                   {nextModule && (
                     <button
                       className="btn-next-module"
@@ -954,6 +982,11 @@ function App() {
                     <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: 'var(--bg-warm)', color: 'var(--text)', border: '1px solid var(--border)' }}>
                       <ChevronLeft size={16} /> 一覧に戻る
                     </button>
+                    {lastInChapter && activeModule && (
+                      <button className="btn" onClick={() => openChapterTest(activeModule.chapter)} style={{ flex: 2 }}>
+                        第{activeModule.chapter}章のまとめテストへ（10問） <ArrowRight size={16} />
+                      </button>
+                    )}
                     {nextModule && (
                       <button className="btn" onClick={() => updateModuleId(nextModule.id)} style={{ flex: 2 }}>
                         次のモジュールへ：{nextModule.title} <ArrowRight size={16} />
@@ -966,107 +999,27 @@ function App() {
           ) : view === 'randomquiz' ? (
             <motion.div key="rq" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <button className="btn-back" onClick={() => switchView('dashboard')}><ChevronLeft size={18} /> 一覧に戻る</button>
-              {rqDone ? (
-                /* Results screen */
-                <div>
-                  <div className="card" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--primary)' }}>
-                      {rqResults.filter(r => r.correct).length} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/ {rqResults.length} 問正解</span>
-                    </div>
-                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>全範囲クイズ完了</p>
-                  </div>
-                  {/* Breakdown by module */}
-                  {(() => {
-                    const byModule: Record<string, { title: string; correct: number; total: number }> = {};
-                    rqResults.forEach(r => {
-                      if (!byModule[r.moduleId]) byModule[r.moduleId] = { title: r.moduleTitle, correct: 0, total: 0 };
-                      byModule[r.moduleId].total++;
-                      if (r.correct) byModule[r.moduleId].correct++;
-                    });
-                    const weak = Object.entries(byModule).filter(([, v]) => v.correct < v.total);
-                    return (
-                      <div className="card">
-                        <h3 style={{ margin: '0 0 1rem', fontSize: '1rem' }}>モジュール別結果</h3>
-                        {Object.entries(byModule).map(([id, v]) => (
-                          <div key={id} className="rq-result-row">
-                            <span className={`rq-result-dot ${v.correct === v.total ? 'ok' : 'ng'}`} />
-                            <span style={{ flex: 1, fontSize: '0.85rem' }}>{v.title}</span>
-                            <span style={{ fontSize: '0.8rem', color: v.correct === v.total ? '#16a34a' : '#dc2626', fontWeight: 700 }}>{v.correct}/{v.total}</span>
-                          </div>
-                        ))}
-                        {weak.length > 0 && (
-                          <div style={{ marginTop: '1.25rem' }}>
-                            <p style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', margin: '0 0 0.5rem' }}>復習が必要なモジュール：</p>
-                            <div className="links-row">
-                              {weak.map(([id, v]) => (
-                                <button key={id} className="btn-link" onClick={() => updateModuleId(id)}>
-                                  {v.title} <ArrowRight size={12} />
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
-                  <button className="btn" onClick={startRandomQuiz} style={{ marginTop: '0.5rem' }}>
-                    <Shuffle size={16} /> もう一度
-                  </button>
-                </div>
-              ) : rqQuestions.length > 0 ? (
-                /* Quiz screen */
-                <div className="card" style={{ border: '1px solid var(--border)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: '1.1rem' }}>全範囲クイズ</h3>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>{rqQuestions[rqIdx].moduleTitle}</span>
-                    </div>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      {rqIdx + 1} / {rqQuestions.length}
-                    </span>
-                  </div>
-                  <div style={{ marginBottom: '1.25rem', fontSize: '1rem', fontWeight: 600, lineHeight: 1.6 }}>
-                    {parseContent(rqQuestions[rqIdx].q.question)}
-                  </div>
-                  <div className="quiz-options">
-                    {rqQuestions[rqIdx].q.options.map((opt, i) => (
-                      <button
-                        key={`rq-${rqIdx}-${i}`}
-                        className="btn"
-                        style={{
-                          background: rqSelected === i ? (i === rqQuestions[rqIdx].q.correctAnswer ? '#166534' : '#b91c1c') : 'var(--card-bg)',
-                          color: rqSelected === i ? 'white' : 'var(--text)',
-                          justifyContent: 'space-between',
-                          border: rqSelected === i ? 'none' : '1px solid var(--border)',
-                          textAlign: 'left',
-                          padding: '0.75rem 1rem',
-                          boxShadow: 'none',
-                          fontWeight: 500,
-                          fontSize: '0.9rem',
-                        }}
-                        onClick={() => rqHandleSelect(i)}
-                      >
-                        <div style={{ flex: 1 }}>{parseContent(opt)}</div>
-                        {rqSelected === i && (i === rqQuestions[rqIdx].q.correctAnswer ? <CheckCircle2 size={18} /> : <XCircle size={18} />)}
-                      </button>
-                    ))}
-                  </div>
-                  <AnimatePresence>
-                    {rqSelected !== null && (
-                      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                        style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--bg-warm)', borderRadius: '0.5rem', border: '1px solid var(--border)' }}>
-                        <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.6 }}>
-                          <strong style={{ color: rqIsCorrect ? '#166534' : '#b91c1c' }}>{rqIsCorrect ? '正解！' : '不正解...'}</strong><br />
-                          {parseContent(rqQuestions[rqIdx].q.explanation)}
-                        </p>
-                        <button className="btn" style={{ marginTop: '1rem', width: 'auto', padding: '0.5rem 1rem' }} onClick={rqNext}>
-                          {rqIdx + 1 < rqQuestions.length ? '次の問題へ' : '結果を見る'} <ArrowRight size={16} />
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ) : null}
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 1rem' }}>
+                全{modules.length}モジュールのうち{RANDOM_QUIZ_SIZE}モジュールから、1問ずつ出題します。
+              </p>
+              <MixedQuiz key={`rq-${quizNonce}`} title="全範囲クイズ" draw={drawRandomQuiz}
+                renderContent={parseContent} onOpenModule={updateModuleId} />
+            </motion.div>
+          ) : view === 'chaptertest' && testChapter ? (
+            <motion.div key={`ct-${testChapter}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
+              <ModuleSidebar modules={modules} activeId={null} activeTest={testChapter} onSelect={updateModuleId} onSelectTest={openChapterTest} chapterNames={chapterNames} chapterColors={chapterColors} />
+              <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
+              <div className="chapter-test-head" style={{ '--ch-accent': chapterColors[testChapter].accent, '--ch-bg': chapterColors[testChapter].bg, '--ch-text': chapterColors[testChapter].text } as React.CSSProperties}>
+                <span className="chapter-test-badge" style={{ background: chapterColors[testChapter].accent }}>第{testChapter}章のまとめテスト</span>
+                <h2 className="chapter-test-title">{chapterNames[testChapter]}</h2>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                  この章の{modules.filter(m => m.chapter === testChapter).length}モジュールから、{CHAPTER_TEST_SIZE}問をランダムに出題します。どのモジュールからも最低1問は出ます。
+                </p>
+              </div>
+              <MixedQuiz key={`ct-${testChapter}-${quizNonce}`} title={`第${testChapter}章のまとめテスト`}
+                draw={() => drawChapterTest(testChapter)} renderContent={parseContent} onOpenModule={updateModuleId}
+                onFinish={(score, total) => finishChapterTest(testChapter, score, total)}
+                best={chapterBest[testChapter] ?? null} accent={chapterColors[testChapter].accent} />
             </motion.div>
           ) : view === 'cheatsheet' ? (
             <motion.div key="cs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
@@ -1154,7 +1107,7 @@ function App() {
                       style={{
                         '--ch-accent': cc.accent,
                         '--ch-light': cc.light,
-                        borderRadius: idx === filteredModules.length - 1 || filteredModules[idx + 1]?.chapter !== m.chapter
+                        borderRadius: searchQuery && (idx === filteredModules.length - 1 || filteredModules[idx + 1]?.chapter !== m.chapter)
                           ? '0 0 var(--radius-card) var(--radius-card)' : '0',
                         marginBottom: 0,
                         borderTop: 'none',
@@ -1184,6 +1137,25 @@ function App() {
                       <div className="module-desc">{parseContent(m.description)}</div>
                     </div>
                   );
+                  if (!searchQuery && (idx === filteredModules.length - 1 || filteredModules[idx + 1]?.chapter !== m.chapter)) {
+                    const best = chapterBest[m.chapter];
+                    const n = modules.filter(x => x.chapter === m.chapter).length;
+                    acc.push(
+                      <div key={`ct-${m.chapter}`} className="card-module card-chapter-test" onClick={() => openChapterTest(m.chapter)}
+                        role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') openChapterTest(m.chapter); }}
+                        style={{ '--ch-accent': cc.accent, '--ch-light': cc.light, '--ch-bg': cc.bg, '--ch-text': cc.text } as React.CSSProperties}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                          <h4 style={{ margin: 0, fontSize: '0.95rem' }}>第{m.chapter}章のまとめテスト</h4>
+                          {best && (
+                            <span className={`progress-badge ${best.score === best.total ? 'perfect' : ''}`}>
+                              最高 {best.score}/{best.total}
+                            </span>
+                          )}
+                        </div>
+                        <div className="module-desc">この章の{n}モジュールから10問をランダムに出題します。</div>
+                      </div>
+                    );
+                  }
                   return acc;
                 }, [])}
               </div>
@@ -1206,7 +1178,8 @@ function App() {
                     <li><strong>学習モジュール（全{totalModules}モジュール）</strong>：確率分布・推定・検定・多変量解析・ベイズ統計・時系列分析など</li>
                     <li><strong>用語集</strong>：準1級の用語解説</li>
                     <li><strong>公式集</strong>：重要公式の一覧（印刷対応）</li>
-                    <li><strong>全範囲クイズ</strong>：全モジュールからランダム出題</li>
+                    <li><strong>まとめテスト</strong>：各章の最後に、その章の問題からランダムに10問</li>
+                    <li><strong>全範囲クイズ</strong>：全モジュールからランダムに20問</li>
                   </ul>
                 </section>
 

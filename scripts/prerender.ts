@@ -440,11 +440,11 @@ const glossaryFaqItems = glossaryTerms.slice(0, 20).map(t => ({
 const randomQuizSampleHtml = `<div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px"><a href="${BASE}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:20px">全範囲ランダムクイズ</h1>
-  <p style="color:#555;margin-bottom:20px">統計検定準1級の全36モジュール（360問）からランダムに出題するクイズです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など全範囲を横断的に復習できます。</p>
+  <p style="color:#555;margin-bottom:20px">統計検定準1級の全${modules.length}モジュール（${modules.reduce((n, m) => n + m.quiz.length, 0)}問）から、違うモジュールの問題を1問ずつ、計20問出題するクイズです。確率論・推測統計・多変量解析・ベイズ統計・時系列分析など全範囲を横断的に復習できます。</p>
   <section style="background:#f0f7ff;padding:16px;border-radius:8px;margin-bottom:24px">
     <h2 style="font-size:1.1rem;font-weight:700;margin:0 0 10px">このクイズの特徴</h2>
     <ul style="color:#444;padding-left:20px;margin:0;line-height:2">
-      <li>全36モジュール・360問からランダム出題</li>
+      <li>全${modules.length}モジュール・${modules.reduce((n, m) => n + m.quiz.length, 0)}問からランダムに20問</li>
       <li>各問題に詳しい解説付き</li>
       <li>どのモジュールの問題かが表示されるので復習しやすい</li>
       <li>スコアは自動集計（セッション内）</li>
@@ -497,7 +497,7 @@ ${glossaryTermsHtml}
   },
   randomquiz: {
     title: '全範囲ランダムクイズ',
-    description: '統計検定準1級の全36モジュール・360問からランダム出題するクイズ。確率論・推測統計・多変量解析・ベイズ統計・時系列分析を横断的に復習。',
+    description: `統計検定準1級の全${modules.length}モジュールからランダムに20問出題するクイズ。確率論・推測統計・多変量解析・ベイズ統計・時系列分析を横断的に復習。`,
     bodyHtml: randomQuizSampleHtml
   },
   privacy: {
@@ -585,6 +585,34 @@ for (const [page, config] of Object.entries(staticPageContents)) {
 
   fs.writeFileSync(path.join(pageDir, 'index.html'), pageHtml);
   generatedCount++;
+}
+
+// ── 章のまとめテスト（/chapter-N-test/） ──────────
+// 中身はモジュールの問題の再掲なので、検索結果には出さない（noindex・sitemap にも入れない）。
+// ページを置くのは、再読み込みや直接アクセスでもテスト画面を開けるようにするため
+const CHAPTER_NAMES: Record<number, string> = {
+  1: '確率論の基礎', 2: '確率分布', 3: '標本分布と漸近理論', 4: '統計的推測', 5: '多変量解析', 6: 'ベイズ・確率過程・発展',
+};
+for (const ch of [...new Set(modules.map(m => m.chapter))]) {
+  const mods = modules.filter(m => m.chapter === ch);
+  const page = `chapter-${ch}-test`;
+  const pageDir = path.join(DIST_DIR, page);
+  fs.mkdirSync(pageDir, { recursive: true });
+  const title = `第${ch}章のまとめテスト（${CHAPTER_NAMES[ch]}） | 統計検定 準1級 学習リファレンス`;
+  const body = `<article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px"><a href="${BASE}/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a></nav>
+  <h1 style="font-size:1.4rem;font-weight:700">第${ch}章のまとめテスト：${CHAPTER_NAMES[ch]}</h1>
+  <p style="color:#555">この章の${mods.length}モジュールから、10問をランダムに出題します。テストを始めるには、JavaScriptを有効にしてください。</p>
+  <ul>${mods.map(m => `<li><a href="${BASE}/${m.id}/" style="color:#2563eb">${m.title}</a></li>`).join('')}</ul>
+</article>`;
+  const html = subDirTemplateHtml
+    .replace(robotsMeta, '<meta name="robots" content="noindex, follow" />')
+    .replace('<title>統計検定 準1級 学習リファレンス</title>', `<title>${title}</title>`)
+    .replace('<link rel="canonical" href="https://study-apps.com/stats-pre1/" />', `<link rel="canonical" href="${BASE_URL}/${page}/" />`)
+    .replace('<meta property="og:url" content="https://study-apps.com/stats-pre1/" />', `<meta property="og:url" content="${BASE_URL}/${page}/" />`)
+    .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  if (!html.includes('noindex')) throw new Error('chapter test: noindex not applied');
+  fs.writeFileSync(path.join(pageDir, 'index.html'), html);
 }
 
 // ── sitemap.xml ──────────────────────────────────
