@@ -375,39 +375,102 @@ function geometricShape(): string {
     <text x="${f1(PX(b, 15))}" y="${f1(PY(b, ps[10]) - 26)}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰色（11回目以降）の合計 ${f2(tail)}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（初めて6が出る回）／高さ ＝ P(X = k)</text>
   </svg>`;
-  const cap = `サイコロで初めて6が出る回の分布（p = 1/6）です。いちばん起こりやすいのは1回目（${f2(ps[0])}）で、そこから1回ごとに 5/6 倍ずつ低くなり、右へ長い裾を引きます。平均は6回目ですが、山の頂上は1回目にあり、10回振っても6が出ない確率（灰色の棒の合計。表示した20回目より先も含む）も ${f2(tail)}（約${Math.round(tail * 100)}%）あります。`;
+  const cap = `サイコロで初めて6が出る回の分布（p = 1/6）です。山の頂上は1回目で、平均の6回目より左にあります。灰色の棒（11回目以降）の合計が、10回振っても出ない確率で、約${Math.round(tail * 100)}%です。`;
   return fig(svg, cap);
 }
 
-// ============ 1.8：連続型分布の形 ============
-function continuousShapes(): string {
-  const W = 350, H = 410;
-  const P = (i: number, xMin: number, xMax: number, yMax: number): Box => ({ x: 18 + (i % 2) * 176, y: 40 + Math.floor(i / 2) * 190, w: 150, h: 120, xMin, xMax, yMax });
-  const g = P(0, 0, 12, 1.05), be = P(1, 0, 1, 3), ln = P(2, 0, 5, 1.0), ca = P(3, -6, 6, 0.42);
-  const lbl = (b: Box, x: number, y: number, t: string, c: string) => `<text x="${f1(PX(b, x))}" y="${f1(PY(b, y))}" font-size="12.4" font-weight="700" fill="${c}">${t}</text>`;
-  const svg = `${svgOpen(W, H, '連続型分布の形：ガンマ、ベータ、対数正規、コーシーと正規の比較')}
-    <text x="${g.x}" y="${g.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">指数・ガンマ（λ = 1）</text>
-    ${axes(g, [0, 4, 8, 12])}
-    ${curve(g, gammaPdf(1), INDIGO, 0, 12)}${curve(g, gammaPdf(2), AMBER, 0, 12)}${curve(g, gammaPdf(5), TEAL, 0, 12)}
-    ${lbl(g, 0.6, 0.9, 'α=1（指数）', INDIGO)}${lbl(g, 1.6, 0.42, 'α=2', '#b45309')}${lbl(g, 6.2, 0.2, 'α=5', TEAL)}
-
-    <text x="${be.x}" y="${be.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">ベータ（α, β）0〜1</text>
-    ${axes(be, [0, 0.5, 1])}
-    ${curve(be, betaPdf(2, 5), INDIGO, 0.001, 0.999)}${curve(be, betaPdf(5, 2), AMBER, 0.001, 0.999)}${curve(be, betaPdf(2, 2), TEAL, 0.001, 0.999)}${curve(be, () => 1, SLATE, 0, 1, 1.5, '4 3')}
-    ${lbl(be, 0.02, 2.75, '(2,5)', INDIGO)}${lbl(be, 0.8, 2.75, '(5,2)', '#b45309')}${lbl(be, 0.38, 1.7, '(2,2)', TEAL)}<text x="${be.x}" y="${be.y + be.h + 30}" font-size="12.4" fill="${SLATE}">点線 (1,1) ＝ 一様分布</text>
-
-    <text x="${ln.x}" y="${ln.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">対数正規（log X が正規）</text>
-    ${axes(ln, [0, 1, 2, 3, 4, 5])}
-    ${curve(ln, lognormPdf(0.5), INDIGO, 0.01, 5)}${curve(ln, lognormPdf(1), AMBER, 0.01, 5)}
-    ${lbl(ln, 1.3, 0.85, 'σ=0.5', INDIGO)}${lbl(ln, 0.05, 0.75, 'σ=1', '#b45309')}
-
-    <text x="${ca.x}" y="${ca.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">コーシー と 正規</text>
-    ${axes(ca, [-6, -3, 0, 3, 6])}
-    ${curve(ca, (x) => normPdf(x), INDIGO)}${curve(ca, cauchyPdf, ROSE)}
-    ${lbl(ca, 0.7, 0.37, '正規', INDIGO)}${lbl(ca, 2.2, 0.1, 'コーシー', ROSE)}
+// ============ 1.8：連続型分布（分布ごとに1枚。本文の例と同じ数字で描く） ============
+// 指数分布：1時間に平均3件の電話＝1分あたり 0.05 件。次の電話までの待ち時間（分）
+const RATE = 0.05;
+const expPdf = (t: number) => (t < 0 ? 0 : RATE * Math.exp(-RATE * t));
+function exponentialShape(): string {
+  const W = 340, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 100, yMax: 0.055 };
+  const over20 = Math.exp(-RATE * 20);
+  const svg = `${svgOpen(W, H, '指数分布：次の電話までの待ち時間。0分のところが最も高く、右へなだらかに下がる。20分より長く待つ確率は約0.37')}
+    ${axes(b, [0, 20, 40, 60, 80, 100])}
+    ${area(b, expPdf, 20, 100, INDIGO, 0.2)}
+    ${curve(b, expPdf, INDIGO, 0, 100, 2.2)}
+    <line x1="${f1(PX(b, 20))}" y1="${b.y}" x2="${f1(PX(b, 20))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 20) + 5)}" y="${b.y + 10}" font-size="12.4" font-weight="700" fill="#b45309">平均 20分</text>
+    <text x="${f1(PX(b, 52))}" y="${f1(PY(b, expPdf(40)) - 12)}" font-size="12.4" fill="${INDIGO}">20分より長く待つ確率</text>
+    <text x="${f1(PX(b, 52))}" y="${f1(PY(b, expPdf(40)) + 4)}" font-size="12.4" font-weight="700" fill="${INDIGO}">＝ 塗った面積 ${f2(over20)}</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 t（次の電話までの待ち時間・分）／高さ ＝ 密度</text>
   </svg>`;
+  const cap = `1時間に平均3件の電話が来る窓口で、次の電話までの待ち時間の分布です。すぐ来ることがいちばん多く、長く待つほど起こりにくくなります。平均は20分ですが、20分より長く待つことも約${Math.round(over20 * 100)}%あります。`;
+  return fig(svg, cap);
+}
+
+// ガンマ分布：同じ窓口で、1件目・2件目・3件目の電話が来るまでの待ち時間
+const gammaRate = (k: number) => (t: number) => RATE * gammaPdf(k)(RATE * t);
+function gammaShape(): string {
+  const W = 340, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 150, yMax: 0.055 };
+  const ks = [{ k: 1, c: INDIGO, lx: 6, ly: 0.046, t: '1件目（指数分布）' }, { k: 2, c: AMBER, lx: 22, ly: 0.024, t: '2件目' }, { k: 3, c: TEAL, lx: 62, ly: 0.0165, t: '3件目' }];
+  const svg = `${svgOpen(W, H, 'ガンマ分布：1件目・2件目・3件目の電話が来るまでの待ち時間。件数が増えるほど山が右へ移り、低く広がる。平均は20分・40分・60分')}
+    ${axes(b, [0, 30, 60, 90, 120, 150])}
+    ${ks.map(({ k, c }) => curve(b, gammaRate(k), c, 0.01, 150, 2.2)).join('')}
+    ${ks.map(({ k, c }) => `<line x1="${f1(PX(b, 20 * k))}" y1="${f1(PY(b, gammaRate(k)(20 * k)))}" x2="${f1(PX(b, 20 * k))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.2" stroke-dasharray="3 3" />`).join('')}
+    ${ks.map(({ c, lx, ly, t }) => `<text x="${f1(PX(b, lx))}" y="${f1(PY(b, ly))}" font-size="12.4" font-weight="700" fill="${c === AMBER ? '#b45309' : c}">${t}</text>`).join('')}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 t（分）／点線 ＝ 平均（20分・40分・60分）</text>
+  </svg>`;
+  const cap = `同じ窓口で、1件目・2件目・3件目の電話が来るまでの待ち時間です。待つ件数 α が増えるほど山は右へ移り、低く横に広がります。平均は 20分 × α です。`;
+  return fig(svg, cap);
+}
+
+// ベータ分布：0〜1の割合
+function betaShape(): string {
+  const W = 340, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 1, yMax: 2.7 };
+  const svg = `${svgOpen(W, H, 'ベータ分布：0から1の値の分布。(2,5) は左寄り、(5,2) は右寄り、(2,2) は真ん中、(1,1) は平らな一様分布')}
+    ${axes(b, [0, 0.25, 0.5, 0.75, 1])}
+    ${curve(b, () => 1, SLATE, 0, 1, 1.5, '4 3')}
+    ${curve(b, betaPdf(2, 5), INDIGO, 0.001, 0.999, 2.2)}${curve(b, betaPdf(5, 2), AMBER, 0.001, 0.999, 2.2)}${curve(b, betaPdf(2, 2), TEAL, 0.001, 0.999, 2.2)}
+    <text x="${f1(PX(b, 0.21))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="${INDIGO}">(2, 5) 平均 0.29</text>
+    <text x="${f1(PX(b, 0.56))}" y="${f1(PY(b, 2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2) 平均 0.71</text>
+    <text x="${f1(PX(b, 0.5))}" y="${f1(PY(b, 1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">(2, 2) 平均 0.5</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x（割合）／点線 (1, 1) ＝ 一様分布</text>
+  </svg>`;
+  const cap = `α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。(1, 1) は0〜1のどこも同じ高さの一様分布です。`;
+  return fig(svg, cap);
+}
+
+// 対数正規分布：ln X ~ N(0, σ²)。中央値 1、平均 e^{σ²/2}
+function lognormalShape(): string {
+  const W = 340, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 5, yMax: 0.95 };
+  const mean1 = Math.exp(0.5);
+  const svg = `${svgOpen(W, H, '対数正規分布：0より大きい値だけをとり、右に長い裾を引く。σ=1 では中央値1、平均1.65で、平均が中央値より右にある')}
+    ${axes(b, [0, 1, 2, 3, 4, 5])}
+    ${curve(b, lognormPdf(0.5), TEAL, 0.01, 5, 1.8, '5 3')}
+    ${curve(b, lognormPdf(1), INDIGO, 0.01, 5, 2.2)}
+    <line x1="${f1(PX(b, 1))}" y1="${f1(PY(b, lognormPdf(1)(1)))}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1.4" />
+    <line x1="${f1(PX(b, mean1))}" y1="${f1(PY(b, lognormPdf(1)(mean1)))}" x2="${f1(PX(b, mean1))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, mean1) + 5)}" y="${f1(PY(b, 0.42))}" font-size="12.4" font-weight="700" fill="#b45309">平均 ${f2(mean1)}</text>
+    <text x="${f1(PX(b, 2.3))}" y="${f1(PY(b, 0.22))}" font-size="12.4" font-weight="700" fill="${INDIGO}">σ = 1</text>
+    <text x="${f1(PX(b, 1.25))}" y="${f1(PY(b, 0.82))}" font-size="12.4" font-weight="700" fill="${TEAL}">σ = 0.5</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の線 ＝ 中央値 1／橙の点線 ＝ 平均（σ = 1）</text>
+  </svg>`;
+  const cap = `ln X が平均0の正規分布に従うときの X の分布です。0より大きい値だけをとり、右に長い裾を引きます。σ = 1 では、真ん中の値（中央値）は1なのに、平均は裾に引っ張られて ${f2(mean1)} になります。σ が大きいほど裾は長くなります。`;
+  return fig(svg, cap);
+}
+
+// コーシー分布と標準正規分布：|X| > 3 の面積を比べる
+function cauchyShape(): string {
+  const W = 340, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: -6, xMax: 6, yMax: 0.42 };
   const tailN = 2 * (1 - Phi(3)), tailC = 1 - (2 / Math.PI) * Math.atan(3);
-  const cap = `左上：ガンマ分布は α = 1 のとき指数分布そのもので、α を大きくすると山が右へ移り、左右対称に近い形になります（λ = 1 なら平均も分散も α）。右上：ベータ分布は0〜1の値（割合）の分布で、α と β の大小で山の位置が決まります（α < β なら左寄り）。(1, 1) は一様分布です。左下：対数正規分布は0より大きい値だけをとり、右に長い裾を引きます（所得や価格の分布）。σ が大きいほど裾が長くなります。右下：コーシー分布は山が低く、裾が非常に重い分布です。|X| > 3 になる確率は正規分布で ${pct(tailN, 2)}、コーシー分布では ${pct(tailC)} です。この裾の重さのために期待値が存在しません。`;
+  const svg = `${svgOpen(W, H, 'コーシー分布と標準正規分布：コーシー分布は山が低く裾が重い。3より外に出る確率は正規分布0.27%、コーシー分布20.5%')}
+    ${axes(b, [-6, -3, 0, 3, 6])}
+    ${area(b, cauchyPdf, -6, -3, ROSE, 0.25)}${area(b, cauchyPdf, 3, 6, ROSE, 0.25)}
+    ${curve(b, (x) => normPdf(x), INDIGO, -6, 6, 2.2)}${curve(b, cauchyPdf, ROSE, -6, 6, 2.2)}
+    <text x="${f1(PX(b, 0.6))}" y="${f1(PY(b, 0.39))}" font-size="12.4" font-weight="700" fill="${INDIGO}">標準正規</text>
+    <text x="${f1(PX(b, 1.2))}" y="${f1(PY(b, 0.2))}" font-size="12.4" font-weight="700" fill="${ROSE}">コーシー</text>
+    <text x="${f1(PX(b, 4.5))}" y="${f1(PY(b, 0.13))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">3 より外</text>
+    <text x="${f1(PX(b, 4.5))}" y="${f1(PY(b, 0.13) + 15)}" text-anchor="middle" font-size="12.4" fill="${ROSE}">（両側で ${pct(tailC)}）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">塗った面積 ＝ |X| が3を超える確率（正規は ${pct(tailN, 2)}）</text>
+  </svg>`;
+  const cap = `コーシー分布は真ん中の山が低く、そのぶん裾がなかなか0になりません。|X| が3を超える確率は、標準正規分布では ${pct(tailN, 2)} ですが、コーシー分布では ${pct(tailC)} もあります。`;
   return fig(svg, cap);
 }
 
@@ -1180,7 +1243,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bernoulli': bernoulli,
   'f-hypergeo': hypergeo,
   'f-poisson': poissonShapes, 'f-poisson-slice': poissonSlice, 'f-poisson-binom': poissonFromBinom, 'f-continuity': continuityCorrection, 'f-geometric': geometricShape,
-  'f-continuous': continuousShapes,
+  'f-exponential': exponentialShape, 'f-wait-total': gammaShape, 'f-ratio-dist': betaShape, 'f-lognormal': lognormalShape, 'f-cauchy': cauchyShape,
   'f-normal-areas': normalAreas,
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
