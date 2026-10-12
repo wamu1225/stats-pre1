@@ -250,6 +250,59 @@ function binomialShapes(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.7：1時間を短い区間に区切る ============
+function poissonSlice(): string {
+  const W = 340, H = 196;
+  const x0 = 14, w = 312;
+  const events = [17.5, 19.5];
+  const row = (y: number, n: number, title: string, note: string) => {
+    const cw = w / n;
+    const hit = new Set(events.map((t) => Math.floor(t / (60 / n))));
+    const cells = range(0, n - 1).map((i) => `<rect x="${f1(x0 + i * cw)}" y="${y}" width="${f1(cw)}" height="26" fill="${hit.has(i) ? AMBER : '#ffffff'}" fill-opacity="${hit.has(i) ? 0.45 : 1}" stroke="${SLATE}" stroke-width="${n > 20 ? 0.5 : 1}" />`).join('');
+    const marks = events.map((t) => `<circle cx="${f1(x0 + (t / 60) * w)}" cy="${y + 13}" r="3.4" fill="${ROSE}" />`).join('');
+    return `<text x="${x0}" y="${y - 7}" font-size="13.2" font-weight="700" fill="${INK}">${title}</text>
+      <text x="${x0 + w}" y="${y - 7}" text-anchor="end" font-size="12.4" fill="${n > 20 ? TEAL : '#b45309'}">${note}</text>
+      ${cells}${marks}`;
+  };
+  const svg = `${svgOpen(W, H, '1時間を5分ごとの12区間と1分ごとの60区間に区切った図。17分台と19分台の2件の事故が、12区間では同じ区間に入り、60区間では別々の区間に分かれる')}
+    ${row(40, 12, '5分ごとに 12 区間', '2件が同じ区間に入る')}
+    ${row(112, 60, '1分ごとに 60 区間', '別々の区間に分かれる')}
+    ${[0, 15, 30, 45, 60].map((t) => `<text x="${f1(x0 + (t / 60) * w)}" y="156" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}分</text>`).join('')}
+    <circle cx="${x0 + 4}" cy="${H - 14}" r="3.4" fill="${ROSE}" />
+    <text x="${x0 + 12}" y="${H - 10}" font-size="12.4" fill="${INK}">＝ 事故　</text>
+    <rect x="${x0 + 70}" y="${H - 21}" width="12" height="12" fill="${AMBER}" fill-opacity="0.45" stroke="${SLATE}" stroke-width="1" />
+    <text x="${x0 + 88}" y="${H - 10}" font-size="12.4" fill="${INK}">＝「起きた」と数える区間</text>
+  </svg>`;
+  const cap = `1時間のうち、17分台と19分台に事故が2件起きた例です。5分ごとの12区間に区切ると、2件とも同じ区間（15〜20分）に入ってしまい、区間ごとの「起きた／起きない」で数えると1件になってしまいます。1分ごとの60区間なら別々の区間に分かれ、2件と正しく数えられます。区間を細かくするほど、件数を「事故が起きた区間の数」、つまり二項分布として扱えるようになります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.7：区間を細かくすると二項分布がポアソン分布に近づく ============
+function poissonFromBinom(): string {
+  const W = 340, H = 230;
+  const b: Box = { x: 18, y: 40, w: 312, h: 150, xMin: -0.5, xMax: 12.5, yMax: 0.3 };
+  const ks = range(0, 12);
+  const coarse = ks.map((k) => (k <= 8 ? binom(8, 0.5, k) : 0));
+  const fine = ks.map((k) => binom(100, 0.04, k));
+  const dots = ks.map((k, i) => `<circle cx="${f1(PX(b, k))}" cy="${f1(PY(b, coarse[i]))}" r="3.4" fill="${AMBER}" />`).join('');
+  const rings = ks.map((k, i) => `<circle cx="${f1(PX(b, k))}" cy="${f1(PY(b, fine[i]))}" r="3.6" fill="none" stroke="${INK}" stroke-width="1.4" />`).join('');
+  const svg = `${svgOpen(W, H, 'ポアソン分布 λ=4 の棒に、二項分布 B(8,0.5) と B(100,0.04) を点で重ねた図。100区間の方が棒の頭にほぼ重なる')}
+    ${axes(b, [0, 2, 4, 6, 8, 10, 12])}
+    ${bars(b, ks, ks.map((k) => pois(4, k)), INDIGO, 0.35)}
+    ${dots}${rings}
+    <rect x="${b.x + b.w - 168}" y="${b.y - 34}" width="10" height="10" fill="${INDIGO}" fill-opacity="0.75" />
+    <text x="${b.x + b.w - 152}" y="${b.y - 25}" font-size="12.4" fill="${INK}">ポアソン分布 λ = 4</text>
+    <circle cx="${b.x + b.w - 163}" cy="${b.y - 12}" r="3.4" fill="${AMBER}" />
+    <text x="${b.x + b.w - 152}" y="${b.y - 8}" font-size="12.4" fill="#b45309">B(8, 0.5)：8 区間</text>
+    <circle cx="${b.x + b.w - 163}" cy="${b.y + 5}" r="3.6" fill="none" stroke="${INK}" stroke-width="1.4" />
+    <text x="${b.x + b.w - 152}" y="${b.y + 9}" font-size="12.4" fill="${INK}">B(100, 0.04)：100 区間</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（1時間の件数）／高さ ＝ P(X = k)</text>
+  </svg>`;
+  const maxDiff = Math.max(...ks.map((k, i) => Math.abs(fine[i] - pois(4, k))));
+  const cap = `棒は平均4件のポアソン分布です。● は1時間を8区間に区切った二項分布 B(8, 0.5)、○ は100区間に区切った B(100, 0.04) で、どちらも平均は4件です。8区間では山が高く細く（4件の確率が ${f2(coarse[4])}、ポアソン分布では ${f2(pois(4, 4))}）、区間が8つしかないので9件以上は起こりえません。100区間にすると ○ は棒の頭とほぼ重なります（どの k でも差は ${maxDiff.toFixed(3)} 以下）。区間を細かくするほど二項分布がポアソン分布に近づく、というのがポアソン分布の式の成り立ちです。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.7：ポアソン分布 ============
 function poissonShapes(): string {
   const W = 350, H = 240;
@@ -262,18 +315,67 @@ function poissonShapes(): string {
     const x = PX(b, k) - 1.5 * w + j * w;
     return `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(w)}" height="${f1(b.y + b.h - y)}" fill="${c}" fill-opacity="0.8" />`;
   }).join('')).join('');
-  const bin = ks.map((k) => `<circle cx="${f1(PX(b, k))}" cy="${f1(PY(b, binom(100, 0.04, k)))}" r="2.6" fill="none" stroke="${INK}" stroke-width="1.2" />`).join('');
-  const svg = `${svgOpen(W, H, 'ポアソン分布の形：λ が大きいほど山が右に移り、低く広がる。二項分布 B(100,0.04) はポアソン分布 λ=4 とほぼ重なる')}
+  const svg = `${svgOpen(W, H, 'ポアソン分布の形：λ が大きいほど山が右に移り、低く広がる')}
     ${axes(b, [0, 2, 4, 6, 8, 10, 12, 14, 16, 18])}
-    ${groups}${bin}
+    ${groups}
     <text x="${f1(PX(b, 1) + 6)}" y="${f1(PY(b, pois(1, 0)) + 2)}" font-size="13.2" font-weight="700" fill="${INDIGO}">λ = 1</text>
     <text x="${f1(PX(b, 4) + 8)}" y="${f1(PY(b, pois(4, 4)) - 8)}" font-size="13.2" font-weight="700" fill="#b45309">λ = 4</text>
     <text x="${f1(PX(b, 10) + 6)}" y="${f1(PY(b, pois(10, 10)) - 8)}" font-size="13.2" font-weight="700" fill="${TEAL}">λ = 10</text>
-    <text x="${b.x + b.w}" y="${b.y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">○ ＝ 二項分布 B(100, 0.04)</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（一定時間に起きる回数）／棒の高さ ＝ P(X = k)</text>
   </svg>`;
-  const maxDiff = Math.max(...ks.map((k) => Math.abs(binom(100, 0.04, k) - pois(4, k))));
-  const cap = `λ = 1 では0回と1回が同じ高さ（どちらも ${f2(pois(1, 0))}）で、そこから急に減ります。λ = 4、10 と大きくなるにつれて山は右へ移り、低く広がって左右対称に近づきます。平均も分散も λ なので、山の位置と広がりが一緒に大きくなります。○ は二項分布 B(100, 0.04)（np = 4）で、λ = 4 の棒とほぼ重なります（各 k での差は最大 ${maxDiff.toFixed(3)}）。n が大きく p が小さいときにポアソン分布で近似できる、という少数法則を図で見たものです。`;
+  const cap = `λ = 1 では0件と1件が同じ高さ（どちらも ${f2(pois(1, 0))}）で、そこから急に減ります。λ = 4、10 と大きくなるにつれて、山は右へ移り、低く横に広がって、左右対称の形に近づきます。山の位置は平均 λ のあたりにあり、λ が大きいほど広がる理由は、すぐ下の「分散も λ」で説明します。λ が大きいと左右対称に近づくので、1.10 で学ぶ正規分布（左右対称の釣鐘形の分布）で近似できるようになります（この節の後半）。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.7：連続修正（ポアソン分布 λ=16 を正規分布で近似） ============
+function continuityCorrection(): string {
+  const W = 340, H = 236;
+  const lam = 16, sd = 4, cut = 20;
+  const b: Box = { x: 14, y: 40, w: 316, h: 150, xMin: 5.5, xMax: 27.5, yMax: 0.11 };
+  const ks = range(6, 27);
+  const bw = PX(b, 1) - PX(b, 0);
+  const barsSvg = ks.map((k) => {
+    const y = PY(b, pois(lam, k));
+    const on = k <= cut;
+    return `<rect x="${f1(PX(b, k - 0.5))}" y="${f1(y)}" width="${f1(bw)}" height="${f1(b.y + b.h - y)}" fill="${on ? INDIGO : SLATE}" fill-opacity="${on ? 0.55 : 0.2}" stroke="#ffffff" stroke-width="0.8" />`;
+  }).join('');
+  const g = (x: number) => normPdf(x, lam, sd);
+  const exact = range(0, cut).reduce((s, k) => s + pois(lam, k), 0);
+  const withCc = Phi((cut + 0.5 - lam) / sd), noCc = Phi((cut - lam) / sd);
+  const vline = (x: number, c: string, dash: string) => `<line x1="${f1(PX(b, x))}" y1="${b.y - 4}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.6"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  const svg = `${svgOpen(W, H, 'ポアソン分布 λ=16 の棒に正規分布の曲線を重ねた図。20件の棒は19.5から20.5までの幅を持つので、20件以下は20.5までの面積で近似する')}
+    ${axes(b, [8, 12, 16, 20, 24])}
+    ${barsSvg}
+    ${curve(b, g, AMBER, b.xMin, b.xMax, 2.2)}
+    ${vline(cut, ROSE, '4 3')}${vline(cut + 0.5, TEAL, '')}
+    <text x="${f1(PX(b, cut) - 4)}" y="${b.y - 22}" text-anchor="end" font-size="12.4" fill="${ROSE}">20 で切る</text>
+    <text x="${f1(PX(b, cut) - 4)}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">→ ${f2(noCc)}</text>
+    <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 22}" font-size="12.4" font-weight="700" fill="${TEAL}">20.5 で切る</text>
+    <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 8}" font-size="12.4" font-weight="700" fill="${TEAL}">→ ${f2(withCc)}</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">青の棒 ＝ 20件以下（合計 ${f2(exact)}）／橙 ＝ 正規分布</text>
+  </svg>`;
+  const cap = `平均16件のポアソン分布（棒）に、平均16・標準偏差4の正規分布（橙の曲線）を重ねました。棒は1本ずつ、整数 k を中心に k − 0.5 から k + 0.5 までの幅を持っています。20件以下の確率（青の棒の合計 ${f2(exact)}）を曲線の下の面積で近似するとき、20 で切ると20件の棒の右半分が入らず ${f2(noCc)} と小さく出ます。20.5 で切れば棒が丸ごと入り、${f2(withCc)} とほぼ一致します。これが連続修正です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.7：幾何分布の形 ============
+function geometricShape(): string {
+  const W = 340, H = 220;
+  const p = 1 / 6;
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: 0.5, xMax: 20.5, yMax: 0.18 };
+  const ks = range(1, 20);
+  const ps = ks.map((k) => (1 - p) ** (k - 1) * p);
+  const tail = (1 - p) ** 10;
+  const svg = `${svgOpen(W, H, 'サイコロで初めて6が出る回数の分布。1回目が最も高く、そこから5/6倍ずつ低くなる。平均は6回目')}
+    ${axes(b, [1, 5, 10, 15, 20])}
+    ${bars(b, ks, ps, INDIGO, 0.3)}
+    <line x1="${f1(PX(b, 6))}" y1="${b.y}" x2="${f1(PX(b, 6))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 6) + 5)}" y="${b.y + 10}" font-size="12.4" font-weight="700" fill="#b45309">平均 1/p ＝ 6 回目</text>
+    <text x="${f1(PX(b, 1) + 8)}" y="${f1(PY(b, ps[0]) + 4)}" font-size="12.4" fill="${INDIGO}">1回目 ${f2(ps[0])}</text>
+    <text x="${f1(PX(b, 15))}" y="${f1(PY(b, ps[10]) - 26)}" text-anchor="middle" font-size="12.4" fill="${SLATE}">11回目以降の合計 ${f2(tail)}</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 k（初めて6が出る回）／高さ ＝ P(X = k)</text>
+  </svg>`;
+  const cap = `サイコロで初めて6が出る回の分布（p = 1/6）です。いちばん起こりやすいのは1回目（${f2(ps[0])}）で、そこから1回ごとに 5/6 倍ずつ低くなり、右へ長い裾を引きます。平均は6回目ですが、山の頂上は1回目にあり、10回振っても6が出ない確率も ${f2(tail)}（約${Math.round(tail * 100)}%）あります。`;
   return fig(svg, cap);
 }
 
@@ -914,7 +1016,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-uniform': uniformDice,
   'f-bernoulli': bernoulli,
   'f-hypergeo': hypergeo,
-  'f-poisson': poissonShapes,
+  'f-poisson': poissonShapes, 'f-poisson-slice': poissonSlice, 'f-poisson-binom': poissonFromBinom, 'f-continuity': continuityCorrection, 'f-geometric': geometricShape,
   'f-continuous': continuousShapes,
   'f-normal-areas': normalAreas,
   'f-bayes-tree': bayesTree,
