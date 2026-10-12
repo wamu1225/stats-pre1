@@ -180,11 +180,11 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${K(e,[0,.25,.5,.75,1])}
     ${q(e,()=>1,R,0,1,1.5,`4 3`)}
     ${q(e,me(2,5),P,.001,.999,2.2)}${q(e,me(5,2),F,.001,.999,2.2)}${q(e,me(2,2),I,.001,.999,2.2)}
-    <text x="${B(W(e,.21))}" y="${B(G(e,2.55))}" font-size="12.4" font-weight="700" fill="${P}">(2, 5) 平均 0.29</text>
-    <text x="${B(W(e,.56))}" y="${B(G(e,2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2) 平均 0.71</text>
-    <text x="${B(W(e,.5))}" y="${B(G(e,1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${I}">(2, 2) 平均 0.5</text>
+    <text x="${B(W(e,.1))}" y="${B(G(e,2.55))}" font-size="12.4" font-weight="700" fill="${P}">(2, 5)</text>
+    <text x="${B(W(e,.83))}" y="${B(G(e,2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2)</text>
+    <text x="${B(W(e,.5))}" y="${B(G(e,1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${I}">(2, 2)</text>
     <text x="${e.x+e.w/2}" y="222" text-anchor="middle" font-size="12.4" fill="${R}">横軸 x（割合）／点線 (1, 1) ＝ 一様分布</text>
-  </svg>`,`α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。(1, 1) は0〜1のどこも同じ高さの一様分布です。`)}function Re(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:5,yMax:.95},t=Math.exp(.5);return J(`${Y(340,226,`対数正規分布：0より大きい値だけをとり、右に長い裾を引く。σ=1 では中央値1、平均1.65で、平均が中央値より右にある`)}
+  </svg>`,`α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。平均は α/(α+β) で、(2, 5) は 0.29、(5, 2) は 0.71、(2, 2) は 0.5 です。(1, 1) は0〜1のどこも同じ高さの一様分布です。`)}function Re(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:5,yMax:.95},t=Math.exp(.5);return J(`${Y(340,226,`対数正規分布：0より大きい値だけをとり、右に長い裾を引く。σ=1 では中央値1、平均1.65で、平均が中央値より右にある`)}
     ${K(e,[0,1,2,3,4,5])}
     ${q(e,he(.5),I,.01,5,1.8,`5 3`)}
     ${q(e,he(1),P,.01,5,2.2)}
