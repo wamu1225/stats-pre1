@@ -1281,6 +1281,71 @@ function ldaBoundary(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.23：バイアス・バリアンスのトレードオフ（多項式の次数と誤差） ============
+function biasVariance(): string {
+  const W = 350, H = 300;
+  const n = 15, sig = 0.3, R = 300, D = 9;
+  const f = (x: number) => Math.sin(Math.PI * (x + 0.3));
+  const rnd = gaussFrom(mulberry32(5));
+  const xs = Array.from({ length: n }, (_, i) => -1 + (2 * i) / (n - 1));
+  const gx = Array.from({ length: 41 }, (_, i) => -1 + i / 20);
+  const solve = (A: number[][], b: number[]) => {
+    const m = b.length;
+    const M = A.map((r, i) => [...r, b[i]]);
+    for (let c = 0; c < m; c++) {
+      let p = c;
+      for (let r = c + 1; r < m; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      [M[c], M[p]] = [M[p], M[c]];
+      for (let r = c + 1; r < m; r++) { const q = M[r][c] / M[c][c]; for (let k = c; k <= m; k++) M[r][k] -= q * M[c][k]; }
+    }
+    const x = Array(m).fill(0);
+    for (let r = m - 1; r >= 0; r--) { let s = M[r][m]; for (let k = r + 1; k < m; k++) s -= M[r][k] * x[k]; x[r] = s / M[r][r]; }
+    return x as number[];
+  };
+  // 同じ真の曲線から R 回データを取り直し、次数 d の多項式を当てはめて誤差を分解する
+  const rows = Array.from({ length: D }, (_, di) => {
+    const d = di + 1, m = d + 1;
+    const preds: number[][] = [];
+    let tr = 0;
+    for (let r = 0; r < R; r++) {
+      const y = xs.map((x) => f(x) + sig * rnd());
+      const A = Array.from({ length: m }, (_, i) => Array.from({ length: m }, (_, j) => xs.reduce((s, x) => s + x ** (i + j), 0)));
+      const b = Array.from({ length: m }, (_, i) => xs.reduce((s, x, k) => s + y[k] * x ** i, 0));
+      const w = solve(A, b);
+      const pr = (x: number) => w.reduce((s, c, i) => s + c * x ** i, 0);
+      tr += xs.reduce((s, x, k) => s + (pr(x) - y[k]) ** 2, 0) / n;
+      preds.push(gx.map(pr));
+    }
+    const mean = gx.map((_, j) => preds.reduce((s, p) => s + p[j], 0) / R);
+    const bias2 = gx.reduce((s, x, j) => s + (mean[j] - f(x)) ** 2, 0) / gx.length;
+    const vr = gx.reduce((s, _, j) => s + preds.reduce((q, p) => q + (p[j] - mean[j]) ** 2, 0) / R, 0) / gx.length;
+    return { d, train: tr / R, bias2, vr, test: bias2 + vr + sig * sig };
+  });
+  const L = 42, T = 24, PW = 292, PH = 170, yMax = 0.55;
+  const px = (d: number) => L + ((d - 1) / (D - 1)) * PW;
+  const py = (v: number) => T + PH - (Math.min(v, yMax) / yMax) * PH;
+  const path = (key: 'train' | 'bias2' | 'vr' | 'test', color: string, w: number, dash = '') =>
+    `<polyline points="${rows.map((r) => `${f1(px(r.d))},${f1(py(r[key]))}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${w}" ${dash ? `stroke-dasharray="${dash}"` : ''} />`;
+  const best = rows.reduce((a, b) => (b.test < a.test ? b : a));
+  const yt = [0, 0.2, 0.4];
+  const svg = `${svgOpen(W, H, 'バイアスとバリアンスのトレードオフ：多項式の次数を上げるとバイアスは減りバリアンスは増え、将来データの誤差は中くらいの次数で最小になる')}
+    <rect x="${L}" y="${T}" width="${PW}" height="${PH}" fill="none" stroke="${SLATE}" stroke-width="1" />
+    ${yt.map((v) => `<line x1="${L}" y1="${f1(py(v))}" x2="${L + PW}" y2="${f1(py(v))}" stroke="${SLATE}" stroke-opacity="0.2" /><text x="${L - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${rows.map((r) => `<text x="${f1(px(r.d))}" y="${T + PH + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${r.d}</text>`).join('')}
+    ${path('train', SLATE, 1.8, '5 4')}${path('bias2', AMBER, 2.2)}${path('vr', INDIGO, 2.2)}${path('test', ROSE, 3)}
+    <circle cx="${f1(px(best.d))}" cy="${f1(py(best.test))}" r="5" fill="#ffffff" stroke="${ROSE}" stroke-width="2" />
+    <text x="${f1(px(best.d))}" y="${f1(py(best.test) - 10)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">最小：${best.d} 次</text>
+    <text x="${L + PW / 2}" y="${T + PH + 34}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝当てはめる多項式の次数（右ほど複雑）</text>
+    <line x1="14" y1="${H - 36}" x2="38" y2="${H - 36}" stroke="${ROSE}" stroke-width="3" /><text x="44" y="${H - 32}" font-size="12.4" fill="${INK}">将来データの誤差（3つの和）</text>
+    <line x1="14" y1="${H - 20}" x2="38" y2="${H - 20}" stroke="${AMBER}" stroke-width="2.2" /><text x="44" y="${H - 16}" font-size="12.4" fill="${INK}">バイアス²</text>
+    <line x1="112" y1="${H - 20}" x2="136" y2="${H - 20}" stroke="${INDIGO}" stroke-width="2.2" /><text x="142" y="${H - 16}" font-size="12.4" fill="${INK}">バリアンス</text>
+    <line x1="210" y1="${H - 20}" x2="234" y2="${H - 20}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 16}" font-size="12.4" fill="${INK}">手元データの誤差</text>
+    <text x="14" y="${H - 3}" font-size="12" fill="${SLATE}">データ ${n} 点・ノイズ sd ${sig}・${R} 回の取り直しの平均</text>
+  </svg>`;
+  const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアスは ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -1314,4 +1379,5 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
   'f-lda': ldaBoundary,
+  'f-biasvar': biasVariance,
 };
