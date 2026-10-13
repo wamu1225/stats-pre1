@@ -257,7 +257,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             AIC: {aic} ({aic > 50 ? '過学習' : '良好'})
           </div>
           <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart data={line} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
+            <ComposedChart data={line} margin={{ top: 20, right: 20, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="x" hide />
               <YAxis domain={[-4, 4]} hide />
@@ -277,7 +277,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             第1主成分の寄与率: {(contribution * 100).toFixed(0)}%
           </div>
           <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
+            <ComposedChart margin={{ top: 20, right: 20, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" dataKey="x" domain={[-3, 3]} hide />
               <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
@@ -297,7 +297,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       return (
         <div>
           <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+            <ComposedChart margin={{ top: 10, right: 20, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" dataKey="x" domain={[-4, 4]} hide />
               <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
@@ -318,7 +318,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       return (
         <div>
           <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart data={hist} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <ComposedChart data={hist} margin={{ top: 10, right: 10, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="x" hide />
               <YAxis hide />
@@ -356,7 +356,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       return (
         <div>
           <ResponsiveContainer width="100%" height={190}>
-            <ComposedChart data={chartD} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <ComposedChart data={chartD} margin={{ top: 10, right: 10, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="x" hide />
               <YAxis hide />
