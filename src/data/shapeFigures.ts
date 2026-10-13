@@ -500,6 +500,53 @@ function normalAreas(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.10：平均と標準偏差で形がどう変わるか ============
+function normalParams(): string {
+  const W = 344, H = 300;
+  const yMax = normPdf(0, 0, 4) * 1.08;
+  const top: Box = { x: 14, y: 40, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
+  const bot: Box = { x: 14, y: 184, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
+  const ticks = [150, 160, 170, 180, 190];
+  const mus = [{ m: 164, c: TEAL }, { m: 170, c: INDIGO }, { m: 176, c: AMBER }];
+  const sds = [{ s: 4, c: TEAL, lx: 158.5, ly: 0.088, t: 'σ = 4' }, { s: 6, c: INDIGO, lx: 177.5, ly: 0.058, t: 'σ = 6' }, { s: 9, c: AMBER, lx: 185, ly: 0.03, t: 'σ = 9' }];
+  const lab = (c: string) => (c === AMBER ? '#b45309' : c);
+  const svg = `${svgOpen(W, H, '上は標準偏差6のまま平均を164・170・176と変えた正規分布で、形は同じまま左右に動く。下は平均170のまま標準偏差を4・6・9と変えたもので、大きいほど低く横に広がる')}
+    <text x="${top.x}" y="${top.y - 22}" font-size="13.2" font-weight="700" fill="${INK}">平均を変える（標準偏差は 6）</text>
+    ${mus.map(({ m, c }) => curve(top, (x) => normPdf(x, m, 6), c)).join('')}
+    ${mus.map(({ m, c }) => `<text x="${f1(PX(top, m))}" y="${f1(PY(top, normPdf(m, m, 6)) - 5)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${lab(c)}">${m}</text>`).join('')}
+    ${axes(top, ticks)}
+    <text x="${bot.x}" y="${bot.y - 22}" font-size="13.2" font-weight="700" fill="${INK}">標準偏差を変える（平均は 170）</text>
+    ${sds.map(({ s: sd, c }) => curve(bot, (x) => normPdf(x, 170, sd), c)).join('')}
+    ${sds.map(({ c, lx, ly, t }) => `<text x="${f1(PX(bot, lx))}" y="${f1(PY(bot, ly))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${lab(c)}">${t}</text>`).join('')}
+    ${axes(bot, ticks)}
+    <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm</text>
+  </svg>`;
+  const cap = `上の3本は標準偏差を6cmに固定し、平均だけを164・170・176cmと変えたものです。山の形はまったく同じで、平均の位置へ平行に動きます。下の3本は平均を170cmに固定し、標準偏差を4・6・9cmと変えたものです。標準偏差が大きいほど横に広がり、面積は1のままなので山は低くなります。σ = 4 の山の高さは σ = 9 の${num(9 / 4)}倍です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.10：標準化（身長180cm以上の割合） ============
+function standardizeTail(): string {
+  const W = 344, H = 236;
+  const mu = 170, sd = 6, cut = 180, z = (cut - mu) / sd, tail = 1 - Phi(z);
+  const b: Box = { x: 14, y: 40, w: 316, h: 120, xMin: 152, xMax: 188, yMax: normPdf(mu, mu, sd) * 1.08 };
+  const pdf = (x: number) => normPdf(x, mu, sd);
+  const base = b.y + b.h;
+  const zs = [-3, -2, -1, 0, 1, 2, 3];
+  const svg = `${svgOpen(W, H, '身長が平均170cm・標準偏差6cmの正規分布で、180cm以上の部分に色を付けた図。下に標準化した Z の目盛りを並べてある')}
+    ${area(b, pdf, cut, b.xMax, ROSE, 0.45)}
+    ${curve(b, pdf, INDIGO)}
+    <line x1="${f1(PX(b, cut))}" y1="${b.y - 4}" x2="${f1(PX(b, cut))}" y2="${base}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, cut))}" y="${b.y - 10}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">180cm（Z ≈ ${f2(z)}）</text>
+    <text x="${f1(PX(b, 184.5))}" y="${f1(PY(b, 0.024))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">約${(tail * 100).toFixed(1)}%</text>
+    ${axes(b, [152, 158, 164, 170, 176, 182, 188])}
+    ${zs.map((t) => `<text x="${f1(PX(b, mu + t * sd))}" y="${base + 32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">${t}</text>`).join('')}
+    <text x="${W / 2}" y="${base + 56}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の目盛り＝身長 cm／藍の目盛り＝Z ＝（身長 − 170）÷ 6</text>
+  </svg>`;
+  const cap = `同じ山に、身長の目盛り（灰）と標準化した Z の目盛り（藍）を並べました。180cm は平均から 10cm、標準偏差6cmで割ると Z ≈ ${f2(z)} の位置です。色を付けた180cm以上の面積は、標準正規分布の Z ≥ ${f2(z)} の面積と同じで、約${(tail * 100).toFixed(1)}%です。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.3：ベイズの樹形図（1000人） ============
 function bayesTree(): string {
   const W = 350, H = 250;
@@ -1445,6 +1492,8 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-poisson': poissonShapes, 'f-poisson-slice': poissonSlice, 'f-poisson-binom': poissonFromBinom, 'f-continuity': continuityCorrection, 'f-geometric': geometricShape,
   'f-exponential': exponentialShape, 'f-wait-total': gammaShape, 'f-ratio-dist': betaShape, 'f-lognormal': lognormalShape, 'f-cauchy': cauchyShape,
   'f-normal-areas': normalAreas,
+  'f-normal-params': normalParams,
+  'f-standardize': standardizeTail,
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,

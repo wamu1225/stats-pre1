@@ -152,9 +152,11 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       const skewData: { x: string; sym: number; right: number; left: number }[] = [];
       const kurtData: { x: string; normal: number; fat: number }[] = [];
       const kurtTail: { x: string; normal: number; fat: number }[] = [];
-      for (let x = -4; x <= 5; x += 0.12) {
-        const rU = x + 2;
-        const lU = 2 - x;
+      // 横軸は 0 を中心に左右対称（-5〜5）にとる。以前は -4〜5 で、対称な曲線が左に寄って見えていた（2026-10-14）
+      for (let i = -50; i <= 50; i++) {
+        const x = i / 10;
+        const rU = x + 3;
+        const lU = 3 - x;
         const right = rU > 0 ? (rU * rU * Math.exp(-rU)) / (4 * Math.exp(-2)) : 0;
         const left = lU > 0 ? (lU * lU * Math.exp(-lU)) / (4 * Math.exp(-2)) : 0;
         const sym = normalPDF(x, 0, 1.4) * 1.4 * Math.sqrt(2 * Math.PI);
