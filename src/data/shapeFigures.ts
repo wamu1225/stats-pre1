@@ -502,10 +502,10 @@ function normalAreas(): string {
 
 // ============ 1.10：平均と標準偏差で形がどう変わるか ============
 function normalParams(): string {
-  const W = 344, H = 316;
+  const W = 344, H = 330;
   const yMax = normPdf(0, 0, 4) * 1.08;
   const top: Box = { x: 14, y: 40, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
-  const bot: Box = { x: 14, y: 184, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
+  const bot: Box = { x: 14, y: 198, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
   const ticks = [150, 160, 170, 180, 190];
   const mus = [{ m: 164, c: TEAL }, { m: 170, c: INDIGO }, { m: 176, c: AMBER }];
   const sds = [{ s: 4, c: TEAL, lx: 158.5, ly: 0.088, t: 'σ = 4' }, { s: 6, c: INDIGO, lx: 177.5, ly: 0.058, t: 'σ = 6' }, { s: 9, c: AMBER, lx: 185, ly: 0.03, t: 'σ = 9' }];
