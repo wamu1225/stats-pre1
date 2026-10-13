@@ -391,7 +391,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
                 {row.label} <span style={{ color: '#94a3b8', fontWeight: 400 }}>— {row.example}</span>
               </div>
               <ResponsiveContainer width="100%" height={52}>
-                <ComposedChart data={skewData} margin={{ top: 2, right: 4, left: -28, bottom: 0 }}>
+                <ComposedChart data={skewData} margin={{ top: 2, right: 4, left: 4, bottom: 0 }}>
                   <YAxis hide domain={[0, 1.15]} />
                   <Area type="monotone" dataKey={row.key} fill={row.color} fillOpacity={0.25} stroke={row.color} strokeWidth={2} dot={false} isAnimationActive={false} />
                 </ComposedChart>
@@ -413,7 +413,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             ))}
           </div>
           <ResponsiveContainer width="100%" height={116}>
-            <ComposedChart data={kurtData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
+            <ComposedChart data={kurtData} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
               <YAxis hide domain={[0, 0.78]} />
               {kurtRows.map(row => (
                 <Area key={row.key} type="monotone" dataKey={row.key} fill={row.color} fillOpacity={0.18}
