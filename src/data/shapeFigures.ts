@@ -669,6 +669,91 @@ function bivariateNormal(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.9：変数変換（Y = X² で帯の幅と高さが変わる） ============
+function transformStrips(): string {
+  const W = 344, H = 236;
+  const L: Box = { x: 14, y: 40, w: 130, h: 140, xMin: 0, xMax: 1, yMax: 3 };
+  const R: Box = { x: 198, y: 40, w: 130, h: 140, xMin: 0, xMax: 1, yMax: 3 };
+  const cols = [INDIGO, AMBER, TEAL, ROSE];
+  const fy = (y: number) => 1 / (2 * Math.sqrt(y));
+  const cuts = [0, 0.25, 0.5, 0.75, 1];
+  const left = cuts.slice(0, 4).map((a, i) => `<rect x="${f1(PX(L, a))}" y="${f1(PY(L, 1))}" width="${f1(PX(L, cuts[i + 1]) - PX(L, a))}" height="${f1(PY(L, 0) - PY(L, 1))}" fill="${cols[i]}" fill-opacity="0.35" stroke="${cols[i]}" />`).join('');
+  const right = cuts.slice(0, 4).map((a, i) => area(R, fy, Math.max(a * a, 0.004), cuts[i + 1] ** 2, cols[i], 0.35)).join('');
+  const svg = `${svgOpen(W, H, '一様分布の X を2乗すると、0に近い側の帯は細く高く、1に近い側の帯は太く低くなる。どの帯も面積は0.25のまま')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">X（0〜1の一様分布）</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">Y ＝ X²</text>
+    ${left}${axes(L, [0, 0.5, 1])}
+    ${right}${curve(R, fy, INK, 0.004, 1, 1.6)}${axes(R, [0, 0.5, 1])}
+    <text x="${f1(PX(L, 0.5))}" y="${f1(PY(L, 1) - 6)}" text-anchor="middle" font-size="12.4" fill="${SLATE}">高さ 1</text>
+    <text x="${f1(PX(R, 0.3))}" y="${f1(PY(R, 2.6))}" font-size="12.4" fill="${INDIGO}">細く高い</text>
+    <text x="${f1(PX(R, 0.98))}" y="${f1(PY(R, 0.9))}" text-anchor="end" font-size="12.4" fill="${ROSE}">太く低い</text>
+    <text x="${(L.x + L.w + R.x) / 2}" y="${L.y + L.h / 2 + 4}" text-anchor="middle" font-size="18" fill="${SLATE}">→</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">4色の帯は、どれも面積（確率）0.25</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
+  </svg>`;
+  const cap = `X を4つの帯（0〜0.25、0.25〜0.5 …）に分け、それぞれを2乗した先へ移しました。藍の帯 0〜0.25 は 0〜${0.25 ** 2} へ縮むので、面積0.25を保つために高くなります。赤の帯 0.75〜1 は ${0.75 ** 2}〜1 へ広がるので低くなります。この「幅が何倍になったかで高さを割る」補正がヤコビアンです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：条件付き分布（身長と体重・ρ = 0.5） ============
+function conditionalNormal(): string {
+  const W = 344, H = 262;
+  const mx = 170, sx = 6, my = 65, sy = 8, rho = 0.5;
+  const b = { x: 36, y: 30, w: 296, h: 186, xMin: 152, xMax: 188, yMin: 41, yMax: 89 };
+  const X = (x: number) => b.x + ((x - b.xMin) / (b.xMax - b.xMin)) * b.w;
+  const Y = (y: number) => b.y + b.h - ((y - b.yMin) / (b.yMax - b.yMin)) * b.h;
+  const ell = (c: number) => {
+    const out: string[] = [];
+    for (let k = 0; k <= 72; k++) {
+      const t = (2 * Math.PI * k) / 72;
+      const u = c * Math.sqrt(1 + rho) * Math.cos(t), v = c * Math.sqrt(1 - rho) * Math.sin(t);
+      out.push(`${f1(X(mx + sx * (u - v) / Math.SQRT2))},${f1(Y(my + sy * (u + v) / Math.SQRT2))}`);
+    }
+    return `<polygon points="${out.join(' ')}" fill="none" stroke="#cbd5e1" stroke-width="1.4" />`;
+  };
+  const cm = (x: number) => my + rho * (sy / sx) * (x - mx);
+  const cs = sy * Math.sqrt(1 - rho * rho);
+  const slice = (x0: number, col: string) => {
+    const m = cm(x0), k = 5 / normPdf(m, m, cs);
+    const pts: string[] = [];
+    for (let i = 0; i <= 80; i++) { const y = m - 2.5 * cs + (5 * cs * i) / 80; pts.push(`${f1(X(x0 + k * normPdf(y, m, cs)))},${f1(Y(y))}`); }
+    return `<line x1="${f1(X(x0))}" y1="${b.y}" x2="${f1(X(x0))}" y2="${b.y + b.h}" stroke="${col}" stroke-width="1.2" stroke-dasharray="4 3" />
+      <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="2" />
+      <circle cx="${f1(X(x0))}" cy="${f1(Y(m))}" r="3.4" fill="${col}" />`;
+  };
+  const svg = `${svgOpen(W, H, '身長と体重の2変量正規分布。身長を決めると体重は正規分布になり、その中心は右上がりの直線の上にある')}
+    <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+    ${ell(1)}${ell(2)}
+    <line x1="${f1(X(b.xMin))}" y1="${f1(Y(cm(b.xMin)))}" x2="${f1(X(b.xMax))}" y2="${f1(Y(cm(b.xMax)))}" stroke="${INK}" stroke-width="1.4" />
+    ${slice(164, TEAL)}${slice(176, AMBER)}
+    ${[155, 160, 165, 170, 175, 180, 185].map((v) => `<text x="${f1(X(v))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${[45, 55, 65, 75, 85].map((v) => `<text x="${b.x - 4}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <text x="${b.x - 30}" y="${b.y - 8}" font-size="12.4" fill="${SLATE}">体重kg</text>
+    <text x="${f1(X(176))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">176cm</text>
+    <text x="${f1(X(164))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">164cm</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm／黒の直線 ＝ 身長ごとの体重の平均</text>
+  </svg>`;
+  const cap = `点は身長ごとの体重の平均です。身長（平均170cm・標準偏差6cm）と体重（平均65kg・標準偏差8kg）が、相関0.5の2変量正規分布に従うとします。灰色の楕円は等高線です。身長を176cmに決めて縦に切ると、体重は平均${num(cm(176))}kg・標準偏差${num(cs)}kgの正規分布になります。164cmなら平均${num(cm(164))}kgです。切る位置を変えると、山の中心は黒の直線に沿って動き、幅は変わりません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：最大値の分布（指数分布 n 個の最大値） ============
+function maxShift(): string {
+  const W = 344, H = 226;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 8, yMax: 1.0 };
+  const fmax = (n: number) => (x: number) => (x < 0 ? 0 : n * Math.exp(-x) * (1 - Math.exp(-x)) ** (n - 1));
+  const ns = [{ n: 1, c: INDIGO, lx: 0.35, ly: 0.86, t: 'n = 1' }, { n: 10, c: AMBER, lx: 2.6, ly: 0.47, t: 'n = 10' }, { n: 100, c: TEAL, lx: 4.9, ly: 0.47, t: 'n = 100' }];
+  const svg = `${svgOpen(W, H, '平均1の指数分布 n 個の最大値の分布。n を10倍にするごとに右へ約2.3ずれ、形はほぼ同じになっていく')}
+    ${axes(b, [0, 2, 4, 6, 8])}
+    ${ns.map(({ n, c }) => curve(b, fmax(n), c, 0, 8, 2.2)).join('')}
+    ${ns.slice(1).map(({ n, c }) => `<line x1="${f1(PX(b, Math.log(n)))}" y1="${f1(PY(b, fmax(n)(Math.log(n))))}" x2="${f1(PX(b, Math.log(n)))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.2" stroke-dasharray="3 3" />`).join('')}
+    ${ns.map(({ c, lx, ly, t }) => `<text x="${f1(PX(b, lx))}" y="${f1(PY(b, ly))}" font-size="12.4" font-weight="700" fill="${c === AMBER ? '#b45309' : c}">${t}</text>`).join('')}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ n 個の最大値／点線 ＝ ln n（${f2(Math.log(10))}・${f2(Math.log(100))}）</text>
+  </svg>`;
+  const cap = `平均1の指数分布から n 個とった最大値の分布です。n を10倍にするたびに、山は右へ ln 10 ≈ ${f2(Math.log(10))} ずつずれます。n = 10 と n = 100 の山の形はほとんど同じで、ずらして重ねると、ガンベル分布という1つの形に近づいていきます。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.11：大数の法則（サイコロの累積平均） ============
 function lln(): string {
   const W = 350, H = 230;
@@ -1363,7 +1448,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift,
   'f-lln': lln,
   'f-likelihood': likelihood,
   'f-darts': darts,
