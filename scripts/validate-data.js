@@ -48,6 +48,13 @@ function checkFile(filePath) {
     errors.push(`[Error] Single backslash before LaTeX spacing (${[...new Set(spacing)].join(' ')}) in ${filePath}. Use \\\\, etc.`);
   }
 
+  // 2c. \underbrace with text labels widens a display formula past 390px; KaTeX then shrinks it to
+  //     unreadable size and clips the last label (2026-10-13 1.23 / 1.5b). Put the labels in a list instead.
+  const ub = (raw.match(/\\underbrace/g) || []).length;
+  if (ub) {
+    errors.push(`[Error] \\underbrace used ${ub} time(s) in ${filePath}. Write the formula plainly and explain each term in a list below it.`);
+  }
+
   // 3. Quiz count check
   if (filePath.includes('modules.ts')) {
     const moduleMatches = raw.match(/\{\s*id:[\s\S]*?quiz:\s*\[([\s\S]*?)\]\s*\}/g);
