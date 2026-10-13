@@ -215,7 +215,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <line x1="${z(W(e,170-1.96*6))}" y1="${e.y}" x2="${z(W(e,170-1.96*6))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.2" stroke-dasharray="3 2" />
     <line x1="${z(W(e,181.76))}" y1="${e.y}" x2="${z(W(e,181.76))}" y2="${e.y+e.h}" stroke="${I}" stroke-width="1.2" stroke-dasharray="3 2" />
     <text x="${e.x+e.w/2}" y="246" text-anchor="middle" font-size="12.4" fill="${L}">身長（cm）。平均 170・標準偏差 6</text>
-  </svg>`,`本文の身長の例（平均 170cm・標準偏差 6cm）を描いたものです。濃い順に、平均から ±1σ（164〜176cm）に ${V(i(1))}、±2σ（158〜182cm）までに ${V(i(2))}、±3σ（152〜188cm）までに ${V(i(3))} が入ります。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`)}function Ve(){let e=U(0,0,4)*1.08,t={x:14,y:40,w:316,h:92,xMin:146,xMax:194,yMax:e},n={x:14,y:184,w:316,h:92,xMin:146,xMax:194,yMax:e},r=[150,160,170,180,190],i=[{m:164,c:F},{m:170,c:N},{m:176,c:P}],a=[{s:4,c:F,lx:158.5,ly:.088,t:`σ = 4`},{s:6,c:N,lx:177.5,ly:.058,t:`σ = 6`},{s:9,c:P,lx:185,ly:.03,t:`σ = 9`}],o=e=>e===P?`#b45309`:e;return J(`${Y(344,316,`上は標準偏差6のまま平均を164・170・176と変えた正規分布で、形は同じまま左右に動く。下は平均170のまま標準偏差を4・6・9と変えたもので、大きいほど低く横に広がる`)}
+  </svg>`,`本文の身長の例（平均 170cm・標準偏差 6cm）を描いたものです。濃い順に、平均から ±1σ（164〜176cm）に ${V(i(1))}、±2σ（158〜182cm）までに ${V(i(2))}、±3σ（152〜188cm）までに ${V(i(3))} が入ります。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`)}function Ve(){let e=U(0,0,4)*1.08,t={x:14,y:40,w:316,h:92,xMin:146,xMax:194,yMax:e},n={x:14,y:198,w:316,h:92,xMin:146,xMax:194,yMax:e},r=[150,160,170,180,190],i=[{m:164,c:F},{m:170,c:N},{m:176,c:P}],a=[{s:4,c:F,lx:158.5,ly:.088,t:`σ = 4`},{s:6,c:N,lx:177.5,ly:.058,t:`σ = 6`},{s:9,c:P,lx:185,ly:.03,t:`σ = 9`}],o=e=>e===P?`#b45309`:e;return J(`${Y(344,330,`上は標準偏差6のまま平均を164・170・176と変えた正規分布で、形は同じまま左右に動く。下は平均170のまま標準偏差を4・6・9と変えたもので、大きいほど低く横に広がる`)}
     <text x="${t.x}" y="${t.y-22}" font-size="13.2" font-weight="700" fill="${R}">平均を変える（標準偏差は 6）</text>
     ${i.map(({m:e,c:n})=>q(t,t=>U(t,e,6),n)).join(``)}
     ${i.map(({m:e,c:n})=>`<text x="${z(W(t,e))}" y="${z(G(t,U(e,e,6))-5)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${o(n)}">${e}</text>`).join(``)}
@@ -224,7 +224,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${a.map(({s:e,c:t})=>q(n,t=>U(t,170,e),t)).join(``)}
     ${a.map(({c:e,lx:t,ly:r,t:i})=>`<text x="${z(W(n,t))}" y="${z(G(n,r))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${o(e)}">${i}</text>`).join(``)}
     ${K(n,r)}
-    <text x="${344/2}" y="312" text-anchor="middle" font-size="12.4" fill="${L}">横軸 身長 cm</text>
+    <text x="${344/2}" y="326" text-anchor="middle" font-size="12.4" fill="${L}">横軸 身長 cm</text>
   </svg>`,`上の3本は標準偏差を6cmに固定し、平均だけを164・170・176cmと変えたものです。山の形はまったく同じで、平均の位置へ平行に動きます。下の3本は平均を170cmに固定し、標準偏差を4・6・9cmと変えたものです。標準偏差が大きいほど横に広がり、面積は1のままなので山は低くなります。σ = 4 の山の高さは σ = 9 の${H(9/4)}倍です。`)}function He(){let e=10/6,t=1-fe(e),n={x:14,y:40,w:316,h:120,xMin:152,xMax:188,yMax:U(170,170,6)*1.08},r=e=>U(e,170,6),i=n.y+n.h;return J(`${Y(344,236,`身長が平均170cm・標準偏差6cmの正規分布で、180cm以上の部分に色を付けた図。下に標準化した Z の目盛りを並べてある`)}
     ${_e(n,r,180,n.xMax,I,.45)}
     ${q(n,r,N)}
