@@ -502,7 +502,7 @@ function normalAreas(): string {
 
 // ============ 1.10：平均と標準偏差で形がどう変わるか ============
 function normalParams(): string {
-  const W = 344, H = 300;
+  const W = 344, H = 316;
   const yMax = normPdf(0, 0, 4) * 1.08;
   const top: Box = { x: 14, y: 40, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
   const bot: Box = { x: 14, y: 184, w: 316, h: 92, xMin: 146, xMax: 194, yMax };
@@ -519,7 +519,7 @@ function normalParams(): string {
     ${sds.map(({ s: sd, c }) => curve(bot, (x) => normPdf(x, 170, sd), c)).join('')}
     ${sds.map(({ c, lx, ly, t }) => `<text x="${f1(PX(bot, lx))}" y="${f1(PY(bot, ly))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${lab(c)}">${t}</text>`).join('')}
     ${axes(bot, ticks)}
-    <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm</text>
   </svg>`;
   const cap = `上の3本は標準偏差を6cmに固定し、平均だけを164・170・176cmと変えたものです。山の形はまったく同じで、平均の位置へ平行に動きます。下の3本は平均を170cmに固定し、標準偏差を4・6・9cmと変えたものです。標準偏差が大きいほど横に広がり、面積は1のままなので山は低くなります。σ = 4 の山の高さは σ = 9 の${num(9 / 4)}倍です。`;
   return fig(svg, cap);
