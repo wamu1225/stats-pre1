@@ -1255,6 +1255,26 @@ $$E[X] = \\frac{1}{\\lambda}, \\quad \\text{Var}(X) = \\frac{1}{\\lambda^2}$$
 
 1分に0.05件なら、平均の待ち時間は $1/0.05 = 20$ 分です。1時間に3件なら20分に1件の割合なので、直感とも合います。
 
+分散が $1/\\lambda^2$ になるのは、時間の単位を変えると分かります。
+
+1. 20分を1単位として測ると、平均1単位の指数分布（$\\lambda = 1$）になります。その分散は1です（下の参考で計算します）
+2. 分に戻すには値を20倍するので、分散は $20^2 = 400$ 倍になります（[確率分布の基礎](/stats-pre1/1.4-dist-basics/)で学んだ $\\text{Var}(aX) = a^2\\,\\text{Var}(X)$ です）
+3. $20 = 1/\\lambda$ なので、分散は $1/\\lambda^2$ です
+
+標準偏差は $1/\\lambda$ で、平均と同じ大きさです。平均20分の待ち時間は、標準偏差も20分あり、ばらつきがとても大きい分布です。
+
+🔍 **期待値と分散を積分で求める**
+
+部分積分を使います。$t \\to \\infty$ で $t e^{-\\lambda t}$ も $t^2 e^{-\\lambda t}$ も0に近づくので、角かっこの項は0になります。
+
+$$\\begin{aligned} E[X] &= \\int_0^\\infty t\\,\\lambda e^{-\\lambda t}\\,dt \\\\ &= \\Big[-t e^{-\\lambda t}\\Big]_0^\\infty + \\int_0^\\infty e^{-\\lambda t}\\,dt \\\\ &= \\frac{1}{\\lambda} \\end{aligned}$$
+
+$$\\begin{aligned} E[X^2] &= \\int_0^\\infty t^2\\,\\lambda e^{-\\lambda t}\\,dt \\\\ &= \\Big[-t^2 e^{-\\lambda t}\\Big]_0^\\infty + \\int_0^\\infty 2t\\, e^{-\\lambda t}\\,dt \\\\ &= \\frac{2}{\\lambda}\\,E[X] = \\frac{2}{\\lambda^2} \\end{aligned}$$
+
+$$\\begin{aligned} \\text{Var}(X) &= E[X^2] - (E[X])^2 \\\\ &= \\frac{2}{\\lambda^2} - \\frac{1}{\\lambda^2} = \\frac{1}{\\lambda^2} \\end{aligned}$$
+
+🔍/
+
 #### 無記憶性
 
 指数分布は、[幾何分布](/stats-pre1/1.7b-geometric-multinomial/)と同じ**無記憶性**を持ちます。すでに $s$ 分待ったとき、さらに $t$ 分以上待つ確率は、最初から $t$ 分以上待つ確率と変わりません。
