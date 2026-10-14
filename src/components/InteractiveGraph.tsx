@@ -118,12 +118,12 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         return Math.exp((k - 1) * Math.log(x) - x - logFactKm1);
       };
 
-      for (let z = -4; z <= 4; z += 0.05) {
+      // Integer steps keep the x labels exact ("-3.00", not "-0.00"). The exact Gamma density is
+      // drawn for every n: at n=30 the skewness 2/sqrt(n) is still 0.37, and the text says so.
+      for (let i = -80; i <= 80; i++) {
+        const z = i / 20;
         const s = z * sqrtN + n;
-        // For n>25, Gamma(n,1) standardized is visually indistinguishable from N(0,1)
-        const density = n <= 25
-          ? gammaPDF(s, n) * sqrtN
-          : normalPDF(z, 0, 1);
+        const density = gammaPDF(s, n) * sqrtN;
         data.push({ x: z.toFixed(2), y: Math.max(0, density), ref: normalPDF(z, 0, 1) });
       }
     } else if (type === 't') {
@@ -358,14 +358,17 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           <ResponsiveContainer width="100%" height={190}>
             <ComposedChart data={chartD} margin={{ top: 10, right: 10, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="x" hide />
+              <XAxis dataKey="x" ticks={['-3.00', '-2.00', '-1.00', '0.00', '1.00', '2.00', '3.00']} tickFormatter={(v: string) => String(parseFloat(v))} tick={{ fontSize: 11 }} interval={0} />
               <YAxis hide />
               <Area type="monotone" dataKey="y" fill="var(--primary)" stroke="var(--primary)" fillOpacity={0.3} dot={false} isAnimationActive={false} />
               <Line type="monotone" dataKey="ref" stroke="#94a3b8" strokeDasharray="5 5" dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            点線: N(0,1)（収束の目標）。n を増やすと青い分布が近づく様子が分かります。
+            点線: N(0,1)（収束の目標）。横軸は標準化した平均。
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
+            n = {n} のとき、標準化した平均の歪度 2/√n ≈ {(2 / Math.sqrt(n)).toFixed(2)}（0 で左右対称）
           </div>
         </div>
       );

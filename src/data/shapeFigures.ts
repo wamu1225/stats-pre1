@@ -547,6 +547,38 @@ function standardizeTail(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.11：中心極限定理（コイン100回の表の枚数。棒＝二項分布の確率、曲線＝N(50, 25)） ============
+function cltCoin(): string {
+  const W = 344, H = 262;
+  const b: Box = { x: 14, y: 40, w: 316, h: 168, xMin: 29.5, xMax: 70.5, yMax: 0.088 };
+  const ks = range(30, 70);
+  const ps = ks.map((k) => binom(100, 0.5, k));
+  const mid = PY(b, normPdf(55, 50, 5));
+  const in5 = ks.filter((k) => k >= 45 && k <= 55).reduce((a, k) => a + binom(100, 0.5, k), 0);
+  // 左上の小さな枠：1回分のコイン（0 と 1 が 1/2 ずつ）
+  const ib = { x: 22, y: 44, w: 92, h: 66 };
+  const ibar = (cx: number) => `<rect x="${cx - 11}" y="${ib.y + 20}" width="22" height="${ib.h - 34}" fill="${SLATE}" fill-opacity="0.6" />`;
+  const svg = `${svgOpen(W, H, 'コインを100回投げたときの表の枚数の確率。0と1の2本の棒しかない1回分の分布から、平均50・標準偏差5の釣鐘形になる')}
+    ${axes(b, [30, 40, 50, 60, 70])}
+    ${bars(b, ks, ps, INDIGO, 0.25)}
+    ${curve(b, (x) => normPdf(x, 50, 5), ROSE, 29.5, 70.5, 2)}
+    <line x1="${f1(PX(b, 50))}" y1="${b.y - 4}" x2="${f1(PX(b, 50))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 50))}" y="${b.y - 10}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">平均 50</text>
+    <line x1="${f1(PX(b, 45))}" y1="${f1(mid)}" x2="${f1(PX(b, 55))}" y2="${f1(mid)}" stroke="${INK}" stroke-width="1.2" />
+    <text x="${f1(PX(b, 56))}" y="${f1(mid + 4)}" font-size="12.4" fill="${INK}">±5＝標準偏差</text>
+    <rect x="${ib.x}" y="${ib.y}" width="${ib.w}" height="${ib.h}" fill="#fff" stroke="${SLATE}" stroke-width="0.8" rx="4" />
+    <text x="${ib.x + ib.w / 2}" y="${ib.y + 14}" text-anchor="middle" font-size="11.6" fill="${INK}">1回分のコイン</text>
+    ${ibar(ib.x + 28)}${ibar(ib.x + 64)}
+    <text x="${ib.x + 28}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="11.6" fill="${SLATE}">裏 0</text>
+    <text x="${ib.x + 64}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="11.6" fill="${SLATE}">表 1</text>
+    <text x="${W - 8}" y="${b.y + 30}" text-anchor="end" font-size="12.4" fill="${INDIGO}">棒＝実際の確率</text>
+    <text x="${W - 8}" y="${b.y + 48}" text-anchor="end" font-size="12.4" fill="${ROSE}">曲線＝N(50, 25)</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝100回のうち表が出た枚数</text>
+  </svg>`;
+  const cap = `1回のコイン投げは、左上のように裏（0）と表（1）の棒が2本あるだけの分布です。100回投げて表の枚数を数えると、その確率（青い棒）は平均50を頂上とする釣鐘形になり、平均50・標準偏差5の正規分布の曲線（赤）にほぼ重なります。50 ± 5（45〜55枚）に入る確率は約${pct(in5, 0)}です。実験を1000回繰り返してヒストグラムを描けば、この棒の形に近づきます。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.3：ベイズの樹形図（1000人） ============
 function bayesTree(): string {
   const W = 350, H = 250;
@@ -821,7 +853,7 @@ function lln(): string {
     ${lines}
     <line x1="${b.x}" y1="${b.y + b.h}" x2="${b.x + b.w}" y2="${b.y + b.h}" stroke="${SLATE}" />
     ${[[0, '1'], [1, '10'], [2, '100'], [3, '1000']].map(([v, t]) => `<text x="${f1(PX(b, v as number))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
-    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">振った回数（目盛りは10倍ごと）／縦軸＝それまでの目の平均</text>
+    <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝振った回数（10倍ごと）／縦軸＝目の平均</text>
   </svg>`;
   const at = (k: number) => runs.map((m) => m[k - 1].toFixed(2)).join('・');
   const cap = `3人が別々にサイコロを1000回振り、それまでに出た目の平均を追いかけました。10回目の平均は ${at(10)} とばらばらですが、100回目には ${at(100)}、1000回目には ${at(1000)} と、3本とも期待値 3.5 のまわりに集まります。どこで止めても平均が3.5ちょうどになるわけではなく、「ずれが大きくなる確率」が回数とともに小さくなる、というのが大数の法則の主張です。`;
@@ -1494,6 +1526,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-normal-areas': normalAreas,
   'f-normal-params': normalParams,
   'f-standardize': standardizeTail,
+  'f-clt-coin': cltCoin,
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
