@@ -547,6 +547,59 @@ function standardizeTail(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.10：1次変換（点数を2倍して10点足す） ============
+function normalAffine(): string {
+  const W = 344, H = 196;
+  const b: Box = { x: 14, y: 44, w: 316, h: 104, xMin: 0, xMax: 180, yMax: normPdf(0, 0, 10) * 1.1 };
+  const X = (x: number) => normPdf(x, 50, 10);
+  const Y = (x: number) => normPdf(x, 110, 20);
+  const svg = `${svgOpen(W, H, '平均50点・標準偏差10点の点数を2倍して10点足すと、山の中心は110点へ動き、幅は2倍に広がって高さは半分になる')}
+    ${area(b, X, 30, 70, INDIGO, 0.18)}
+    ${area(b, Y, 70, 150, AMBER, 0.18)}
+    ${curve(b, X, INDIGO)}
+    ${curve(b, Y, AMBER)}
+    <text x="${f1(PX(b, 50))}" y="${f1(PY(b, X(50)) - 20)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">X</text>
+    <text x="${f1(PX(b, 50))}" y="${f1(PY(b, X(50)) - 6)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">N(50, 10²)</text>
+    <text x="${f1(PX(b, 110))}" y="${f1(PY(b, Y(110)) - 20)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">2X + 10</text>
+    <text x="${f1(PX(b, 110))}" y="${f1(PY(b, Y(110)) - 6)}" text-anchor="middle" font-size="12.4" fill="#b45309">N(110, 20²)</text>
+    ${axes(b, [10, 30, 50, 70, 90, 110, 130, 150, 170])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 点数。色の帯＝平均 ± 2標準偏差</text>
+  </svg>`;
+  const cap = `平均50点・標準偏差10点の山（藍）を、全員2倍して10点足すと橙の山になります。中心は 50 × 2 + 10 = 110 点へ動き、幅は2倍、面積は1のままなので高さは半分です。色の帯（平均 ± 2標準偏差）も 30〜70点から 70〜150点へ、幅が40点から80点に伸びています。形は正規分布のまま変わりません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.10：和と差（数学＋英語・数学−英語。SDを足した18点は誤り） ============
+function normalSum(): string {
+  const W = 344, H = 250;
+  const sd = Math.sqrt(164);
+  const b: Box = { x: 14, y: 52, w: 316, h: 148, xMin: -40, xMax: 160, yMax: normPdf(0, 0, 8) * 1.12 };
+  const M = (x: number) => normPdf(x, 60, 10);
+  const E = (x: number) => normPdf(x, 55, 8);
+  const S = (x: number) => normPdf(x, 115, sd);
+  const D = (x: number) => normPdf(x, 5, sd);
+  const bad = (x: number) => normPdf(x, 115, 18);
+  const svg = `${svgOpen(W, H, '数学 N(60,100) と英語 N(55,64) の山、その合計 N(115,164) と点差 N(5,164) の山。合計と点差は同じ幅で、どちらも元の2科目より広い。標準偏差を足した18点の山は破線で、実際の合計より広すぎる')}
+    ${curve(b, E, SLATE, b.xMin, b.xMax, 1.6)}
+    ${curve(b, M, TEAL, b.xMin, b.xMax, 1.6)}
+    ${curve(b, bad, ROSE, b.xMin, b.xMax, 1.6, '5 3')}
+    ${curve(b, D, AMBER)}
+    ${curve(b, S, INDIGO)}
+    <text x="${f1(PX(b, 41))}" y="${f1(PY(b, E(55)) + 4)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${SLATE}">英語</text>
+    <text x="${f1(PX(b, 73))}" y="${f1(PY(b, M(60)) + 4)}" font-size="12.4" font-weight="700" fill="${TEAL}">数学</text>
+    <text x="${f1(PX(b, 5))}" y="${f1(PY(b, D(5)) - 20)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">点差</text>
+    <text x="${f1(PX(b, 5))}" y="${f1(PY(b, D(5)) - 6)}" text-anchor="middle" font-size="12.4" fill="#b45309">N(5, 164)</text>
+    <text x="${f1(PX(b, 115))}" y="${f1(PY(b, S(115)) - 20)}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">合計</text>
+    <text x="${f1(PX(b, 115))}" y="${f1(PY(b, S(115)) - 6)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">N(115, 164)</text>
+    <line x1="196" y1="22" x2="218" y2="22" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="5 3" />
+    <text x="222" y="26" font-size="12.4" fill="${ROSE}">SD 18点の山（誤り）</text>
+    ${axes(b, [-40, -20, 0, 20, 40, 60, 80, 100, 120, 140, 160])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 点数</text>
+  </svg>`;
+  const cap = `数学（緑・標準偏差10点）と英語（灰・8点）を足した合計（藍）は、中心が115点、標準偏差は約${f1(sd)}点です。点差（橙）は中心が5点に動くだけで、幅は合計とまったく同じです。どちらも元の2科目より広がっています。破線は標準偏差どうしを足した18点の山で、実際の合計より明らかに広すぎます。足しても引いても分散は 100 + 64 = 164 で、山の形は正規分布のままです。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.11：中心極限定理（コイン100回の表の枚数。棒＝二項分布の確率、曲線＝N(50, 25)） ============
 function cltCoin(): string {
   const W = 344, H = 262;
@@ -1526,6 +1579,8 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-normal-areas': normalAreas,
   'f-normal-params': normalParams,
   'f-standardize': standardizeTail,
+  'f-normal-affine': normalAffine,
+  'f-normal-plus': normalSum,
   'f-clt-coin': cltCoin,
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
