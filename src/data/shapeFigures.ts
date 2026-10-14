@@ -899,7 +899,12 @@ function lln(): string {
   });
   const cols = [INDIGO, AMBER, TEAL];
   const lines = runs.map((m, j) => `<polyline points="${m.map((v, i) => `${f1(PX(b, Math.log10(i + 1)))},${f1(py(v))}`).join(' ')}" fill="none" stroke="${cols[j]}" stroke-width="1.6" />`).join('');
-  const svg = `${svgOpen(W, H, 'サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく')}
+  // 灰の帯＝3.5 ± 2σ/√n（σ ≈ 1.708）。平均のほとんどがこの内側に入る
+  const sd = Math.sqrt(35 / 12);
+  const ns = Array.from({ length: 61 }, (_, i) => 10 ** (i / 20));
+  const band = `<polygon points="${[...ns.map((n) => `${f1(PX(b, Math.log10(n)))},${f1(py(3.5 + 2 * sd / Math.sqrt(n)))}`), ...ns.reverse().map((n) => `${f1(PX(b, Math.log10(n)))},${f1(py(3.5 - 2 * sd / Math.sqrt(n)))}`)].join(' ')}" fill="${SLATE}" fill-opacity="0.16" />`;
+  const svg = `${svgOpen(W, H, 'サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく。灰色の帯（平均のほとんどが入る範囲）は回数とともに細くなる')}
+    ${band}
     ${[2, 3, 4, 5].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <line x1="${b.x}" y1="${f1(py(3.5))}" x2="${b.x + b.w}" y2="${f1(py(3.5))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${b.x + b.w}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">赤の点線＝期待値 3.5</text>
@@ -909,7 +914,31 @@ function lln(): string {
     <text x="${b.x + b.w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝振った回数（10倍ごと）／縦軸＝目の平均</text>
   </svg>`;
   const at = (k: number) => runs.map((m) => m[k - 1].toFixed(2)).join('・');
-  const cap = `3人が別々にサイコロを1000回振り、それまでに出た目の平均を追いかけました。10回目の平均は ${at(10)} とばらばらですが、100回目には ${at(100)}、1000回目には ${at(1000)} と、3本とも期待値 3.5 のまわりに集まります。どこで止めても平均が3.5ちょうどになるわけではなく、「ずれが大きくなる確率」が回数とともに小さくなる、というのが大数の法則の主張です。`;
+  const rg = (n: number) => `${(3.5 - 2 * sd / Math.sqrt(n)).toFixed(2)}〜${(3.5 + 2 * sd / Math.sqrt(n)).toFixed(2)}`;
+  const cap = `3人が別々にサイコロを1000回振り、それまでに出た目の平均を追いかけました。10回目の平均は ${at(10)} とばらばらですが、100回目には ${at(100)}、1000回目には ${at(1000)} と、3本とも期待値 3.5 のまわりに集まります。灰色の帯は 3.5 ± 2σ/√n で、平均のほとんど（約95%）がこの内側に入る範囲です。100回なら ${rg(100)}、1000回なら ${rg(1000)} と細くなります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.11：指数分布から n 個とった平均の分布（幅が縮む＝大数の法則／形が釣鐘になる＝中心極限定理） ============
+function meanNarrow(): string {
+  const W = 344, H = 250;
+  const b: Box = { x: 14, y: 30, w: 316, h: 170, xMin: 0, xMax: 3, yMax: 3.6 };
+  // n 個の平均 = Gamma(n,1)/n。密度は n·g_n(n x)
+  const dens = (n: number) => (x: number) => (x <= 0 ? (n === 1 ? 1 : 0) : n * gammaPdf(n)(n * x));
+  const set = [{ n: 1, c: SLATE, lx: 0.3, t: 'n = 1（元の分布）' }, { n: 4, c: TEAL, lx: 0.75, t: 'n = 4' }, { n: 16, c: AMBER, lx: 0.94, t: 'n = 16' }, { n: 64, c: INDIGO, lx: 0.985, t: 'n = 64' }];
+  const lab = (c: string) => (c === AMBER ? '#b45309' : c);
+  const svg = `${svgOpen(W, H, '指数分布から n 個とった平均の分布。n が増えると山の幅が縮んで1に集まり、形は右に歪んだ形から左右対称の釣鐘形に変わる')}
+    <line x1="${f1(PX(b, 1))}" y1="${b.y - 6}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 1) + 4)}" y="${b.y + 4}" font-size="12.4" fill="${ROSE}">期待値 1</text>
+    ${set.map(({ n, c }) => curve(b, dens(n), c, 0.001, 3, n === 64 ? 2.2 : 1.8)).join('')}
+    <text x="${f1(PX(b, 1.7))}" y="${f1(PY(b, 0.45))}" font-size="12.4" font-weight="700" fill="${SLATE}">${set[0].t}</text>
+    <text x="${f1(PX(b, 0.55))}" y="${f1(PY(b, 1.05))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${TEAL}">${set[1].t}</text>
+    <text x="${f1(PX(b, 1.26))}" y="${f1(PY(b, dens(16)(0.94)) + 4)}" font-size="12.4" font-weight="700" fill="${lab(AMBER)}">${set[2].t}</text>
+    <text x="${f1(PX(b, 1.13))}" y="${f1(PY(b, dens(64)(0.985)) + 8)}" font-size="12.4" font-weight="700" fill="${INDIGO}">${set[3].t}</text>
+    ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5, 3])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝n 個の平均の値</text>
+  </svg>`;
+  const cap = `元の分布（灰）は指数分布で、0のそばが最も多く右に長く裾を引きます。そこから n 個とって平均すると、n = 4 ではまだ右に歪んだ山、n = 16、64 と増やすにつれて、山は期待値1のまわりに細く集まり、形も左右対称に近づきます。幅が縮むのが大数の法則、形が釣鐘になるのが中心極限定理です。標準偏差は 1/√n なので、n = 64 では 0.125 です。`;
   return fig(svg, cap);
 }
 
@@ -1587,6 +1616,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-overfit': overfit,
   'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift,
   'f-lln': lln,
+  'f-mean-narrow': meanNarrow,
   'f-likelihood': likelihood,
   'f-darts': darts,
   'f-pvalue': pValue,

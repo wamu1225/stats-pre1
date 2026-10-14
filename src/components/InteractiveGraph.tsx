@@ -365,10 +365,10 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             </ComposedChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            点線: N(0,1)（収束の目標）。横軸は標準化した平均。
+            元の分布＝指数分布（右に歪み、歪度2）。点線: N(0,1)。横軸は標準化した平均。
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
-            n = {n} のとき、標準化した平均の歪度 2/√n ≈ {(2 / Math.sqrt(n)).toFixed(2)}（0 で左右対称）
+            n = {n} のとき、標準化した平均の歪度 2/√n ≈ {(2 / Math.sqrt(n)).toFixed(2)}（元の歪度2 ÷ √n。0 で左右対称）
           </div>
         </div>
       );
