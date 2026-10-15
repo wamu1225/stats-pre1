@@ -1592,6 +1592,62 @@ function biasVariance(): string {
   return fig(svg, cap);
 }
 
+// ── 統計的因果推論（3.7）：DAG の基本3形とフロントドア ──
+type DagNode = { id: string; x: number; y: number; label: string; hidden?: boolean };
+type DagEdge = [string, string, string?];
+function dagPanel(nodes: DagNode[], edges: DagEdge[], mark: string): string {
+  const R = 17;
+  const by = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const lines = edges.map(([a, b, color]) => {
+    const A = by[a], B = by[b];
+    const dx = B.x - A.x, dy = B.y - A.y, d = Math.hypot(dx, dy);
+    const ux = dx / d, uy = dy / d;
+    const c = color ?? INK;
+    return `<line x1="${f1(A.x + ux * (R + 1))}" y1="${f1(A.y + uy * (R + 1))}" x2="${f1(B.x - ux * (R + 3))}" y2="${f1(B.y - uy * (R + 3))}" stroke="${c}" stroke-width="2" marker-end="url(#${mark})" />`;
+  }).join('');
+  const circles = nodes.map(n => `
+    <circle cx="${n.x}" cy="${n.y}" r="${R}" fill="${n.hidden ? '#f8fafc' : '#ffffff'}" stroke="${n.hidden ? SLATE : INDIGO}" stroke-width="1.8"${n.hidden ? ' stroke-dasharray="4 3"' : ''} />
+    <text x="${n.x}" y="${n.y + 5}" text-anchor="middle" font-size="14" font-weight="700" fill="${n.hidden ? SLATE : INDIGO}">${n.label}</text>`).join('');
+  return lines + circles;
+}
+function dagBasic(): string {
+  const W = 350, H = 372;
+  const mk = 'dag-arrow';
+  const t = (y: number, title: string, sub: string) =>
+    `<text x="10" y="${y}" font-size="13" font-weight="700" fill="${INK}">${title}</text><text x="10" y="${y + 16}" font-size="12" fill="${SLATE}">${sub}</text>`;
+  const p1 = dagPanel([{ id: 'Z', x: 255, y: 28, label: 'Z' }, { id: 'X', x: 200, y: 96, label: 'X' }, { id: 'Y', x: 310, y: 96, label: 'Y' }],
+    [['Z', 'X', AMBER], ['Z', 'Y', AMBER], ['X', 'Y']], mk);
+  const p2 = dagPanel([{ id: 'X', x: 190, y: 220, label: 'X' }, { id: 'M', x: 250, y: 220, label: 'M' }, { id: 'Y', x: 310, y: 220, label: 'Y' }],
+    [['X', 'M', TEAL], ['M', 'Y', TEAL]], mk);
+  const p3 = dagPanel([{ id: 'X', x: 200, y: 296, label: 'X' }, { id: 'Y', x: 310, y: 296, label: 'Y' }, { id: 'C', x: 255, y: 340, label: 'C' }],
+    [['X', 'C', ROSE], ['Y', 'C', ROSE]], mk);
+  const svg = `${svgOpen(W, H, '因果グラフ（DAG）の基本3形：交絡（Zが共通原因）、媒介（XからMを通ってY）、合流点（XとYがCに向かう）')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${t(24, '① 交絡（分岐）', 'Z が X と Y の共通原因')}
+    ${p1}
+    <line x1="10" y1="132" x2="340" y2="132" stroke="#e2e8f0" />
+    ${t(176, '② 媒介（連鎖）', 'X が M を介して Y へ')}
+    ${p2}
+    <line x1="10" y1="252" x2="340" y2="252" stroke="#e2e8f0" />
+    ${t(270, '③ 合流点', 'X と Y の結果が C')}
+    ${p3}
+  </svg>`;
+  return fig(svg, '矢印は原因から結果の向き。①は Z で調整して交絡を切る。②は M を調整すると X の効果の通り道を塞ぐ。③は C を調整すると、もともと無関係の X と Y に見かけの関連が生まれる。');
+}
+function dagFront(): string {
+  const W = 350, H = 150;
+  const mk = 'dagf-arrow';
+  const nodes: DagNode[] = [{ id: 'U', x: 175, y: 28, label: 'U', hidden: true }, { id: 'X', x: 60, y: 108, label: 'X' }, { id: 'M', x: 175, y: 108, label: 'M' }, { id: 'Y', x: 290, y: 108, label: 'Y' }];
+  const g = dagPanel(nodes, [['U', 'X', SLATE], ['U', 'Y', SLATE], ['X', 'M', TEAL], ['M', 'Y', TEAL]], mk);
+  const svg = `${svgOpen(W, H, 'フロントドア基準のDAG：観測できない U が X と Y の両方に影響し、X から M を通って Y に届く経路がある')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${g}
+    <text x="218" y="40" font-size="12" fill="${SLATE}">観測できない交絡</text>
+    <text x="175" y="146" text-anchor="middle" font-size="12" fill="${TEAL}">X→M と M→Y を別々にたどる</text>
+  </svg>`;
+  return fig(svg, '点線の U は測れない共通原因。X と Y を直接比べても U の影響が混ざるが、途中の M を観測できれば、X→M と M→Y の2段に分けて効果を求められる。');
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -1632,4 +1688,6 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-mds': mdsMap,
   'f-lda': ldaBoundary,
   'f-biasvar': biasVariance,
+  'f-dag-basic': dagBasic,
+  'f-dag-front': dagFront,
 };

@@ -85,6 +85,7 @@ const sections: { title: string; lead: string; head: [string, string]; rows: Row
       ['「イベントが起きるまでの時間」で、途中で観察が終わった人がいる', 'カプラン・マイヤー法、Cox 比例ハザードモデル', '3.5-survival'],
       ['時間の順に並んだデータの予測', 'ARIMA モデル', '3.2-timeseries'],
       ['一部の値が欠けているデータでの推定', 'EM アルゴリズム', '3.6-simulation'],
+      ['観察データから、原因の効果（因果効果）を求めたい', '因果グラフ（DAG）・バックドア基準', '3.7-causal'],
     ],
   },
 ];
