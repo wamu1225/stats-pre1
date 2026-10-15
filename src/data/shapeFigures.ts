@@ -942,6 +942,69 @@ function meanNarrow(): string {
   return fig(svg, cap);
 }
 
+// 1.12：t・χ²・F が標準正規分布 Z からどう組み立てられるか
+function distFamily(): string {
+  const W = 344, H = 300;
+  const mk = 'df-arrow';
+  const box = (cx: number, cy: number, w: number, c: string, title: string, sub: string) =>
+    `<rect x="${f1(cx - w / 2)}" y="${f1(cy - 24)}" width="${w}" height="48" rx="8" fill="#fff" stroke="${c}" stroke-width="2" />
+    <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="14" font-weight="700" fill="${c}">${title}</text>
+    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="11.5" fill="${SLATE}">${sub}</text>`;
+  const arrow = (x1: number, y1: number, x2: number, y2: number) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="1.6" marker-end="url(#${mk})" />`;
+  const svg = `${svgOpen(W, H, '3つの分布の組み立て。標準正規分布 Z を2乗して k 個足すとカイ二乗分布、Z をカイ二乗分布を自由度で割った値の平方根で割ると t 分布、自由度で割った2つのカイ二乗分布の比が F 分布。t 分布を2乗すると分子の自由度1の F 分布')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${box(172, 32, 190, INK, '標準正規分布 Z', 'N(0, 1)')}
+    ${arrow(172, 57, 172, 100)}
+    <text x="180" y="83" font-size="11.5" fill="${INK}">2乗して k 個足す</text>
+    ${box(172, 126, 190, TEAL, 'カイ二乗分布 χ²(k)', '例：(n−1)s² / σ²')}
+    ${arrow(120, 151, 92, 210)}
+    ${arrow(224, 151, 252, 210)}
+    <path d="M77,40 C14,60 14,170 66,210" fill="none" stroke="${INK}" stroke-width="1.6" marker-end="url(#${mk})" />
+    <text x="34" y="120" font-size="11.5" fill="${INK}">Z を</text>
+    <text x="34" y="136" font-size="11.5" fill="${INK}">分子に</text>
+    <text x="104" y="172" text-anchor="end" font-size="11.5" fill="${INK}">÷ √(χ²/k)</text>
+    <text x="242" y="172" font-size="11.5" fill="${INK}">χ²/k の比</text>
+    ${box(86, 236, 150, INDIGO, 't 分布 t(k)', '例：平均を s で標準化')}
+    ${box(258, 236, 150, AMBER, 'F 分布 F(k₁, k₂)', '例：2つの s² の比')}
+    <path d="M86,262 V276 H258 V262" fill="none" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="172" y="295" text-anchor="middle" font-size="11.5" fill="${ROSE}">t(k)² = F(1, k)</text>
+  </svg>`;
+  const cap = `3つとも Z から作れます。t と F で割る2つの量は、互いに独立であることが条件です。`;
+  return fig(svg, cap);
+}
+
+// 1.12：非心 t 分布。真の平均が仮定の値からずれると、T の山が右へずれる
+function noncentralT(): string {
+  const W = 344, H = 250;
+  const k = 9, cut = 2.262;
+  const b: Box = { x: 14, y: 30, w: 316, h: 170, xMin: -4, xMax: 8, yMax: 0.42 };
+  const chi = (v: number) => (v <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(v) - v / 2 - (k / 2) * Math.log(2) - lgamma(k / 2)));
+  const phi = (x: number) => Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+  const simpson = (fn: (x: number) => number, a: number, z: number, m: number) => {
+    const h = (z - a) / m; let s = fn(a) + fn(z);
+    for (let i = 1; i < m; i++) s += fn(a + i * h) * (i % 2 ? 4 : 2);
+    return (s * h) / 3;
+  };
+  // T = (Z + δ) / √(V/k)、V ~ χ²(k)。V で積分して密度を出す
+  const dens = (d: number) => (t: number) => simpson((v) => { const s = Math.sqrt(v / k); return phi(t * s - d) * s * chi(v); }, 1e-6, 60, 300);
+  const over = (d: number) => simpson(dens(d), cut, 14, 120);
+  const set = [{ d: 0, c: SLATE, lx: -1.9, t: 'δ = 0' }, { d: 2, c: TEAL, lx: 0.2, t: 'δ = 2' }, { d: 3, c: INDIGO, lx: 4.6, t: 'δ = 3' }];
+  const svg = `${svgOpen(W, H, '自由度9の t 分布と非心度2・3の非心 t 分布。非心度が大きいほど山が右へずれ、2.262 より右の面積が増える')}
+    ${area(b, dens(3), cut, 8, INDIGO, 0.16)}
+    <line x1="${f1(PX(b, cut))}" y1="${b.y - 6}" x2="${f1(PX(b, cut))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, cut) + 4)}" y="${b.y + 4}" font-size="12.4" fill="${ROSE}">2.262</text>
+    ${set.map(({ d, c }) => curve(b, dens(d), c, -4, 8, 2)).join('')}
+    <text x="${f1(PX(b, -1.6))}" y="${f1(PY(b, 0.36))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${SLATE}">${set[0].t}</text>
+    <text x="${f1(PX(b, 1.0))}" y="${f1(PY(b, 0.40))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${TEAL}">${set[1].t}</text>
+    <text x="${f1(PX(b, 4.4))}" y="${f1(PY(b, 0.28))}" font-size="12.4" font-weight="700" fill="${INDIGO}">${set[2].t}</text>
+    ${axes(b, [-4, -2, 0, 2, 4, 6, 8])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝T の値（自由度9）</text>
+  </svg>`;
+  const cap = `δ = 0 が普通の t 分布です。2.262 を超える確率は、δ = 0 で ${pct(over(0), 1)}、δ = 2 で ${pct(over(2), 0)}、δ = 3 で ${pct(over(3), 0)} です。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.14：尤度関数（10回中7回表） ============
 function likelihood(): string {
   const W = 350, H = 220;
@@ -1673,6 +1736,8 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
+  'f-dist-family': distFamily,
+  'f-noncentral-t': noncentralT,
   'f-likelihood': likelihood,
   'f-darts': darts,
   'f-pvalue': pValue,

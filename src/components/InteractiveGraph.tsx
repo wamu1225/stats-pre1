@@ -11,6 +11,7 @@ import {
   ComposedChart,
   Area,
   Bar,
+  ReferenceLine,
 } from 'recharts';
 import { motion } from 'framer-motion';
 import { normalPDF, tPDF, chi2PDF, fPDF } from '../utils/math';
@@ -83,10 +84,25 @@ function runMetropolis(steps: number, seed: number): number[] {
   return samples;
 }
 
+// χ² の横軸の右端（期待値 k ＋ 標準偏差 √(2k) の4つ分。小さい k でも 20 は確保）
+function chi2XMax(k: number): number {
+  return Math.max(20, Math.ceil((k + 4 * Math.sqrt(2 * k)) / 10) * 10);
+}
+function niceStep(xMax: number): number {
+  return xMax <= 20 ? 5 : xMax <= 50 ? 10 : 20;
+}
+function simpson(f: (x: number) => number, a: number, b: number, m: number): number {
+  const h = (b - a) / m;
+  let s = f(a) + f(b);
+  for (let i = 1; i < m; i++) s += f(a + i * h) * (i % 2 ? 4 : 2);
+  return (s * h) / 3;
+}
+
 export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const title = typeToTitle[type] || '統計シミュレーター';
   const [n, setN] = useState(5);
   const [df, setDf] = useState(5);
+  const [df2, setDf2] = useState(10);
   const [degree, setDegree] = useState(1);
   const [corr, setCorr] = useState(0.9);
   const [pcaCorr, setPcaCorr] = useState(0.8);
@@ -127,16 +143,22 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         data.push({ x: z.toFixed(2), y: Math.max(0, density), ref: normalPDF(z, 0, 1) });
       }
     } else if (type === 't') {
-      for (let x = -4; x <= 4; x += 0.1) {
-        data.push({ x: x.toFixed(1), y: tPDF(x, df), normal: normalPDF(x, 0, 1) });
+      // 横軸は数値で持ち、目盛りを -4・-2・0・2・4 に固定する（文字列の x では目盛りが -2.2・-0.4 のように半端になっていた）
+      for (let i = -80; i <= 80; i++) {
+        const x = i / 20;
+        data.push({ x, y: tPDF(x, df), normal: normalPDF(x, 0, 1) });
       }
     } else if (type === 'chi2') {
-      for (let x = 0; x <= 20; x += 0.2) {
-        data.push({ x: x.toFixed(1), y: chi2PDF(x, df) });
+      // 自由度が大きいと山が右へ動くので、横軸の右端を期待値＋標準偏差4つ分まで広げる
+      const xMax = chi2XMax(df);
+      for (let i = 1; i <= 160; i++) {
+        const x = (xMax * i) / 160;
+        data.push({ x, y: chi2PDF(x, df) });
       }
     } else if (type === 'f') {
-      for (let x = 0; x <= 5; x += 0.1) {
-        data.push({ x: x.toFixed(1), y: fPDF(x, 5, df) });
+      for (let i = 1; i <= 200; i++) {
+        const x = i / 40;
+        data.push({ x, y: fPDF(x, df, df2) });
       }
     } else if (type === 'update') {
       // Simple Bayesian Update Visualization
@@ -245,9 +267,45 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       return { hist };
     }
     return data;
-  }, [type, n, df, degree, pcaCorr, basePairs, ldaCorr, ldaBasePairs, mcmcN, mcmcSamples]);
+  }, [type, n, df, df2, degree, pcaCorr, basePairs, ldaCorr, ldaBasePairs, mcmcN, mcmcSamples]);
 
   const renderChart = () => {
+    if (type === 't' || type === 'chi2' || type === 'f') {
+      const d = chartData as { x: number; y: number; normal?: number }[];
+      const xMax = type === 't' ? 4 : type === 'chi2' ? chi2XMax(df) : 5;
+      const step = type === 'chi2' ? niceStep(xMax) : 1;
+      const ticks = type === 't' ? [-4, -2, 0, 2, 4] : Array.from({ length: Math.floor(xMax / step) + 1 }, (_, i) => i * step);
+      // 自由度1・2では 0 の近くで密度が無限に大きくなるので、縦軸の上限を決めてはみ出した分は切る
+      const yTop = type === 't' ? 0.42 : type === 'chi2' ? Math.min(0.5, Math.max(...d.map(p => p.y)) * 1.15) : Math.min(1.6, Math.max(...d.map(p => p.y)) * 1.15);
+      const tailT = type === 't' ? 1 - simpson(x => tPDF(x, df), -2, 2, 400) : 0;
+      return (
+        <div>
+          <ResponsiveContainer width="100%" height={190}>
+            <ComposedChart data={d} margin={{ top: 10, right: 12, left: 4, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis type="number" dataKey="x" domain={[type === 't' ? -4 : 0, xMax]} ticks={ticks} interval={0} tick={{ fontSize: 11, fill: '#64748b' }} />
+              <YAxis hide domain={[0, yTop]} allowDataOverflow />
+              {type === 't' && <Line type="monotone" dataKey="normal" stroke="#94a3b8" strokeDasharray="5 5" dot={false} isAnimationActive={false} />}
+              {type === 'chi2' && <ReferenceLine x={df} stroke="#dc2626" strokeDasharray="4 3" />}
+              {type === 'f' && <ReferenceLine x={1} stroke="#dc2626" strokeDasharray="4 3" />}
+              {type === 't'
+                ? <Line type="monotone" dataKey="y" stroke="var(--primary)" strokeWidth={2} dot={false} isAnimationActive={false} />
+                : <Area type="monotone" dataKey="y" fill="var(--primary)" stroke="var(--primary)" fillOpacity={0.3} dot={false} isAnimationActive={false} />}
+            </ComposedChart>
+          </ResponsiveContainer>
+          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
+            {type === 't' ? '青: 自由度 ' + df + ' の t 分布。点線: N(0,1)。' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝1（2つの分散が等しいときの中心）。'}
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
+            {type === 't'
+              ? <>|T| が 2 を超える確率：{(tailT * 100).toFixed(1)}%（N(0,1) では 4.6%）</>
+              : type === 'chi2'
+                ? <>自由度 k = {df}：期待値 {df}、分散 {2 * df}</>
+                : <>F({df}, {df2})：{df2 > 2 ? <>期待値 {df2}/({df2}−2) ≈ {(df2 / (df2 - 2)).toFixed(2)}</> : <>分母の自由度が2以下では期待値なし</>}</>}
+          </div>
+        </div>
+      );
+    }
     if (type === 'overfit') {
       const { line, dots } = chartData as { line: { x: number; y: number }[], dots: { x: number; y: number }[] };
       const aic = degree === 1 ? 45 : degree === 2 ? 42 : 88;
@@ -475,11 +533,6 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
               <Line type="monotone" dataKey="prior" stroke="#94a3b8" strokeDasharray="5 5" dot={false} name="事前分布" />
               <Area type="monotone" dataKey="posterior" fill="var(--primary)" stroke="var(--primary)" fillOpacity={0.3} name="事後分布" />
             </>
-          ) : type === 't' ? (
-            <>
-              <Line type="monotone" dataKey="normal" stroke="#94a3b8" strokeDasharray="5 5" dot={false} name="正規分布" />
-              <Line type="monotone" dataKey="y" stroke="var(--primary)" strokeWidth={2} dot={false} name="t分布" />
-            </>
           ) : (
             <Area type="monotone" dataKey="y" fill="var(--primary)" stroke="var(--primary)" fillOpacity={0.3} dot={false} />
           )}
@@ -506,8 +559,14 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         )}
         {(type === 't' || type === 'chi2' || type === 'f') && (
           <div className="slider-container">
-            <div className="slider-label"><span>自由度</span> <span>{df}</span></div>
-            <input type="range" min="1" max="50" step="1" value={df} onChange={e => setDf(parseInt(e.target.value))} />
+            <div className="slider-label"><span>{type === 'f' ? '分子の自由度 k₁' : type === 'chi2' ? '自由度 k' : '自由度'}</span> <span>{df}</span></div>
+            <input type="range" min="1" max="50" step="1" value={df} onChange={e => setDf(parseInt(e.target.value))} aria-label={type === 'f' ? '分子の自由度' : '自由度'} />
+          </div>
+        )}
+        {type === 'f' && (
+          <div className="slider-container">
+            <div className="slider-label"><span>分母の自由度 k₂</span> <span>{df2}</span></div>
+            <input type="range" min="1" max="50" step="1" value={df2} onChange={e => setDf2(parseInt(e.target.value))} aria-label="分母の自由度" />
           </div>
         )}
         {type === 'update' && (
