@@ -797,7 +797,7 @@ function bivariateNormal(): string {
   };
   const svg = `${svgOpen(W, H, '2変量正規分布の等確率線：相関0なら円、相関0.7なら右上がりの楕円')}${panel(0, 12)}${panel(0.7, 188)}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`;
-  const cap = `どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。`;
+  const cap = `左は相関0で等高線は円、右は相関0.7で右上がりの楕円です。X が大きいほど Y も大きくなりやすいことが、楕円の傾きに表れます。`;
   return fig(svg, cap);
 }
 
@@ -823,7 +823,7 @@ function transformStrips(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">4色の帯は、どれも面積（確率）0.25</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
   </svg>`;
-  const cap = `X を4つの帯（0〜0.25、0.25〜0.5 …）に分け、それぞれを2乗した先へ移しました。藍の帯 0〜0.25 は 0〜${0.25 ** 2} へ縮むので、面積0.25を保つために高くなります。赤の帯 0.75〜1 は ${0.75 ** 2}〜1 へ広がるので低くなります。この「幅が何倍になったかで高さを割る」補正がヤコビアンです。`;
+  const cap = `0〜1の一様分布を4つの帯に分けて2乗しました。どの帯も面積0.25のままで、縮んだ帯は高く、広がった帯は低くなります。`;
   return fig(svg, cap);
 }
 
@@ -865,7 +865,7 @@ function conditionalNormal(): string {
     <text x="${f1(X(164))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">164cm</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm／黒の直線 ＝ 身長ごとの体重の平均</text>
   </svg>`;
-  const cap = `点は身長ごとの体重の平均です。身長（平均170cm・標準偏差6cm）と体重（平均65kg・標準偏差8kg）が、相関0.5の2変量正規分布に従うとします。灰色の楕円は等高線です。身長を176cmに決めて縦に切ると、体重は平均${num(cm(176))}kg・標準偏差${num(cs)}kgの正規分布になります。164cmなら平均${num(cm(164))}kgです。切る位置を変えると、山の中心は黒の直線に沿って動き、幅は変わりません。`;
+  const cap = `身長（平均170cm・標準偏差6cm）と体重（平均65kg・標準偏差8kg）、相関0.5の例です。身長で縦に切ると体重は正規分布になり、中心は黒の直線に沿って動き、幅（標準偏差${num(cs)}kg）は変わりません。`;
   return fig(svg, cap);
 }
 
@@ -882,7 +882,7 @@ function maxShift(): string {
     ${ns.map(({ c, lx, ly, t }) => `<text x="${f1(PX(b, lx))}" y="${f1(PY(b, ly))}" font-size="12.4" font-weight="700" fill="${c === AMBER ? '#b45309' : c}">${t}</text>`).join('')}
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ n 個の最大値／点線 ＝ ln n（${f2(Math.log(10))}・${f2(Math.log(100))}）</text>
   </svg>`;
-  const cap = `平均1の指数分布から n 個とった最大値の分布です。n を10倍にするたびに、山は右へ ln 10 ≈ ${f2(Math.log(10))} ずつずれます。n = 10 と n = 100 の山の形はほとんど同じで、ずらして重ねると、ガンベル分布という1つの形に近づいていきます。`;
+  const cap = `n を10倍にするたびに山は右へ ${f2(Math.log(10))} ずれ、形はほぼ同じです。ずらして重ねるとガンベル分布に近づきます。`;
   return fig(svg, cap);
 }
 
@@ -916,7 +916,7 @@ function mahalanobis(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">楕円＝マハラノビス距離 1・2・3 の線（相関0.7）</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">かっこ内＝その点のマハラノビス距離</text>
   </svg>`;
-  const cap = `P と Q は、中心からのふつうの距離がどちらも ${f2(eu)} です。点は右上がりに散らばるので、楕円に沿った P のマハラノビス距離は ${f2(md(P[0], P[1]))}、楕円を横切る Q は ${f2(md(Q[0], Q[1]))} です。Q のほうがずっと珍しい点だということを、この距離が表します。`;
+  const cap = `P と Q は中心からのふつうの距離がどちらも ${f2(eu)} ですが、マハラノビス距離は P が ${f2(md(P[0], P[1]))}、Q が ${f2(md(Q[0], Q[1]))} です。点の散らばりを横切る Q のほうが、ずっと珍しい点です。`;
   return fig(svg, cap);
 }
 
@@ -943,7 +943,7 @@ function uncorrelatedDependent(): string {
     <text x="${f1(PX(b, 2.1))}" y="${f1(py(-2.8))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">y = −x</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">200点・標本相関 ${f2(rr)}</text>
   </svg>`;
-  const cap = `X も Y もそれぞれ N(0, 1) に従い、相関もほぼ0です。それでも点は2本の線の上にしかなく、X が分かれば Y は2通りに絞られます。2変量正規分布で相関0なら、点は最初の図の左のように円形に散らばります。`;
+  const cap = `X も Y も N(0, 1) で相関もほぼ0なのに、点は2本の線の上にしかなく、X が分かれば Y は2通りに絞られます。`;
   return fig(svg, cap);
 }
 
@@ -972,7 +972,7 @@ function foldSquare(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">橙：−1.5〜−1 から　藍：1〜1.5 から</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線＝自由度1のカイ二乗分布</text>
   </svg>`;
-  const cap = `左右対称な2つの帯は、2乗するとどちらも 1〜2.25 に移ります。右の帯は2つを積み上げたもので、面積は片側 ${pct(one)} ずつ、合わせて ${pct(2 * one)} です。式で2つの寄与を足すのは、この積み上げのことです。`;
+  const cap = `左右2つの帯（各 ${pct(one)}）が同じ 1〜2.25 に移り、積み重なって ${pct(2 * one)} になります。`;
   return fig(svg, cap);
 }
 
@@ -1001,7 +1001,7 @@ function expSum(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線分の上では、どの点も密度は e^(−u) で同じ</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">λ = 1 の場合</text>
   </svg>`;
-  const cap = `和が u になる組は線分の上に並び、u が大きいほど線分が長くなります。線分の上の1点あたりの密度 e^(−u) は u とともに小さくなるので、両方を掛けた u e^(−u) が和の密度です。0の近くは組み合わせが少ないため低く、u = 1 で最大になります。`;
+  const cap = `和が u になる組は線分の上に並び、u が大きいほど線分が長くなります。線分の長さ u と1点の密度 e^(−u) を掛けた u e^(−u) が和の密度です。`;
   return fig(svg, cap);
 }
 
@@ -1020,7 +1020,7 @@ function maxCdf(): string {
     ${axes(b, [0, 0.2, 0.4, 0.6, 0.8, 1])}
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x／縦軸＝最大値が x 以下になる確率 x^n</text>
   </svg>`;
-  const cap = `点線の x = 0.8 で比べると、最大値が0.8以下になる確率は、1個なら ${f2(0.8)}、5個なら ${f2(0.8 ** 5)}、20個なら ${(0.8 ** 20).toFixed(3)} です。個数が増えるほど「全部が0.8以下」は起きにくくなり、最大値は1の近くに寄ります。`;
+  const cap = `最大値が0.8以下になる確率は、1個 ${f2(0.8)}、5個 ${f2(0.8 ** 5)}、20個 ${(0.8 ** 20).toFixed(3)}。個数が増えるほど最大値は1に寄ります。`;
   return fig(svg, cap);
 }
 
@@ -1056,7 +1056,58 @@ function gevTypes(): string {
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">塗り＝4を超える部分（右の裾）</text>
   </svg>`;
   const p = (xi: number) => pct(sf(xi, 4));
-  const cap = `同じ一般極値分布で形状パラメータ ξ だけを変えました。4を超える確率は、フレシェ型 ${p(0.5)}、ガンベル型 ${p(0)}、ワイブル型 0 です。裾の長い分布の最大値ほど、とびぬけた値が出やすくなります。`;
+  const cap = `4を超える確率は、フレシェ型 ${p(0.5)}、ガンベル型 ${p(0)}、ワイブル型 0 です。裾の長い分布の最大値ほど、とびぬけた値が出ます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：周辺分布（相関0.7の点を横軸・縦軸に落とすと、どちらも標準正規分布） ============
+function marginalNormal(): string {
+  const W = 344, H = 262, rho = 0.7;
+  const b: Box = { x: 92, y: 14, w: 180, h: 180, xMin: -3, xMax: 3, yMax: 1 };
+  const py = (y: number) => b.y + b.h / 2 - (y / 3) * (b.h / 2);
+  const g = gaussFrom(mulberry32(8));
+  const pts = Array.from({ length: 200 }, () => { const z1 = g(), z2 = g(); return [z1, rho * z1 + Math.sqrt(1 - rho * rho) * z2]; })
+    .filter(([x, y]) => Math.abs(x) < 3 && Math.abs(y) < 3);
+  const k = 40 / normPdf(0);
+  const bottom: string[] = [], left: string[] = [];
+  for (let i = 0; i <= 80; i++) {
+    const v = -3 + (6 * i) / 80;
+    bottom.push(`${f1(PX(b, v))},${f1(b.y + b.h + 44 - k * normPdf(v))}`);
+    left.push(`${f1(b.x - 4 - k * normPdf(v))},${f1(py(v))}`);
+  }
+  const svg = `${svgOpen(W, H, '相関0.7の2変量正規分布の点と、横軸と縦軸に落とした周辺分布。どちらも標準正規分布の形')}
+    <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+    ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="1.8" fill="${SLATE}" fill-opacity="0.5" />`).join('')}
+    <polyline points="${bottom.join(' ')}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
+    <polyline points="${left.join(' ')}" fill="none" stroke="${TEAL}" stroke-width="2.2" />
+    <line x1="${b.x}" y1="${b.y + b.h + 44}" x2="${b.x + b.w}" y2="${b.y + b.h + 44}" stroke="${SLATE}" />
+    <line x1="${b.x - 4}" y1="${b.y}" x2="${b.x - 4}" y2="${b.y + b.h}" stroke="${SLATE}" />
+    <text x="${b.x + b.w + 6}" y="${b.y + b.h + 40}" font-size="12.4" font-weight="700" fill="${INDIGO}">X だけ</text>
+    <text x="${b.x - 50}" y="${b.y + 10}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">Y だけ</text>
+    <text x="${b.x + b.w + 6}" y="${b.y + 14}" font-size="12.4" fill="${SLATE}">相関</text>
+    <text x="${b.x + b.w + 6}" y="${b.y + 30}" font-size="12.4" fill="${SLATE}">0.7</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍・緑の曲線＝N(0, 1) の密度</text>
+  </svg>`;
+  const cap = `相関0.7の点を横軸に落としても縦軸に落としても、標準正規分布の形になります。相関は、2つの値の組み合わせ方にだけ表れます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：最小値（部品1個と10個のうち最初の故障） ============
+function minParts(): string {
+  const W = 344, H = 236;
+  const b: Box = { x: 40, y: 26, w: 290, h: 160, xMin: 0, xMax: 1500, yMax: 1 };
+  const one = (t: number) => Math.exp(-t / 1000), ten = (t: number) => Math.exp(-t / 100);
+  const svg = `${svgOpen(W, H, '平均寿命1000時間の部品1個が動き続ける確率と、10個が全部動き続ける確率。10個のほうがずっと早く下がる')}
+    ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>
+      <line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#eef2f7" />`).join('')}
+    ${curve(b, one, INDIGO, 0, 1500, 2.2)}${curve(b, ten, ROSE, 0, 1500, 2.2)}
+    ${[{ t: 100, c: ROSE }, { t: 1000, c: INDIGO }].map(({ t, c }) => `<line x1="${f1(PX(b, t))}" y1="${b.y}" x2="${f1(PX(b, t))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.1" stroke-dasharray="4 3" />`).join('')}
+    ${axes(b, [0, 500, 1000, 1500])}
+    <text x="${f1(PX(b, 560))}" y="${f1(PY(b, 0.72))}" font-size="12.4" font-weight="700" fill="${INDIGO}">1個（平均1000時間）</text>
+    <text x="${f1(PX(b, 240))}" y="${f1(PY(b, 0.3))}" font-size="12.4" font-weight="700" fill="${ROSE}">10個とも（平均100時間）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 時間／縦軸＝まだ1個も壊れていない確率</text>
+  </svg>`;
+  const cap = `1個なら1000時間後も ${pct(one(1000))} が動いていますが、10個が全部動き続ける確率は300時間で ${pct(ten(300))} まで下がります。最初の故障は、平均100時間でやって来ます。`;
   return fig(svg, cap);
 }
 
@@ -1935,7 +1986,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-min-parts': minParts,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
