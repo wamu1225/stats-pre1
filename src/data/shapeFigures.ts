@@ -1005,6 +1005,29 @@ function noncentralT(): string {
   return fig(svg, cap);
 }
 
+// 1.13：一様分布 U(0,1) から5個とったときの、小さい方から k 番目の値の分布（ベータ分布 Be(k, 6−k)）
+function orderStats(): string {
+  const W = 344, H = 250, n = 5;
+  const b: Box = { x: 14, y: 30, w: 316, h: 170, xMin: 0, xMax: 1, yMax: 5.2 };
+  const coef = (k: number) => Math.exp(lgamma(n + 1) - lgamma(k) - lgamma(n - k + 1));
+  const dens = (k: number) => (x: number) => coef(k) * x ** (k - 1) * (1 - x) ** (n - k);
+  const set = [
+    { k: 1, c: SLATE, x: 0.06, y: 4.3, a: 'start', t: '1番目（最小）' },
+    { k: 2, c: TEAL, x: 0.25, y: 2.35, a: 'middle', t: '2番目' },
+    { k: 3, c: INDIGO, x: 0.5, y: 2.1, a: 'middle', t: '3番目（中央値）' },
+    { k: 4, c: '#b45309', x: 0.75, y: 2.35, a: 'middle', t: '4番目' },
+    { k: 5, c: ROSE, x: 0.94, y: 4.3, a: 'end', t: '5番目（最大）' },
+  ];
+  const svg = `${svgOpen(W, H, '0から1の一様分布から5個とったときの、小さい方から1番目から5番目の値の分布。1番目は0の近く、5番目は1の近くに山があり、3番目の中央値は0.5を中心に左右対称')}
+    ${set.map(({ k, c }) => curve(b, dens(k), c, 0.0005, 0.9995, 2)).join('')}
+    ${set.map(({ c, x, y, a, t }) => `<text x="${f1(PX(b, x))}" y="${f1(PY(b, y))}" text-anchor="${a}" font-size="12.4" font-weight="700" fill="${c}">${t}</text>`).join('')}
+    ${axes(b, [0, 0.2, 0.4, 0.6, 0.8, 1])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝小さい方から k 番目の値</text>
+  </svg>`;
+  const cap = `5個の値は 0 から 1 をおよそ6等分する位置に並び、k 番目の値の期待値は k/6 です。端の2つ（最小・最大）は山が鋭く、中央値は広がります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.14：尤度関数（10回中7回表） ============
 function likelihood(): string {
   const W = 350, H = 220;
@@ -1738,6 +1761,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT,
+  'f-order-stats': orderStats,
   'f-likelihood': likelihood,
   'f-darts': darts,
   'f-pvalue': pValue,
