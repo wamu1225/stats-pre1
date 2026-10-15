@@ -790,14 +790,14 @@ function bivariateNormal(): string {
     };
     const r = (() => { const n = pts.length; const mx = pts.reduce((s, p) => s + p[0], 0) / n, my = pts.reduce((s, p) => s + p[1], 0) / n; let sxy = 0, sxx = 0, syy = 0; pts.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; }); return sxy / Math.sqrt(sxx * syy); })();
     return `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
-      ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, Math.max(-3, Math.min(3, x))))}" cy="${f1(py(Math.max(-3, Math.min(3, y))))}" r="1.8" fill="${SLATE}" fill-opacity="0.55" />`).join('')}
+      ${pts.filter(([x, y]) => Math.abs(x) < 3 && Math.abs(y) < 3).map(([x, y]) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="1.8" fill="${SLATE}" fill-opacity="0.55" />`).join('')}
       ${ell(1)}${ell(2)}
       <text x="${b.x + b.w / 2}" y="${b.y - 10}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">相関 ρ = ${rho}</text>
       <text x="${b.x + b.w / 2}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">150点の標本相関 ${f2(r)}</text>`;
   };
   const svg = `${svgOpen(W, H, '2変量正規分布の等確率線：相関0なら円、相関0.7なら右上がりの楕円')}${panel(0, 12)}${panel(0.7, 188)}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線＝同じ確率密度の点を結んだ等高線（内側 1σ、外側 2σ）</text></svg>`;
-  const cap = `どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。多変量正規分布は「平均ベクトル（山の中心）」と「分散共分散行列（楕円の向きと太さ）」で形が決まります。`;
+  const cap = `どちらも X と Y は平均0・分散1の正規分布です。左は相関0で、等高線は円になり、X の値から Y について何もわかりません。右は相関0.7で、等高線が右上がりの楕円に傾き、X が大きいほど Y も大きくなりやすいことが形で見えます。`;
   return fig(svg, cap);
 }
 
@@ -883,6 +883,180 @@ function maxShift(): string {
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ n 個の最大値／点線 ＝ ln n（${f2(Math.log(10))}・${f2(Math.log(100))}）</text>
   </svg>`;
   const cap = `平均1の指数分布から n 個とった最大値の分布です。n を10倍にするたびに、山は右へ ln 10 ≈ ${f2(Math.log(10))} ずつずれます。n = 10 と n = 100 の山の形はほとんど同じで、ずらして重ねると、ガンベル分布という1つの形に近づいていきます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：マハラノビス距離（中心から同じ距離の2点でも、楕円に沿う点と横切る点で珍しさが違う） ============
+function mahalanobis(): string {
+  const W = 344, H = 290, rho = 0.7;
+  const b: Box = { x: 62, y: 22, w: 220, h: 220, xMin: -3, xMax: 3, yMax: 1 };
+  const py = (y: number) => b.y + b.h / 2 - (y / 3) * (b.h / 2);
+  const md = (x: number, y: number) => Math.sqrt((x * x - 2 * rho * x * y + y * y) / (1 - rho * rho));
+  const ell = (c: number) => {
+    const out: string[] = [];
+    for (let k = 0; k <= 72; k++) {
+      const t = (2 * Math.PI * k) / 72;
+      const u = c * Math.sqrt(1 + rho) * Math.cos(t), v = c * Math.sqrt(1 - rho) * Math.sin(t);
+      out.push(`${f1(PX(b, (u - v) / Math.SQRT2))},${f1(py((u + v) / Math.SQRT2))}`);
+    }
+    return `<polygon points="${out.join(' ')}" fill="none" stroke="${INDIGO}" stroke-opacity="${1 - c * 0.22}" stroke-width="1.5" />`;
+  };
+  const P = [1.2, 1.2], Q = [1.2, -1.2];
+  const eu = Math.hypot(P[0], P[1]);
+  const dot = ([x, y]: number[], col: string, name: string) => `<line x1="${f1(PX(b, 0))}" y1="${f1(py(0))}" x2="${f1(PX(b, x))}" y2="${f1(py(y))}" stroke="${col}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="4.5" fill="${col}" />
+    <text x="${f1(PX(b, x) + 8)}" y="${f1(py(y) + (y > 0 ? -6 : 16))}" font-size="13.2" font-weight="700" fill="${col}">${name}（${f2(md(x, y))}）</text>`;
+  const svg = `${svgOpen(W, H, '相関0.7の2変量正規分布で、中心から同じ距離にある2点。楕円に沿った点Pはマハラノビス距離が小さく、楕円を横切る点Qは大きい')}
+    <line x1="${b.x}" y1="${f1(py(0))}" x2="${b.x + b.w}" y2="${f1(py(0))}" stroke="#e2e8f0" />
+    <line x1="${f1(PX(b, 0))}" y1="${b.y}" x2="${f1(PX(b, 0))}" y2="${b.y + b.h}" stroke="#e2e8f0" />
+    ${[1, 2, 3].map(ell).join('')}
+    ${dot(P, TEAL, 'P')}${dot(Q, ROSE, 'Q')}
+    <text x="${b.x + b.w + 6}" y="${f1(py(0) + 4)}" font-size="12.4" fill="${SLATE}">X</text>
+    <text x="${f1(PX(b, 0))}" y="${b.y - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">Y</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">楕円＝マハラノビス距離 1・2・3 の線（相関0.7）</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">かっこ内＝その点のマハラノビス距離</text>
+  </svg>`;
+  const cap = `P と Q は、中心からのふつうの距離がどちらも ${f2(eu)} です。点は右上がりに散らばるので、楕円に沿った P のマハラノビス距離は ${f2(md(P[0], P[1]))}、楕円を横切る Q は ${f2(md(Q[0], Q[1]))} です。Q のほうがずっと珍しい点だということを、この距離が表します。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：それぞれは正規分布で無相関なのに、独立でない例（Y = SX） ============
+function uncorrelatedDependent(): string {
+  const W = 344, H = 280;
+  const b: Box = { x: 62, y: 22, w: 220, h: 220, xMin: -3, xMax: 3, yMax: 1 };
+  const py = (y: number) => b.y + b.h / 2 - (y / 3) * (b.h / 2);
+  const g = gaussFrom(mulberry32(91)), r = mulberry32(19);
+  const all = Array.from({ length: 200 }, () => { const x = g(); return [x, (r() < 0.5 ? -1 : 1) * x]; });
+  const n = all.length, mx = all.reduce((s, p) => s + p[0], 0) / n, my = all.reduce((s, p) => s + p[1], 0) / n;
+  let sxy = 0, sxx = 0, syy = 0;
+  all.forEach(([x, y]) => { sxy += (x - mx) * (y - my); sxx += (x - mx) ** 2; syy += (y - my) ** 2; });
+  const rr = sxy / Math.sqrt(sxx * syy);
+  const pts = all.filter(([x]) => Math.abs(x) < 3);
+  const svg = `${svgOpen(W, H, 'X は標準正規分布、Y は X に確率1/2で+1か−1を掛けた値。点は y=x と y=−x の2本の線の上にしかない')}
+    <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+    <line x1="${b.x}" y1="${f1(py(0))}" x2="${b.x + b.w}" y2="${f1(py(0))}" stroke="#e2e8f0" />
+    <line x1="${f1(PX(b, 0))}" y1="${b.y}" x2="${f1(PX(b, 0))}" y2="${b.y + b.h}" stroke="#e2e8f0" />
+    ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="2.4" fill="${y * x >= 0 ? TEAL : ROSE}" fill-opacity="0.6" />`).join('')}
+    <text x="${b.x + b.w + 6}" y="${f1(py(0) + 4)}" font-size="12.4" fill="${SLATE}">X</text>
+    <text x="${f1(PX(b, 0))}" y="${b.y - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">Y</text>
+    <text x="${f1(PX(b, 2.1))}" y="${f1(py(2.7))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${TEAL}">y = x</text>
+    <text x="${f1(PX(b, 2.1))}" y="${f1(py(-2.8))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">y = −x</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">200点・標本相関 ${f2(rr)}</text>
+  </svg>`;
+  const cap = `X も Y もそれぞれ N(0, 1) に従い、相関もほぼ0です。それでも点は2本の線の上にしかなく、X が分かれば Y は2通りに絞られます。2変量正規分布で相関0なら、点は最初の図の左のように円形に散らばります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：単調でない変換（Y = X² で左右2つの帯が同じ場所に重なる） ============
+function foldSquare(): string {
+  const W = 344, H = 240;
+  const L: Box = { x: 10, y: 44, w: 150, h: 140, xMin: -3, xMax: 3, yMax: 0.45 };
+  const R: Box = { x: 190, y: 44, w: 144, h: 140, xMin: 0, xMax: 4, yMax: 0.85 };
+  const fy = (y: number) => Math.exp(-y / 2) / Math.sqrt(2 * Math.PI * y);
+  const half = (y: number) => fy(y) / 2;
+  // 右の帯：下半分＝橙（−1.5〜−1 から）、上半分＝藍（1〜1.5 から）
+  const n = 40, lo = 1, hi = 2.25;
+  const xs = Array.from({ length: n + 1 }, (_, i) => lo + ((hi - lo) * i) / n);
+  const top = `<polygon points="${[...xs.map((y) => `${f1(PX(R, y))},${f1(PY(R, fy(y)))}`), ...[...xs].reverse().map((y) => `${f1(PX(R, y))},${f1(PY(R, half(y)))}`)].join(' ')}" fill="${INDIGO}" fill-opacity="0.35" />`;
+  // 曲線は密度が枠の上端を超えない所から描く（0の近くで無限大に発散する）
+  const y0 = 0.2;
+  const one = Phi(1.5) - Phi(1);
+  const svg = `${svgOpen(W, H, '標準正規分布の X の、1〜1.5 と −1.5〜−1 の2つの帯は、2乗すると同じ 1〜2.25 に移り、積み重なる')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">X（標準正規分布）</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">Y ＝ X²</text>
+    ${area(L, (x) => normPdf(x), -1.5, -1, AMBER, 0.45)}${area(L, (x) => normPdf(x), 1, 1.5, INDIGO, 0.35)}
+    ${curve(L, (x) => normPdf(x), INK, -3, 3, 1.6)}${axes(L, [-2, -1, 0, 1, 2])}
+    ${area(R, half, lo, hi, AMBER, 0.45)}${top}
+    ${curve(R, fy, INK, y0, 4, 1.6)}${curve(R, half, SLATE, lo, hi, 1, '3 2')}${axes(R, [0, 1, 2, 3, 4])}
+    <text x="${(L.x + L.w + R.x) / 2}" y="${L.y + L.h / 2 + 4}" text-anchor="middle" font-size="18" fill="${SLATE}">→</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">橙：−1.5〜−1 から　藍：1〜1.5 から</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線＝自由度1のカイ二乗分布</text>
+  </svg>`;
+  const cap = `左右対称な2つの帯は、2乗するとどちらも 1〜2.25 に移ります。右の帯は2つを積み上げたもので、面積は片側 ${pct(one)} ずつ、合わせて ${pct(2 * one)} です。式で2つの寄与を足すのは、この積み上げのことです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：指数分布2つの和（組み合わせの数 × 1点の密度） ============
+function expSum(): string {
+  const W = 344, H = 250;
+  const L: Box = { x: 46, y: 40, w: 110, h: 110, xMin: 0, xMax: 3, yMax: 3 };
+  const R: Box = { x: 186, y: 40, w: 150, h: 120, xMin: 0, xMax: 6, yMax: 1 };
+  const LY = (y: number) => L.y + L.h - (y / 3) * L.h;
+  // 線分のラベルは縦軸の左（線分の左端の高さ）に置き、隣の線分と重ねない
+  const segs = [{ u: 0.5, c: TEAL }, { u: 1.5, c: INDIGO }, { u: 2.5, c: ROSE }];
+  const svg = `${svgOpen(W, H, '左：和が u になる (X, Y) の組は線分 x+y=u の上に並び、u が大きいほど線分が長い。右：和の密度 u e^(−u) は u=1 で最大')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">和が u になる組</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">和 U の密度</text>
+    <rect x="${L.x}" y="${L.y}" width="${L.w}" height="${L.h}" fill="none" stroke="#e2e8f0" />
+    ${segs.map(({ u, c }) => `<line x1="${f1(PX(L, 0))}" y1="${f1(LY(u))}" x2="${f1(PX(L, u))}" y2="${f1(LY(0))}" stroke="${c}" stroke-width="2.4" />
+      <text x="${f1(PX(L, 0) - 4)}" y="${f1(LY(u) + 4)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${c}">u=${u}</text>`).join('')}
+    ${[0, 1, 2, 3].map((v) => `<text x="${f1(PX(L, v))}" y="${L.y + L.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <text x="${L.x + L.w + 4}" y="${L.y + L.h + 4}" font-size="12.4" fill="${SLATE}">X</text>
+    <text x="${L.x}" y="${L.y - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">Y</text>
+    ${curve(R, (x) => Math.exp(-x), SLATE, 0, 6, 1.4, '4 3')}
+    ${curve(R, (x) => x * Math.exp(-x), INDIGO, 0, 6, 2.2)}
+    ${axes(R, [0, 2, 4, 6])}
+    <text x="${f1(PX(R, 1.9))}" y="${f1(PY(R, 0.66))}" font-size="12.4" fill="${SLATE}">X 1つ e^(−x)</text>
+    <text x="${f1(PX(R, 1.9))}" y="${f1(PY(R, 0.38))}" font-size="12.4" font-weight="700" fill="${INDIGO}">和 u e^(−u)</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線分の上では、どの点も密度は e^(−u) で同じ</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">λ = 1 の場合</text>
+  </svg>`;
+  const cap = `和が u になる組は線分の上に並び、u が大きいほど線分が長くなります。線分の上の1点あたりの密度 e^(−u) は u とともに小さくなるので、両方を掛けた u e^(−u) が和の密度です。0の近くは組み合わせが少ないため低く、u = 1 で最大になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：最大値の分布関数 F(x)^n（一様分布） ============
+function maxCdf(): string {
+  const W = 344, H = 236;
+  const b: Box = { x: 40, y: 26, w: 290, h: 160, xMin: 0, xMax: 1, yMax: 1 };
+  const set = [{ n: 1, c: SLATE, t: '1個' }, { n: 5, c: INDIGO, t: '5個' }, { n: 20, c: ROSE, t: '20個' }];
+  const svg = `${svgOpen(W, H, '0から1の一様分布から n 個とったときの最大値の分布関数 x の n 乗。n が増えると曲線は右下に下がり、最大値は1の近くに寄る')}
+    ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>
+      <line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#eef2f7" />`).join('')}
+    <line x1="${f1(PX(b, 0.8))}" y1="${b.y}" x2="${f1(PX(b, 0.8))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1.1" stroke-dasharray="4 3" />
+    ${set.map(({ n, c }) => curve(b, (x) => x ** n, c, 0, 1, 2.2)).join('')}
+    ${set.map(({ n, c, t }) => `<circle cx="${f1(PX(b, 0.8))}" cy="${f1(PY(b, 0.8 ** n))}" r="3.6" fill="${c}" />
+      <text x="${f1(PX(b, 0.8) - 7)}" y="${f1(PY(b, 0.8 ** n) + (n === 20 ? -2 : -5))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${c}">${t} ${(0.8 ** n).toFixed(n === 20 ? 3 : 2)}</text>`).join('')}
+    ${axes(b, [0, 0.2, 0.4, 0.6, 0.8, 1])}
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x／縦軸＝最大値が x 以下になる確率 x^n</text>
+  </svg>`;
+  const cap = `点線の x = 0.8 で比べると、最大値が0.8以下になる確率は、1個なら ${f2(0.8)}、5個なら ${f2(0.8 ** 5)}、20個なら ${(0.8 ** 20).toFixed(3)} です。個数が増えるほど「全部が0.8以下」は起きにくくなり、最大値は1の近くに寄ります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：極値分布の3つの型（一般極値分布 ξ = −0.5, 0, 0.5） ============
+function gevTypes(): string {
+  const W = 344, H = 252;
+  const b: Box = { x: 14, y: 50, w: 316, h: 150, xMin: -3, xMax: 6, yMax: 0.5 };
+  const gev = (xi: number) => (x: number) => {
+    if (xi === 0) { const t = Math.exp(-x); return t * Math.exp(-t); }
+    const z = 1 + xi * x;
+    if (z <= 0) return 0;
+    const t = z ** (-1 / xi);
+    return t ** (xi + 1) * Math.exp(-t);
+  };
+  const sf = (xi: number, x: number) => {
+    if (xi === 0) return 1 - Math.exp(-Math.exp(-x));
+    const z = 1 + xi * x;
+    if (z <= 0) return xi < 0 ? 0 : 1;
+    return 1 - Math.exp(-(z ** (-1 / xi)));
+  };
+  const svg = `${svgOpen(W, H, '極値分布の3つの型。ガンベル型は右の裾が指数的に減り、フレシェ型は右の裾が長く、ワイブル型は上限で止まる')}
+    ${area(b, gev(0.5), 4, 6, AMBER, 0.3)}${area(b, gev(0), 4, 6, INDIGO, 0.3)}
+    <line x1="${f1(PX(b, 2))}" y1="${b.y}" x2="${f1(PX(b, 2))}" y2="${b.y + b.h}" stroke="${TEAL}" stroke-width="1.2" stroke-dasharray="3 3" />
+    ${curve(b, gev(-0.5), TEAL, -3, 2, 2.2)}
+    ${curve(b, gev(0), INDIGO, -3, 6, 2.2)}
+    ${curve(b, gev(0.5), AMBER, -1.95, 6, 2.2)}
+    ${axes(b, [-2, 0, 2, 4, 6])}
+    <text x="2" y="16" font-size="12.4" font-weight="700" fill="${INDIGO}">ガンベル型 ξ=0</text>
+    <text x="${W / 2 - 6}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">フレシェ型 ξ=0.5</text>
+    <text x="${W - 2}" y="16" text-anchor="end" font-size="12.4" font-weight="700" fill="${TEAL}">ワイブル型 ξ=−0.5</text>
+    <text x="${f1(PX(b, 2) + 4)}" y="${b.y + 12}" font-size="12.4" fill="${TEAL}">上限 2</text>
+    <text x="${f1(PX(b, 4.1))}" y="${f1(PY(b, 0.1))}" font-size="12.4" fill="#b45309">長い裾</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">塗り＝4を超える部分（右の裾）</text>
+  </svg>`;
+  const p = (xi: number) => pct(sf(xi, 4));
+  const cap = `同じ一般極値分布で形状パラメータ ξ だけを変えました。4を超える確率は、フレシェ型 ${p(0.5)}、ガンベル型 ${p(0)}、ワイブル型 0 です。裾の長い分布の最大値ほど、とびぬけた値が出やすくなります。`;
   return fig(svg, cap);
 }
 
@@ -1761,7 +1935,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
