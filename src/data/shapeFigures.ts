@@ -888,9 +888,10 @@ function maxShift(): string {
 
 // ============ 1.11：大数の法則（サイコロの累積平均） ============
 function lln(): string {
-  const W = 350, H = 230;
-  const b: Box = { x: 34, y: 30, w: 300, h: 154, xMin: 0, xMax: 3, yMax: 1 };
-  const yMin = 2, yMax = 5;
+  const W = 350, H = 270;
+  const b: Box = { x: 34, y: 30, w: 300, h: 194, xMin: 0, xMax: 3, yMax: 1 };
+  // 縦軸は平均がとりうる全範囲 1〜6（切ると最初の数回が軸に張り付き、同じ目が続いたように見える）
+  const yMin = 1, yMax = 6;
   const py = (y: number) => b.y + b.h - ((Math.max(yMin, Math.min(yMax, y)) - yMin) / (yMax - yMin)) * b.h;
   const runs = [1101, 2202, 3303].map((seed) => {
     const r = mulberry32(seed);
@@ -905,7 +906,7 @@ function lln(): string {
   const band = `<polygon points="${[...ns.map((n) => `${f1(PX(b, Math.log10(n)))},${f1(py(3.5 + 2 * sd / Math.sqrt(n)))}`), ...ns.reverse().map((n) => `${f1(PX(b, Math.log10(n)))},${f1(py(3.5 - 2 * sd / Math.sqrt(n)))}`)].join(' ')}" fill="${SLATE}" fill-opacity="0.16" />`;
   const svg = `${svgOpen(W, H, 'サイコロを振る回数を増やすと、3人それぞれの平均が3.5に近づいていく。灰色の帯（平均のほとんどが入る範囲）は回数とともに細くなる')}
     ${band}
-    ${[2, 3, 4, 5].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${[1, 2, 3, 4, 5, 6].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <line x1="${b.x}" y1="${f1(py(3.5))}" x2="${b.x + b.w}" y2="${f1(py(3.5))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${b.x + b.w}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">赤の点線＝期待値 3.5</text>
     ${lines}
@@ -915,7 +916,11 @@ function lln(): string {
   </svg>`;
   const at = (k: number) => runs.map((m) => m[k - 1].toFixed(2)).join('・');
   const rg = (n: number) => `${(3.5 - 2 * sd / Math.sqrt(n)).toFixed(2)}〜${(3.5 + 2 * sd / Math.sqrt(n)).toFixed(2)}`;
-  const cap = `線は3人それぞれの平均の推移。10回目は ${at(10)} とばらばらで、1000回目は ${at(1000)} です。灰色の帯は平均の約95%が入る範囲で、100回で ${rg(100)}、1000回で ${rg(1000)} です。`;
+  const first = (j: number, k: number) => {
+    const r = mulberry32([1101, 2202, 3303][j]);
+    return Array.from({ length: k }, () => 1 + Math.floor(r() * 6)).join('・');
+  };
+  const cap = `線は3人それぞれの平均の推移（乱数で振ったシミュレーション）。緑の人は最初の6回が ${first(2, 6)} と偏って平均が2を下回り、10回目でも3人は ${at(10)} とばらばらですが、1000回目は ${at(1000)} です。灰色の帯は平均の約95%が入る範囲で、100回で ${rg(100)}、1000回で ${rg(1000)} です。`;
   return fig(svg, cap);
 }
 
