@@ -927,7 +927,7 @@ function meanNarrow(): string {
   const dens = (n: number) => (x: number) => (x <= 0 ? (n === 1 ? 1 : 0) : n * gammaPdf(n)(n * x));
   const set = [{ n: 1, c: SLATE, lx: 0.3, t: 'n = 1（元の分布）' }, { n: 4, c: TEAL, lx: 0.75, t: 'n = 4' }, { n: 16, c: AMBER, lx: 0.94, t: 'n = 16' }, { n: 64, c: INDIGO, lx: 0.985, t: 'n = 64' }];
   const lab = (c: string) => (c === AMBER ? '#b45309' : c);
-  const svg = `${svgOpen(W, H, '指数分布から n 個とった平均の分布。n が増えると山の幅が縮んで1に集まり、形は右に歪んだ形から左右対称の釣鐘形に変わる')}
+  const svg = `${svgOpen(W, H, '指数分布から n 個とった平均の分布。n が増えると山の幅が縮んで期待値の1に集まり、形は右に歪んだ形から左右対称の釣鐘形に変わる')}
     <line x1="${f1(PX(b, 1))}" y1="${b.y - 6}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${f1(PX(b, 1) + 4)}" y="${b.y + 4}" font-size="12.4" fill="${ROSE}">期待値 1</text>
     ${set.map(({ n, c }) => curve(b, dens(n), c, 0.001, 3, n === 64 ? 2.2 : 1.8)).join('')}
