@@ -1718,105 +1718,106 @@ $$M \\approx N\\!\\left(m,\\; \\frac{1}{4n\\, f(m)^2}\\right)$$
 
 $m$ での密度 $f(m)$ が高いほど、データが中央値の近くに集まるので、中央値のばらつきは小さくなります。
 
-**数値例**：正規分布 $N(\\mu, \\sigma^2)$ なら $m = \\mu$、$f(m) = 1/(\\sigma\\sqrt{2\\pi})$ なので、中央値の分散は $\\pi\\sigma^2/(2n) \\approx 1.57\\,\\sigma^2/n$ です。標本平均の分散 $\\sigma^2/n$ の約1.57倍で、正規分布では平均のほうがばらつきが小さくなります。`,keyFormulas:[{label:`ネイマンの分解定理`,formula:`L(\\theta;\\mathbf{x}) = g(T(\\mathbf{x}),\\theta)\\cdot h(\\mathbf{x})`},{label:`順序統計量の PDF`,formula:`\\begin{aligned} &f_{X_{(k)}}(x) = \\dfrac{n!}{(k-1)!(n-k)!} \\\\ &\\quad \\times [F(x)]^{k-1}[1-F(x)]^{n-k}f(x) \\end{aligned}`},{label:`一様分布の k 番目の値`,formula:`\\begin{aligned} &X_{(k)} \\sim \\text{Be}(k,\\, n-k+1) \\\\ &E[X_{(k)}] = \\dfrac{k}{n+1} \\end{aligned}`},{label:`標本中央値の近似分布`,formula:`M \\approx N\\!\\left(m,\\; \\dfrac{1}{4n\\,f(m)^2}\\right)`}],quiz:[{id:`ss1-1`,question:`ネイマンの分解定理で「十分統計量 $T$」を使う主な理由はどれか？`,options:[`推定量の不偏性を保証する`,`データを $T$ だけに圧縮してもパラメータの推定で情報損失がない`,`計算が容易になる`,`サンプルサイズを減らせる`],correctAnswer:1,explanation:`十分統計量 $T$ は、$T$ を知ったうえでのデータの条件付き分布が母数によらない統計量です。コインなら、表の回数が分かれば並び順は $p$ について何も教えてくれません。そのため $T$ だけを残しても、母数の推測で失う情報がありません。`},{id:`ss1-2`,question:`ポアソン分布 $\\text{Po}(\\lambda)$ のi.i.d.標本 $X_1,\\ldots,X_n$ における $\\lambda$ の十分統計量はどれか？`,options:[`$\\text{Var}(X_i)$`,`$\\bar{X}$（標本平均）`,`$\\sum X_i$（合計）`,`$\\max(X_i)$`],correctAnswer:2,explanation:`ポアソン分布の尤度 $L(\\lambda;\\mathbf{x}) = e^{-n\\lambda}\\lambda^{\\sum x_i}/\\prod x_i!$ は $T = \\sum X_i$ だけに依存します。ネイマンの分解定理より $T = \\sum X_i$ が十分統計量です（$\\bar{X}$ は $T$ と1対1対応なので同値）。`},{id:`ss1-3`,question:`順序統計量 $X_{(1)},\\ldots,X_{(n)}$ のうち、最小値 $X_{(1)}$ の分布の特徴はどれか？`,options:[`$n$ に依存しない分布`,`$n$ 個すべて以上である確率は $F(x)$`,`母分布より常に大きい値になる`,`$P(X_{(1)} > x) = [1-F(x)]^n$（全観測値が $x$ を超える確率）`],correctAnswer:3,explanation:`最小値が $x$ を超えるのは、$n$ 個全部が $x$ を超えるときだけなので $P(X_{(1)}>x) = [1-F(x)]^n$ です。$n$ が増えると、最小値は元の分布の左端に近づきます。`},{id:`ss1-4`,question:`順序統計量 $X_{(k)}$ の分布において、$k=n/2$（中央値）の漸近分布はどれか（$n$ が大きいとき）？`,options:[`正規分布`,`$t$ 分布`,`ポアソン分布`,`一様分布`],correctAnswer:0,explanation:`中央値 $X_{(n/2)}$ は $n$ が大きくなると正規分布に漸近します（CLTの順序統計量版）。漸近平均は真の中央値 $m$（$F(m)=0.5$）、漸近分散は $1/(4nf(m)^2)$（$f$ は PDF）。`},{id:`ss1-5`,question:`正規分布 $N(\\mu, \\sigma^2)$（$\\sigma^2$ 既知）の i.i.d. 標本における $\\mu$ の十分統計量はどれか？`,options:[`$\\sum X_i^2$`,`$\\bar{X}$（標本平均）`,`$\\max(X_i)$`,`$X_{(1)}$（最小値）`],correctAnswer:1,explanation:`正規分布の尤度 $L(\\mu;\\mathbf{x}) \\propto \\exp(-\\sum(x_i-\\mu)^2/(2\\sigma^2))$ を展開すると $T = \\sum x_i = n\\bar{X}$ にのみ依存する形に因数分解されます。したがって $\\bar{X}$（あるいは $\\sum X_i$）が $\\mu$ の十分統計量です。`},{id:`ss1-6`,question:`0から1の一様分布 $U(0,1)$ から独立に5個とったとき、小さい方から2番目の値 $X_{(2)}$ の期待値はいくらか？`,options:[`$1/3$`,`$2/5$`,`$1/6$`,`$1/2$`],correctAnswer:0,explanation:`一様分布の $k$ 番目の値はベータ分布 $\\text{Be}(k,\\, n-k+1)$ に従い、期待値は $k/(n+1)$ です。$k = 2$、$n = 5$ なので $2/6 = 1/3$ です。5個の値は0から1をおよそ6等分する位置に並ぶ、と覚えられます。$2/5$ は $k/n$ と取り違えた値です。`},{id:`ss1-7`,question:`ネイマンの分解定理の因数分解 $L(\\theta;\\mathbf{x}) = g(T(\\mathbf{x}),\\theta) \\cdot h(\\mathbf{x})$ において $h(\\mathbf{x})$ の条件は何か？`,options:[`$\\theta$ と $T$ のいずれにも依存しない`,`$T$ のみに依存する`,`$\\theta$ と $T$ の両方に依存する`,`$\\theta$ に依存しない`],correctAnswer:3,explanation:`$h(\\mathbf{x})$ はデータだけで決まり、母数 $\\theta$ を含まないことが条件です。$\\theta$ を含む部分 $g$ にデータが $T$ の形でしか入っていなければ、$T$ 以外の情報は $\\theta$ の推測に関係しません。$h$ は $T$ 以外のデータを含んでいてもかまいません（ポアソン分布の $1/\\prod x_i!$ など）。`},{id:`ss1-8`,question:`一様分布 $U(0, \\theta)$ の i.i.d. 標本 $X_1,\\ldots,X_n$ における $\\theta$ の十分統計量はどれか？`,options:[`$X_{(n)}$（最大値）`,`$X_{(1)}$（最小値）`,`$\\bar{X}$`,`$\\sum X_i$`],correctAnswer:0,explanation:`$U(0,\\theta)$ の尤度 $L(\\theta;\\mathbf{x}) = \\theta^{-n} \\cdot \\mathbf{1}[x_{(n)} \\leq \\theta]$ は最大値 $X_{(n)}$ を通じてのみ $\\theta$ に依存します（$\\mathbf{1}[\\cdot]$ は指示関数）。したがって $X_{(n)}$ が $\\theta$ の十分統計量であり、最尤推定量にもなります。`},{id:`ss1-9`,question:`正規分布 $N(\\mu, \\sigma^2)$（$\\mu, \\sigma^2$ 両方未知）のi.i.d.標本における十分統計量はどれか？`,options:[`$S^2$（標本分散）のみ`,`$(\\bar{X}, S^2)$ の組`,`$X_{(1)}$ と $X_{(n)}$`,`$\\bar{X}$ のみ`],correctAnswer:1,explanation:`2つのパラメータ（$\\mu, \\sigma^2$）が未知のとき、十分統計量は1次元でなく $(\\sum X_i, \\sum X_i^2)$、すなわち $(\\bar{X}, S^2)$ の組（2次元）になります。一般にパラメータの次元数と十分統計量の次元数は対応します（指数型分布族の場合）。`},{id:`ss1-10`,question:`二項分布 $B(n, p)$ の i.i.d. 試行における $p$ の十分統計量はどれか？（$n$ 固定、各試行で1または0のベルヌーイ観測）`,options:[`$\\max(X_i)$`,`$(n, \\bar{X})$ の組`,`$\\bar{X}$（標本平均）`,`$\\sum X_i$（表の合計回数）`],correctAnswer:3,explanation:`ベルヌーイ試行の尤度 $L(p;\\mathbf{x}) = p^{\\sum x_i}(1-p)^{n-\\sum x_i}$ は $T = \\sum X_i$（表の合計回数）のみに依存します。ネイマンの分解定理より $\\sum X_i$ が十分統計量です。$\\bar{X} = \\sum X_i / n$ も $T$ と1対1対応するため同値です。`}]},{id:`1.14-estimation`,updatedAt:`2026-05-29`,title:`推定法：最尤推定法とモーメント法`,chapter:6,description:`最尤推定量（MLE）とモーメント推定量の導出と性質で、「もっともらしいパラメータ」の求め方を学びます。`,content:`💡 **このモジュールで学ぶこと**
+**数値例**：正規分布 $N(\\mu, \\sigma^2)$ なら $m = \\mu$、$f(m) = 1/(\\sigma\\sqrt{2\\pi})$ なので、中央値の分散は $\\pi\\sigma^2/(2n) \\approx 1.57\\,\\sigma^2/n$ です。標本平均の分散 $\\sigma^2/n$ の約1.57倍で、正規分布では平均のほうがばらつきが小さくなります。`,keyFormulas:[{label:`ネイマンの分解定理`,formula:`L(\\theta;\\mathbf{x}) = g(T(\\mathbf{x}),\\theta)\\cdot h(\\mathbf{x})`},{label:`順序統計量の PDF`,formula:`\\begin{aligned} &f_{X_{(k)}}(x) = \\dfrac{n!}{(k-1)!(n-k)!} \\\\ &\\quad \\times [F(x)]^{k-1}[1-F(x)]^{n-k}f(x) \\end{aligned}`},{label:`一様分布の k 番目の値`,formula:`\\begin{aligned} &X_{(k)} \\sim \\text{Be}(k,\\, n-k+1) \\\\ &E[X_{(k)}] = \\dfrac{k}{n+1} \\end{aligned}`},{label:`標本中央値の近似分布`,formula:`M \\approx N\\!\\left(m,\\; \\dfrac{1}{4n\\,f(m)^2}\\right)`}],quiz:[{id:`ss1-1`,question:`ネイマンの分解定理で「十分統計量 $T$」を使う主な理由はどれか？`,options:[`推定量の不偏性を保証する`,`データを $T$ だけに圧縮してもパラメータの推定で情報損失がない`,`計算が容易になる`,`サンプルサイズを減らせる`],correctAnswer:1,explanation:`十分統計量 $T$ は、$T$ を知ったうえでのデータの条件付き分布が母数によらない統計量です。コインなら、表の回数が分かれば並び順は $p$ について何も教えてくれません。そのため $T$ だけを残しても、母数の推測で失う情報がありません。`},{id:`ss1-2`,question:`ポアソン分布 $\\text{Po}(\\lambda)$ のi.i.d.標本 $X_1,\\ldots,X_n$ における $\\lambda$ の十分統計量はどれか？`,options:[`$\\text{Var}(X_i)$`,`$\\bar{X}$（標本平均）`,`$\\sum X_i$（合計）`,`$\\max(X_i)$`],correctAnswer:2,explanation:`ポアソン分布の尤度 $L(\\lambda;\\mathbf{x}) = e^{-n\\lambda}\\lambda^{\\sum x_i}/\\prod x_i!$ は $T = \\sum X_i$ だけに依存します。ネイマンの分解定理より $T = \\sum X_i$ が十分統計量です（$\\bar{X}$ は $T$ と1対1対応なので同値）。`},{id:`ss1-3`,question:`順序統計量 $X_{(1)},\\ldots,X_{(n)}$ のうち、最小値 $X_{(1)}$ の分布の特徴はどれか？`,options:[`$n$ に依存しない分布`,`$n$ 個すべて以上である確率は $F(x)$`,`母分布より常に大きい値になる`,`$P(X_{(1)} > x) = [1-F(x)]^n$（全観測値が $x$ を超える確率）`],correctAnswer:3,explanation:`最小値が $x$ を超えるのは、$n$ 個全部が $x$ を超えるときだけなので $P(X_{(1)}>x) = [1-F(x)]^n$ です。$n$ が増えると、最小値は元の分布の左端に近づきます。`},{id:`ss1-4`,question:`順序統計量 $X_{(k)}$ の分布において、$k=n/2$（中央値）の漸近分布はどれか（$n$ が大きいとき）？`,options:[`正規分布`,`$t$ 分布`,`ポアソン分布`,`一様分布`],correctAnswer:0,explanation:`中央値 $X_{(n/2)}$ は $n$ が大きくなると正規分布に漸近します（CLTの順序統計量版）。漸近平均は真の中央値 $m$（$F(m)=0.5$）、漸近分散は $1/(4nf(m)^2)$（$f$ は PDF）。`},{id:`ss1-5`,question:`正規分布 $N(\\mu, \\sigma^2)$（$\\sigma^2$ 既知）の i.i.d. 標本における $\\mu$ の十分統計量はどれか？`,options:[`$\\sum X_i^2$`,`$\\bar{X}$（標本平均）`,`$\\max(X_i)$`,`$X_{(1)}$（最小値）`],correctAnswer:1,explanation:`正規分布の尤度 $L(\\mu;\\mathbf{x}) \\propto \\exp(-\\sum(x_i-\\mu)^2/(2\\sigma^2))$ を展開すると $T = \\sum x_i = n\\bar{X}$ にのみ依存する形に因数分解されます。したがって $\\bar{X}$（あるいは $\\sum X_i$）が $\\mu$ の十分統計量です。`},{id:`ss1-6`,question:`0から1の一様分布 $U(0,1)$ から独立に5個とったとき、小さい方から2番目の値 $X_{(2)}$ の期待値はいくらか？`,options:[`$1/3$`,`$2/5$`,`$1/6$`,`$1/2$`],correctAnswer:0,explanation:`一様分布の $k$ 番目の値はベータ分布 $\\text{Be}(k,\\, n-k+1)$ に従い、期待値は $k/(n+1)$ です。$k = 2$、$n = 5$ なので $2/6 = 1/3$ です。5個の値は0から1をおよそ6等分する位置に並ぶ、と覚えられます。$2/5$ は $k/n$ と取り違えた値です。`},{id:`ss1-7`,question:`ネイマンの分解定理の因数分解 $L(\\theta;\\mathbf{x}) = g(T(\\mathbf{x}),\\theta) \\cdot h(\\mathbf{x})$ において $h(\\mathbf{x})$ の条件は何か？`,options:[`$\\theta$ と $T$ のいずれにも依存しない`,`$T$ のみに依存する`,`$\\theta$ と $T$ の両方に依存する`,`$\\theta$ に依存しない`],correctAnswer:3,explanation:`$h(\\mathbf{x})$ はデータだけで決まり、母数 $\\theta$ を含まないことが条件です。$\\theta$ を含む部分 $g$ にデータが $T$ の形でしか入っていなければ、$T$ 以外の情報は $\\theta$ の推測に関係しません。$h$ は $T$ 以外のデータを含んでいてもかまいません（ポアソン分布の $1/\\prod x_i!$ など）。`},{id:`ss1-8`,question:`一様分布 $U(0, \\theta)$ の i.i.d. 標本 $X_1,\\ldots,X_n$ における $\\theta$ の十分統計量はどれか？`,options:[`$X_{(n)}$（最大値）`,`$X_{(1)}$（最小値）`,`$\\bar{X}$`,`$\\sum X_i$`],correctAnswer:0,explanation:`$U(0,\\theta)$ の尤度 $L(\\theta;\\mathbf{x}) = \\theta^{-n} \\cdot \\mathbf{1}[x_{(n)} \\leq \\theta]$ は最大値 $X_{(n)}$ を通じてのみ $\\theta$ に依存します（$\\mathbf{1}[\\cdot]$ は指示関数）。したがって $X_{(n)}$ が $\\theta$ の十分統計量であり、最尤推定量にもなります。`},{id:`ss1-9`,question:`正規分布 $N(\\mu, \\sigma^2)$（$\\mu, \\sigma^2$ 両方未知）のi.i.d.標本における十分統計量はどれか？`,options:[`$S^2$（標本分散）のみ`,`$(\\bar{X}, S^2)$ の組`,`$X_{(1)}$ と $X_{(n)}$`,`$\\bar{X}$ のみ`],correctAnswer:1,explanation:`2つのパラメータ（$\\mu, \\sigma^2$）が未知のとき、十分統計量は1次元でなく $(\\sum X_i, \\sum X_i^2)$、すなわち $(\\bar{X}, S^2)$ の組（2次元）になります。一般にパラメータの次元数と十分統計量の次元数は対応します（指数型分布族の場合）。`},{id:`ss1-10`,question:`二項分布 $B(n, p)$ の i.i.d. 試行における $p$ の十分統計量はどれか？（$n$ 固定、各試行で1または0のベルヌーイ観測）`,options:[`$\\max(X_i)$`,`$(n, \\bar{X})$ の組`,`$\\bar{X}$（標本平均）`,`$\\sum X_i$（表の合計回数）`],correctAnswer:3,explanation:`ベルヌーイ試行の尤度 $L(p;\\mathbf{x}) = p^{\\sum x_i}(1-p)^{n-\\sum x_i}$ は $T = \\sum X_i$（表の合計回数）のみに依存します。ネイマンの分解定理より $\\sum X_i$ が十分統計量です。$\\bar{X} = \\sum X_i / n$ も $T$ と1対1対応するため同値です。`}]},{id:`1.14-estimation`,updatedAt:`2026-10-16`,title:`推定法：最尤推定法とモーメント法`,chapter:6,description:`データから母数の値を求める2つの方法、最尤推定法（尤度を最大にする）とモーメント法（平均をデータの平均と等しいとおく）を、図と例で学びます。`,content:`💡 **このモジュールで学ぶこと**
 
-「全国のコーヒー愛飲者の平均月額消費を知りたい」全員を調査するのは不可能なので、100人を無作為抽出してパラメータを推定します。このモジュールでは「どうやってパラメータの値を求めるか」という**推定法（estimation method）**、すなわち最尤推定法とモーメント法を学びます。推定量の品質評価（不偏性・有効性など）は次のモジュール[推定量の性質](/stats-pre1/1.15-estimator-props/)で、深い漸近理論は[漸近理論の基礎](/stats-pre1/1.22-asymptotic/)で扱います。
+手元のデータから、分布の母数（コインの表の確率 $p$ など）の値を求める2つの方法を学びます。
 
-💡 **推定量とは「データを使って真の値を当てる関数」**
+- **最尤推定法**：データが最も起こりやすくなる母数を選ぶ
+- **モーメント法**：平均などを、データの平均などと等しいとおく
 
-母数（真の値）$\\theta$ は未知です。手元にあるデータ $X_1, X_2, \\ldots, X_n$ を加工して $\\theta$ を推測する関数を**推定量**（estimator）$\\hat{\\theta}$（シータハット）と呼びます。
+求めた値がどれだけ良いか（偏り・ばらつき）は、次の[推定量の性質](/stats-pre1/1.15-estimator-props/)で学びます。
 
 ---
 
-### 1. 最尤推定法
+### 1. 推定量とは
 
-「このデータを最も"もっともらしく"説明するパラメータはどれか？」この問いに答えるのが**最尤推定法**（MLE: Maximum Likelihood Estimation）です。
+#### データを入れると数が出てくる関数
 
-コインを10回投げて7回表が出ました。表の確率 $p$ として最も自然な推定値は $p = 0.7$ です。これは実際に「データが得られる確率が最大になる $p$」と一致します。
+母数 $\\theta$ は未知です。データ $X_1, \\ldots, X_n$ から $\\theta$ を推測する関数を**推定量** $\\hat{\\theta}$（シータハット）と呼び、実際のデータを入れて出てきた数を**推定値**と呼びます。
+
+[[f-estimator-flow]]
+
+---
+
+### 2. 最尤推定法
+
+#### 尤度：母数ごとの「データの起こりやすさ」
+
+コインを10回投げて7回表が出たとします。表の確率が $p$ なら、この結果が出る確率は $p^7(1-p)^3$ に比例します。これを $p$ の関数として見たものが**尤度関数** $L(p)$ です。
 
 [[f-likelihood]]
 
-**尤度関数**（Likelihood Function）$L(\\theta) = f(x_1, \\ldots, x_n ; \\theta)$ は「パラメータが $\\theta$ だとしたとき、今のデータが得られる確率（密度）」です。これを最大化する $\\hat{\\theta}_{\\text{MLE}}$ が最尤推定量です。
+一般には、母数が $\\theta$ のときに今のデータが得られる確率（連続なら密度）を $\\theta$ の関数として見たものが尤度 $L(\\theta)$ で、これを最大にする $\\hat{\\theta}$ が**最尤推定量**（MLE）です。
 
-計算上は $\\ell(\\theta) = \\log L(\\theta)$（対数尤度）を最大化するほうが便利です。独立なデータでは積が和になり、$\\frac{\\partial \\ell}{\\partial \\theta} = 0$ を解きます（**スコア方程式**）。
+#### 対数をとっても頂上は同じ
 
-🎯 **MLE の標準4ステップ手順**
+独立なデータの尤度は積 $L(\\theta) = \\prod f(x_i; \\theta)$ です。対数をとると和になって微分しやすく、頂上の位置も変わりません。
 
-1. **尤度関数を書く**：$L(\\theta) = \\prod_{i=1}^n f(x_i; \\theta)$（積の形）
-2. **対数尤度を取る**：$\\ell(\\theta) = \\log L(\\theta) = \\sum_{i=1}^n \\log f(x_i; \\theta)$（和の形。微分が楽）
-3. **スコア方程式**：$\\frac{\\partial \\ell}{\\partial \\theta} = 0$ を解く
-4. **2階微分の符号確認**：$\\frac{\\partial^2 \\ell}{\\partial \\theta^2} < 0$（上に凸＝最大点であること）
+[[f-likelihood-peak]]
 
----
+#### 4つの手順で求める
 
-### 2. 具体例：ベルヌーイ試行で MLE を実際に計算する
+10回中7回表の例で、$p$ の最尤推定値を求めます。
 
-コインを10回投げて成功5回・失敗5回が観測されたとします。表の確率 $p$ の MLE を4ステップで導きます。
+1. **尤度を書く**：$L(p) = p^7 (1-p)^3$
+2. **対数をとる**：$\\ell(p) = 7\\log p + 3\\log(1-p)$
+3. **微分して0とおく**（スコア方程式）：$\\dfrac{7}{p} - \\dfrac{3}{1-p} = 0$ より $\\hat{p} = 0.7$
+4. **頂上か確かめる**：2階微分 $-\\dfrac{7}{p^2} - \\dfrac{3}{(1-p)^2}$ が負なので最大
 
-**ステップ1（尤度）**：1回の試行の確率関数は $f(x; p) = p^x (1-p)^{1-x}$（$x \\in \\{0,1\\}$）。観測 $\\sum x_i = 5$、$n=10$ より：
+一般に $n$ 回中 $k$ 回なら $\\hat{p} = k/n$ で、表の割合そのものです。
 
-$$L(p) = p^{\\sum x_i}(1-p)^{n-\\sum x_i} = p^5 (1-p)^5$$
+#### 正規分布の最尤推定量
 
-**ステップ2（対数尤度）**：
+$N(\\mu, \\sigma^2)$ から $n$ 個とったとき、同じ手順で次の2つが求まります。
 
-$$\\ell(p) = 5\\log p + 5\\log(1-p)$$
+$$\\hat{\\mu} = \\bar{X}, \\qquad \\hat{\\sigma}^2 = \\frac{1}{n}\\sum_{i=1}^{n}(X_i - \\bar{X})^2$$
 
-**ステップ3（スコア方程式）**：$p$ で微分してゼロと置きます。
+$\\hat{\\sigma}^2$ は $n$ で割るので、平均すると真の $\\sigma^2$ より少し小さくなります（$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2$）。
 
-$$\\frac{d\\ell}{dp} = \\frac{5}{p} - \\frac{5}{1-p} = 0 \\;\\Longrightarrow\\; 5(1-p) = 5p \\;\\Longrightarrow\\; \\hat{p} = 0.5$$
+| $n$ | 2 | 5 | 10 | 30 |
+|---|---|---|---|---|
+| $E[\\hat{\\sigma}^2] / \\sigma^2$ | 0.50 | 0.80 | 0.90 | 0.97 |
 
-**ステップ4（最大確認）**：$\\frac{d^2\\ell}{dp^2} = -\\frac{5}{p^2} - \\frac{5}{(1-p)^2} < 0$ なので確かに最大点です。一般化すると $\\hat{p}_{\\text{MLE}} = \\bar{X}$（標本平均）です。「成功比率を素直に推定値とせよ」という直感と一致します。
-
-🎯 **押さえどころ**：正規分布 $N(\\mu, \\sigma^2)$ の MLE は $\\hat{\\mu} = \\bar{X}$（標本平均）、$\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i - \\bar{X})^2$（$n$ 分の1。不偏ではない）。
-
-⚠️ **よくある誤解**：「MLE は最良の推定量だから必ず不偏」と思いがちですが、誤りです。正規分布の $\\sigma^2$ の MLE は $\\frac{1}{n}\\sum(X_i-\\bar{X})^2$ で $E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2 < \\sigma^2$ となり**真値より小さい方向に偏っています**。MLE が保証するのは「漸近的な有効性」であって、有限標本での不偏性ではありません。
-
-📖 **最小二乗法との関係**：正規誤差モデルでは MLE と最小二乗推定（OLS）は一致します。残差二乗和の最小化と対数尤度の最大化が同じ解を与えます。
+$n$ が大きければ偏りはほぼ消えます。最尤推定量は、いつも偏りがないとは限りません。誤差が正規分布に従う回帰では、最尤推定と最小二乗法が同じ答えになります（[重回帰分析とモデル評価](/stats-pre1/2.1-regression/)）。
 
 ---
 
 ### 3. モーメント法
 
-MLEは強力ですが、計算が複雑になる場合があります。より直感的な方法が**モーメント法**（Method of Moments, MM）で、「母集団のモーメントと標本モーメントが等しい」とおいてパラメータを決める方法です。$k$ 次母モーメント $E[X^k]$ を標本モーメント $\\frac{1}{n}\\sum X_i^k$ で置き換えて連立方程式を解きます。
+#### 平均をデータの平均と等しいとおく
 
-パラメータが1つなら1次モーメント（期待値）だけで解け、「標本平均を期待値の式と等置する」という操作になります。
+分布の平均 $E[X]$ を母数で書き、それをデータの平均 $\\bar{X}$ と等しいとおいて解きます。母数が2つなら、$E[X^2]$ と $\\frac{1}{n}\\sum X_i^2$ も等しいとおきます。
 
-**指数分布 $\\text{Exp}(\\lambda)$ のモーメント推定量の導出**：
+**例**：指数分布 $\\text{Exp}(\\lambda)$ は $E[X] = 1/\\lambda$ なので、$1/\\hat{\\lambda} = \\bar{X}$ より $\\hat{\\lambda} = 1/\\bar{X}$ です。故障までの時間の平均が2時間なら $\\hat{\\lambda} = 0.5$（1時間あたり0.5回）です。
 
-指数分布 $f(x; \\lambda) = \\lambda e^{-\\lambda x}$ の理論平均は $E[X] = 1/\\lambda$。これを標本平均 $\\bar{X}$ と等置します：
+#### 2つの方法の答えを並べる
 
-$$\\frac{1}{\\hat{\\lambda}_{\\text{MM}}} = \\bar{X} \\;\\Longrightarrow\\; \\hat{\\lambda}_{\\text{MM}} = \\frac{1}{\\bar{X}}$$
-
-例えば故障時間データ $\\bar{X} = 2$ 時間なら $\\hat{\\lambda} = 0.5$（時間あたり0.5回の故障率）。MLE も同じ $1/\\bar{X}$ になり、両者が一致します。
-
-**ポアソン分布 $\\text{Po}(\\lambda)$**：$E[X] = \\lambda$ なので $\\hat{\\lambda}_{\\text{MM}} = \\bar{X}$。これも MLE と一致します。
-
----
-
-### 4. 使い分けの表：なぜ MLE が一般に優れるか
-
-| 観点 | 最尤推定法（MLE） | モーメント法（MM） |
+| 分布 | 最尤推定 | モーメント法 |
 |---|---|---|
-| 計算の手間 | 多い（対数尤度の微分） | 少ない（期待値と等置） |
-| 情報の活用 | 尤度を通じてデータ全情報を使う | 1次・2次モーメントなど一部のみ |
-| 漸近効率 | 最良（CRB を達成） | 一般に劣る |
-| 用途 | 推論・予測の主力 | 初期値・簡易推定 |
+| ベルヌーイ $p$ | $\\bar{X}$ | $\\bar{X}$ |
+| ポアソン $\\lambda$ | $\\bar{X}$ | $\\bar{X}$ |
+| 指数 $\\lambda$ | $1/\\bar{X}$ | $1/\\bar{X}$ |
+| 正規 $\\mu, \\sigma^2$ | $\\bar{X}$、$\\frac{1}{n}\\sum(X_i - \\bar{X})^2$ | 同じ |
+| 一様 $U(0, \\theta)$ | 最大値 $X_{(n)}$ | $2\\bar{X}$ |
 
-💡 **なぜ MLE はモーメント法より優れているのか**
+多くの分布で2つは一致しますが、一様分布では違います。$E[X] = \\theta/2$ なのでモーメント法は $2\\bar{X}$、最尤推定は最大値です（理由は次の節）。どちらが良いかを、推定値の散らばりで比べます。
 
-MLE は**十分統計量**（[十分統計量と順序統計量](/stats-pre1/1.13-sufficient-stats/)を参照）を完全に活用するため、データの情報を最大限引き出します。その結果、漸近的に**最小分散**（クラーメル・ラオ下限を達成）を実現します。これは MLE が最良の推定量であることの理論的根拠です。漸近的性質の詳細は次のモジュール[推定量の性質](/stats-pre1/1.15-estimator-props/)、フィッシャー情報量との関係は[漸近理論の基礎](/stats-pre1/1.22-asymptotic/)で扱います。
+[[f-mm-vs-mle]]
+
+最尤推定は、データの情報を尤度を通してすべて使うので、$n$ が大きいとき一般にモーメント法よりばらつきが小さくなります。モーメント法は計算が簡単で、最尤推定を数値計算で求めるときの出発点にも使います。
 
 ---
 
-### 5. MLE がうまく機能しない例
+### 4. 微分で求まらないとき
 
-MLE は強力ですが、すべての場面で万能というわけではありません。注意すべき場合があります。
+#### 尤度が跳ぶ・山が2つある
 
-- **一様分布 $U(0, \\theta)$**：尤度 $L(\\theta) = \\theta^{-n} \\cdot \\mathbf{1}[x_{(n)} \\leq \\theta]$ は不連続で、スコア方程式が使えません。$\\hat{\\theta} = \\max(X_i)$（標本最大値）が MLE になります。「微分してゼロ」が常に使えるわけではない点に注意。
-- **多峰性の対数尤度**：複数の極大点があるとき、数値最適化が誤った極大に収束する危険があります。複数の初期値で計算するなどの工夫が必要です。
-- **正則条件の違反**：パラメータ空間の境界で MLE が定義されないことがあります（例：分散パラメータが0近傍）。
+「微分して0」は、尤度がなめらかで頂上が1つのときの方法です。次の2つは注意が要ります。
 
-🎯 **つまずきやすい点**：MLE が「微分してゼロ」で常に求まるとは限りません。特に**一様分布のように尤度関数の台がパラメータに依存する場合**は注意。たとえば一様分布 $U(0, \\theta)$ では、$\\theta$ が最大の観測値より小さいと尤度が0になり、それ以上では $\\theta$ が小さいほど尤度が大きいので、微分ではなく「最大の観測値」が MLE になります。`,keyFormulas:[{label:`対数尤度`,formula:`\\ell(\\theta) = \\log L(\\theta) = \\sum_{i=1}^n \\log f(x_i; \\theta)`},{label:`スコア方程式`,formula:`\\dfrac{\\partial \\ell}{\\partial \\theta} = 0`},{label:`正規分布のMLE（平均）`,formula:`\\hat{\\mu}_{\\text{MLE}} = \\bar{X}`},{label:`正規分布のMLE（分散）`,formula:`\\hat{\\sigma}^2_{\\text{MLE}} = \\dfrac{1}{n}\\sum(X_i-\\bar{X})^2`}],quiz:[{id:`est1-11`,question:`尤度関数 $L(\\theta)$ の直感的な意味として正しいものはどれか？`,options:[`推定誤差の大きさ`,`$\\theta$ が真の値である確率`,`観測データが得られる確率を $\\theta$ の関数として見たもの`,`$\\theta$ の事前分布`],correctAnswer:2,explanation:`尤度関数は「パラメータが $\\theta$ だとしたとき、今観測されたデータが得られる確率（密度）」です。$\\theta$ を変えながら「どの $\\theta$ のもとでデータが最も起きやすいか」を探すのが最尤推定の発想です。`},{id:`est1-3`,question:`最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？`,options:[`最大値が変わるから`,`積の形が和に変わり微分しやすくなるから`,`正規分布に近似されるから`,`負の値を扱えるようになるから`],correctAnswer:1,explanation:`独立なデータの尤度は $L = \\prod f(x_i;\\theta)$（積の形）です。$\\log L = \\sum \\log f(x_i;\\theta)$（和の形）にすると微分計算が簡単になります。$\\log$ は単調増加なので最大化の問題として同値です。`},{id:`est1-6`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\mu$ の最尤推定量（MLE）はどれか？`,options:[`標本平均 $\\bar{X}$`,`$\\frac{1}{n}\\sum X_i^2$`,`中央値`,`$\\frac{1}{n-1}\\sum X_i$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\mu) = -\\frac{n}{2}\\log(2\\pi\\sigma^2) - \\frac{1}{2\\sigma^2}\\sum(X_i-\\mu)^2$ を最大化すると $\\hat{\\mu} = \\bar{X}$ が得られます。これは不偏推定量でもあります。一方 $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏ではない点に注意。`},{id:`est1-7`,question:`モーメント法（Method of Moments）でポアソン分布 $\\text{Po}(\\lambda)$ の $\\lambda$ を推定するとき、推定量はどれか？`,options:[`$\\sum X_i$`,`$\\bar{X}$（標本平均）`,`$S^2$（標本分散）`,`$\\max(X_i)$`],correctAnswer:1,explanation:`モーメント法は $E[X] = \\lambda$ を標本平均 $\\bar{X}$ と等置します。$E[X] = \\lambda$ なので $\\hat{\\lambda}_{\\text{MM}} = \\bar{X}$ です。ポアソン分布では MLE も $\\bar{X}$ になるため、両者は一致します。`},{id:`est1-10`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\sigma^2$ の MLE $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ はなぜ不偏でないか？`,options:[`$n$ が大きすぎるから`,`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2 \\neq \\sigma^2$ だから`,`平均が既知でない場合に使えないから`,`MLE は必ず不偏でないから`],correctAnswer:1,explanation:`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2$ で真の値 $\\sigma^2$ より小さい方向に偏っています。不偏にするには分母を $n-1$ にした不偏分散 $S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ を使います。`},{id:`est1-12`,question:`スコア方程式 $\\partial \\ell / \\partial \\theta = 0$ を解くことは何に相当するか？`,options:[`分散の最小化`,`データの標準化`,`尤度の最小化`,`対数尤度の最大化点（極大点）の発見`],correctAnswer:3,explanation:`対数尤度 $\\ell(\\theta)$ の導関数をゼロとおいた方程式がスコア方程式で、その解が MLE の候補です。2階微分が負であることを確認して最大点であることを確かめます。解が複数ある場合は全体の最大値を選びます。`},{id:`est1-13`,question:`指数分布 $\\text{Exp}(\\lambda)$（$f(x) = \\lambda e^{-\\lambda x}$、$E[X] = 1/\\lambda$）の MLE はどれか？`,options:[`$1/\\bar{X}$`,`$\\sqrt{\\bar{X}}$`,`$n / \\sum X_i^2$`,`$\\bar{X}$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\lambda) = n\\log\\lambda - \\lambda \\sum X_i$ を微分すると $n/\\lambda - \\sum X_i = 0$、解くと $\\hat{\\lambda} = n/\\sum X_i = 1/\\bar{X}$ です。モーメント法（$E[X] = 1/\\lambda$ から $\\hat{\\lambda} = 1/\\bar{X}$）と一致します。`},{id:`est1-14`,question:`モーメント法と MLE を比較したとき、一般に正しいものはどれか？`,options:[`モーメント法の方が常に精度が高い`,`MLE の方が漸近的に効率が良い（分散が小さい）`,`両者は常に同じ推定量を与える`,`モーメント法は正規分布にしか使えない`],correctAnswer:1,explanation:`MLE は漸近有効性（asymptotic efficiency）を持ち、$n \\to \\infty$ でクラーメル・ラオ下限に達します。モーメント法は計算が簡単ですが一般に漸近分散が大きくなります。ただしポアソン分布のように両者が一致する場合もあります。`},{id:`est1-15`,question:`正規誤差モデルで最小二乗推定（OLS）と MLE の関係はどれか？`,options:[`OLS は不偏だが MLE は必ず不偏でない`,`OLS は常に MLE より精度が高い`,`正規誤差を仮定した場合、OLS と MLE は同じ解を与える`,`MLE は非線形モデルにしか使えない`],correctAnswer:2,explanation:`線形回帰モデルで誤差が $N(0, \\sigma^2)$ に従うとき、対数尤度の最大化は残差二乗和 $\\sum(y_i - \\mathbf{x}_i^\\top \\boldsymbol{\\beta})^2$ の最小化と同値になります。これが OLS と MLE の一致の理由です。`},{id:`est1-16`,question:`連続一様分布 $\\text{Uniform}(0, \\theta)$ の MLE はどれか？`,options:[`$\\min(X_i)$（標本最小値）`,`$\\bar{X}$`,`$2\\bar{X}$`,`$\\max(X_i)$（標本最大値）`],correctAnswer:3,explanation:`尤度 $L(\\theta) = \\theta^{-n}$（$\\theta \\geq \\max(X_i)$ のとき）は $\\theta$ が小さいほど大きくなります。最小の $\\theta$ は $\\max(X_i)$（これより小さくするとデータが説明不可能）なので MLE は $\\hat{\\theta} = \\max(X_i)$ です。スコア方程式が使えない例として重要です。`}]},{id:`1.15-estimator-props`,updatedAt:`2026-05-29`,title:`推定量の性質：不偏性・一致性・有効性の理論`,chapter:6,description:`良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式で、推定量の品質を評価する理論を学びます。`,content:`💡 **このモジュールで学ぶこと**
+[[f-likelihood-trouble]]
+
+- **一様分布** $U(0, \\theta)$：尤度は $\\theta$ が最大値以上のとき $\\theta^{-n}$、それより小さいと0です。傾きが0になる点が無く、跳んだ所の最大値 $X_{(n)}$ が最尤推定量です
+- **山が2つある尤度**：数値計算で頂上を探すと、出発点によって小さい方の山に止まります。出発点を変えて何度か計算し、尤度が最大のものを選びます`,keyFormulas:[{label:`対数尤度`,formula:`\\ell(\\theta) = \\log L(\\theta) = \\sum_{i=1}^n \\log f(x_i; \\theta)`},{label:`スコア方程式`,formula:`\\dfrac{\\partial \\ell}{\\partial \\theta} = 0`},{label:`正規分布のMLE（平均）`,formula:`\\hat{\\mu}_{\\text{MLE}} = \\bar{X}`},{label:`正規分布のMLE（分散）`,formula:`\\hat{\\sigma}^2_{\\text{MLE}} = \\dfrac{1}{n}\\sum(X_i-\\bar{X})^2`}],quiz:[{id:`est1-11`,question:`尤度関数 $L(\\theta)$ の直感的な意味として正しいものはどれか？`,options:[`推定誤差の大きさ`,`$\\theta$ が真の値である確率`,`観測データが得られる確率を $\\theta$ の関数として見たもの`,`$\\theta$ の事前分布`],correctAnswer:2,explanation:`尤度関数は「パラメータが $\\theta$ だとしたとき、今観測されたデータが得られる確率（密度）」です。$\\theta$ を変えながら「どの $\\theta$ のもとでデータが最も起きやすいか」を探すのが最尤推定の発想です。`},{id:`est1-3`,question:`最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？`,options:[`最大値が変わるから`,`積の形が和に変わり微分しやすくなるから`,`正規分布に近似されるから`,`負の値を扱えるようになるから`],correctAnswer:1,explanation:`独立なデータの尤度は $L = \\prod f(x_i;\\theta)$（積の形）です。$\\log L = \\sum \\log f(x_i;\\theta)$（和の形）にすると微分計算が簡単になります。$\\log$ は単調増加なので最大化の問題として同値です。`},{id:`est1-6`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\mu$ の最尤推定量（MLE）はどれか？`,options:[`標本平均 $\\bar{X}$`,`$\\frac{1}{n}\\sum X_i^2$`,`中央値`,`$\\frac{1}{n-1}\\sum X_i$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\mu) = -\\frac{n}{2}\\log(2\\pi\\sigma^2) - \\frac{1}{2\\sigma^2}\\sum(X_i-\\mu)^2$ を最大化すると $\\hat{\\mu} = \\bar{X}$ が得られます。これは不偏推定量でもあります。一方 $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏ではない点に注意。`},{id:`est1-7`,question:`モーメント法（Method of Moments）でポアソン分布 $\\text{Po}(\\lambda)$ の $\\lambda$ を推定するとき、推定量はどれか？`,options:[`$\\sum X_i$`,`$\\bar{X}$（標本平均）`,`$S^2$（標本分散）`,`$\\max(X_i)$`],correctAnswer:1,explanation:`モーメント法は $E[X] = \\lambda$ を標本平均 $\\bar{X}$ と等置します。$E[X] = \\lambda$ なので $\\hat{\\lambda}_{\\text{MM}} = \\bar{X}$ です。ポアソン分布では MLE も $\\bar{X}$ になるため、両者は一致します。`},{id:`est1-10`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\sigma^2$ の MLE $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ はなぜ不偏でないか？`,options:[`$n$ が大きすぎるから`,`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2 \\neq \\sigma^2$ だから`,`平均が既知でない場合に使えないから`,`MLE は必ず不偏でないから`],correctAnswer:1,explanation:`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2$ で真の値 $\\sigma^2$ より小さい方向に偏っています。不偏にするには分母を $n-1$ にした不偏分散 $S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ を使います。`},{id:`est1-12`,question:`一様分布 $U(0, \\theta)$ の $\\theta$ をモーメント法で推定するとき、推定量はどれか？`,options:[`$2\\bar{X}$`,`$\\bar{X}$`,`$\\max(X_i)$`,`$\\bar{X}/2$`],correctAnswer:0,explanation:`$U(0, \\theta)$ の平均は $\\theta/2$ です。これをデータの平均と等しいとおくと $\\hat{\\theta}/2 = \\bar{X}$ なので $\\hat{\\theta} = 2\\bar{X}$ です。最尤推定量は最大値 $\\max(X_i)$ で、一様分布では2つの方法の答えが違います。$\\bar{X}/2$ は等式の向きを取り違えた値です。`},{id:`est1-13`,question:`指数分布 $\\text{Exp}(\\lambda)$（$f(x) = \\lambda e^{-\\lambda x}$、$E[X] = 1/\\lambda$）の MLE はどれか？`,options:[`$1/\\bar{X}$`,`$\\sqrt{\\bar{X}}$`,`$n / \\sum X_i^2$`,`$\\bar{X}$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\lambda) = n\\log\\lambda - \\lambda \\sum X_i$ を微分すると $n/\\lambda - \\sum X_i = 0$、解くと $\\hat{\\lambda} = n/\\sum X_i = 1/\\bar{X}$ です。モーメント法（$E[X] = 1/\\lambda$ から $\\hat{\\lambda} = 1/\\bar{X}$）と一致します。`},{id:`est1-14`,question:`モーメント法と MLE を比較したとき、一般に正しいものはどれか？`,options:[`モーメント法の方が常に精度が高い`,`MLE の方が漸近的に効率が良い（分散が小さい）`,`両者は常に同じ推定量を与える`,`モーメント法は正規分布にしか使えない`],correctAnswer:1,explanation:`最尤推定はデータの情報を尤度を通してすべて使うので、$n$ が大きいとき一般にモーメント法よりばらつきが小さくなります。一様分布 $U(0, 1)$ から10個とると、真の値からのずれ（二乗誤差の平方根）は最尤推定の最大値が約0.12、モーメント法の $2\\bar{X}$ が約0.18です。ポアソン分布のように両者が一致する場合もあります。`},{id:`est1-15`,question:`正規誤差モデルで最小二乗推定（OLS）と MLE の関係はどれか？`,options:[`OLS は不偏だが MLE は必ず不偏でない`,`OLS は常に MLE より精度が高い`,`正規誤差を仮定した場合、OLS と MLE は同じ解を与える`,`MLE は非線形モデルにしか使えない`],correctAnswer:2,explanation:`線形回帰モデルで誤差が $N(0, \\sigma^2)$ に従うとき、対数尤度の最大化は残差二乗和 $\\sum(y_i - \\mathbf{x}_i^\\top \\boldsymbol{\\beta})^2$ の最小化と同値になります。これが OLS と MLE の一致の理由です。`},{id:`est1-16`,question:`連続一様分布 $\\text{Uniform}(0, \\theta)$ の MLE はどれか？`,options:[`$\\min(X_i)$（標本最小値）`,`$\\bar{X}$`,`$2\\bar{X}$`,`$\\max(X_i)$（標本最大値）`],correctAnswer:3,explanation:`尤度 $L(\\theta) = \\theta^{-n}$（$\\theta \\geq \\max(X_i)$ のとき）は $\\theta$ が小さいほど大きくなります。最小の $\\theta$ は $\\max(X_i)$（これより小さくするとデータが説明不可能）なので MLE は $\\hat{\\theta} = \\max(X_i)$ です。スコア方程式が使えない例として重要です。`}]},{id:`1.15-estimator-props`,updatedAt:`2026-05-29`,title:`推定量の性質：不偏性・一致性・有効性の理論`,chapter:6,description:`良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式で、推定量の品質を評価する理論を学びます。`,content:`💡 **このモジュールで学ぶこと**
 
 前のモジュールでは「どうやってパラメータを推定するか」（最尤法・モーメント法）を学びました。このモジュールでは「その推定量は良い推定量か」を評価する4つの性質と、精度の理論的限界（クラーメル・ラオの不等式）を学びます。
 

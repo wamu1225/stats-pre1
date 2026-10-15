@@ -1271,10 +1271,133 @@ function likelihood(): string {
     <line x1="${f1(PX(b, 0.7))}" y1="${b.y}" x2="${f1(PX(b, 0.7))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${f1(PX(b, 0.7) + 4)}" y="${b.y + 10}" font-size="12.4" fill="${ROSE}">p̂ = 0.7</text>
     <text x="${f1(PX(b, 0.3))}" y="${f1(PY(b, 0.62))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
-    <text x="${f1(PX(b, 0.84))}" y="${f1(PY(b, 0.9))}" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
+    <text x="${f1(PX(b, 0.655))}" y="${f1(PY(b, 0.95))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
   </svg>`;
-  const cap = `横軸に表の確率 p の候補を並べ、それぞれの p で「今のデータが出る確率」を描いたものが尤度関数です。10回中7回表なら、山の頂上は p = 0.7 で、これが最尤推定値です。同じ7割でも100回中70回なら、頂上の位置は変わらずに山がずっと鋭くなります。山が鋭いほど p の候補を狭く絞り込めるということで、この「山の鋭さ」を数にしたものが後の章のフィッシャー情報量です。`;
+  const cap = `10回中7回表なら、山の頂上の p = 0.7 が最尤推定値です。同じ7割でも100回中70回なら、頂上は同じ位置のまま山が鋭くなり、p の候補を狭く絞り込めます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.14：推定量の流れ（母集団 → 標本 → 推定量 → 推定値） ============
+function estimatorFlow(): string {
+  const W = 344, H = 250;
+  const rows = [
+    { t: '母集団（母数 θ は未知）', e: '表の確率 p', c: SLATE },
+    { t: '標本 X₁, …, Xₙ', e: '10回投げた結果', c: TEAL },
+    { t: '推定量 θ̂ ＝ データの関数', e: '表の割合 X̄', c: INDIGO },
+    { t: '推定値（1つの数）', e: '0.7', c: ROSE },
+  ];
+  const bx = 12, bw = 200, bh = 36, gap = 20, y0 = 28;
+  const svg = `${svgOpen(W, H, '母集団から標本をとり、推定量という関数に入れて、推定値という1つの数を得る流れ。右はコインの例')}
+    <text x="${bx + bw / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${SLATE}">一般</text>
+    <text x="${bx + bw + 66}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${SLATE}">コインの例</text>
+    ${rows.map(({ t, e, c }, i) => {
+      const y = y0 + i * (bh + gap);
+      return `<rect x="${bx}" y="${y}" width="${bw}" height="${bh}" rx="6" fill="${c}" fill-opacity="0.1" stroke="${c}" stroke-width="1.4" />
+        <text x="${bx + bw / 2}" y="${y + bh / 2 + 5}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${c === SLATE ? INK : c}">${t}</text>
+        <text x="${bx + bw + 66}" y="${y + bh / 2 + 5}" text-anchor="middle" font-size="12.4" fill="${INK}">${e}</text>
+        ${i < 3 ? `<line x1="${bx + bw / 2}" y1="${y + bh + 2}" x2="${bx + bw / 2}" y2="${y + bh + gap - 4}" stroke="${SLATE}" stroke-width="1.4" />
+        <polygon points="${bx + bw / 2 - 4},${y + bh + gap - 8} ${bx + bw / 2 + 4},${y + bh + gap - 8} ${bx + bw / 2},${y + bh + gap - 2}" fill="${SLATE}" />` : ''}`;
+    }).join('')}
+  </svg>`;
+  const cap = `推定量はデータを入れると数が出てくる関数で、出てきた1つの数が推定値です。標本が変われば推定値も変わります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.14：尤度と対数尤度は同じ所で最大（10回中7回表） ============
+function likelihoodLog(): string {
+  const W = 344, H = 350;
+  const T: Box = { x: 40, y: 30, w: 290, h: 110, xMin: 0.2, xMax: 1, yMax: 1.1 };
+  const B = { x: 40, y: 212, w: 290, h: 100, xMin: 0.2, xMax: 1, yMin: -6, yMax: 0.6 };
+  const lr = (p: number) => 7 * Math.log(p / 0.7) + 3 * Math.log((1 - p) / 0.3);
+  const BX = (p: number) => B.x + ((p - B.xMin) / (B.xMax - B.xMin)) * B.w;
+  const BY = (v: number) => B.y + B.h - ((v - B.yMin) / (B.yMax - B.yMin)) * B.h;
+  const pts: string[] = [];
+  for (let i = 0; i <= 120; i++) { const p = 0.2 + (0.78 * i) / 120; pts.push(`${f1(BX(p))},${f1(BY(lr(p)))}`); }
+  const ticks = [0.2, 0.4, 0.6, 0.8, 1];
+  const svg = `${svgOpen(W, H, '10回中7回表のときの尤度（上）と対数尤度（下）。どちらも p=0.7 で最大になり、頂上では傾きが0')}
+    <text x="${T.x}" y="${T.y - 12}" font-size="13.2" font-weight="700" fill="${INDIGO}">尤度 L(p)（最大を1にそろえた）</text>
+    ${area(T, (p) => Math.exp(lr(p)), 0.2, 0.999, INDIGO, 0.12)}${curve(T, (p) => Math.exp(lr(p)), INDIGO, 0.2, 0.999)}
+    ${axes(T, ticks)}
+    <text x="${B.x}" y="${B.y - 12}" font-size="13.2" font-weight="700" fill="${TEAL}">対数尤度 ℓ(p) ＝ log L(p)</text>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${TEAL}" stroke-width="2" />
+    <line x1="${f1(BX(0.58))}" y1="${f1(BY(0))}" x2="${f1(BX(0.82))}" y2="${f1(BY(0))}" stroke="${INK}" stroke-width="1.6" />
+    <text x="${f1(BX(0.84))}" y="${f1(BY(0) + 4)}" font-size="12.4" fill="${INK}">傾き 0</text>
+    <line x1="${B.x}" y1="${B.y + B.h}" x2="${B.x + B.w}" y2="${B.y + B.h}" stroke="${SLATE}" />
+    ${ticks.map((v) => `<text x="${f1(BX(v))}" y="${B.y + B.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <line x1="${f1(PX(T, 0.7))}" y1="${T.y}" x2="${f1(BX(0.7))}" y2="${B.y + B.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(T, 0.7) + 4)}" y="${T.y + 8}" font-size="12.4" fill="${ROSE}">p̂ = 0.7</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝表の確率 p の候補</text>
+  </svg>`;
+  const cap = `対数をとると山の形は変わりますが、頂上の位置は p = 0.7 のままです。頂上では傾きが0なので、対数尤度を微分して0とおけば頂上が求まります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.14：微分で求まらない尤度（一様分布の跳び・山が2つ） ============
+function likelihoodTrouble(): string {
+  const W = 344, H = 250;
+  const L: Box = { x: 10, y: 40, w: 150, h: 130, xMin: 0, xMax: 2, yMax: 1.1 };
+  const R: Box = { x: 186, y: 40, w: 150, h: 130, xMin: -6, xMax: 6, yMax: 1.1 };
+  const xs = [0.12, 0.35, 0.51, 0.64, 0.83], mx = Math.max(...xs);
+  const lu = (th: number) => (th < mx ? 0 : (mx / th) ** xs.length);
+  // コーシー分布の位置 θ の尤度（データが2か所に分かれる）
+  const cd = [-3.3, -2.1, 2.3, 2.9];
+  const ll = (th: number) => -cd.reduce((s, x) => s + Math.log(1 + (x - th) ** 2), 0);
+  const grid = Array.from({ length: 1201 }, (_, i) => -6 + (12 * i) / 1200);
+  const top = Math.max(...grid.map(ll));
+  const lc = (th: number) => Math.exp(ll(th) - top);
+  const peaks = grid.filter((g, i) => i > 0 && i < grid.length - 1 && ll(g) > ll(grid[i - 1]) && ll(g) >= ll(grid[i + 1]));
+  const svg = `${svgOpen(W, H, '左：一様分布の尤度は最大の観測値で跳び、そこが最大。右：データが2か所に分かれると尤度の山が2つできる')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">一様分布 U(0, θ)</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">山が2つある尤度</text>
+    <line x1="${f1(PX(L, 0))}" y1="${f1(PY(L, 0))}" x2="${f1(PX(L, mx))}" y2="${f1(PY(L, 0))}" stroke="${INDIGO}" stroke-width="2.4" />
+    ${curve(L, lu, INDIGO, mx, 2, 2.4)}
+    <line x1="${f1(PX(L, mx))}" y1="${f1(PY(L, 0))}" x2="${f1(PX(L, mx))}" y2="${f1(PY(L, 1))}" stroke="${INDIGO}" stroke-width="1" stroke-dasharray="2 2" />
+    <circle cx="${f1(PX(L, mx))}" cy="${f1(PY(L, 1))}" r="4" fill="${ROSE}" />
+    <text x="${f1(PX(L, mx) + 6)}" y="${f1(PY(L, 1) + 12)}" font-size="12.4" font-weight="700" fill="${ROSE}">最大値 ${mx}</text>
+    ${xs.map((x) => `<circle cx="${f1(PX(L, x))}" cy="${f1(PY(L, 0) - 6)}" r="2.6" fill="${TEAL}" />`).join('')}
+    ${axes(L, [0, 1, 2])}
+    ${curve(R, lc, INDIGO, -6, 6, 2.2)}
+    ${cd.map((x) => `<circle cx="${f1(PX(R, x))}" cy="${f1(PY(R, 0) - 6)}" r="2.6" fill="${TEAL}" />`).join('')}
+    ${peaks.map((p) => `<circle cx="${f1(PX(R, p))}" cy="${f1(PY(R, lc(p)))}" r="3.6" fill="${lc(p) > 0.999 ? ROSE : AMBER}" />`).join('')}
+    ${axes(R, [-4, 0, 4])}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">緑の点＝観測値　縦軸＝尤度（最大を1にそろえた）</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右はコーシー分布の位置 θ の尤度</text>
+  </svg>`;
+  const lo = peaks.find((p) => lc(p) < 0.999), hi = peaks.find((p) => lc(p) > 0.999);
+  const cap = `左は最大値 ${mx} で跳ぶ尤度で、傾きが0になる点がありません。右は頂上 θ ≈ ${f1(hi ?? 0)} のほかに、θ ≈ ${f1(lo ?? 0)} にも山があります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.14：モーメント法と最尤推定の比較（一様分布 U(0, θ)・θ = 1・n = 10） ============
+function mmVsMle(): string {
+  const W = 344, H = 250, n = 10;
+  const b: Box = { x: 14, y: 30, w: 316, h: 160, xMin: 0.4, xMax: 1.6, yMax: 10.5 };
+  // 10個の和 S の密度（アーウィン・ホール分布）。2X̄ = S/5 なので密度は 5 f_S(5t)
+  const fact = (k: number) => Math.exp(lgamma(k + 1));
+  const fS = (s: number) => {
+    if (s <= 0 || s >= n) return 0;
+    let v = 0;
+    for (let k = 0; k <= Math.floor(s); k++) v += (-1) ** k * choose(n, k) * (s - k) ** (n - 1);
+    return v / fact(n - 1);
+  };
+  const fMM = (t: number) => 5 * fS(5 * t);
+  const fML = (t: number) => (t <= 0 || t > 1 ? 0 : n * t ** (n - 1));
+  const sdMM = 2 * Math.sqrt(1 / 12 / n), mML = n / (n + 1), vML = n / ((n + 1) ** 2 * (n + 2));
+  const rmseML = Math.sqrt(vML + (mML - 1) ** 2);
+  const svg = `${svgOpen(W, H, '一様分布 U(0,1) から10個とったときの、モーメント推定量 2X̄ と最尤推定量（最大値）の分布。最尤推定量は1の少し手前に鋭く集まり、モーメント推定量は広く散らばる')}
+    <line x1="${f1(PX(b, 1))}" y1="${b.y - 4}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 1) + 4)}" y="${b.y + 6}" font-size="12.4" fill="${ROSE}">真の θ = 1</text>
+    ${area(b, fMM, 0.4, 1.6, AMBER, 0.25)}${curve(b, fMM, AMBER, 0.4, 1.6, 2)}
+    ${area(b, fML, 0.4, 1, INDIGO, 0.2)}${curve(b, fML, INDIGO, 0.4, 1, 2.2)}
+    <line x1="${f1(PX(b, 1))}" y1="${f1(PY(b, 10))}" x2="${f1(PX(b, 1))}" y2="${f1(PY(b, 0))}" stroke="${INDIGO}" stroke-width="2.2" />
+    ${axes(b, [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6])}
+    <text x="${f1(PX(b, 0.88))}" y="${f1(PY(b, 6.5))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">最尤：最大値</text>
+    <text x="${f1(PX(b, 1.22))}" y="${f1(PY(b, 2.3))}" font-size="12.4" font-weight="700" fill="#b45309">モーメント：2X̄</text>
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／縦軸＝密度</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">U(0, 1) から10個とった場合</text>
+  </svg>`;
+  const cap = `同じ10個のデータでも、2X̄ は標準偏差 ${f2(sdMM)} で広く散らばり、最大値は1の少し手前（平均 ${f2(mML)}）に鋭く集まります。真の値からのずれの大きさ（二乗誤差の平方根）は、最尤 ${f2(rmseML)}、モーメント ${f2(sdMM)} です。`;
   return fig(svg, cap);
 }
 
@@ -1992,7 +2115,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT,
   'f-order-stats': orderStats,
-  'f-likelihood': likelihood,
+  'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
