@@ -350,7 +350,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <line x1="${e.x}" y1="${e.y+e.h}" x2="${e.x+e.w}" y2="${e.y+e.h}" stroke="${I}" />
     ${[[0,`1`],[1,`10`],[2,`100`],[3,`1000`]].map(([t,n])=>`<text x="${R(U(e,t))}" y="${e.y+e.h+14}" text-anchor="middle" font-size="12.4" fill="${I}">${n}</text>`).join(``)}
     <text x="${e.x+e.w/2}" y="224" text-anchor="middle" font-size="12.4" fill="${I}">横軸＝振った回数（10倍ごと）／縦軸＝目の平均</text>
-  </svg>`,l=e=>n.map(t=>t[e-1].toFixed(2)).join(`・`),u=e=>`${(3.5-2*a/Math.sqrt(e)).toFixed(2)}〜${(3.5+2*a/Math.sqrt(e)).toFixed(2)}`;return J(c,`線は3人それぞれの平均の推移。10回目は ${l(10)} とばらばらで、1000回目は ${l(1e3)} です。灰色の帯は平均の約95%が入る範囲で、100回で ${u(100)}、1000回で ${u(1e3)} です。`)}function st(){let e={x:14,y:30,w:316,h:170,xMin:0,xMax:3,yMax:3.6},t=e=>t=>t<=0?e===1?1:0:e*me(e)(e*t),n=[{n:1,c:I,lx:.3,t:`n = 1（元の分布）`},{n:4,c:P,lx:.75,t:`n = 4`},{n:16,c:N,lx:.94,t:`n = 16`},{n:64,c:M,lx:.985,t:`n = 64`}];return J(`${Y(344,250,`指数分布から n 個とった平均の分布。n が増えると山の幅が縮んで1に集まり、形は右に歪んだ形から左右対称の釣鐘形に変わる`)}
+  </svg>`,l=e=>n.map(t=>t[e-1].toFixed(2)).join(`・`),u=e=>`${(3.5-2*a/Math.sqrt(e)).toFixed(2)}〜${(3.5+2*a/Math.sqrt(e)).toFixed(2)}`;return J(c,`線は3人それぞれの平均の推移。10回目は ${l(10)} とばらばらで、1000回目は ${l(1e3)} です。灰色の帯は平均の約95%が入る範囲で、100回で ${u(100)}、1000回で ${u(1e3)} です。`)}function st(){let e={x:14,y:30,w:316,h:170,xMin:0,xMax:3,yMax:3.6},t=e=>t=>t<=0?e===1?1:0:e*me(e)(e*t),n=[{n:1,c:I,lx:.3,t:`n = 1（元の分布）`},{n:4,c:P,lx:.75,t:`n = 4`},{n:16,c:N,lx:.94,t:`n = 16`},{n:64,c:M,lx:.985,t:`n = 64`}];return J(`${Y(344,250,`指数分布から n 個とった平均の分布。n が増えると山の幅が縮んで期待値の1に集まり、形は右に歪んだ形から左右対称の釣鐘形に変わる`)}
     <line x1="${R(U(e,1))}" y1="${e.y-6}" x2="${R(U(e,1))}" y2="${e.y+e.h}" stroke="${F}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${R(U(e,1)+4)}" y="${e.y+4}" font-size="12.4" fill="${F}">期待値 1</text>
     ${n.map(({n,c:r})=>K(e,t(n),r,.001,3,n===64?2.2:1.8)).join(``)}
@@ -1690,7 +1690,7 @@ $$\\bar{X}_n \\approx N\\!\\left(\\mu,\\; \\frac{\\sigma^2}{n}\\right) \\quad (n
 
 | | 図で見ると | 分かること |
 |---|---|---|
-| 大数の法則（確率収束） | 山の幅が縮んで1に集まる | 平均は $\\mu$ に近づく |
+| 大数の法則（確率収束） | 山の幅が縮み、期待値 $\\mu$（この図では1）に集まる | 平均は $\\mu$ に近づく |
 | 中心極限定理（分布収束） | 山の形が釣鐘形に変わる | 平均の誤差の確率が計算できる |
 
 #### スライダーで形の変化を見る
