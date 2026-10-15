@@ -321,9 +321,9 @@ function App() {
                   <text x="84" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₁</text>
                   <text x="210" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₂</text>
                   <text x="306" y="40" textAnchor="middle" fontSize={13} fontWeight={700} fill="#374151">B₃</text>
-                  <text x="84" y="150" textAnchor="middle" fontSize={11} fontWeight={700} fill="#312e81">A∩B₁</text>
-                  <text x="210" y="136" textAnchor="middle" fontSize={11} fontWeight={700} fill="#312e81">A∩B₂</text>
-                  <text x="306" y="162" textAnchor="middle" fontSize={10} fontWeight={700} fill="#312e81">A∩B₃</text>
+                  <text x="84" y="150" textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#312e81">A∩B₁</text>
+                  <text x="210" y="136" textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#312e81">A∩B₂</text>
+                  <text x="306" y="162" textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#312e81">A∩B₃</text>
                 </svg>
                 <figcaption className="venn-caption">
                   全確率の定理 P(A) = Σ P(A∣Bᵢ)·P(Bᵢ)。全体 Ω を排反な原因 B₁,B₂,B₃ … に分け、各原因の中で A が起きる量（青）を足し合わせると P(A) になる。列の幅が P(Bᵢ)、青い高さが P(A∣Bᵢ) のイメージ。
@@ -346,7 +346,7 @@ function App() {
                 <figure key={key} className="venn-figure">
                   <svg viewBox="0 0 360 220" role="img" aria-label="信頼区間の被覆：別々の標本から作った95%信頼区間と、固定された真の値θ。約95%が真値をまたぐ" className="venn-svg ci-svg">
                     <line x1={trueX} y1={22} x2={trueX} y2={210} stroke="#dc2626" strokeWidth={1.5} strokeDasharray="4 3" />
-                    <text x={trueX} y={15} textAnchor="middle" fontSize={12} fontWeight={700} fill="#b91c1c">θ（真の値・固定）</text>
+                    <text x={trueX} y={15} textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#b91c1c">θ（真の値・固定）</text>
                     {intervals.map(([lo, hi], idx) => {
                       const y = 30 + idx * 9;
                       const covers = lo <= trueX && trueX <= hi;
@@ -391,14 +391,14 @@ function App() {
                     <polyline points={curve(mu0, 52, 300)} fill="none" stroke="#4338ca" strokeWidth={2} />
                     <polyline points={curve(mu1, 130, 360)} fill="none" stroke="#0f766e" strokeWidth={2} />
                     <line x1={c} y1={52} x2={c} y2={base} stroke="#111827" strokeWidth={1.2} strokeDasharray="4 3" />
-                    <text x={mu0} y={base + 15} textAnchor="middle" fontSize={12} fill="#3730a3">μ₀</text>
-                    <text x={mu1} y={base + 15} textAnchor="middle" fontSize={12} fill="#0f766e">μ₁</text>
-                    <text x={c} y={48} textAnchor="middle" fontSize={11} fill="#111827">境界 c</text>
-                    <text x={mu0} y={64} textAnchor="middle" fontSize={11} fontWeight={700} fill="#3730a3">H₀ 真</text>
-                    <text x={mu1} y={64} textAnchor="middle" fontSize={11} fontWeight={700} fill="#0f766e">H₁ 真</text>
-                    <text x={224} y={183} textAnchor="middle" fontSize={12} fontWeight={700} fill="#991b1b">α</text>
-                    <text x={189} y={170} textAnchor="middle" fontSize={12} fontWeight={700} fill="#374151">β</text>
-                    <text x={262} y={150} textAnchor="middle" fontSize={12} fontWeight={700} fill="#166534">1−β</text>
+                    <text x={mu0} y={base + 15} textAnchor="middle" fontSize={14.7} fill="#3730a3">μ₀</text>
+                    <text x={mu1} y={base + 15} textAnchor="middle" fontSize={14.7} fill="#0f766e">μ₁</text>
+                    <text x={c} y={48} textAnchor="middle" fontSize={14.7} fill="#111827">境界 c</text>
+                    <text x={mu0} y={64} textAnchor="middle" fontSize={14.7} fontWeight={700} fill="#3730a3">H₀ 真</text>
+                    <text x={mu1} y={64} textAnchor="middle" fontSize={14.7} fontWeight={700} fill="#0f766e">H₁ 真</text>
+                    <text x={224} y={183} textAnchor="middle" fontSize={14.7} fontWeight={700} fill="#991b1b">α</text>
+                    <text x={189} y={170} textAnchor="middle" fontSize={14.7} fontWeight={700} fill="#374151">β</text>
+                    <text x={262} y={150} textAnchor="middle" fontSize={14.7} fontWeight={700} fill="#166534">1−β</text>
                   </svg>
                   <figcaption className="venn-caption">
                     左の山は差がない（H₀ が真）ときの検定統計量の分布、右の山は差がある（H₁ が真）ときの分布。境界 c より右に出たら H₀ を棄却する。α（赤）＝H₀ が真なのに棄却してしまう第1種の過誤、β（灰）＝H₁ が真なのに見逃す第2種の過誤、1−β（緑）＝検出力。境界 c を左へ動かすと α は増え β は減る（トレードオフ）。標本数 n を増やすと両方の山が細くなって重なりが減り、α を保ったまま検出力を上げられる。
@@ -422,10 +422,10 @@ function App() {
                   <circle cx={250} cy={110} r={34} fill="#dbeafe" stroke="#2563eb" strokeWidth={2} />
                   <text x={110} y={117} textAnchor="middle" fontSize={20} fontWeight={700} fill="#b45309">晴</text>
                   <text x={250} y={117} textAnchor="middle" fontSize={20} fontWeight={700} fill="#1d4ed8">雨</text>
-                  <text x={180} y={50} textAnchor="middle" fontSize={12} fontWeight={700} fill="#334155">0.2</text>
-                  <text x={180} y={181} textAnchor="middle" fontSize={12} fontWeight={700} fill="#334155">0.4</text>
-                  <text x={33} y={114} textAnchor="middle" fontSize={12} fontWeight={700} fill="#b45309">0.8</text>
-                  <text x={327} y={114} textAnchor="middle" fontSize={12} fontWeight={700} fill="#1d4ed8">0.6</text>
+                  <text x={180} y={50} textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#334155">0.2</text>
+                  <text x={180} y={181} textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#334155">0.4</text>
+                  <text x={33} y={114} textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#b45309">0.8</text>
+                  <text x={327} y={114} textAnchor="middle" fontSize={12.6} fontWeight={700} fill="#1d4ed8">0.6</text>
                 </svg>
                 <figcaption className="venn-caption">
                   天気を晴れ・雨の2状態にしたマルコフ連鎖。矢印は推移確率 pᵢⱼ（晴→雨 = 0.2、雨→晴 = 0.4、自己ループは晴→晴 = 0.8、雨→雨 = 0.6）。各状態から出る矢印の確率の和は必ず1で、これが推移確率行列 P の各行の和が1になることに対応する。次の状態は今の状態だけで決まり、それより前の履歴にはよらない（マルコフ性）。
@@ -448,11 +448,11 @@ function App() {
                     <line x1={px(-6)} y1={py(0.5 + 0.11 * -6)} x2={px(6)} y2={py(0.5 + 0.11 * 6)} stroke="#9ca3af" strokeWidth={1.5} strokeDasharray="5 3" />
                     <polyline points={scurve.trim()} fill="none" stroke="#0f766e" strokeWidth={2.4} />
                     <circle cx={px(0)} cy={py(0.5)} r={2.8} fill="#0f766e" />
-                    <text x={x0 - 6} y={py(1) + 4} textAnchor="end" fontSize={11} fill="#6b7280">1</text>
-                    <text x={x0 - 6} y={py(0) + 4} textAnchor="end" fontSize={11} fill="#6b7280">0</text>
-                    <text x={px(0) + 7} y={py(0.5) - 6} textAnchor="start" fontSize={11} fontWeight={700} fill="#0f766e">p=0.5</text>
-                    <text x={x1} y={yBot + 20} textAnchor="end" fontSize={11} fill="#6b7280">β₀+β·x（線形予測子）</text>
-                    <text x={x0 - 4} y={yTop - 12} textAnchor="start" fontSize={11} fill="#6b7280">確率 p</text>
+                    <text x={x0 - 6} y={py(1) + 4} textAnchor="end" fontSize={12.6} fill="#6b7280">1</text>
+                    <text x={x0 - 6} y={py(0) + 4} textAnchor="end" fontSize={12.6} fill="#6b7280">0</text>
+                    <text x={px(0) + 7} y={py(0.5) - 6} textAnchor="start" fontSize={12.6} fontWeight={700} fill="#0f766e">p=0.5</text>
+                    <text x={x1} y={yBot + 20} textAnchor="end" fontSize={12.6} fill="#6b7280">β₀+β·x（線形予測子）</text>
+                    <text x={x0 - 4} y={yTop - 12} textAnchor="start" fontSize={12.6} fill="#6b7280">確率 p</text>
                   </svg>
                   <figcaption className="venn-caption">
                     ロジスティック回帰のシグモイド関数 p = 1 / (1 + e^−(β₀+β·x))。線形予測子（横軸）がどれだけ大きく・小さくなっても、確率（縦軸）は必ず0と1の間に収まる。確率をそのまま直線で当てはめると（灰の破線）0を下回り1を超えてしまうのに対し、シグモイドはなめらかに0↔1を結ぶ。中央 β₀+β·x = 0 で p = 0.5、そこで傾きが最も急になる。

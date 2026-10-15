@@ -620,10 +620,10 @@ function cltCoin(): string {
     <line x1="${f1(PX(b, 45))}" y1="${f1(mid)}" x2="${f1(PX(b, 55))}" y2="${f1(mid)}" stroke="${INK}" stroke-width="1.2" />
     <text x="${f1(PX(b, 56))}" y="${f1(mid + 4)}" font-size="12.4" fill="${INK}">±5＝標準偏差</text>
     <rect x="${ib.x}" y="${ib.y}" width="${ib.w}" height="${ib.h}" fill="#fff" stroke="${SLATE}" stroke-width="0.8" rx="4" />
-    <text x="${ib.x + ib.w / 2}" y="${ib.y + 14}" text-anchor="middle" font-size="11.6" fill="${INK}">1回分のコイン</text>
+    <text x="${ib.x + ib.w / 2}" y="${ib.y + 14}" text-anchor="middle" font-size="12.1" fill="${INK}">1回分のコイン</text>
     ${ibar(ib.x + 28)}${ibar(ib.x + 64)}
-    <text x="${ib.x + 28}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="11.6" fill="${SLATE}">裏 0</text>
-    <text x="${ib.x + 64}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="11.6" fill="${SLATE}">表 1</text>
+    <text x="${ib.x + 28}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="12.1" fill="${SLATE}">裏 0</text>
+    <text x="${ib.x + 64}" y="${ib.y + ib.h - 2}" text-anchor="middle" font-size="12.1" fill="${SLATE}">表 1</text>
     <text x="${W - 8}" y="${b.y + 30}" text-anchor="end" font-size="12.4" fill="${INDIGO}">棒＝実際の確率</text>
     <text x="${W - 8}" y="${b.y + 48}" text-anchor="end" font-size="12.4" fill="${ROSE}">曲線＝N(50, 25)</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝100回のうち表が出た枚数</text>
@@ -949,26 +949,26 @@ function distFamily(): string {
   const box = (cx: number, cy: number, w: number, c: string, title: string, sub: string) =>
     `<rect x="${f1(cx - w / 2)}" y="${f1(cy - 24)}" width="${w}" height="48" rx="8" fill="#fff" stroke="${c}" stroke-width="2" />
     <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="14" font-weight="700" fill="${c}">${title}</text>
-    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="11.5" fill="${SLATE}">${sub}</text>`;
+    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="12.1" fill="${SLATE}">${sub}</text>`;
   const arrow = (x1: number, y1: number, x2: number, y2: number) =>
     `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="1.6" marker-end="url(#${mk})" />`;
   const svg = `${svgOpen(W, H, '3つの分布の組み立て。標準正規分布 Z を2乗して k 個足すとカイ二乗分布、Z をカイ二乗分布を自由度で割った値の平方根で割ると t 分布、自由度で割った2つのカイ二乗分布の比が F 分布。t 分布を2乗すると分子の自由度1の F 分布')}
     <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
     ${box(172, 32, 190, INK, '標準正規分布 Z', 'N(0, 1)')}
     ${arrow(172, 57, 172, 100)}
-    <text x="180" y="83" font-size="11.5" fill="${INK}">2乗して k 個足す</text>
+    <text x="180" y="83" font-size="12.1" fill="${INK}">2乗して k 個足す</text>
     ${box(172, 126, 190, TEAL, 'カイ二乗分布 χ²(k)', '例：(n−1)s² / σ²')}
     ${arrow(120, 151, 92, 210)}
     ${arrow(224, 151, 252, 210)}
     <path d="M77,40 C14,60 14,170 66,210" fill="none" stroke="${INK}" stroke-width="1.6" marker-end="url(#${mk})" />
-    <text x="34" y="120" font-size="11.5" fill="${INK}">Z を</text>
-    <text x="34" y="136" font-size="11.5" fill="${INK}">分子に</text>
-    <text x="104" y="172" text-anchor="end" font-size="11.5" fill="${INK}">÷ √(χ²/k)</text>
-    <text x="242" y="172" font-size="11.5" fill="${INK}">χ²/k の比</text>
+    <text x="34" y="120" font-size="12.1" fill="${INK}">Z を</text>
+    <text x="34" y="136" font-size="12.1" fill="${INK}">分子に</text>
+    <text x="104" y="172" text-anchor="end" font-size="12.1" fill="${INK}">÷ √(χ²/k)</text>
+    <text x="242" y="172" font-size="12.1" fill="${INK}">χ²/k の比</text>
     ${box(86, 236, 150, INDIGO, 't 分布 t(k)', '例：平均を s で標準化')}
     ${box(258, 236, 150, AMBER, 'F 分布 F(k₁, k₂)', '例：2つの s² の比')}
     <path d="M86,262 V276 H258 V262" fill="none" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="172" y="295" text-anchor="middle" font-size="11.5" fill="${ROSE}">t(k)² = F(1, k)</text>
+    <text x="172" y="295" text-anchor="middle" font-size="12.1" fill="${ROSE}">t(k)² = F(1, k)</text>
   </svg>`;
   const cap = `3つとも Z から作れます。t と F で割る2つの量は、互いに独立であることが条件です。`;
   return fig(svg, cap);
@@ -1415,12 +1415,12 @@ function factorPath(): string {
     const mid = { x: (fcx + 38 + rx) / 2, y: (fcy + y) / 2 };
     return `
     <rect x="${rx}" y="${y - rh / 2}" width="${rw}" height="${rh}" rx="3" fill="#ffffff" stroke="${INDIGO}" stroke-width="1.6" />
-    <text x="${rx + rw / 2}" y="${y + 4.5}" text-anchor="middle" font-size="12" fill="${INK}">${nm}</text>
+    <text x="${rx + rw / 2}" y="${y + 4.5}" text-anchor="middle" font-size="12.3" fill="${INK}">${nm}</text>
     ${arrow(fcx + 38, fcy + (y - fcy) * 0.35, rx - 1, y, INDIGO)}
-    <text x="${f1(mid.x)}" y="${f1(mid.y - 8)}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">${f1(lam[i])}</text>
+    <text x="${f1(mid.x)}" y="${f1(mid.y - 8)}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">${f1(lam[i])}</text>
     ${arrow(318 - 16, y, rx + rw + 1, y, AMBER)}
     <circle cx="322" cy="${y}" r="15" fill="#fff7ed" stroke="${AMBER}" stroke-width="1.6" />
-    <text x="322" y="${y + 4.5}" text-anchor="middle" font-size="12" fill="#b45309">u${i + 1}</text>`;
+    <text x="322" y="${y + 4.5}" text-anchor="middle" font-size="12.3" fill="#b45309">u${i + 1}</text>`;
   }).join('');
 
   // PCA（向きが逆）
@@ -1429,20 +1429,20 @@ function factorPath(): string {
   const pcx = 280, pcy = py0 + 40;
   const pcaRows = names.map((nm, i) => `
     <rect x="20" y="${pys[i] - rh / 2}" width="${rw}" height="${rh}" rx="3" fill="#ffffff" stroke="${SLATE}" stroke-width="1.6" />
-    <text x="${20 + rw / 2}" y="${pys[i] + 4.5}" text-anchor="middle" font-size="12" fill="${INK}">${nm}</text>
+    <text x="${20 + rw / 2}" y="${pys[i] + 4.5}" text-anchor="middle" font-size="12.3" fill="${INK}">${nm}</text>
     ${arrow(20 + rw + 1, pys[i], pcx - 38, pcy + (pys[i] - pcy) * 0.35, SLATE)}`).join('');
 
   const svg = `${svgOpen(W, H, '因子分析のパス図：潜在因子から各観測変数へ矢印が出て、各変数には独自因子が付く。主成分分析は向きが逆で、観測変数から主成分を作る')}
     <defs><marker id="pa-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
     <text x="10" y="16" font-size="13" font-weight="700" fill="${INK}">因子分析：因子が変数を生む</text>
     <ellipse cx="${fcx}" cy="${fcy}" rx="38" ry="26" fill="#eef2ff" stroke="${INDIGO}" stroke-width="1.8" />
-    <text x="${fcx}" y="${fcy - 2}" text-anchor="middle" font-size="12" font-weight="700" fill="${INDIGO}">外向性</text>
-    <text x="${fcx}" y="${fcy + 12}" text-anchor="middle" font-size="12" fill="${INDIGO}">（因子 F）</text>
+    <text x="${fcx}" y="${fcy - 2}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">外向性</text>
+    <text x="${fcx}" y="${fcy + 12}" text-anchor="middle" font-size="12.3" fill="${INDIGO}">（因子 F）</text>
     ${rows}
     <text x="10" y="${py0 - 30}" font-size="13" font-weight="700" fill="${INK}">主成分分析：変数から軸を作る</text>
     ${pcaRows}
     <ellipse cx="${pcx}" cy="${pcy}" rx="38" ry="26" fill="#f1f5f9" stroke="${SLATE}" stroke-width="1.8" />
-    <text x="${pcx}" y="${pcy + 4.5}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">主成分 Z</text>
+    <text x="${pcx}" y="${pcy + 4.5}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INK}">主成分 Z</text>
   </svg>`;
   const comm = lam.map((l) => f2(l * l));
   const uniq = lam.map((l) => f2(1 - l * l));
@@ -1463,7 +1463,7 @@ function strataVsCluster(): string {
   const box = (x0: number, y0: number, label: string, shades: number[], picked: boolean[], on: boolean) =>
     `<rect x="${x0}" y="${y0}" width="78" height="58" rx="4" fill="${on ? '#f8fafc' : '#ffffff'}" stroke="${on ? INK : SLATE}" stroke-width="${on ? 2 : 1}" />
     ${dotsIn(x0, y0, shades, picked)}
-    <text x="${x0 + 39}" y="${y0 + 74}" text-anchor="middle" font-size="12" fill="${SLATE}">${label}</text>`;
+    <text x="${x0 + 39}" y="${y0 + 74}" text-anchor="middle" font-size="12.3" fill="${SLATE}">${label}</text>`;
   // 層化：層の中は似ている（同じ色）。各層から 2 個ずつ
   const strata = [0, 1, 1, 2].map((s) => Array(8).fill(s));
   const pickedS = (_k: number) => Array.from({ length: 8 }, (_, j) => j === 1 || j === 6);
@@ -1476,7 +1476,7 @@ function strataVsCluster(): string {
     ${strata.map((sh, i) => box(xs[i], top1, '層' + 'ABCD'[i], sh, pickedS(i), true)).join('')}
     <text x="8" y="${top2 - 12}" font-size="13" font-weight="700" fill="${INK}">集落抽出：集落を丸ごと 1 つ選ぶ（計 8 個）</text>
     ${[0, 1, 2, 3].map((i) => box(xs[i], top2, '集落' + (i + 1), mix, Array(8).fill(i === 2), i === 2)).join('')}
-    <text x="8" y="${H - 6}" font-size="12" fill="${SLATE}">色＝調べたい値（低・中・高）。濃い輪郭が選ばれた個体</text>
+    <text x="8" y="${H - 6}" font-size="12.3" fill="${SLATE}">色＝調べたい値（低・中・高）。濃い輪郭が選ばれた個体</text>
   </svg>`;
   const cap = `どちらも 32 個の母集団から 8 個を選んでいますが、選び方が違います。上の層化抽出は、層の中が似ている（同じ色）ように分け、各層から2個ずつ抜くので、低・中・高がもれなく入ります。下の集落抽出は、集落ごとに低・中・高が混ざっている（全体の縮図になっている）ことを前提に、1つの集落を丸ごと選びます。層化は<strong>層の中が似ているほど</strong>、集落抽出は<strong>集落の中が全体の縮図であるほど</strong>精度がよくなります。逆に集落の中が似た個体ばかりだと、1つ選んだだけでは偏ります。`;
   return fig(svg, cap);
@@ -1607,7 +1607,7 @@ function ldaBoundary(): string {
     <text x="46" y="256" font-size="12.4" fill="${INK}">LDA の境界（楕円の形を考慮）</text>
     <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" />
     <text x="46" y="276" font-size="12.4" fill="${INK}">2 つの平均の中点で垂直に切る境界</text>
-    <text x="14" y="293" font-size="12" fill="${SLATE}">輪＝各群の平均／楕円＝平均からマハラノビス距離 ${r} の範囲</text>
+    <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝平均からマハラノビス距離 ${r} の範囲</text>
   </svg>`;
   const cap = `2群の広がりが同じ向きの楕円（ここでは相関 ${rho}）のとき、灰の破線のように2つの平均の中点で垂直に切ると、楕円の長軸方向に伸びた裾が相手側にはみ出します。LDA の境界（赤）は、グループ内の分散共分散行列の逆行列を平均の差にかけた方向に垂直な線で、楕円の形に合わせて傾きます。この図では、灰の破線から約 ${Math.abs(ang(w) - ang(d))} 度回っています。楕円はマハラノビス距離が等しい点を結んだ線で、次の節のマハラノビス距離は、この楕円を測る物差しです。`;
   return fig(svg, cap);
@@ -1662,8 +1662,8 @@ function biasVariance(): string {
   const yt = [0, 0.2, 0.4];
   const svg = `${svgOpen(W, H, 'バイアスとバリアンスのトレードオフ：多項式の次数を上げるとバイアスは減りバリアンスは増え、将来データの誤差は中くらいの次数で最小になる')}
     <rect x="${L}" y="${T}" width="${PW}" height="${PH}" fill="none" stroke="${SLATE}" stroke-width="1" />
-    ${yt.map((v) => `<line x1="${L}" y1="${f1(py(v))}" x2="${L + PW}" y2="${f1(py(v))}" stroke="${SLATE}" stroke-opacity="0.2" /><text x="${L - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
-    ${rows.map((r) => `<text x="${f1(px(r.d))}" y="${T + PH + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${r.d}</text>`).join('')}
+    ${yt.map((v) => `<line x1="${L}" y1="${f1(py(v))}" x2="${L + PW}" y2="${f1(py(v))}" stroke="${SLATE}" stroke-opacity="0.2" /><text x="${L - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.3" fill="${SLATE}">${v}</text>`).join('')}
+    ${rows.map((r) => `<text x="${f1(px(r.d))}" y="${T + PH + 16}" text-anchor="middle" font-size="12.3" fill="${SLATE}">${r.d}</text>`).join('')}
     ${path('train', SLATE, 1.8, '5 4')}${path('bias2', AMBER, 2.2)}${path('vr', INDIGO, 2.2)}${path('test', ROSE, 3)}
     <circle cx="${f1(px(best.d))}" cy="${f1(py(best.test))}" r="5" fill="#ffffff" stroke="${ROSE}" stroke-width="2" />
     <text x="${f1(px(best.d))}" y="${f1(py(best.test) - 10)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">最小：${best.d} 次</text>
@@ -1672,7 +1672,7 @@ function biasVariance(): string {
     <line x1="14" y1="${H - 20}" x2="38" y2="${H - 20}" stroke="${AMBER}" stroke-width="2.2" /><text x="44" y="${H - 16}" font-size="12.4" fill="${INK}">バイアス²</text>
     <line x1="112" y1="${H - 20}" x2="136" y2="${H - 20}" stroke="${INDIGO}" stroke-width="2.2" /><text x="142" y="${H - 16}" font-size="12.4" fill="${INK}">バリアンス</text>
     <line x1="210" y1="${H - 20}" x2="234" y2="${H - 20}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 16}" font-size="12.4" fill="${INK}">手元データの誤差</text>
-    <text x="14" y="${H - 3}" font-size="12" fill="${SLATE}">データ ${n} 点・ノイズ sd ${sig}・${R} 回の取り直しの平均</text>
+    <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">データ ${n} 点・ノイズ sd ${sig}・${R} 回の取り直しの平均</text>
   </svg>`;
   const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアスは ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
   return fig(svg, cap);
@@ -1700,7 +1700,7 @@ function dagBasic(): string {
   const W = 350, H = 372;
   const mk = 'dag-arrow';
   const t = (y: number, title: string, sub: string) =>
-    `<text x="10" y="${y}" font-size="13" font-weight="700" fill="${INK}">${title}</text><text x="10" y="${y + 16}" font-size="12" fill="${SLATE}">${sub}</text>`;
+    `<text x="10" y="${y}" font-size="13" font-weight="700" fill="${INK}">${title}</text><text x="10" y="${y + 16}" font-size="12.3" fill="${SLATE}">${sub}</text>`;
   const p1 = dagPanel([{ id: 'Z', x: 255, y: 28, label: 'Z' }, { id: 'X', x: 200, y: 96, label: 'X' }, { id: 'Y', x: 310, y: 96, label: 'Y' }],
     [['Z', 'X', AMBER], ['Z', 'Y', AMBER], ['X', 'Y']], mk);
   const p2 = dagPanel([{ id: 'X', x: 190, y: 220, label: 'X' }, { id: 'M', x: 250, y: 220, label: 'M' }, { id: 'Y', x: 310, y: 220, label: 'Y' }],
@@ -1728,8 +1728,8 @@ function dagFront(): string {
   const svg = `${svgOpen(W, H, 'フロントドア基準のDAG：観測できない U が X と Y の両方に影響し、X から M を通って Y に届く経路がある')}
     <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
     ${g}
-    <text x="218" y="40" font-size="12" fill="${SLATE}">観測できない交絡</text>
-    <text x="175" y="146" text-anchor="middle" font-size="12" fill="${TEAL}">X→M と M→Y を別々にたどる</text>
+    <text x="218" y="40" font-size="12.3" fill="${SLATE}">観測できない交絡</text>
+    <text x="175" y="146" text-anchor="middle" font-size="12.3" fill="${TEAL}">X→M と M→Y を別々にたどる</text>
   </svg>`;
   return fig(svg, '点線の U は測れない共通原因。X と Y を直接比べても U の影響が混ざるが、途中の M を観測できれば、X→M と M→Y の2段に分けて効果を求められる。');
 }
