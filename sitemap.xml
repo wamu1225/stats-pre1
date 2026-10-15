@@ -79,14 +79,26 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/1.11-lln-clt/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <loc>https://study-apps.com/stats-pre1/1.9-multivariate/</loc>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://study-apps.com/stats-pre1/1.9-multivariate/</loc>
+    <loc>https://study-apps.com/stats-pre1/1.9b-transform/</loc>
     <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.9c-extreme-value/</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.11-lln-clt/</loc>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
