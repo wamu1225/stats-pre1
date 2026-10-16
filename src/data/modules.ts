@@ -1817,51 +1817,113 @@ $n$ が大きければ偏りはほぼ消えます。最尤推定量は、いつ�
 [[f-likelihood-trouble]]
 
 - **一様分布** $U(0, \\theta)$：尤度は $\\theta$ が最大値以上のとき $\\theta^{-n}$、それより小さいと0です。傾きが0になる点が無く、跳んだ所の最大値 $X_{(n)}$ が最尤推定量です
-- **山が2つある尤度**：数値計算で頂上を探すと、出発点によって小さい方の山に止まります。出発点を変えて何度か計算し、尤度が最大のものを選びます`,keyFormulas:[{label:`対数尤度`,formula:`\\ell(\\theta) = \\log L(\\theta) = \\sum_{i=1}^n \\log f(x_i; \\theta)`},{label:`スコア方程式`,formula:`\\dfrac{\\partial \\ell}{\\partial \\theta} = 0`},{label:`正規分布のMLE（平均）`,formula:`\\hat{\\mu}_{\\text{MLE}} = \\bar{X}`},{label:`正規分布のMLE（分散）`,formula:`\\hat{\\sigma}^2_{\\text{MLE}} = \\dfrac{1}{n}\\sum(X_i-\\bar{X})^2`}],quiz:[{id:`est1-11`,question:`尤度関数 $L(\\theta)$ の直感的な意味として正しいものはどれか？`,options:[`推定誤差の大きさ`,`$\\theta$ が真の値である確率`,`観測データが得られる確率を $\\theta$ の関数として見たもの`,`$\\theta$ の事前分布`],correctAnswer:2,explanation:`尤度関数は「パラメータが $\\theta$ だとしたとき、今観測されたデータが得られる確率（密度）」です。$\\theta$ を変えながら「どの $\\theta$ のもとでデータが最も起きやすいか」を探すのが最尤推定の発想です。`},{id:`est1-3`,question:`最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？`,options:[`最大値が変わるから`,`積の形が和に変わり微分しやすくなるから`,`正規分布に近似されるから`,`負の値を扱えるようになるから`],correctAnswer:1,explanation:`独立なデータの尤度は $L = \\prod f(x_i;\\theta)$（積の形）です。$\\log L = \\sum \\log f(x_i;\\theta)$（和の形）にすると微分計算が簡単になります。$\\log$ は単調増加なので最大化の問題として同値です。`},{id:`est1-6`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\mu$ の最尤推定量（MLE）はどれか？`,options:[`標本平均 $\\bar{X}$`,`$\\frac{1}{n}\\sum X_i^2$`,`中央値`,`$\\frac{1}{n-1}\\sum X_i$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\mu) = -\\frac{n}{2}\\log(2\\pi\\sigma^2) - \\frac{1}{2\\sigma^2}\\sum(X_i-\\mu)^2$ を最大化すると $\\hat{\\mu} = \\bar{X}$ が得られます。これは不偏推定量でもあります。一方 $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏ではない点に注意。`},{id:`est1-7`,question:`モーメント法（Method of Moments）でポアソン分布 $\\text{Po}(\\lambda)$ の $\\lambda$ を推定するとき、推定量はどれか？`,options:[`$\\sum X_i$`,`$\\bar{X}$（標本平均）`,`$S^2$（標本分散）`,`$\\max(X_i)$`],correctAnswer:1,explanation:`モーメント法は $E[X] = \\lambda$ を標本平均 $\\bar{X}$ と等置します。$E[X] = \\lambda$ なので $\\hat{\\lambda}_{\\text{MM}} = \\bar{X}$ です。ポアソン分布では MLE も $\\bar{X}$ になるため、両者は一致します。`},{id:`est1-10`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\sigma^2$ の MLE $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ はなぜ不偏でないか？`,options:[`$n$ が大きすぎるから`,`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2 \\neq \\sigma^2$ だから`,`平均が既知でない場合に使えないから`,`MLE は必ず不偏でないから`],correctAnswer:1,explanation:`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2$ で真の値 $\\sigma^2$ より小さい方向に偏っています。不偏にするには分母を $n-1$ にした不偏分散 $S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ を使います。`},{id:`est1-12`,question:`一様分布 $U(0, \\theta)$ の $\\theta$ をモーメント法で推定するとき、推定量はどれか？`,options:[`$2\\bar{X}$`,`$\\bar{X}$`,`$\\max(X_i)$`,`$\\bar{X}/2$`],correctAnswer:0,explanation:`$U(0, \\theta)$ の平均は $\\theta/2$ です。これをデータの平均と等しいとおくと $\\hat{\\theta}/2 = \\bar{X}$ なので $\\hat{\\theta} = 2\\bar{X}$ です。最尤推定量は最大値 $\\max(X_i)$ で、一様分布では2つの方法の答えが違います。$\\bar{X}/2$ は等式の向きを取り違えた値です。`},{id:`est1-13`,question:`指数分布 $\\text{Exp}(\\lambda)$（$f(x) = \\lambda e^{-\\lambda x}$、$E[X] = 1/\\lambda$）の MLE はどれか？`,options:[`$1/\\bar{X}$`,`$\\sqrt{\\bar{X}}$`,`$n / \\sum X_i^2$`,`$\\bar{X}$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\lambda) = n\\log\\lambda - \\lambda \\sum X_i$ を微分すると $n/\\lambda - \\sum X_i = 0$、解くと $\\hat{\\lambda} = n/\\sum X_i = 1/\\bar{X}$ です。モーメント法（$E[X] = 1/\\lambda$ から $\\hat{\\lambda} = 1/\\bar{X}$）と一致します。`},{id:`est1-14`,question:`モーメント法と MLE を比較したとき、一般に正しいものはどれか？`,options:[`モーメント法の方が常に精度が高い`,`MLE の方が漸近的に効率が良い（分散が小さい）`,`両者は常に同じ推定量を与える`,`モーメント法は正規分布にしか使えない`],correctAnswer:1,explanation:`最尤推定はデータの情報を尤度を通してすべて使うので、$n$ が大きいとき一般にモーメント法よりばらつきが小さくなります。一様分布 $U(0, 1)$ から10個とると、真の値からのずれ（二乗誤差の平方根）は最尤推定の最大値が約0.12、モーメント法の $2\\bar{X}$ が約0.18です。ポアソン分布のように両者が一致する場合もあります。`},{id:`est1-15`,question:`正規誤差モデルで最小二乗推定（OLS）と MLE の関係はどれか？`,options:[`OLS は不偏だが MLE は必ず不偏でない`,`OLS は常に MLE より精度が高い`,`正規誤差を仮定した場合、OLS と MLE は同じ解を与える`,`MLE は非線形モデルにしか使えない`],correctAnswer:2,explanation:`線形回帰モデルで誤差が $N(0, \\sigma^2)$ に従うとき、対数尤度の最大化は残差二乗和 $\\sum(y_i - \\mathbf{x}_i^\\top \\boldsymbol{\\beta})^2$ の最小化と同値になります。これが OLS と MLE の一致の理由です。`},{id:`est1-16`,question:`連続一様分布 $\\text{Uniform}(0, \\theta)$ の MLE はどれか？`,options:[`$\\min(X_i)$（標本最小値）`,`$\\bar{X}$`,`$2\\bar{X}$`,`$\\max(X_i)$（標本最大値）`],correctAnswer:3,explanation:`尤度 $L(\\theta) = \\theta^{-n}$（$\\theta \\geq \\max(X_i)$ のとき）は $\\theta$ が小さいほど大きくなります。最小の $\\theta$ は $\\max(X_i)$（これより小さくするとデータが説明不可能）なので MLE は $\\hat{\\theta} = \\max(X_i)$ です。スコア方程式が使えない例として重要です。`}]},{id:`1.15-estimator-props`,updatedAt:`2026-05-29`,title:`推定量の性質：不偏性・一致性・有効性の理論`,chapter:6,description:`良い推定量の4条件・ガウス・マルコフの定理・クラーメル・ラオの不等式で、推定量の品質を評価する理論を学びます。`,content:`💡 **このモジュールで学ぶこと**
+- **山が2つある尤度**：数値計算で頂上を探すと、出発点によって小さい方の山に止まります。出発点を変えて何度か計算し、尤度が最大のものを選びます`,keyFormulas:[{label:`対数尤度`,formula:`\\ell(\\theta) = \\log L(\\theta) = \\sum_{i=1}^n \\log f(x_i; \\theta)`},{label:`スコア方程式`,formula:`\\dfrac{\\partial \\ell}{\\partial \\theta} = 0`},{label:`正規分布のMLE（平均）`,formula:`\\hat{\\mu}_{\\text{MLE}} = \\bar{X}`},{label:`正規分布のMLE（分散）`,formula:`\\hat{\\sigma}^2_{\\text{MLE}} = \\dfrac{1}{n}\\sum(X_i-\\bar{X})^2`}],quiz:[{id:`est1-11`,question:`尤度関数 $L(\\theta)$ の直感的な意味として正しいものはどれか？`,options:[`推定誤差の大きさ`,`$\\theta$ が真の値である確率`,`観測データが得られる確率を $\\theta$ の関数として見たもの`,`$\\theta$ の事前分布`],correctAnswer:2,explanation:`尤度関数は「パラメータが $\\theta$ だとしたとき、今観測されたデータが得られる確率（密度）」です。$\\theta$ を変えながら「どの $\\theta$ のもとでデータが最も起きやすいか」を探すのが最尤推定の発想です。`},{id:`est1-3`,question:`最尤推定量を求める際に「対数尤度」を使う主な理由はどれか？`,options:[`最大値が変わるから`,`積の形が和に変わり微分しやすくなるから`,`正規分布に近似されるから`,`負の値を扱えるようになるから`],correctAnswer:1,explanation:`独立なデータの尤度は $L = \\prod f(x_i;\\theta)$（積の形）です。$\\log L = \\sum \\log f(x_i;\\theta)$（和の形）にすると微分計算が簡単になります。$\\log$ は単調増加なので最大化の問題として同値です。`},{id:`est1-6`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\mu$ の最尤推定量（MLE）はどれか？`,options:[`標本平均 $\\bar{X}$`,`$\\frac{1}{n}\\sum X_i^2$`,`中央値`,`$\\frac{1}{n-1}\\sum X_i$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\mu) = -\\frac{n}{2}\\log(2\\pi\\sigma^2) - \\frac{1}{2\\sigma^2}\\sum(X_i-\\mu)^2$ を最大化すると $\\hat{\\mu} = \\bar{X}$ が得られます。これは不偏推定量でもあります。一方 $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏ではない点に注意。`},{id:`est1-7`,question:`モーメント法（Method of Moments）でポアソン分布 $\\text{Po}(\\lambda)$ の $\\lambda$ を推定するとき、推定量はどれか？`,options:[`$\\sum X_i$`,`$\\bar{X}$（標本平均）`,`$S^2$（標本分散）`,`$\\max(X_i)$`],correctAnswer:1,explanation:`モーメント法は $E[X] = \\lambda$ を標本平均 $\\bar{X}$ と等置します。$E[X] = \\lambda$ なので $\\hat{\\lambda}_{\\text{MM}} = \\bar{X}$ です。ポアソン分布では MLE も $\\bar{X}$ になるため、両者は一致します。`},{id:`est1-10`,question:`正規分布 $N(\\mu, \\sigma^2)$ の $\\sigma^2$ の MLE $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ はなぜ不偏でないか？`,options:[`$n$ が大きすぎるから`,`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2 \\neq \\sigma^2$ だから`,`平均が既知でない場合に使えないから`,`MLE は必ず不偏でないから`],correctAnswer:1,explanation:`$E[\\hat{\\sigma}^2] = \\frac{n-1}{n}\\sigma^2$ で真の値 $\\sigma^2$ より小さい方向に偏っています。不偏にするには分母を $n-1$ にした不偏分散 $S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ を使います。`},{id:`est1-12`,question:`一様分布 $U(0, \\theta)$ の $\\theta$ をモーメント法で推定するとき、推定量はどれか？`,options:[`$2\\bar{X}$`,`$\\bar{X}$`,`$\\max(X_i)$`,`$\\bar{X}/2$`],correctAnswer:0,explanation:`$U(0, \\theta)$ の平均は $\\theta/2$ です。これをデータの平均と等しいとおくと $\\hat{\\theta}/2 = \\bar{X}$ なので $\\hat{\\theta} = 2\\bar{X}$ です。最尤推定量は最大値 $\\max(X_i)$ で、一様分布では2つの方法の答えが違います。$\\bar{X}/2$ は等式の向きを取り違えた値です。`},{id:`est1-13`,question:`指数分布 $\\text{Exp}(\\lambda)$（$f(x) = \\lambda e^{-\\lambda x}$、$E[X] = 1/\\lambda$）の MLE はどれか？`,options:[`$1/\\bar{X}$`,`$\\sqrt{\\bar{X}}$`,`$n / \\sum X_i^2$`,`$\\bar{X}$`],correctAnswer:0,explanation:`対数尤度 $\\ell(\\lambda) = n\\log\\lambda - \\lambda \\sum X_i$ を微分すると $n/\\lambda - \\sum X_i = 0$、解くと $\\hat{\\lambda} = n/\\sum X_i = 1/\\bar{X}$ です。モーメント法（$E[X] = 1/\\lambda$ から $\\hat{\\lambda} = 1/\\bar{X}$）と一致します。`},{id:`est1-14`,question:`モーメント法と MLE を比較したとき、一般に正しいものはどれか？`,options:[`モーメント法の方が常に精度が高い`,`MLE の方が漸近的に効率が良い（分散が小さい）`,`両者は常に同じ推定量を与える`,`モーメント法は正規分布にしか使えない`],correctAnswer:1,explanation:`最尤推定はデータの情報を尤度を通してすべて使うので、$n$ が大きいとき一般にモーメント法よりばらつきが小さくなります。一様分布 $U(0, 1)$ から10個とると、真の値からのずれ（二乗誤差の平方根）は最尤推定の最大値が約0.12、モーメント法の $2\\bar{X}$ が約0.18です。ポアソン分布のように両者が一致する場合もあります。`},{id:`est1-15`,question:`正規誤差モデルで最小二乗推定（OLS）と MLE の関係はどれか？`,options:[`OLS は不偏だが MLE は必ず不偏でない`,`OLS は常に MLE より精度が高い`,`正規誤差を仮定した場合、OLS と MLE は同じ解を与える`,`MLE は非線形モデルにしか使えない`],correctAnswer:2,explanation:`線形回帰モデルで誤差が $N(0, \\sigma^2)$ に従うとき、対数尤度の最大化は残差二乗和 $\\sum(y_i - \\mathbf{x}_i^\\top \\boldsymbol{\\beta})^2$ の最小化と同値になります。これが OLS と MLE の一致の理由です。`},{id:`est1-16`,question:`連続一様分布 $\\text{Uniform}(0, \\theta)$ の MLE はどれか？`,options:[`$\\min(X_i)$（標本最小値）`,`$\\bar{X}$`,`$2\\bar{X}$`,`$\\max(X_i)$（標本最大値）`],correctAnswer:3,explanation:`尤度 $L(\\theta) = \\theta^{-n}$（$\\theta \\geq \\max(X_i)$ のとき）は $\\theta$ が小さいほど大きくなります。最小の $\\theta$ は $\\max(X_i)$（これより小さくするとデータが説明不可能）なので MLE は $\\hat{\\theta} = \\max(X_i)$ です。スコア方程式が使えない例として重要です。`}]},{id:`1.15-estimator-props`,updatedAt:`2026-10-16`,title:`推定量の性質：不偏性・一致性・有効性の理論`,chapter:6,description:`推定量の良さを測る物差し（不偏性・平均二乗誤差・一致性・有効性）と、分散の下限を与えるクラーメル・ラオの不等式、最小二乗法の良さを保証するガウス・マルコフの定理を、図で学びます。`,content:`💡 **このモジュールで学ぶこと**
 
-前のモジュールでは「どうやってパラメータを推定するか」（最尤法・モーメント法）を学びました。このモジュールでは「その推定量は良い推定量か」を評価する4つの性質と、精度の理論的限界（クラーメル・ラオの不等式）を学びます。
+[推定法](/stats-pre1/1.14-estimation/)で求めた推定量が「良い」かどうかを、どんな物差しで測るかを学びます。
 
-💡 **ダーツのたとえで4性質を覚える**
+- 不偏性・平均二乗誤差・一致性・有効性
+- 分散の下限（クラーメル・ラオの不等式）と、最小二乗法の良さ（ガウス・マルコフの定理）
 
-的の中心が「真の値 $\\theta$」、矢1本1本が「推定値 $\\hat{\\theta}$」とします。
+---
+
+### 1. 良い推定量とは
+
+#### ダーツで見る偏りとばらつき
+
+データをとり直すたびに推定値は変わります。的の中心を真の値 $\\theta$、矢1本を「1回分のデータから計算した推定値 $\\hat{\\theta}$」と見ます。
 
 [[f-darts]]
 
----
-
-### 1. 推定量の4つの性質
-
-**不偏性**（Unbiasedness）：何度も試行したとき矢の**重心**が的の中心に来ていること。$E[\\hat{\\theta}] = \\theta$。標本平均 $\\bar{X}$ は母平均の不偏推定量。標本分散 $\\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏でなく、$S^2 = \\frac{1}{n-1}\\sum(X_i-\\bar{X})^2$ が不偏分散。
-
-**一致性**（Consistency）：矢の本数（データ数 $n$）を増やすほど中心に集まること。$\\hat{\\theta} \\xrightarrow{p} \\theta$（$n \\to \\infty$）。大数の法則が典型例。
-
-**有効性**（Efficiency）：同じ「不偏な」推定量を比べたとき散らばり（分散）が最小であること。不偏推定量の中で分散が最小のものを**最小分散不偏推定量**（MVUE: Minimum Variance Unbiased Estimator）と呼びます。**ラオ・ブラックウェルの定理**は「十分統計量を使って任意の不偏推定量を改良し、MVUEを構成できる」ことを保証します。
-
-**推定量の相対効率**：2つの不偏推定量 $\\hat{\\theta}_1$, $\\hat{\\theta}_2$ の相対効率 $e = \\text{Var}(\\hat{\\theta}_2)/\\text{Var}(\\hat{\\theta}_1)$。$e > 1$ なら $\\hat{\\theta}_1$ のほうが効率的。正規分布で標本平均 vs. 標本中央値の相対効率は $\\pi/2 \\approx 1.57$ で、標本平均のほうが効率的です。
-
-🎯 **つまずきやすい点**：不偏性と一致性は独立した性質です。「不偏だが不一致」「不偏でないが一致」の推定量が存在します。
+| 性質 | 意味 | 式 |
+|---|---|---|
+| 不偏性 | 推定値の平均が真の値 | $E[\\hat{\\theta}] = \\theta$ |
+| 一致性 | $n$ を増やすと真の値に集まる | $\\hat{\\theta} \\xrightarrow{p} \\theta$ |
+| 有効性 | 不偏な中でばらつきが小さい | $\\text{Var}(\\hat{\\theta})$ が最小 |
 
 ---
 
-### 2. ガウス・マルコフの定理
+### 2. 不偏性と平均二乗誤差
 
-**ガウス・マルコフの定理**（Gauss-Markov Theorem）：線形モデル $\\mathbf{y} = X\\boldsymbol{\\beta} + \\boldsymbol{\\varepsilon}$（誤差は独立・等分散・期待値0を仮定）のもとで、最小二乗推定量（OLS）は**線形不偏推定量の中で分散が最小**です（**BLUE**: Best Linear Unbiased Estimator）。
+#### 不偏分散と n で割る分散
 
-「BLUEである」＝「線形・不偏・最小分散」の3条件を同時に満たす唯一の推定量がOLSです。誤差の正規性は不要（等分散だけで十分）な点が重要です。
+正規分布の分散 $\\sigma^2$ を推定する2つの推定量を比べます。
+
+$$S^2 = \\frac{1}{n-1}\\sum_{i=1}^{n}(X_i - \\bar{X})^2, \\qquad \\hat{\\sigma}^2 = \\frac{1}{n}\\sum_{i=1}^{n}(X_i - \\bar{X})^2$$
+
+[[f-variance-estimators]]
+
+$S^2$ は $E[S^2] = \\sigma^2$ で不偏なので**不偏分散**と呼びます。$\\hat{\\sigma}^2$（最尤推定量）は平均が $\\frac{n-1}{n}\\sigma^2$ で、少し小さめに偏ります。
+
+#### 平均二乗誤差＝偏りの2乗＋分散
+
+推定値が真の値からどれだけずれるかを、ずれの2乗の平均で測ったものが**平均二乗誤差**（MSE）です。
+
+$$\\text{MSE}(\\hat{\\theta}) = E[(\\hat{\\theta} - \\theta)^2] = \\{E[\\hat{\\theta}] - \\theta\\}^2 + \\text{Var}(\\hat{\\theta})$$
+
+図の2つ（$n = 5$、$\\sigma^2 = 1$）を数で比べます。
+
+| | 偏り | 分散 | MSE |
+|---|---|---|---|
+| $S^2$ | 0 | 0.50 | 0.50 |
+| $\\hat{\\sigma}^2$ | $-0.20$ | 0.32 | 0.36 |
+
+偏りがあっても、分散が小さければ MSE は小さくなることがあります。不偏性だけで推定量の良し悪しは決まりません。
 
 ---
 
-### 3. クラーメル・ラオの不等式
+### 3. 一致性
 
-**クラーメル・ラオの不等式**（Cramér-Rao Inequality）は「どんな不偏推定量も超えられない精度の限界」を与えます。フィッシャー情報量が大きい（データが $\\theta$ の変化に敏感に反応する）ほど $\\theta$ を精確に推定できるため、分散の下限 $1/I(\\theta)$ は小さくなります。「情報が多いほど精度の上限も高くなる」という直感を式にしたものです：
+#### n を増やすと真の値に集まる
 
-$$\\text{Var}(\\hat{\\theta}) \\geq \\frac{1}{I(\\theta)}, \\quad I(\\theta) = E\\!\\left[\\left(\\frac{\\partial \\log f}{\\partial \\theta}\\right)^2\\right]$$
+一致性は、**1つの推定量に使うデータの数 $n$** を増やしたとき、推定値が真の値に集まる性質です。
 
-$I(\\theta)$ は**フィッシャー情報量**（Fisher Information）で、「データが $\\theta$ についてどれだけ情報を持っているか」の指標です。$n$ 個の独立観測では下限は $1/(nI(\\theta))$ です。サンプルが増えるほど精度の限界が上がります。
+[[f-consistency]]
 
-具体例で $I(\\theta)$ を計算してみます。分散 $\\sigma^2$ が既知の正規分布 $N(\\mu, \\sigma^2)$ で、$\\theta = \\mu$ とすると、$\\log f = -\\frac{(x-\\mu)^2}{2\\sigma^2} + \\text{定数}$ なので、$\\frac{\\partial \\log f}{\\partial \\mu} = \\frac{x-\\mu}{\\sigma^2}$ です。これを2乗して期待値をとると $E\\!\\left[\\frac{(X-\\mu)^2}{\\sigma^4}\\right] = \\frac{\\sigma^2}{\\sigma^4} = \\frac{1}{\\sigma^2}$ で、$I(\\mu) = 1/\\sigma^2$ になります。ばらつき $\\sigma^2$ が小さいほど情報量が大きい、という直感どおりの結果です。$n$ 個の観測での下限は $\\sigma^2/n$ で、これは $\\text{Var}(\\bar{X})$ とちょうど一致します。つまり $\\bar{X}$ はこの下限を達成していて、有効推定量だと確かめられます。
+不偏性と一致性は別の性質です。$X_1$ は不偏ですが一致しません。逆に $\\hat{\\sigma}^2$ は不偏ではありませんが、偏り $-\\sigma^2/n$ と分散がどちらも0に近づくので一致します。
 
-この下限を達成する不偏推定量を**有効推定量**（efficient estimator）と呼びます。正規分布の $\\mu$ に対する $\\bar{X}$ が代表例。`,keyFormulas:[{label:`不偏性`,formula:`E[\\hat{\\theta}] = \\theta`},{label:`一致性`,formula:`\\hat{\\theta} \\xrightarrow{p} \\theta \\quad (n \\to \\infty)`},{label:`クラーメル・ラオの不等式`,formula:`\\text{Var}(\\hat{\\theta}) \\geq \\dfrac{1}{I(\\theta)}`},{label:`フィッシャー情報量`,formula:`I(\\theta) = E\\!\\left[\\left(\\dfrac{\\partial \\log f}{\\partial \\theta}\\right)^2\\right]`},{label:`不偏分散`,formula:`S^2 = \\dfrac{1}{n-1}\\sum_{i=1}^n (X_i - \\bar{X})^2`}],quiz:[{id:`est1-1`,question:`「推定量の期待値が真の値に等しい」という性質を何と呼ぶか？`,options:[`十分性`,`一致性`,`有効性`,`不偏性`],correctAnswer:3,explanation:`不偏性は $E[\\hat{\\theta}] = \\theta$ です。例：標本平均 $\\bar{X}$ は母平均 $\\mu$ の不偏推定量。一方 $\\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏でなく、$\\frac{1}{n-1}$ で割る不偏分散 $S^2$ が不偏推定量です。`},{id:`est1-2`,question:`$n \\to \\infty$ のとき推定量が真の値に確率収束する性質を何と呼ぶか？`,options:[`一致性`,`不偏性`,`有効性`,`十分性`],correctAnswer:0,explanation:`一致性は $\\hat{\\theta} \\xrightarrow{p} \\theta$ です。不偏性はサンプルサイズに関わらず成立する性質であり、一致性（大きな $n$ での収束）とは独立した概念です。「不偏だが不一致」「一致だが不偏でない」推定量が存在します。`},{id:`est1-4`,question:`クラーメル・ラオの不等式においてフィッシャー情報量 $I(\\theta)$ が大きいほど推定はどうなるか？`,options:[`一致性が保証されなくなる`,`分散の下限が上がり高精度が難しくなる`,`分散の下限が下がりより精密な推定が原理的に可能になる`,`推定量の期待値が大きくなる`],correctAnswer:2,explanation:`$I(\\theta)$ が大きいほど $1/I(\\theta)$ が小さくなり、分散の下限が低くなります。「データが $\\theta$ についてより多くの情報を含む」ほど精密な推定が可能になるという直感と一致します。`},{id:`est1-5`,question:`ガウス・マルコフの定理が保証するのはどの範囲の最小分散性か？`,options:[`一致推定量の中で最小`,`すべての推定量の中で最小`,`すべての不偏推定量の中で最小`,`線形不偏推定量の中で最小`],correctAnswer:3,explanation:`ガウス・マルコフの定理はOLSが「線形不偏推定量の中で最小分散（BLUE）」であることを保証します。非線形推定量や不偏でない推定量（リッジ回帰など）は含みません。正規性を仮定すれば「すべての不偏推定量中で最小」まで強化できます。`},{id:`est1-8`,question:`正規分布で標本平均と標本中央値の相対効率（大標本）として正しいものはどれか？`,options:[`中央値のほうが効率的（相対効率 $> 1$）`,`両者の効率は同じ`,`標本平均のほうが効率的（相対効率 $\\pi/2 \\approx 1.57$）`,`相対効率はサンプルサイズで変わるため一定でない`],correctAnswer:2,explanation:`正規分布の大標本で、標本中央値の漸近分散は $\\pi/(2n)$、標本平均の漸近分散は $\\sigma^2/n$。相対効率 $= (\\pi/(2n))/(1/n) = \\pi/2 \\approx 1.57$ で、標本平均のほうが約57%分散が小さく効率的です。重裾分布では中央値が有利になる場合もあります。`},{id:`est1-9`,question:`クラーメル・ラオ下限を達成する不偏推定量を何と呼ぶか？`,options:[`BLUE`,`一致推定量`,`十分統計量`,`有効推定量`],correctAnswer:3,explanation:`クラーメル・ラオの不等式が与える下限 $1/(nI(\\theta))$ をちょうど達成する不偏推定量を「有効推定量（efficient estimator）」と呼びます。正規分布の $\\mu$ に対する $\\bar{X}$ が代表例です。BLUEはガウス・マルコフの定理が保証する「線形不偏推定量の中の最小分散推定量」で、やや異なる概念です。`},{id:`est1-17`,question:`不偏性と一致性の関係として正しいものはどれか？`,options:[`不偏だが不一致な推定量、一致だが不偏でない推定量がどちらも存在する`,`2つは同じ概念を異なる言葉で表したもの`,`不偏なら必ず一致する`,`一致なら必ず不偏である`],correctAnswer:0,explanation:`不偏性は「有限サンプルでの期待値の一致」、一致性は「$n \\to \\infty$ での確率収束」で独立した概念です。例：$\\hat{\\theta} = X_1$（最初の観測値だけを使う）は不偏だが一致でない。MLEの $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏でないが一致推定量です。`},{id:`est1-18`,question:`最小分散不偏推定量（MVUE）とはどんな推定量か？`,options:[`すべての推定量の中で分散が最小`,`すべての不偏推定量の中で分散が最小`,`最も計算が簡単な不偏推定量`,`一致性も同時に満たす不偏推定量`],correctAnswer:1,explanation:`MVUE（Minimum Variance Unbiased Estimator）は「不偏性を満たすすべての推定量」の中で分散が最小のものです。クラーメル・ラオ下限を達成する不偏推定量（有効推定量）がMVUEになります。ラオ・ブラックウェルの定理は十分統計量を使ってMVUEを構成する方法を与えます。`},{id:`est1-19`,question:`BLUEが保証する「線形不偏推定量の中の最小分散」に、正規性の仮定を加えるとどう強化されるか？`,options:[`変わらない`,`「すべての推定量の中で最小分散」になる`,`「すべての不偏推定量の中で最小分散」になる`,`「一致推定量の中で最小分散」になる`],correctAnswer:2,explanation:`ガウス・マルコフは正規性なしで「線形不偏推定量の中のBLUE」を保証します。誤差が正規分布に従うとき、OLSはMLE（すべての推定量を含む）と一致し、「すべての不偏推定量の中で最小分散」（MVUE）まで強化されます。`},{id:`est1-20`,question:`$n$ 個の独立同分布サンプルのとき、クラーメル・ラオの下限はどうなるか？`,options:[`$1/(n \\cdot I(\\theta))$`,`$I(\\theta)$`,`$1/I(\\theta)$`,`$n \\cdot I(\\theta)$`],correctAnswer:0,explanation:`$n$ 個の独立観測では総フィッシャー情報量が $nI(\\theta)$ になるため、不偏推定量の分散の下限は $1/(nI(\\theta))$ です。$n$ が増えるほど下限が下がり（精度の上限が上がり）、「サンプルが多いほど精密な推定が可能」という直感と対応します。`}]},{id:`1.22-asymptotic`,updatedAt:`2026-05-29`,title:`漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法`,chapter:6,description:`MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。`,content:`💡 **このモジュールで学ぶこと**
+---
+
+### 4. 有効性
+
+#### 不偏な推定量どうしをばらつきで比べる
+
+不偏な推定量が複数あるときは、分散が小さい方が良い推定量です。分散の比を**相対効率**と呼びます。正規分布の平均 $\\mu$ を、標本平均と標本中央値で推定して比べます。
+
+[[f-mean-vs-median]]
+
+相対効率は $\\pi/2 \\approx 1.57$ で、正規分布では平均の方が効率的です（中央値の分散は[十分統計量・順序統計量](/stats-pre1/1.13-sufficient-stats/)で求めました）。裾の重い分布では、中央値の方が有利になることもあります。
+
+不偏推定量の中で分散が最小のものを**最小分散不偏推定量**（MVUE）と呼びます。十分統計量を使うと不偏推定量を改良できること（ラオ・ブラックウェルの定理）が、MVUE を探す手がかりになります。
+
+---
+
+### 5. 分散の下限：クラーメル・ラオの不等式
+
+#### どの不偏推定量もこれ以上は小さくできない
+
+$n$ 個の独立なデータからの不偏推定量の分散には、下限があります。
+
+$$\\text{Var}(\\hat{\\theta}) \\geq \\frac{1}{n\\,I(\\theta)}, \\qquad I(\\theta) = E\\!\\left[\\left(\\frac{\\partial \\log f(X; \\theta)}{\\partial \\theta}\\right)^2\\right]$$
+
+$I(\\theta)$ は**フィッシャー情報量**で、1個のデータが $\\theta$ についてもつ情報の量です。[推定法](/stats-pre1/1.14-estimation/)の尤度の図で、データが多いほど山が鋭くなったのと同じで、情報が多いほど $\\theta$ を狭く絞り込めます。
+
+#### 正規分布の平均で確かめる
+
+$\\sigma^2$ が既知の $N(\\mu, \\sigma^2)$ で $\\theta = \\mu$ とします。
+
+$$\\begin{aligned} \\frac{\\partial \\log f}{\\partial \\mu} &= \\frac{x - \\mu}{\\sigma^2} \\\\ I(\\mu) &= E\\!\\left[\\frac{(X - \\mu)^2}{\\sigma^4}\\right] = \\frac{1}{\\sigma^2} \\end{aligned}$$
+
+下限は $\\sigma^2/n$ で、$\\text{Var}(\\bar{X}) = \\sigma^2/n$ とちょうど等しくなります。下限に届く不偏推定量を**有効推定量**と呼び、$\\bar{X}$ はその代表例です。上の図の中央値は、この下限より約1.57倍大きい分散です。
+
+---
+
+### 6. 最小二乗法の良さ：ガウス・マルコフの定理
+
+#### どの範囲で「最良」か
+
+線形モデル $\\mathbf{y} = X\\boldsymbol{\\beta} + \\boldsymbol{\\varepsilon}$ で、誤差が独立・等分散・期待値0なら、最小二乗推定量（OLS）は**線形不偏推定量の中で分散が最小**です（**BLUE**）。誤差の正規性は要りません。回帰そのものは[重回帰分析とモデル評価](/stats-pre1/2.1-regression/)で学びます。
+
+[[f-estimator-classes]]`,keyFormulas:[{label:`不偏性`,formula:`E[\\hat{\\theta}] = \\theta`},{label:`一致性`,formula:`\\hat{\\theta} \\xrightarrow{p} \\theta \\quad (n \\to \\infty)`},{label:`クラーメル・ラオの不等式（n 個の独立なデータ）`,formula:`\\text{Var}(\\hat{\\theta}) \\geq \\dfrac{1}{n\\,I(\\theta)}`},{label:`フィッシャー情報量`,formula:`I(\\theta) = E\\!\\left[\\left(\\dfrac{\\partial \\log f}{\\partial \\theta}\\right)^2\\right]`},{label:`不偏分散`,formula:`S^2 = \\dfrac{1}{n-1}\\sum_{i=1}^n (X_i - \\bar{X})^2`},{label:`平均二乗誤差`,formula:`\\text{MSE}(\\hat{\\theta}) = \\{E[\\hat{\\theta}] - \\theta\\}^2 + \\text{Var}(\\hat{\\theta})`}],quiz:[{id:`est1-1`,question:`「推定量の期待値が真の値に等しい」という性質を何と呼ぶか？`,options:[`十分性`,`一致性`,`有効性`,`不偏性`],correctAnswer:3,explanation:`不偏性は $E[\\hat{\\theta}] = \\theta$ です。例：標本平均 $\\bar{X}$ は母平均 $\\mu$ の不偏推定量。一方 $\\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏でなく、$\\frac{1}{n-1}$ で割る不偏分散 $S^2$ が不偏推定量です。`},{id:`est1-2`,question:`正規分布から5個とり、分散 $\\sigma^2$ を不偏分散 $S^2$（$n-1$ で割る）と $\\hat{\\sigma}^2$（$n$ で割る）で推定します。平均二乗誤差（MSE）について正しいものはどれか？`,options:[`$\\hat{\\sigma}^2$ の方が MSE は小さい`,`$S^2$ は不偏なので MSE も必ず小さい`,`2つの MSE は等しい`,`$\\hat{\\sigma}^2$ は偏りがあるので MSE は必ず大きい`],correctAnswer:0,explanation:`MSE は偏りの2乗と分散の和です。$\\sigma^2 = 1$ とすると、$S^2$ は偏り0・分散0.50で MSE 0.50、$\\hat{\\sigma}^2$ は偏り $-0.20$・分散0.32で MSE $0.04 + 0.32 = 0.36$ です。偏りがあっても分散が小さければ MSE は小さくなるので、不偏性だけで良し悪しは決まりません。`},{id:`est1-4`,question:`クラーメル・ラオの不等式においてフィッシャー情報量 $I(\\theta)$ が大きいほど推定はどうなるか？`,options:[`一致性が保証されなくなる`,`分散の下限が上がり高精度が難しくなる`,`分散の下限が下がりより精密な推定が原理的に可能になる`,`推定量の期待値が大きくなる`],correctAnswer:2,explanation:`$I(\\theta)$ が大きいほど $1/I(\\theta)$ が小さくなり、分散の下限が低くなります。「データが $\\theta$ についてより多くの情報を含む」ほど精密な推定が可能になるという直感と一致します。`},{id:`est1-5`,question:`ガウス・マルコフの定理が保証するのはどの範囲の最小分散性か？`,options:[`一致推定量の中で最小`,`すべての推定量の中で最小`,`すべての不偏推定量の中で最小`,`線形不偏推定量の中で最小`],correctAnswer:3,explanation:`ガウス・マルコフの定理はOLSが「線形不偏推定量の中で最小分散（BLUE）」であることを保証します。非線形推定量や不偏でない推定量（リッジ回帰など）は含みません。正規性を仮定すれば「すべての不偏推定量中で最小」まで強化できます。`},{id:`est1-8`,question:`正規分布で標本平均と標本中央値の相対効率（大標本）として正しいものはどれか？`,options:[`中央値のほうが効率的（相対効率 $> 1$）`,`両者の効率は同じ`,`標本平均のほうが効率的（相対効率 $\\pi/2 \\approx 1.57$）`,`相対効率はサンプルサイズで変わるため一定でない`],correctAnswer:2,explanation:`正規分布の大標本で、標本中央値の分散は $n$ が大きいとき約 $\\pi\\sigma^2/(2n)$、標本平均の分散は $\\sigma^2/n$ です。相対効率 $= \\pi/2 \\approx 1.57$ で、標本平均のほうが約57%分散が小さく効率的です。重裾分布では中央値が有利になる場合もあります。`},{id:`est1-9`,question:`クラーメル・ラオ下限を達成する不偏推定量を何と呼ぶか？`,options:[`BLUE`,`一致推定量`,`十分統計量`,`有効推定量`],correctAnswer:3,explanation:`クラーメル・ラオの不等式が与える下限 $1/(nI(\\theta))$ をちょうど達成する不偏推定量を「有効推定量（efficient estimator）」と呼びます。正規分布の $\\mu$ に対する $\\bar{X}$ が代表例です。BLUEはガウス・マルコフの定理が保証する「線形不偏推定量の中の最小分散推定量」で、やや異なる概念です。`},{id:`est1-17`,question:`不偏性と一致性の関係として正しいものはどれか？`,options:[`不偏だが不一致な推定量、一致だが不偏でない推定量がどちらも存在する`,`2つは同じ概念を異なる言葉で表したもの`,`不偏なら必ず一致する`,`一致なら必ず不偏である`],correctAnswer:0,explanation:`不偏性は「有限サンプルでの期待値の一致」、一致性は「$n \\to \\infty$ での確率収束」で独立した概念です。例：$\\hat{\\theta} = X_1$（最初の観測値だけを使う）は不偏だが一致でない。MLEの $\\hat{\\sigma}^2 = \\frac{1}{n}\\sum(X_i-\\bar{X})^2$ は不偏でないが一致推定量です。`},{id:`est1-18`,question:`最小分散不偏推定量（MVUE）とはどんな推定量か？`,options:[`すべての推定量の中で分散が最小`,`すべての不偏推定量の中で分散が最小`,`最も計算が簡単な不偏推定量`,`一致性も同時に満たす不偏推定量`],correctAnswer:1,explanation:`MVUE（Minimum Variance Unbiased Estimator）は「不偏性を満たすすべての推定量」の中で分散が最小のものです。クラーメル・ラオ下限を達成する不偏推定量（有効推定量）がMVUEになります。ラオ・ブラックウェルの定理は十分統計量を使ってMVUEを構成する方法を与えます。`},{id:`est1-19`,question:`BLUEが保証する「線形不偏推定量の中の最小分散」に、正規性の仮定を加えるとどう強化されるか？`,options:[`変わらない`,`「すべての推定量の中で最小分散」になる`,`「すべての不偏推定量の中で最小分散」になる`,`「一致推定量の中で最小分散」になる`],correctAnswer:2,explanation:`ガウス・マルコフは正規性なしで「線形不偏推定量の中のBLUE」を保証します。誤差が正規分布に従うとき、OLSはMLE（すべての推定量を含む）と一致し、「すべての不偏推定量の中で最小分散」（MVUE）まで強化されます。`},{id:`est1-20`,question:`$n$ 個の独立同分布サンプルのとき、クラーメル・ラオの下限はどうなるか？`,options:[`$1/(n \\cdot I(\\theta))$`,`$I(\\theta)$`,`$1/I(\\theta)$`,`$n \\cdot I(\\theta)$`],correctAnswer:0,explanation:`$n$ 個の独立観測では総フィッシャー情報量が $nI(\\theta)$ になるため、不偏推定量の分散の下限は $1/(nI(\\theta))$ です。$n$ が増えるほど下限が下がり（精度の上限が上がり）、「サンプルが多いほど精密な推定が可能」という直感と対応します。`}]},{id:`1.22-asymptotic`,updatedAt:`2026-05-29`,title:`漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法`,chapter:6,description:`MLE が「最も精密な推定量」であることの数学的根拠と、推定量変換の漸近分散の求め方を学びます。`,content:`💡 **このモジュールで学ぶこと**
 
 コインを100回投げると、表の比率 $\\hat{p}$ は真の確率 $p$ に近くなります。でも「どのくらい近いか」「分布はどんな形か」まで答えるには何が必要でしょうか。「サンプルが多くなると推定量はどんな性質を持つか」「推定量を変換したとき精度はどう変わるか」これらを理論化したのが漸近理論です。このモジュールではフィッシャー情報量・MLE の漸近正規性・デルタ法の3本柱を学びます。
 

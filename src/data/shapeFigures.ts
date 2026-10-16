@@ -1423,7 +1423,94 @@ function darts(): string {
       <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${c.s}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, 'ダーツのたとえ：偏りの有無とばらつきの大小の4通り')}${body}</svg>`;
-  const cap = `赤い点が的の中心（真の値 θ）、青い点が1本ずつの矢（データから計算した推定値 θ̂）、橙の十字が矢の平均の位置です。上の段は矢の平均が中心に来ている＝<strong>不偏</strong>、左の列は矢がまとまっている＝分散が小さい（<strong>有効</strong>）です。左下は矢がまとまっていても中心からずれ続けるので、いくら投げても真の値に届きません。不偏性と有効性は別々の性質で、両方そろうのは左上だけです。`;
+  const cap = `赤い点が真の値、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい（有効）推定量です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.15：不偏分散 S² と n で割る分散の分布（正規分布・n = 5・σ² = 1） ============
+function varianceEstimators(): string {
+  const W = 344, H = 250, n = 5, k = n - 1;
+  const b: Box = { x: 14, y: 40, w: 316, h: 150, xMin: 0, xMax: 3.5, yMax: 1.05 };
+  // (n−1)S²/σ² ～ χ²(k)。S² = V/k、σ̂² = V/n（V ～ χ²(k)）
+  const chi = (v: number) => (v <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(v) - v / 2 - (k / 2) * Math.log(2) - lgamma(k / 2)));
+  const fS = (x: number) => k * chi(k * x);
+  const fH = (x: number) => n * chi(n * x);
+  const mS = 1, mH = k / n;
+  const vS = 2 / k, vH = (k / n) ** 2 * (2 / k);
+  const mseS = vS, mseH = vH + (mH - 1) ** 2;
+  const svg = `${svgOpen(W, H, '正規分布から5個とったときの、不偏分散 S² と n で割った分散の分布。S² の平均は真の値1、n で割った方は0.8で、少し左にずれるが幅は狭い')}
+    <line x1="${f1(PX(b, 1))}" y1="${b.y - 4}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 1) + 4)}" y="${b.y + 4}" font-size="12.4" fill="${ROSE}">真の σ² = 1</text>
+    ${curve(b, fS, INDIGO, 0.001, 3.5, 2.2)}${curve(b, fH, AMBER, 0.001, 3.5, 2.2)}
+    ${[{ m: mS, c: INDIGO }, { m: mH, c: AMBER }].map(({ m, c }) => `<line x1="${f1(PX(b, m))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, m))}" y2="${f1(PY(b, 0) + 8)}" stroke="${c}" stroke-width="3" />`).join('')}
+    ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5, 3])}
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="#b45309">n で割る（平均 ${f2(mH)}）</text>
+    <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">S²：n−1 で割る（平均 1）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／軸の下の短い線＝分布の平均</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">正規分布から5個とった場合</text>
+  </svg>`;
+  const cap = `S² は平均がちょうど1（不偏）ですが広く散らばり、n で割った方は平均 ${f2(mH)} と小さめで、幅は狭くなります。平均二乗誤差は S² が ${f2(mseS)}、n で割った方が ${f2(mseH)} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.15：一致性（X̄ は n とともに真の値に集まる、X₁ は集まらない） ============
+function consistency(): string {
+  const W = 344, H = 262;
+  const L: Box = { x: 10, y: 44, w: 150, h: 150, xMin: -3, xMax: 3, yMax: 1.9 };
+  const R: Box = { x: 186, y: 44, w: 150, h: 150, xMin: -3, xMax: 3, yMax: 1.9 };
+  const ns = [{ n: 1, c: SLATE }, { n: 4, c: TEAL }, { n: 16, c: INDIGO }];
+  const lab = (b: Box, n: number, c: string, i: number) => `<text x="${f1(b.x + b.w - 2)}" y="${b.y + 14 + i * 15}" text-anchor="end" font-size="12.4" font-weight="700" fill="${c}">n = ${n}</text>`;
+  const svg = `${svgOpen(W, H, '左：標本平均は n を増やすと真の値0に集まる（一致）。右：最初の1個だけを使う推定量は n を増やしても広がったまま（不偏だが一致しない）')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">標本平均 X̄</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">最初の1個 X₁</text>
+    ${ns.map(({ n, c }) => curve(L, (x) => normPdf(x, 0, 1 / Math.sqrt(n)), c, -3, 3, 2)).join('')}
+    ${ns.map(({ n, c }, i) => lab(L, n, c, i)).join('')}
+    ${curve(R, (x) => normPdf(x), SLATE, -3, 3, 2)}
+    ${ns.map(({ n, c }, i) => lab(R, n, c, i)).join('')}
+    <text x="${f1(PX(R, 0))}" y="${f1(PY(R, 0.75))}" text-anchor="middle" font-size="12.4" fill="${SLATE}">3本とも同じ</text>
+    ${axes(L, [-2, 0, 2])}${axes(R, [-2, 0, 2])}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">N(0, 1) から n 個とったときの推定値の分布</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">真の値＝0</text>
+  </svg>`;
+  const cap = `どちらも平均は真の値0で不偏です。X̄ は n を4倍にするたびに幅が半分になり0に集まります（一致）が、X₁ は何個データを集めても1個しか使わないので広がったままです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.15：有効性（正規分布で平均と中央値のばらつきを比べる） ============
+function meanVsMedian(): string {
+  const W = 344, H = 236, n = 25;
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: -1, xMax: 1, yMax: 2.2 };
+  const sM = 1 / Math.sqrt(n), sMed = Math.sqrt(Math.PI / (2 * n));
+  const p = (s: number) => 2 * Phi(-0.2 / s);
+  const svg = `${svgOpen(W, H, '正規分布から25個とったときの標本平均と標本中央値の分布。どちらも中心は真の値0だが、中央値の方が広い')}
+    ${curve(b, (x) => normPdf(x, 0, sMed), AMBER, -1, 1, 2.2)}
+    ${curve(b, (x) => normPdf(x, 0, sM), INDIGO, -1, 1, 2.2)}
+    ${axes(b, [-1, -0.5, 0, 0.5, 1])}
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">平均 X̄（分散 σ²/n）</text>
+    <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="#b45309">中央値（分散 約1.57倍）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（真の値 0）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">N(0, 1) から25個（中央値は近似）</text>
+  </svg>`;
+  const cap = `どちらも不偏ですが、中央値の分散は平均の約1.57倍です。真の値から0.2以上ずれる確率は、平均が ${pct(p(sM))}、中央値が ${pct(p(sMed))} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.15：推定量の範囲の入れ子（ガウス・マルコフと MVUE） ============
+function estimatorClasses(): string {
+  const W = 344, H = 250;
+  const box = (x: number, y: number, w: number, h: number, c: string, t: string, s: string) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${c}" fill-opacity="0.08" stroke="${c}" stroke-width="1.5" />
+    <text x="${x + 10}" y="${y + 18}" font-size="13.2" font-weight="700" fill="${c === SLATE ? INK : c}">${t}</text>
+    ${s ? `<text x="${x + 10}" y="${y + 34}" font-size="12.4" fill="${SLATE}">${s}</text>` : ''}`;
+  const svg = `${svgOpen(W, H, 'すべての推定量の中に不偏推定量があり、その中に線形不偏推定量がある。ガウス・マルコフの定理は線形不偏の中で最小分散、正規誤差ならすべての不偏の中で最小分散')}
+    ${box(6, 6, 332, 238, SLATE, 'すべての推定量', '偏りがあるもの（リッジ回帰など）も含む')}
+    ${box(22, 50, 300, 184, TEAL, '不偏推定量', '正規誤差なら OLS がこの中で最小分散')}
+    ${box(38, 98, 268, 126, INDIGO, '線形不偏推定量', 'y の1次式で、不偏なもの')}
+    <circle cx="172" cy="182" r="22" fill="${ROSE}" fill-opacity="0.15" stroke="${ROSE}" stroke-width="1.6" />
+    <text x="172" y="187" text-anchor="middle" font-size="13.2" font-weight="700" fill="${ROSE}">OLS</text>
+    <text x="204" y="178" font-size="12.4" fill="${ROSE}">← この中で</text>
+    <text x="204" y="194" font-size="12.4" fill="${ROSE}">分散が最小</text>
+  </svg>`;
+  const cap = `ガウス・マルコフの定理が言えるのは、藍の枠（線形不偏推定量）の中で OLS の分散が最小ということです。誤差が正規分布なら、緑の枠（すべての不偏推定量）の中でも最小になります。`;
   return fig(svg, cap);
 }
 
@@ -2116,7 +2203,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-noncentral-t': noncentralT,
   'f-order-stats': orderStats,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
-  'f-darts': darts,
+  'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
