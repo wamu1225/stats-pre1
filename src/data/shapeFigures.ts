@@ -1096,6 +1096,33 @@ function expSum(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.9：2変数のヤコビアン＝面積の倍率（x = v、y = u − v で小さな正方形を移す） ============
+function shearArea(): string {
+  const W = 344, H = 250;
+  const L: Box = { x: 30, y: 40, w: 130, h: 130, xMin: 0, xMax: 2, yMax: 2 };
+  const R: Box = { x: 200, y: 40, w: 130, h: 130, xMin: 0, xMax: 2, yMax: 2 };
+  const sq = [[1, 0.3], [1.5, 0.3], [1.5, 0.8], [1, 0.8]];
+  const img = sq.map(([u, v]) => [v, u - v]);
+  const poly = (b: Box, ps: number[][], c: string) => `<polygon points="${ps.map(([a, c2]) => `${f1(PX(b, a))},${f1(PY(b, c2))}`).join(' ')}" fill="${c}" fill-opacity="0.25" stroke="${c}" stroke-width="1.6" />`;
+  const area = (ps: number[][]) => Math.abs(ps.reduce((s, [x1, y1], i) => { const [x2, y2] = ps[(i + 1) % ps.length]; return s + x1 * y2 - x2 * y1; }, 0)) / 2;
+  const frame = (b: Box, xl: string, yl: string) => `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+    ${[0, 1, 2].map((v) => `<text x="${f1(PX(b, v))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${[1, 2].map((v) => `<text x="${b.x - 5}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <text x="${b.x + b.w + 4}" y="${b.y + b.h + 4}" font-size="12.4" fill="${SLATE}">${xl}</text>
+    <text x="${b.x}" y="${b.y - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${yl}</text>`;
+  const svg = `${svgOpen(W, H, '(u, v) の小さな正方形を x = v、y = u − v で移すと平行四辺形になるが、面積は変わらない')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(u, v) の正方形</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(x, y) に移した形</text>
+    ${frame(L, 'u', 'v')}${frame(R, 'x', 'y')}
+    ${poly(L, sq, INDIGO)}${poly(R, img, INDIGO)}
+    <text x="${(L.x + L.w + R.x) / 2 - 4}" y="${L.y + 24}" text-anchor="middle" font-size="18" fill="${SLATE}">→</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">x = v、y = u − v で移す</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">面積：${f2(area(sq))} → ${f2(area(img))}（倍率 ${f1(area(img) / area(sq))}）</text>
+  </svg>`;
+  const cap = `正方形は傾いた平行四辺形に変わりますが、面積は同じです。面積の倍率が1なので、密度を補正する必要がなく、ヤコビアン |J| = 1 です。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.9：最大値の分布関数 F(x)^n（一様分布） ============
 function maxCdf(): string {
   const W = 344, H = 236;
@@ -2287,7 +2314,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
