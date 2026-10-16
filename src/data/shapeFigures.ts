@@ -858,6 +858,14 @@ function conditionalNormal(): string {
     ${ell(1)}${ell(2)}
     <line x1="${f1(X(b.xMin))}" y1="${f1(Y(cm(b.xMin)))}" x2="${f1(X(b.xMax))}" y2="${f1(Y(cm(b.xMax)))}" stroke="${INK}" stroke-width="1.4" />
     ${slice(164, TEAL)}${slice(176, AMBER)}
+    ${(() => {
+      // 身長を知らないときの体重の分布（標準偏差 8kg）。切った山と面積がそろうよう同じ倍率で描く
+      const k = 5 / normPdf(0, 0, cs), x0 = 153;
+      const pts: string[] = [];
+      for (let i = 0; i <= 80; i++) { const y = my - 2.5 * sy + (5 * sy * i) / 80; if (y < b.yMin || y > b.yMax) continue; pts.push(`${f1(X(x0 + k * normPdf(y, my, sy)))},${f1(Y(y))}`); }
+      return `<polyline points="${pts.join(' ')}" fill="none" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="4 3" />
+        <text x="${f1(X(x0) + 4)}" y="${f1(Y(86))}" font-size="12.4" font-weight="700" fill="${SLATE}">全体</text>`;
+    })()}
     ${[155, 160, 165, 170, 175, 180, 185].map((v) => `<text x="${f1(X(v))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     ${[45, 55, 65, 75, 85].map((v) => `<text x="${b.x - 4}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <text x="${b.x - 30}" y="${b.y - 8}" font-size="12.4" fill="${SLATE}">体重kg</text>
@@ -865,7 +873,7 @@ function conditionalNormal(): string {
     <text x="${f1(X(164))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">164cm</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 身長 cm／黒の直線 ＝ 身長ごとの体重の平均</text>
   </svg>`;
-  const cap = `身長（平均170cm・標準偏差6cm）と体重（平均65kg・標準偏差8kg）、相関0.5の例です。身長で縦に切ると体重は正規分布になり、中心は黒の直線に沿って動き、幅（標準偏差${num(cs)}kg）は変わりません。`;
+  const cap = `身長164cmと176cmで縦に切った体重の分布です。点はそれぞれの平均（${num(cm(164))}kg・${num(cm(176))}kg）、左端の灰の点線は身長を知らないときの体重の分布（標準偏差8kg）です。`;
   return fig(svg, cap);
 }
 
@@ -903,20 +911,103 @@ function mahalanobis(): string {
   };
   const P = [1.2, 1.2], Q = [1.2, -1.2];
   const eu = Math.hypot(P[0], P[1]);
+  // 実際の散らばり（相関0.7の200点）と、ふつうの距離が P・Q と同じ円
+  const g = gaussFrom(mulberry32(8));
+  const pts = Array.from({ length: 200 }, () => { const z1 = g(), z2 = g(); return [z1, rho * z1 + Math.sqrt(1 - rho * rho) * z2]; })
+    .filter(([x, y]) => Math.abs(x) < 3 && Math.abs(y) < 3);
+  const circle = `<circle cx="${f1(PX(b, 0))}" cy="${f1(py(0))}" r="${f1(PX(b, eu) - PX(b, 0))}" fill="none" stroke="${SLATE}" stroke-width="1.4" stroke-dasharray="5 4" />`;
   const dot = ([x, y]: number[], col: string, name: string) => `<line x1="${f1(PX(b, 0))}" y1="${f1(py(0))}" x2="${f1(PX(b, x))}" y2="${f1(py(y))}" stroke="${col}" stroke-width="1.4" stroke-dasharray="4 3" />
     <circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="4.5" fill="${col}" />
     <text x="${f1(PX(b, x) + 8)}" y="${f1(py(y) + (y > 0 ? -6 : 16))}" font-size="13.2" font-weight="700" fill="${col}">${name}（${f2(md(x, y))}）</text>`;
   const svg = `${svgOpen(W, H, '相関0.7の2変量正規分布で、中心から同じ距離にある2点。楕円に沿った点Pはマハラノビス距離が小さく、楕円を横切る点Qは大きい')}
     <line x1="${b.x}" y1="${f1(py(0))}" x2="${b.x + b.w}" y2="${f1(py(0))}" stroke="#e2e8f0" />
     <line x1="${f1(PX(b, 0))}" y1="${b.y}" x2="${f1(PX(b, 0))}" y2="${b.y + b.h}" stroke="#e2e8f0" />
-    ${[1, 2, 3].map(ell).join('')}
+    ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(y))}" r="1.7" fill="${SLATE}" fill-opacity="0.35" />`).join('')}
+    ${[1, 2, 3].map(ell).join('')}${circle}
     ${dot(P, TEAL, 'P')}${dot(Q, ROSE, 'Q')}
     <text x="${b.x + b.w + 6}" y="${f1(py(0) + 4)}" font-size="12.4" fill="${SLATE}">X</text>
     <text x="${f1(PX(b, 0))}" y="${b.y - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">Y</text>
-    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">楕円＝マハラノビス距離 1・2・3 の線（相関0.7）</text>
-    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">かっこ内＝その点のマハラノビス距離</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の点線の円＝ふつうの距離が P・Q と同じ</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝マハラノビス距離 1・2・3　かっこ内＝その点の値</text>
   </svg>`;
-  const cap = `P と Q は中心からのふつうの距離がどちらも ${f2(eu)} ですが、マハラノビス距離は P が ${f2(md(P[0], P[1]))}、Q が ${f2(md(Q[0], Q[1]))} です。点の散らばりを横切る Q のほうが、ずっと珍しい点です。`;
+  const cap = `P と Q は同じ円の上にあり、ふつうの距離はどちらも ${f2(eu)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。円ではなく、点の散らばりに沿った楕円で測るのがマハラノビス距離です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：線形変換（相関0.7の点を U = X + Y、V = X − Y に移す） ============
+function linearUV(): string {
+  const W = 344, H = 286, rho = 0.7, lim = 4.5;
+  const L: Box = { x: 14, y: 44, w: 150, h: 150, xMin: -lim, xMax: lim, yMax: 1 };
+  const R: Box = { x: 186, y: 44, w: 150, h: 150, xMin: -lim, xMax: lim, yMax: 1 };
+  const yy = (b: Box, v: number) => b.y + b.h / 2 - (v / lim) * (b.h / 2);
+  const g = gaussFrom(mulberry32(8));
+  const xy = Array.from({ length: 200 }, () => { const z1 = g(), z2 = g(); return [z1, rho * z1 + Math.sqrt(1 - rho * rho) * z2]; });
+  const uv = xy.map(([x, y]) => [x + y, x - y]);
+  const inside = (p: number[]) => Math.abs(p[0]) < lim && Math.abs(p[1]) < lim;
+  const frame = (b: Box) => `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+    <line x1="${b.x}" y1="${f1(yy(b, 0))}" x2="${b.x + b.w}" y2="${f1(yy(b, 0))}" stroke="#e2e8f0" />
+    <line x1="${f1(PX(b, 0))}" y1="${b.y}" x2="${f1(PX(b, 0))}" y2="${b.y + b.h}" stroke="#e2e8f0" />`;
+  // 2σ の等高線：左は Σ = [[1, ρ], [ρ, 1]]、右は AΣAᵀ = diag(2 + 2ρ, 2 − 2ρ)
+  const ellL = (() => { const o: string[] = []; for (let k = 0; k <= 72; k++) { const t = (2 * Math.PI * k) / 72; const u = 2 * Math.sqrt(1 + rho) * Math.cos(t), v = 2 * Math.sqrt(1 - rho) * Math.sin(t); o.push(`${f1(PX(L, (u - v) / Math.SQRT2))},${f1(yy(L, (u + v) / Math.SQRT2))}`); } return o.join(' '); })();
+  const vu = 2 + 2 * rho, vv = 2 - 2 * rho;
+  const ellR = (() => { const o: string[] = []; for (let k = 0; k <= 72; k++) { const t = (2 * Math.PI * k) / 72; o.push(`${f1(PX(R, 2 * Math.sqrt(vu) * Math.cos(t)))},${f1(yy(R, 2 * Math.sqrt(vv) * Math.sin(t)))}`); } return o.join(' '); })();
+  // 1点を追いかける
+  const k = xy.findIndex(([x, y]) => x > 1.1 && x < 1.8 && y > 0.4 && y < 1.2);
+  const [px, py] = xy[k], [pu, pv] = uv[k];
+  const svg = `${svgOpen(W, H, '相関0.7の点を1つずつ U=X+Y、V=X−Y に移すと、右上がりの楕円が横長の楕円になる。楕円は楕円のままで、U と V の相関は0')}
+    <text x="${L.x + L.w / 2}" y="${L.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(X, Y)：相関 0.7</text>
+    <text x="${R.x + R.w / 2}" y="${R.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(U, V) ＝ (X＋Y, X−Y)</text>
+    ${frame(L)}${frame(R)}
+    ${xy.filter(inside).map(([x, y]) => `<circle cx="${f1(PX(L, x))}" cy="${f1(yy(L, y))}" r="1.7" fill="${SLATE}" fill-opacity="0.45" />`).join('')}
+    ${uv.filter(inside).map(([u, v]) => `<circle cx="${f1(PX(R, u))}" cy="${f1(yy(R, v))}" r="1.7" fill="${SLATE}" fill-opacity="0.45" />`).join('')}
+    <polygon points="${ellL}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
+    <polygon points="${ellR}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
+    <circle cx="${f1(PX(L, px))}" cy="${f1(yy(L, py))}" r="4" fill="${ROSE}" />
+    <circle cx="${f1(PX(R, pu))}" cy="${f1(yy(R, pv))}" r="4" fill="${ROSE}" />
+    <text x="${(L.x + L.w + R.x) / 2}" y="${L.y + L.h / 2 + 5}" text-anchor="middle" font-size="18" fill="${SLATE}">→</text>
+    <text x="${L.x + L.w - 2}" y="${f1(yy(L, 0) - 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">X</text>
+    <text x="${f1(PX(L, 0) + 4)}" y="${L.y + 12}" font-size="12.4" fill="${SLATE}">Y</text>
+    <text x="${R.x + R.w - 2}" y="${f1(yy(R, 0) - 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">U</text>
+    <text x="${f1(PX(R, 0) + 4)}" y="${R.y + 12}" font-size="12.4" fill="${SLATE}">V</text>
+    <text x="${W / 2}" y="${H - 40}" text-anchor="middle" font-size="12.4" fill="${SLATE}">赤い点＝同じ1点（${f1(px)}, ${f1(py)}）→（${f1(pu)}, ${f1(pv)}）</text>
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝2σ の等高線（両方とも同じ目盛り）</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右：U の分散 ${f1(vu)}、V の分散 ${f1(vv)}、相関 0</text>
+  </svg>`;
+  const cap = `左の点を1つずつ U = X + Y、V = X − Y に移すと右になります。楕円は楕円のまま（多変量正規分布のまま）で、楕円の向きに沿った U と V では相関が0になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.9：相関0なら、どこで切っても同じ分布（身長と体重・ρ = 0 と 0.5 を並べる） ============
+function independentSlices(): string {
+  const W = 344, H = 262;
+  const mx = 170, sx = 6, my = 65, sy = 8;
+  const panel = (rho: number, x0: number, title: string) => {
+    const b = { x: x0, y: 40, w: 150, h: 170, xMin: 154, xMax: 186, yMin: 41, yMax: 89 };
+    const X = (x: number) => b.x + ((x - b.xMin) / (b.xMax - b.xMin)) * b.w;
+    const Y = (y: number) => b.y + b.h - ((y - b.yMin) / (b.yMax - b.yMin)) * b.h;
+    const cm = (x: number) => my + rho * (sy / sx) * (x - mx);
+    const cs = sy * Math.sqrt(1 - rho * rho);
+    const k = 3.2 / normPdf(0, 0, sy * Math.sqrt(1 - 0.25));
+    const slice = (xc: number, col: string) => {
+      const m = cm(xc), pts: string[] = [];
+      for (let i = 0; i <= 60; i++) { const y = m - 2.5 * cs + (5 * cs * i) / 60; if (y < b.yMin || y > b.yMax) continue; pts.push(`${f1(X(xc + k * normPdf(y, m, cs)))},${f1(Y(y))}`); }
+      return `<line x1="${f1(X(xc))}" y1="${b.y}" x2="${f1(X(xc))}" y2="${b.y + b.h}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" />
+        <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.9" />
+        <circle cx="${f1(X(xc))}" cy="${f1(Y(m))}" r="3" fill="${col}" />`;
+    };
+    return `<text x="${b.x + b.w / 2}" y="${b.y - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${title}</text>
+      <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
+      <line x1="${f1(X(b.xMin))}" y1="${f1(Y(cm(b.xMin)))}" x2="${f1(X(b.xMax))}" y2="${f1(Y(cm(b.xMax)))}" stroke="${INK}" stroke-width="1.3" />
+      ${slice(160, TEAL)}${slice(170, INDIGO)}${slice(180, AMBER)}
+      ${[160, 170, 180].map((v) => `<text x="${f1(X(v))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+      <text x="${b.x + b.w / 2}" y="${b.y - 7}" text-anchor="middle" font-size="12.4" fill="${SLATE}">体重の平均 ${num(cm(160))}・${num(cm(170))}・${num(cm(180))}kg</text>`;
+  };
+  const svg = `${svgOpen(W, H, '身長160・170・180cmで縦に切った体重の分布。相関0では3つとも同じ、相関0.5では身長が高いほど上にずれる')}
+    ${panel(0, 12, '相関 0')}${panel(0.5, 186, '相関 0.5')}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝身長 cm　縦軸＝体重 41〜89kg</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">身長160・170・180cmで切った体重の分布</text>
+  </svg>`;
+  const cap = `相関0では、どの身長で切っても体重の分布は同じ（平均65kg・標準偏差8kg）で、身長を知っても体重の予想は変わりません。これが独立です。`;
   return fig(svg, cap);
 }
 
@@ -2196,7 +2287,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-min-parts': minParts,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
