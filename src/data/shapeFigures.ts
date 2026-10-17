@@ -2292,6 +2292,91 @@ function dagFront(): string {
   return fig(svg, '点線の U は測れない共通原因。X と Y を直接比べても U の影響が混ざるが、途中の M を観測できれば、X→M と M→Y の2段に分けて効果を求められる。');
 }
 
+// ── 対応分析（2.7）：年代×好きな飲み物の分割表を特異値分解して2次元に置く ──
+function jacobiEigen(a0: number[][]): { vals: number[]; vecs: number[][] } {
+  const n = a0.length;
+  const a = a0.map(r => r.slice());
+  const v: number[][] = Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => (i === j ? 1 : 0)));
+  for (let sweep = 0; sweep < 100; sweep++) {
+    let p = 0, q = 1, big = 0;
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) if (Math.abs(a[i][j]) > big) { big = Math.abs(a[i][j]); p = i; q = j; }
+    if (big < 1e-14) break;
+    const theta = (a[q][q] - a[p][p]) / (2 * a[p][q]);
+    const t = Math.sign(theta || 1) / (Math.abs(theta) + Math.sqrt(theta * theta + 1));
+    const c = 1 / Math.sqrt(t * t + 1), s = t * c;
+    for (let k = 0; k < n; k++) {
+      if (k === p || k === q) continue;
+      const akp = a[k][p], akq = a[k][q];
+      a[k][p] = a[p][k] = c * akp - s * akq;
+      a[k][q] = a[q][k] = s * akp + c * akq;
+    }
+    const app = a[p][p], aqq = a[q][q], apq = a[p][q];
+    a[p][p] = app - t * apq; a[q][q] = aqq + t * apq; a[p][q] = a[q][p] = 0;
+    for (let k = 0; k < n; k++) {
+      const vkp = v[k][p], vkq = v[k][q];
+      v[k][p] = c * vkp - s * vkq;
+      v[k][q] = s * vkp + c * vkq;
+    }
+  }
+  return { vals: a.map((r, i) => r[i]), vecs: v };
+}
+export const CA_TABLE = {
+  rows: ['20代', '40代', '60代'],
+  cols: ['コーヒー', '紅茶', '緑茶', 'ジュース'],
+  counts: [[30, 10, 5, 35], [25, 25, 20, 10], [10, 20, 45, 5]],
+};
+function caSolve() {
+  const N = CA_TABLE.counts, I = N.length, J = N[0].length;
+  const n = N.flat().reduce((s, x) => s + x, 0);
+  const r = N.map(row => row.reduce((s, x) => s + x, 0) / n);
+  const c = Array.from({ length: J }, (_, j) => N.reduce((s, row) => s + row[j], 0) / n);
+  const S = N.map((row, i) => row.map((x, j) => (x / n - r[i] * c[j]) / Math.sqrt(r[i] * c[j])));
+  const M = Array.from({ length: I }, (_, i) => Array.from({ length: I }, (_, k) => S[i].reduce((s, x, j) => s + x * S[k][j], 0)));
+  const { vals, vecs } = jacobiEigen(M);
+  const order = vals.map((v, i) => i).sort((x, y) => vals[y] - vals[x]);
+  const inertia = S.flat().reduce((s, x) => s + x * x, 0);
+  const axes = order.slice(0, 2).map(k => {
+    const d = Math.sqrt(Math.max(vals[k], 0));
+    const u = vecs.map(row => row[k]);
+    const vv = Array.from({ length: J }, (_, j) => S.reduce((s, row, i) => s + row[j] * u[i], 0) / d);
+    return { d, share: vals[k] / inertia, rows: u.map((x, i) => (x * d) / Math.sqrt(r[i])), cols: vv.map((x, j) => (x * d) / Math.sqrt(c[j])) };
+  });
+  // 向きは任意なので、20代が左に来るように揃える
+  if (axes[0].rows[0] > 0) { axes[0].rows = axes[0].rows.map(x => -x); axes[0].cols = axes[0].cols.map(x => -x); }
+  return { n, inertia, chi2: n * inertia, axes };
+}
+function correspondenceMap(): string {
+  const W = 350, H = 270;
+  const { axes } = caSolve();
+  const x0 = 20, x1 = 330, y0 = 24, y1 = 232;
+  const xr = 0.95, yr = 0.34; // 表示範囲 x:[-0.95,0.95] y:[-0.34,0.34]
+  const px = (x: number) => x0 + ((x + xr) / (2 * xr)) * (x1 - x0);
+  const py = (y: number) => y1 - ((y + yr) / (2 * yr)) * (y1 - y0);
+  const rowLab: Array<[number, string]> = [[0, 'u'], [1, 'u'], [2, 'u']];
+  const colLab: Array<[number, string]> = [[0, 'u'], [1, 'r'], [2, 'd'], [3, 'd']];
+  const place = (x: number, y: number, label: string, pos: string, color: string) => {
+    const dx = pos === 'r' ? 9 : 0, dy = pos === 'u' ? -9 : pos === 'd' ? 19 : 4;
+    return `<text x="${f1(px(x) + dx)}" y="${f1(py(y) + dy)}" text-anchor="${pos === 'r' ? 'start' : 'middle'}" font-size="12.5" font-weight="700" fill="${color}">${label}</text>`;
+  };
+  const rowPts = rowLab.map(([i, pos]) => {
+    const x = axes[0].rows[i], y = axes[1].rows[i];
+    return `<rect x="${f1(px(x) - 5)}" y="${f1(py(y) - 5)}" width="10" height="10" fill="${INDIGO}" />${place(x, y, CA_TABLE.rows[i], pos, INDIGO)}`;
+  }).join('');
+  const colPts = colLab.map(([j, pos]) => {
+    const x = axes[0].cols[j], y = axes[1].cols[j];
+    return `<circle cx="${f1(px(x))}" cy="${f1(py(y))}" r="5.5" fill="${AMBER}" />${place(x, y, CA_TABLE.cols[j], pos, '#b45309')}`;
+  }).join('');
+  const s1 = (axes[0].share * 100).toFixed(1), s2 = (axes[1].share * 100).toFixed(1);
+  const svg = `${svgOpen(W, H, '対応分析の散布図：年代（四角）と好きな飲み物（丸）を同じ平面に置く。20代はジュースとコーヒー、40代は紅茶、60代は緑茶の近く')}
+    <line x1="${x0}" y1="${f1(py(0))}" x2="${x1}" y2="${f1(py(0))}" stroke="#cbd5e1" stroke-width="1" />
+    <line x1="${f1(px(0))}" y1="${y0 - 6}" x2="${f1(px(0))}" y2="${y1 + 6}" stroke="#cbd5e1" stroke-width="1" />
+    ${rowPts}${colPts}
+    <text x="${x1}" y="${y1 + 32}" text-anchor="end" font-size="12.5" fill="${SLATE}">第1軸（寄与率 ${s1}%）</text>
+    <text x="${x0}" y="${y0 - 8}" text-anchor="start" font-size="12.5" fill="${SLATE}">第2軸（${s2}%）</text>
+  </svg>`;
+  return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表す。原点は全体の平均的な好み。数値は上の表（240人の架空データ）を特異値分解して計算した。');
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -2337,4 +2422,5 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic,
   'f-dag-front': dagFront,
+  'f-ca': correspondenceMap,
 };
