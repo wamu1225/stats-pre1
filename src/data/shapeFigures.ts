@@ -1142,6 +1142,26 @@ function maxCdf(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.9：100年に1度の水位（年最大水位がガンベル分布 μ = 3m、σ = 0.5m のとき） ============
+function returnLevel(): string {
+  const W = 344, H = 240, mu = 3, sg = 0.5;
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: 1.8, xMax: 6.6, yMax: 0.8 };
+  const fz = (x: number) => { const z = (x - mu) / sg; return Math.exp(-(z + Math.exp(-z))) / sg; };
+  const lev = (T: number) => mu - sg * Math.log(-Math.log(1 - 1 / T));
+  const x10 = lev(10), x100 = lev(100);
+  const svg = `${svgOpen(W, H, '年最大水位の分布（ガンベル分布）。上側1%の境目が100年に1度の水位、10%の境目が10年に1度の水位')}
+    ${area(b, fz, x10, 6.6, AMBER, 0.25)}${area(b, fz, x100, 6.6, ROSE, 0.45)}
+    ${curve(b, fz, INDIGO, 1.8, 6.6, 2.2)}
+    ${[{ x: x10, c: '#b45309', t: '10年に1度' }, { x: x100, c: ROSE, t: '100年に1度' }].map(({ x, c, t }, i) => `<line x1="${f1(PX(b, x))}" y1="${b.y + 6 + i * 26}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.3" stroke-dasharray="4 3" />
+      <text x="${f1(PX(b, x) + (i ? -4 : 4))}" y="${b.y + 14 + i * 26}" text-anchor="${i ? 'end' : 'start'}" font-size="12.4" font-weight="700" fill="${c}">${t} ${f1(x)}m</text>`).join('')}
+    ${axes(b, [2, 3, 4, 5, 6])}
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝その年の最大水位（m）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">ガンベル分布（位置 3m・尺度 0.5m）の例</text>
+  </svg>`;
+  const cap = `塗った部分は、その年の最大水位が境目を超える確率で、橙が10%、赤が1%です。毎年1%の確率で超える水位 ${f1(x100)}m を「100年に1度の水位」と呼びます。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.9：極値分布の3つの型（一般極値分布 ξ = −0.5, 0, 0.5） ============
 function gevTypes(): string {
   const W = 344, H = 252;
@@ -2399,7 +2419,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
+  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-return-level': returnLevel, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
