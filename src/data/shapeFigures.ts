@@ -2374,7 +2374,7 @@ function correspondenceMap(): string {
     <text x="${x1}" y="${y1 + 32}" text-anchor="end" font-size="12.5" fill="${SLATE}">第1軸（寄与率 ${s1}%）</text>
     <text x="${x0}" y="${y0 - 8}" text-anchor="start" font-size="12.5" fill="${SLATE}">第2軸（${s2}%）</text>
   </svg>`;
-  return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表す。原点は全体の平均的な好み。数値は上の表（240人の架空データ）を特異値分解して計算した。');
+  return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表します。原点は全体の平均的な好みです。数値は上の表（240人の架空データ）を特異値分解して計算しました。');
 }
 
 export const SHAPE_FIGS: Record<string, () => string> = {
