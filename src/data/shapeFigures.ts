@@ -1373,6 +1373,73 @@ function noncentralT(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.12：数値例の確率を面積で示す（ボルト＝χ²(9)・新薬＝t(9) と N(0,1)・クラス＝F(10,15)） ============
+const simpsonInt = (f: (x: number) => number, a: number, b: number, m = 400) => {
+  const h = (b - a) / m;
+  let s = f(a) + f(b);
+  for (let i = 1; i < m; i++) s += f(a + i * h) * (i % 2 ? 4 : 2);
+  return (s * h) / 3;
+};
+const chi2Pdf = (k: number) => (x: number) => (x <= 0 ? 0 : Math.exp((k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - lgamma(k / 2)));
+const tPdf = (k: number) => (x: number) => Math.exp(lgamma((k + 1) / 2) - lgamma(k / 2) - 0.5 * Math.log(k * Math.PI) - ((k + 1) / 2) * Math.log(1 + (x * x) / k));
+const fPdf = (a: number, c: number) => (x: number) => (x <= 0 ? 0 : Math.exp(lgamma((a + c) / 2) - lgamma(a / 2) - lgamma(c / 2) + (a / 2) * Math.log(a / c) + (a / 2 - 1) * Math.log(x) - ((a + c) / 2) * Math.log(1 + (a * x) / c)));
+
+function chi2Tail(): string {
+  const W = 344, H = 226, k = 9, obs = (9 * 0.07 ** 2) / 0.05 ** 2;
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: 0, xMax: 30, yMax: 0.115 };
+  const f = chi2Pdf(k);
+  const p = simpsonInt(f, obs, 80);
+  const svg = `${svgOpen(W, H, '自由度9のカイ二乗分布。観測値17.64より右の面積が約4%')}
+    ${area(b, f, obs, 30, ROSE, 0.4)}${curve(b, f, INDIGO, 0.01, 30, 2.2)}
+    <line x1="${f1(PX(b, obs))}" y1="${b.y + 10}" x2="${f1(PX(b, obs))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, obs) + 4)}" y="${b.y + 20}" font-size="12.4" font-weight="700" fill="${ROSE}">観測値 ${obs.toFixed(2)}</text>
+    <text x="${f1(PX(b, 21))}" y="${f1(PY(b, 0.03))}" font-size="12.4" font-weight="700" fill="${ROSE}">右の面積 ${pct(p)}</text>
+    ${axes(b, [0, 5, 10, 15, 20, 25, 30])}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">χ²(9)：σ が 0.05 のままのときの (n−1)s²/σ² の分布</text>
+  </svg>`;
+  const cap = `σ = 0.05 のままなら、10本の (n−1)s²/σ² はこの山のどこかに出ます。赤く塗った部分が、観測値 17.64 より右に出る確率です。`;
+  return fig(svg, cap);
+}
+
+function tTail(): string {
+  const W = 344, H = 236, k = 9, obs = 5 / (6 / Math.sqrt(10));
+  // 全体を描くと2つの曲線が重なって差が見えないので、右の裾（1.5〜4.5）だけを拡大する
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: 1.5, xMax: 4.5, yMax: 0.14 };
+  const ft = tPdf(k), fz = (x: number) => normPdf(x);
+  const pt = 2 * simpsonInt(ft, obs, 40), pz = 2 * (1 - Phi(obs));
+  const svg = `${svgOpen(W, H, '自由度9のt分布と標準正規分布の右の裾を拡大。2.64より右の面積は t の方が大きい')}
+    ${area(b, ft, obs, 4.5, ROSE, 0.3)}${area(b, fz, obs, 4.5, SLATE, 0.45)}
+    ${curve(b, fz, SLATE, 1.5, 4.5, 1.8, '4 3')}${curve(b, ft, INDIGO, 1.5, 4.5, 2.2)}
+    <line x1="${f1(PX(b, obs))}" y1="${b.y + 30}" x2="${f1(PX(b, obs))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, obs) + 4)}" y="${b.y + 40}" font-size="12.4" font-weight="700" fill="${ROSE}">T = ${obs.toFixed(2)}</text>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">t(9)：両側 ${pct(pt)}</text>
+    <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="${SLATE}">N(0, 1)（点線・灰）：両側 ${pct(pz)}</text>
+    ${axes(b, [1.5, 2, 2.5, 3, 3.5, 4, 4.5])}
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の裾だけを拡大（左の裾も同じ形）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">薬の効果が無いときの T の分布</text>
+  </svg>`;
+  const cap = `裾を拡大すると、t(9)（藍）は正規分布（灰の点線）より高く、2.64 より右の面積（赤）も正規分布の面積（灰）より大きいことが分かります。`;
+  return fig(svg, cap);
+}
+
+function fTail(): string {
+  const W = 344, H = 226, a = 10, c = 15, obs = 2.0;
+  const b: Box = { x: 14, y: 30, w: 316, h: 150, xMin: 0, xMax: 4, yMax: 0.85 };
+  const f = fPdf(a, c);
+  const p = simpsonInt(f, obs, 60, 2000);
+  const svg = `${svgOpen(W, H, 'F(10,15) 分布。2.0より右の面積は約11%')}
+    ${area(b, f, obs, 4, ROSE, 0.4)}${curve(b, f, INDIGO, 0.01, 4, 2.2)}
+    <line x1="${f1(PX(b, 1))}" y1="${b.y}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 3" />
+    <line x1="${f1(PX(b, obs))}" y1="${b.y + 10}" x2="${f1(PX(b, obs))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, obs) + 4)}" y="${b.y + 20}" font-size="12.4" font-weight="700" fill="${ROSE}">観測した比 2.0</text>
+    <text x="${f1(PX(b, 2.55))}" y="${f1(PY(b, 0.16))}" font-size="12.4" font-weight="700" fill="${ROSE}">右の面積 ${pct(p)}</text>
+    ${axes(b, [0, 1, 2, 3, 4])}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">F(10, 15)：母分散が等しいときの s₁²/s₂² の分布</text>
+  </svg>`;
+  const cap = `母分散が等しくても、標本分散の比は1（点線）のまわりで大きくばらつきます。赤く塗った部分が、比が2.0以上になる確率です。`;
+  return fig(svg, cap);
+}
+
 // 1.13：一様分布 U(0,1) から5個とったときの、小さい方から k 番目の値の分布（ベータ分布 Be(k, 6−k)）
 function orderStats(): string {
   const W = 344, H = 250, n = 5;
@@ -2423,7 +2490,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
-  'f-noncentral-t': noncentralT,
+  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
   'f-order-stats': orderStats,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
