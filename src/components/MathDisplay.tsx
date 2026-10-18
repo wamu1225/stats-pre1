@@ -5,6 +5,8 @@ import katex from 'katex';
 interface Props {
   formula: string;
   block?: boolean;
+  /** 文章の途中に置く数式（本文・問題・解説の $...$）。行の途中で折り返させ、縮小はしない */
+  wrap?: boolean;
 }
 
 
@@ -25,11 +27,11 @@ interface Props {
  */
 const MIN_SCALE = 0.62;   // 1.21em × 0.62 ≒ 0.75em ≒ 12px。これ未満には縮めない
 
-function useFitToWidth(deps: unknown) {
+function useFitToWidth(deps: unknown, enabled = true) {
   const ref = useRef<HTMLElement>(null) as React.RefObject<HTMLDivElement>;
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
     let disposed = false;
     const fit = () => {
       if (disposed) return;
@@ -45,14 +47,17 @@ function useFitToWidth(deps: unknown) {
       //    CSS の `.katex-display{overflow-x:auto}` がその内側 span にも効き、
       //    内側がはみ出しを吸収して **外側は over=0 に見える**（実測で判明）。
       //    本当の必要幅は、いちばん内側の `.katex` の scrollWidth。
+      // ⚠️ インライン経路では .katex が display:inline なので scrollWidth が **0** になる（2026-10-18 実測）。
+      //    内側だけで測るとインラインの式は一度も縮まなかった。外側と内側の大きいほうを必要幅とする。
       const inner = el.querySelector('.katex') as HTMLElement | null;
-      const need = inner ? inner.scrollWidth : el.scrollWidth;
-      if (need <= avail + 1) return;
+      const need = Math.max(inner ? inner.scrollWidth : 0, el.scrollWidth);
+      // 許容3px：inline-block の .katex-inline は縮めても常に 2px 余る（KaTeX の余白・実測で文字は切れていない）
+      if (need <= avail + 3) return;
       const ratio = Math.max(MIN_SCALE, avail / need);
       el.style.fontSize = `${(ratio * 100).toFixed(1)}%`;
       // 縮めても収まらないならスクロールが残る。先頭から読めるように左寄せへ。
-      const after = (el.querySelector('.katex') as HTMLElement | null)?.scrollWidth ?? el.scrollWidth;
-      if (after > el.clientWidth + 1) el.classList.add('math-overflowing');
+      const after = Math.max((el.querySelector('.katex') as HTMLElement | null)?.scrollWidth ?? 0, el.scrollWidth);
+      if (after > el.clientWidth + 3) el.classList.add('math-overflowing');
     };
     // 初回・次フレーム・フォント読込後の3回まわす。
     // KaTeX は独自フォントを使うので、フォントが載る前に測ると幅が変わり判定を誤る。
@@ -69,11 +74,11 @@ function useFitToWidth(deps: unknown) {
       ro.observe(parent);
     }
     return () => { disposed = true; ro?.disconnect(); };
-  }, [deps]);
+  }, [deps, enabled]);
   return ref;
 }
 
-export const MathDisplay: React.FC<Props> = ({ formula, block }) => {
+export const MathDisplay: React.FC<Props> = ({ formula, block, wrap }) => {
   const html = useMemo(() => {
     try {
       return katex.renderToString(formula, {
@@ -87,8 +92,15 @@ export const MathDisplay: React.FC<Props> = ({ formula, block }) => {
     }
   }, [formula, block]);
 
-  const fitRef = useFitToWidth(html);
+  const fitRef = useFitToWidth(html, !wrap);
 
+
+  if (!block && wrap) {
+    // 🔒 文章中の数式は折り返す（2026-10-18 ユーザー指摘「スマホ画面だと数式が切れてるように見える」）。
+    //    inline-block＋nowrap のままだと、長い等式の連鎖が行幅で切れ、後ろはスクロールしないと見えなかった。
+    //    KaTeX は = や + の後ろで改行できるので、普通のインラインに戻して文章と一緒に折り返させる。
+    return <span className="katex-wrap" dangerouslySetInnerHTML={{ __html: html }} />;
+  }
 
   if (!block) {
     // ⚠️ 主要公式パネル・公式集・用語集は block を渡さないので**ここを通る**（5経路のうち3つ）。

@@ -232,7 +232,7 @@ function App() {
             if (!part) return null;
             const key = `inline-${i}`;
             if (part.startsWith('$$') && part.endsWith('$$')) return <MathDisplay key={key} formula={part.slice(2, -2)} block={true} />;
-            if (part.startsWith('$') && part.endsWith('$')) return <MathDisplay key={key} formula={part.slice(1, -1)} />;
+            if (part.startsWith('$') && part.endsWith('$')) return <MathDisplay key={key} formula={part.slice(1, -1)} wrap />;
             if (part.startsWith('**') && part.endsWith('**')) return <strong key={key}>{parseInline(part.slice(2, -2))}</strong>;
             // [ラベル](URL) — 主に study-apps.com 内の姉妹サイトへ渡すための記法。
             // サイト内の移動は [[term:]] とモジュールナビが担うため、ここでは

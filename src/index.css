@@ -114,6 +114,11 @@ html { scroll-behavior: smooth; }
   white-space: nowrap;
 }
 
+/* 文章中の数式は文章と一緒に折り返す（MathDisplay の wrap）。KaTeX は = や + の後ろで改行できる */
+.katex-wrap .katex {
+  white-space: normal;
+}
+
 /* Ensure math inside bold works */
 strong .katex {
   font-weight: bold !important;
