@@ -1498,6 +1498,65 @@ function orderStats(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.13：k 番目の値が x に来るときの3組（n=5, k=3） ============
+function orderSplit(): string {
+  const W = 344, H = 210;
+  const y0 = 92, xL = 20, xR = 324, xx = 172;
+  const dots = [
+    { x: 62, c: TEAL }, { x: 112, c: TEAL },
+    { x: xx, c: INDIGO },
+    { x: 236, c: AMBER }, { x: 290, c: AMBER },
+  ];
+  const svg = `${svgOpen(W, H, '5個のうち3番目の値が x に来るのは、2個が x より小さく、1個が x のあたりにあり、2個が x より大きいとき')}
+    <rect x="${xL}" y="${y0 - 34}" width="${xx - 10 - xL}" height="48" rx="6" fill="${TEAL}" fill-opacity="0.08" />
+    <rect x="${xx + 10}" y="${y0 - 34}" width="${xR - xx - 10}" height="48" rx="6" fill="${AMBER}" fill-opacity="0.08" />
+    <line x1="${xL}" y1="${y0}" x2="${xR}" y2="${y0}" stroke="${SLATE}" stroke-width="1.2" />
+    <line x1="${xx}" y1="${y0 - 40}" x2="${xx}" y2="${y0 + 12}" stroke="${INDIGO}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${xx}" y="${y0 - 44}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">x</text>
+    ${dots.map(({ x, c }) => `<circle cx="${x}" cy="${y0}" r="7" fill="${c}" />`).join('')}
+    <text x="${(xL + xx - 10) / 2}" y="${y0 - 16}" text-anchor="middle" font-size="12.4" fill="${TEAL}">x より小さい</text>
+    <text x="${(xx + 10 + xR) / 2}" y="${y0 - 16}" text-anchor="middle" font-size="12.4" fill="#b45309">x より大きい</text>
+    <text x="${(xL + xx - 10) / 2}" y="${y0 + 34}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${TEAL}">2個：F(x)²</text>
+    <text x="${xx}" y="${y0 + 56}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">1個：f(x)</text>
+    <text x="${(xx + 10 + xR) / 2}" y="${y0 + 34}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">2個：{1−F(x)}²</text>
+    <text x="${W / 2}" y="${H - 30}" text-anchor="middle" font-size="12.4" fill="${INK}">どの2個・どの1個・どの2個にするかの分け方</text>
+    <text x="${W / 2}" y="${H - 12}" text-anchor="middle" font-size="12.4" fill="${INK}">5! ÷ (2! × 1! × 2!) ＝ 30 通り</text>
+  </svg>`;
+  const cap = `5個のうち3番目（中央値）が x に来るときの例です。3つの組の確率を掛け、分け方の数 30 を掛けたものが密度になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.13：真ん中の密度と中央値のばらつき（分散1の正規分布と一様分布、n=25） ============
+function medianSpread(): string {
+  const W = 344, H = 340, n = 25, r3 = Math.sqrt(3);
+  const top: Box = { x: 14, y: 30, w: 316, h: 96, xMin: -2.6, xMax: 2.6, yMax: 0.46 };
+  const bot: Box = { x: 14, y: 196, w: 316, h: 106, xMin: -1.3, xMax: 1.3, yMax: 1.75 };
+  const fU = 1 / (2 * r3), fN = normPdf(0);
+  const sN = 1 / (2 * Math.sqrt(n) * fN), sU = 1 / (2 * Math.sqrt(n) * fU);
+  const uni = (b: Box) => `<polyline points="${f1(PX(b, -2.6))},${f1(PY(b, 0))} ${f1(PX(b, -r3))},${f1(PY(b, 0))} ${f1(PX(b, -r3))},${f1(PY(b, fU))} ${f1(PX(b, r3))},${f1(PY(b, fU))} ${f1(PX(b, r3))},${f1(PY(b, 0))} ${f1(PX(b, 2.6))},${f1(PY(b, 0))}" fill="none" stroke="#b45309" stroke-width="2" />`;
+  const svg = `${svgOpen(W, H, '分散が同じ1の正規分布と一様分布。真ん中の密度は正規分布0.40、一様分布0.29。25個の中央値の分布は、正規分布からのほうが細い')}
+    <text x="${top.x}" y="${top.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">元の分布（どちらも平均0・分散1）</text>
+    ${curve(top, (x) => normPdf(x), INDIGO)}
+    ${uni(top)}
+    <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fN))}" r="3.5" fill="${INDIGO}" />
+    <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fU))}" r="3.5" fill="#b45309" />
+    <text x="${f1(PX(top, 0.12))}" y="${f1(PY(top, fN) - 4)}" font-size="12.4" fill="${INDIGO}">f(m) = 0.40</text>
+    <text x="${f1(PX(top, 0.12))}" y="${f1(PY(top, fU) + 15)}" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
+    <text x="${f1(PX(top, -2.5))}" y="${f1(PY(top, 0.37))}" font-size="12.4" font-weight="700" fill="${INDIGO}">正規</text>
+    <text x="${f1(PX(top, 2.5))}" y="${f1(PY(top, 0.37))}" text-anchor="end" font-size="12.4" font-weight="700" fill="#b45309">一様</text>
+    ${axes(top, [-2, -1, 0, 1, 2])}
+    <text x="${bot.x}" y="${bot.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">25個の中央値 M の分布</text>
+    ${area(bot, (x) => normPdf(x, 0, sN), -1.96 * sN, 1.96 * sN, INDIGO, 0.12)}
+    ${curve(bot, (x) => normPdf(x, 0, sN), INDIGO)}
+    ${curve(bot, (x) => normPdf(x, 0, sU), '#b45309')}
+    <text x="${f1(PX(bot, 0.3))}" y="${f1(PY(bot, 1.5))}" font-size="12.4" fill="${INDIGO}">正規：標準偏差 ${f2(sN)}</text>
+    <text x="${f1(PX(bot, 0.62))}" y="${f1(PY(bot, 0.72))}" font-size="12.4" fill="#b45309">一様：${f2(sU)}</text>
+    ${axes(bot, [-1, -0.5, 0, 0.5, 1])}
+  </svg>`;
+  const cap = `分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。標準偏差は 1/(2√n f(m)) で、0.40 と 0.29 の比がそのまま幅の比になります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.14：尤度関数（10回中7回表） ============
 function likelihood(): string {
   const W = 350, H = 220;
@@ -2526,7 +2585,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
-  'f-order-stats': orderStats,
+  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,

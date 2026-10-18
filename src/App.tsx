@@ -502,17 +502,17 @@ function App() {
                   <tbody>
                     <tr>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>煮玉子</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>52, 48, 55, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>52, 48, 55, 51, 49, 50, 54, 47, 51, 53</td>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>51万円</td>
                     </tr>
                     <tr style={{ background: 'var(--bg-warm)' }}>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>チャーシュー</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>58, 61, 57, 60, 59…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>58, 61, 57, 60, 59, 60, 57, 61, 58, 59</td>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700, color: '#1d4ed8' }}>59万円</td>
                     </tr>
                     <tr>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>メンマ</td>
-                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>50, 52, 48, 51, 49…</td>
+                      <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)' }}>50, 52, 48, 51, 49, 50, 48, 52, 49, 51</td>
                       <td style={{ padding: '0.6rem 0.75rem', border: '1px solid var(--border)', fontWeight: 700 }}>50万円</td>
                     </tr>
                   </tbody>
