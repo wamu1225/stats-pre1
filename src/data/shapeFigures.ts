@@ -828,6 +828,41 @@ function transformStrips(): string {
 }
 
 // ============ 1.9：条件付き分布（身長と体重・ρ = 0.5） ============
+// 1.9：分散共分散行列のどこに何を置くか（行と列に X, Y を割り当てた表）と、図の2例への当てはめ
+function covMatrix(): string {
+  const W = 344, H = 300;
+  const sub = (s: string) => `<tspan baseline-shift="sub" font-size="9.5">${s}</tspan>`;
+  const sup = (s: string) => `<tspan baseline-shift="super" font-size="9.5">${s}</tspan>`;
+  const V = '#e0e7ff', C = '#fef3c7';
+  const cell = (x: number, y: number, w: number, h: number, fill: string, lines: string[], col: string, fs = 12.4) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${SLATE}" stroke-width="1" />` +
+    lines.map((t, i) => `<text x="${x + w / 2}" y="${f1(y + h / 2 + (i - (lines.length - 1) / 2) * 17 + 4.5)}" text-anchor="middle" font-size="${fs}" font-weight="700" fill="${col}">${t}</text>`).join('');
+  // 上：一般形
+  const gx = 64, gy = 36, cw = 130, ch = 56;
+  const top = `
+    <text x="${gx + cw / 2}" y="${gy - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">列 X</text>
+    <text x="${gx + cw * 1.5}" y="${gy - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">列 Y</text>
+    <text x="${gx - 8}" y="${gy + ch / 2 + 4.5}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INK}">行 X</text>
+    <text x="${gx - 8}" y="${gy + ch * 1.5 + 4.5}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INK}">行 Y</text>
+    ${cell(gx, gy, cw, ch, V, ['X の分散', `σ${sub('X')}${sup('2')}`], INDIGO)}
+    ${cell(gx + cw, gy, cw, ch, C, ['X と Y の共分散', `ρσ${sub('X')}σ${sub('Y')}`], AMBER)}
+    ${cell(gx, gy + ch, cw, ch, C, ['Y と X の共分散', `ρσ${sub('X')}σ${sub('Y')}`], AMBER)}
+    ${cell(gx + cw, gy + ch, cw, ch, V, ['Y の分散', `σ${sub('Y')}${sup('2')}`], INDIGO)}
+    <text x="${W / 2}" y="${gy + ch * 2 + 20}" text-anchor="middle" font-size="12" fill="${SLATE}">行と列の交わるマスに、その2つの組み合わせの値を書く</text>`;
+  // 下：図の2例（分散1なので共分散＝ρ）
+  const ey = 214, ew = 52, eh = 30;
+  const ex = (x0: number, title: string, r: string) => `
+    <text x="${x0 + ew}" y="${ey - 10}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
+    ${cell(x0, ey, ew, eh, V, ['1'], INDIGO, 13)}${cell(x0 + ew, ey, ew, eh, C, [r], AMBER, 13)}
+    ${cell(x0, ey + eh, ew, eh, C, [r], AMBER, 13)}${cell(x0 + ew, ey + eh, ew, eh, V, ['1'], INDIGO, 13)}`;
+  const svg = `${svgOpen(W, H, '分散共分散行列の並べ方。行と列にXとYを割り当て、対角に分散、右上と左下に共分散を置く。下に相関0と相関0.7の例')}
+    ${top}
+    ${ex(40, '左の図（相関0）', '0')}${ex(200, '右の図（相関0.7）', '0.7')}
+  </svg>`;
+  const cap = '藍のマス（左上と右下）が分散、橙のマス（右上と左下）が共分散です。最初の散布図の2つは分散がどちらも1なので、共分散は ρ×1×1 で相関係数そのものになります。';
+  return fig(svg, cap);
+}
+
 function conditionalNormal(): string {
   const W = 344, H = 262;
   const mx = 170, sx = 6, my = 65, sy = 8, rho = 0.5;
@@ -2486,7 +2521,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-overfit': overfit,
-  'f-bivariate': bivariateNormal, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-return-level': returnLevel, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
+  'f-bivariate': bivariateNormal, 'f-cov-matrix': covMatrix, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-return-level': returnLevel, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
