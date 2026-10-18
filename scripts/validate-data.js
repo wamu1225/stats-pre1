@@ -66,6 +66,18 @@ function checkFile(filePath) {
     }
   }
 
+  // 2e. Correct-answer position: no module may put 5 or more of its 10 answers in one position
+  //     (2026-10-18: 1.9c had 8 at the first option, 1.9b had 7).
+  if (filePath.includes('modules.ts')) {
+    const starts = [...raw.matchAll(/\{id:`([^`]+)`,updatedAt/g)];
+    starts.forEach((m, k) => {
+      const block = raw.slice(m.index, k + 1 < starts.length ? starts[k + 1].index : raw.length);
+      const cnt = [0, 0, 0, 0];
+      for (const a of block.matchAll(/correctAnswer:(\d)/g)) cnt[+a[1]]++;
+      if (Math.max(...cnt) >= 5) errors.push(`[Error] ${m[1]} has ${Math.max(...cnt)} correct answers at one position (${cnt.join(' ')}). Spread them out.`);
+    });
+  }
+
   // 3. Quiz count check
   if (filePath.includes('modules.ts')) {
     const moduleMatches = raw.match(/\{\s*id:[\s\S]*?quiz:\s*\[([\s\S]*?)\]\s*\}/g);
