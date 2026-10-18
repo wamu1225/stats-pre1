@@ -1541,7 +1541,7 @@ function medianSpread(): string {
     <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fN))}" r="3.5" fill="${INDIGO}" />
     <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fU))}" r="3.5" fill="#b45309" />
     <text x="${f1(PX(top, 0.12))}" y="${f1(PY(top, fN) - 4)}" font-size="12.4" fill="${INDIGO}">f(m) = 0.40</text>
-    <text x="${f1(PX(top, -0.12))}" y="${f1(PY(top, fU) + 15)}" text-anchor="end" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
+    <text x="${f1(PX(top, 0))}" y="${f1(PY(top, 0.12))}" text-anchor="middle" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
     <text x="${f1(PX(top, -2.5))}" y="${f1(PY(top, 0.37))}" font-size="12.4" font-weight="700" fill="${INDIGO}">正規</text>
     <text x="${f1(PX(top, 2.5))}" y="${f1(PY(top, 0.37))}" text-anchor="end" font-size="12.4" font-weight="700" fill="#b45309">一様</text>
     ${axes(top, [-2, -1, 0, 1, 2])}
