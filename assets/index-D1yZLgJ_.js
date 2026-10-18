@@ -609,21 +609,21 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${I(U(n,.3))}" y="${I(W(n,1.5))}" font-size="12.4" fill="${A}">正規：標準偏差 ${L(a)}</text>
     <text x="${I(U(n,.62))}" y="${I(W(n,.72))}" font-size="12.4" fill="#b45309">一様：${L(o)}</text>
     ${G(n,[-1,-.5,0,.5,1])}
-  </svg>`,`分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。標準偏差は 1/(2√n f(m)) なので、f(m) が 0.40 と 0.29 なら、25個の中央値の標準偏差は 0.25 と 0.35 です。`)}function Pt(){let e=6.25/2.25,t=2.101,n=1/t,r={x:14,y:30,w:316,h:120,xMin:0,xMax:3,yMax:1.25},i=Dt(29,29),a={x:14,y:196,w:316,h:60,xMin:0,xMax:7,yMax:1},o=a.y+a.h;return J(`${Y(344,312,`F(29,29) 分布の両側2.5%点は0.48と2.10。標本分散の比2.78をそれぞれで割ると、母分散の比の95%信頼区間は1.32から5.84で、1を含まない`)}
-    <text x="${r.x}" y="${r.y-12}" font-size="12.4" font-weight="700" fill="${F}">F(29, 29) の両側に 2.5% ずつ</text>
-    ${q(r,i,.01,n,N,.4)}${q(r,i,t,3,N,.4)}${K(r,i,A,.01,3,2.2)}
-    <text x="${I(U(r,n))}" y="${I(W(r,.42))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">0.48</text>
-    <text x="${I(U(r,t))}" y="${I(W(r,.32))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">2.10</text>
-    ${G(r,[0,1,2,3])}
-    <text x="${a.x}" y="${a.y-12}" font-size="12.4" font-weight="700" fill="${F}">母分散の比 σ₁²/σ₂² の95%信頼区間</text>
-    <line x1="${I(U(a,1))}" y1="${a.y+4}" x2="${I(U(a,1))}" y2="${o}" stroke="${P}" stroke-width="1.2" stroke-dasharray="3 3" />
-    <text x="${I(U(a,1))}" y="${a.y}" text-anchor="middle" font-size="12.4" fill="${P}">比が1＝等しい</text>
-    <line x1="${I(U(a,e/t))}" y1="${o-22}" x2="${I(U(a,e*t))}" y2="${o-22}" stroke="${M}" stroke-width="4" stroke-linecap="round" />
-    <circle cx="${I(U(a,e))}" cy="${o-22}" r="5" fill="${F}" />
-    <text x="${I(U(a,e))}" y="${o-32}" text-anchor="middle" font-size="12.4" fill="${F}">2.78</text>
-    <text x="${I(U(a,e/t))}" y="${o-32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">1.32</text>
-    <text x="${I(U(a,e*t))}" y="${o-32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">5.84</text>
-    ${G(a,[0,1,2,3,4,5,6,7])}
+  </svg>`,`分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。標準偏差は 1/(2√n f(m)) なので、f(m) が 0.40 と 0.29 なら、25個の中央値の標準偏差は 0.25 と 0.35 です。`)}function Pt(){let e=6.25/2.25,t=2.101;1/t;let n={x:14,y:30,w:316,h:120,xMin:0,xMax:3,yMax:1.25},r=Dt(29,29),i={x:14,y:206,w:316,h:54,xMin:0,xMax:7,yMax:1},a=i.y+i.h;return J(`${Y(344,312,`F(29,29) 分布の両側2.5%点は0.48と2.10。標本分散の比2.78をそれぞれで割ると、母分散の比の95%信頼区間は1.32から5.84で、1を含まない`)}
+    <text x="${n.x}" y="${n.y-12}" font-size="12.4" font-weight="700" fill="${F}">F(29, 29) の両側に 2.5% ずつ</text>
+    ${q(n,r,.01,.47596382674916704,N,.4)}${q(n,r,t,3,N,.4)}${K(n,r,A,.01,3,2.2)}
+    <text x="${I(U(n,.4))}" y="${I(W(n,.22))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${N}">0.48</text>
+    <text x="${I(U(n,t))}" y="${I(W(n,.32))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">2.10</text>
+    ${G(n,[0,1,2,3])}
+    <text x="${i.x}" y="${i.y-12}" font-size="12.4" font-weight="700" fill="${F}">母分散の比 σ₁²/σ₂² の95%信頼区間</text>
+    <line x1="${I(U(i,1))}" y1="${i.y-4}" x2="${I(U(i,1))}" y2="${a}" stroke="${P}" stroke-width="1.2" stroke-dasharray="3 3" />
+    <text x="${I(U(i,1)+5)}" y="${i.y+6}" font-size="12.4" fill="${P}">比が1＝等しい</text>
+    <line x1="${I(U(i,e/t))}" y1="${a-22}" x2="${I(U(i,e*t))}" y2="${a-22}" stroke="${M}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${I(U(i,e))}" cy="${a-22}" r="5" fill="${F}" />
+    <text x="${I(U(i,e))}" y="${a-32}" text-anchor="middle" font-size="12.4" fill="${F}">2.78</text>
+    <text x="${I(U(i,e/t))}" y="${a-32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">1.32</text>
+    <text x="${I(U(i,e*t))}" y="${a-32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">5.84</text>
+    ${G(i,[0,1,2,3,4,5,6,7])}
     <text x="${344/2}" y="308" text-anchor="middle" font-size="12.4" fill="${P}">黒丸＝標本分散の比 2.5² / 1.5² ＝ 2.78</text>
   </svg>`,`標本分散の比 2.78 を、上の図の 2.10 で割ると下端 1.32、0.48 で割ると上端 5.84 です。区間は 2.78 の左右で長さが違い、比が1の点線を含みません。`)}function Ft(){let e={x:30,y:24,w:304,h:150,xMin:0,xMax:1,yMax:1.08},t=(e,t)=>n=>Math.exp(t*Math.log(n)+(e-t)*Math.log(1-n)-(t*Math.log(t/e)+(e-t)*Math.log(1-t/e)));return J(`${Y(350,220,`尤度関数：10回中7回表なら p=0.7 で最大、100回中70回なら同じ場所でずっと鋭い山になる`)}
     ${G(e,[0,.2,.4,.6,.8,1])}
