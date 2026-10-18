@@ -1541,19 +1541,18 @@ function medianSpread(): string {
     <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fN))}" r="3.5" fill="${INDIGO}" />
     <circle cx="${f1(PX(top, 0))}" cy="${f1(PY(top, fU))}" r="3.5" fill="#b45309" />
     <text x="${f1(PX(top, 0.12))}" y="${f1(PY(top, fN) - 4)}" font-size="12.4" fill="${INDIGO}">f(m) = 0.40</text>
-    <text x="${f1(PX(top, 0.12))}" y="${f1(PY(top, fU) + 15)}" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
+    <text x="${f1(PX(top, -0.12))}" y="${f1(PY(top, fU) + 15)}" text-anchor="end" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
     <text x="${f1(PX(top, -2.5))}" y="${f1(PY(top, 0.37))}" font-size="12.4" font-weight="700" fill="${INDIGO}">正規</text>
     <text x="${f1(PX(top, 2.5))}" y="${f1(PY(top, 0.37))}" text-anchor="end" font-size="12.4" font-weight="700" fill="#b45309">一様</text>
     ${axes(top, [-2, -1, 0, 1, 2])}
     <text x="${bot.x}" y="${bot.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">25個の中央値 M の分布</text>
-    ${area(bot, (x) => normPdf(x, 0, sN), -1.96 * sN, 1.96 * sN, INDIGO, 0.12)}
     ${curve(bot, (x) => normPdf(x, 0, sN), INDIGO)}
     ${curve(bot, (x) => normPdf(x, 0, sU), '#b45309')}
     <text x="${f1(PX(bot, 0.3))}" y="${f1(PY(bot, 1.5))}" font-size="12.4" fill="${INDIGO}">正規：標準偏差 ${f2(sN)}</text>
     <text x="${f1(PX(bot, 0.62))}" y="${f1(PY(bot, 0.72))}" font-size="12.4" fill="#b45309">一様：${f2(sU)}</text>
     ${axes(bot, [-1, -0.5, 0, 0.5, 1])}
   </svg>`;
-  const cap = `分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。標準偏差は 1/(2√n f(m)) で、0.40 と 0.29 の比がそのまま幅の比になります。`;
+  const cap = `分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。標準偏差は 1/(2√n f(m)) なので、f(m) が 0.40 と 0.29 なら、25個の中央値の標準偏差は 0.25 と 0.35 です。`;
   return fig(svg, cap);
 }
 
