@@ -1556,6 +1556,34 @@ function medianSpread(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.17：母分散の比の信頼区間（n₁ = n₂ = 30、s₁ = 2.5、s₂ = 1.5） ============
+function varRatioCi(): string {
+  const W = 344, H = 312, df = 29, r = 6.25 / 2.25, hi = 2.101, lo = 1 / hi;
+  const top: Box = { x: 14, y: 30, w: 316, h: 120, xMin: 0, xMax: 3, yMax: 1.25 };
+  const f = fPdf(df, df);
+  const nl: Box = { x: 14, y: 196, w: 316, h: 60, xMin: 0, xMax: 7, yMax: 1 };
+  const yL = nl.y + nl.h;
+  const svg = `${svgOpen(W, H, 'F(29,29) 分布の両側2.5%点は0.48と2.10。標本分散の比2.78をそれぞれで割ると、母分散の比の95%信頼区間は1.32から5.84で、1を含まない')}
+    <text x="${top.x}" y="${top.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">F(29, 29) の両側に 2.5% ずつ</text>
+    ${area(top, f, 0.01, lo, ROSE, 0.4)}${area(top, f, hi, 3, ROSE, 0.4)}${curve(top, f, INDIGO, 0.01, 3, 2.2)}
+    <text x="${f1(PX(top, lo))}" y="${f1(PY(top, 0.42))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">0.48</text>
+    <text x="${f1(PX(top, hi))}" y="${f1(PY(top, 0.32))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.10</text>
+    ${axes(top, [0, 1, 2, 3])}
+    <text x="${nl.x}" y="${nl.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">母分散の比 σ₁²/σ₂² の95%信頼区間</text>
+    <line x1="${f1(PX(nl, 1))}" y1="${nl.y + 4}" x2="${f1(PX(nl, 1))}" y2="${yL}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="3 3" />
+    <text x="${f1(PX(nl, 1))}" y="${nl.y}" text-anchor="middle" font-size="12.4" fill="${SLATE}">比が1＝等しい</text>
+    <line x1="${f1(PX(nl, r / hi))}" y1="${yL - 22}" x2="${f1(PX(nl, r * hi))}" y2="${yL - 22}" stroke="${TEAL}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${f1(PX(nl, r))}" cy="${yL - 22}" r="5" fill="${INK}" />
+    <text x="${f1(PX(nl, r))}" y="${yL - 32}" text-anchor="middle" font-size="12.4" fill="${INK}">2.78</text>
+    <text x="${f1(PX(nl, r / hi))}" y="${yL - 32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">1.32</text>
+    <text x="${f1(PX(nl, r * hi))}" y="${yL - 32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">5.84</text>
+    ${axes(nl, [0, 1, 2, 3, 4, 5, 6, 7])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">黒丸＝標本分散の比 2.5² / 1.5² ＝ 2.78</text>
+  </svg>`;
+  const cap = `標本分散の比 2.78 を、上の図の 2.10 で割ると下端 1.32、0.48 で割ると上端 5.84 です。区間は 2.78 の左右で長さが違い、比が1の点線を含みません。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.14：尤度関数（10回中7回表） ============
 function likelihood(): string {
   const W = 350, H = 220;
@@ -2584,7 +2612,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
-  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread,
+  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
