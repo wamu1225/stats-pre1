@@ -55,6 +55,17 @@ function checkFile(filePath) {
     errors.push(`[Error] \\underbrace used ${ub} time(s) in ${filePath}. Write the formula plainly and explain each term in a list below it.`);
   }
 
+  // 2d. Inline math opened with $$ inside one string (e.g. a quiz option `$$\\log …$`): each template literal
+  //     must hold an even number of single $ once $$ pairs are removed (2026-10-18 3.5 sur1).
+  for (const m of raw.matchAll(/`((?:[^`\\]|\\.)*)`/g)) {
+    if (m[1].includes('${')) continue; // JS interpolation, not content
+    const singles = (m[1].replace(/\$\$/g, '').match(/\$/g) || []).length;
+    if (singles % 2) {
+      const lineNum = raw.slice(0, m.index).split('\n').length;
+      errors.push(`[Error] Odd number of single '$' in one string (inline $$?) at ${filePath}:${lineNum}`);
+    }
+  }
+
   // 3. Quiz count check
   if (filePath.includes('modules.ts')) {
     const moduleMatches = raw.match(/\{\s*id:[\s\S]*?quiz:\s*\[([\s\S]*?)\]\s*\}/g);
@@ -115,6 +126,13 @@ function checkFile(filePath) {
     // 5. Unpaired $
     if ((contentLine.match(/\$/g) || []).length % 2 !== 0) {
       errors.push(`[Error] Unpaired '$' symbol at ${filePath}:${lineNum}`);
+    }
+
+    // 5b. A variable lost from inline math: a superscript/subscript with no base, or a line opening with "= ".
+    //     Seen when text written through an unquoted shell heredoc expanded `$k` and `$Z` to empty
+    //     (2026-10-18 1.12: "$k = 1$ … $Z^2$" became " = 1$ … ^2$"). The $ count stayed even, so 5 missed it.
+    if (/(^|[ 　、。（])[\^_][{0-9a-zA-Z]/.test(contentLine) || /^ ?= /.test(contentLine)) {
+      errors.push(`[Error] Math with a missing variable (bare ^, _ or leading "=") at ${filePath}:${lineNum}`);
     }
 
     // 6. Supported Markdown Check
