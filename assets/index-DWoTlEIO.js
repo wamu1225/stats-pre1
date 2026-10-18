@@ -599,7 +599,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <circle cx="${I(U(t,0))}" cy="${I(W(t,i))}" r="3.5" fill="${A}" />
     <circle cx="${I(U(t,0))}" cy="${I(W(t,r))}" r="3.5" fill="#b45309" />
     <text x="${I(U(t,.12))}" y="${I(W(t,i)-4)}" font-size="12.4" fill="${A}">f(m) = 0.40</text>
-    <text x="${I(U(t,-.12))}" y="${I(W(t,r)+15)}" text-anchor="end" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
+    <text x="${I(U(t,0))}" y="${I(W(t,.12))}" text-anchor="middle" font-size="12.4" fill="#b45309">f(m) = 0.29</text>
     <text x="${I(U(t,-2.5))}" y="${I(W(t,.37))}" font-size="12.4" font-weight="700" fill="${A}">正規</text>
     <text x="${I(U(t,2.5))}" y="${I(W(t,.37))}" text-anchor="end" font-size="12.4" font-weight="700" fill="#b45309">一様</text>
     ${G(t,[-2,-1,0,1,2])}
