@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>標本分布の相互関係（t 分布・カイ二乗分布・F 分布） | 統計検定 準1級 学習リファレンス</title>
-    <meta name="description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。" />
-    <meta property="og:title" content="標本分布の相互関係（t 分布・カイ二乗分布・F 分布） | 統計検定 準1級 学習リファレンス" />
-    <meta property="og:description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。" />
+    <title>標本分布：t 分布・カイ二乗分布・F 分布・非心分布 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。本当に差があるときに使う非心分布も扱います。" />
+    <meta property="og:title" content="標本分布：t 分布・カイ二乗分布・F 分布・非心分布 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。本当に差があるときに使う非心分布も扱います。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://study-apps.com/stats-pre1/1.12-sampling/" />
     <link rel="canonical" href="https://study-apps.com/stats-pre1/1.12-sampling/" />
     <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="標本分布の相互関係（t 分布・カイ二乗分布・F 分布） | 統計検定 準1級 学習リファレンス" />
-    <meta name="twitter:description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。" />
+    <meta name="twitter:title" content="標本分布：t 分布・カイ二乗分布・F 分布・非心分布 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。本当に差があるときに使う非心分布も扱います。" />
     <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
     <!-- Google tag (gtag.js) -->
@@ -54,16 +54,16 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-C7ZgbF6N.js"></script>
+    <script type="module" crossorigin src="../assets/index-CJ3nkufk.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
     <link rel="modulepreload" crossorigin href="../assets/recharts-BprmY7hJ.js">
     <link rel="modulepreload" crossorigin href="../assets/katex-kEq3Onh-.js">
     <link rel="stylesheet" crossorigin href="../assets/katex-6Z4ESKbG.css">
-    <link rel="stylesheet" crossorigin href="../assets/index-B2sLHsIr.css">
+    <link rel="stylesheet" crossorigin href="../assets/index-BQ-mZ0C2.css">
   <meta name="robots" content="index, follow" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"標本分布の相互関係（t 分布・カイ二乗分布・F 分布）","item":"https://study-apps.com/stats-pre1/1.12-sampling/"}]},{"@context":"https://schema.org","@type":"Article","headline":"標本分布の相互関係（t 分布・カイ二乗分布・F 分布）","description":"母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。","url":"https://study-apps.com/stats-pre1/1.12-sampling/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"分布において、自由度を無限大に大きくしたときに近づく分布は？","acceptedAnswer":{"@type":"Answer","text":"標準正規分布"}},{"@type":"Question","name":"独立な  個の標準正規変数を二乗して足し合わせたものが従う分布は？","acceptedAnswer":{"@type":"Answer","text":"自由度 n のカイ二乗分布"}},{"@type":"Question","name":"F分布  の逆数が従う分布は？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第5章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"標本分布：t 分布・カイ二乗分布・F 分布・非心分布","item":"https://study-apps.com/stats-pre1/1.12-sampling/"}]},{"@context":"https://schema.org","@type":"Article","headline":"標本分布：t 分布・カイ二乗分布・F 分布・非心分布","description":"母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。本当に差があるときに使う非心分布も扱います。","url":"https://study-apps.com/stats-pre1/1.12-sampling/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"分布において、自由度を無限大に大きくしたときに近づく分布は？","acceptedAnswer":{"@type":"Answer","text":"標準正規分布"}},{"@type":"Question","name":"独立な  個の標準正規変数を二乗して足し合わせたものが従う分布は？","acceptedAnswer":{"@type":"Answer","text":"自由度 n のカイ二乗分布"}},{"@type":"Question","name":"F分布  の逆数が従う分布は？","acceptedAnswer":{"@type":"Answer","text":""}}]}]</script>
   </head>
   <body>
     <div id="root"><div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
@@ -72,8 +72,8 @@
     <a href="/stats-pre1/1.11-lln-clt/" style="color:#2563eb;text-decoration:none">← 大数の法則と中心極限定理</a>
     <a href="/stats-pre1/1.13-sufficient-stats/" style="color:#2563eb;text-decoration:none">十分統計量と順序統計量 →</a>
   </nav>
-  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">標本分布の相互関係（t 分布・カイ二乗分布・F 分布）</h1>
-  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。</p>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">標本分布：t 分布・カイ二乗分布・F 分布・非心分布</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">母分散が分からないときに平均や分散の確率を計算する t 分布・カイ二乗分布・F 分布を、標準正規分布からの組み立てと自由度による形の変化で学びます。本当に差があるときに使う非心分布も扱います。</p>
   <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
 <p class="content-p">母集団の標準偏差 <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span> が分からない、ふつうの場面で確率を計算するための3つの分布（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">χ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>・<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span>・<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span>）を学びます。読み終えると、次のことができるようになります。</p>
 <ul><li>工程のばらつきが大きくなったかを、10本の測定から判断する（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">χ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span> 分布）</li><li>10人の結果から、薬に効果があるかを判断する（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 分布）</li><li>2つのクラスの点数のばらつきが違うかを判断する（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 分布）</li></ul>
