@@ -322,7 +322,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${(e.x+e.w+t.x)/2}" y="${e.y+e.h/2+4}" text-anchor="middle" font-size="18" fill="${P}">→</text>
     <text x="${344/2}" y="214" text-anchor="middle" font-size="12.4" fill="${P}">4色の帯は、どれも面積（確率）0.25</text>
     <text x="${344/2}" y="231" text-anchor="middle" font-size="12.4" fill="${P}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
-  </svg>`,`0〜1の一様分布を4つの帯に分けて2乗しました。どの帯も面積0.25のままで、縮んだ帯は高く、広がった帯は低くなります。`)}function at(){let e=e=>`<tspan baseline-shift="sub" font-size="9.5">${e}</tspan>`,t=e=>`<tspan baseline-shift="super" font-size="9.5">${e}</tspan>`,n=`#e0e7ff`,r=`#fef3c7`,i=(e,t,n,r,i,a,o,s=12.4)=>`<rect x="${e}" y="${t}" width="${n}" height="${r}" fill="${i}" stroke="${P}" stroke-width="1" />`+a.map((i,c)=>`<text x="${e+n/2}" y="${I(t+r/2+(c-(a.length-1)/2)*17+4.5)}" text-anchor="middle" font-size="${s}" font-weight="700" fill="${o}">${i}</text>`).join(``),a=`
+  </svg>`,`X の値を4つの範囲に分け、それぞれの範囲の値を2乗した先へ移しました。X がその範囲に入る確率（帯の面積）は0.25のままなので、狭い範囲に移った帯は高く、広い範囲に移った帯は低くなります。`)}function at(){let e=e=>`<tspan baseline-shift="sub" font-size="9.5">${e}</tspan>`,t=e=>`<tspan baseline-shift="super" font-size="9.5">${e}</tspan>`,n=`#e0e7ff`,r=`#fef3c7`,i=(e,t,n,r,i,a,o,s=12.4)=>`<rect x="${e}" y="${t}" width="${n}" height="${r}" fill="${i}" stroke="${P}" stroke-width="1" />`+a.map((i,c)=>`<text x="${e+n/2}" y="${I(t+r/2+(c-(a.length-1)/2)*17+4.5)}" text-anchor="middle" font-size="${s}" font-weight="700" fill="${o}">${i}</text>`).join(``),a=`
     <text x="129" y="28" text-anchor="middle" font-size="12.4" font-weight="700" fill="${F}">列 X</text>
     <text x="259" y="28" text-anchor="middle" font-size="12.4" font-weight="700" fill="${F}">列 Y</text>
     <text x="56" y="68.5" text-anchor="end" font-size="12.4" font-weight="700" fill="${F}">行 X</text>
@@ -2149,7 +2149,9 @@ $$\\begin{aligned} f(\\mathbf{x}) &= \\frac{1}{(2\\pi)^{p/2}|\\Sigma|^{1/2}} \\\
 
 #### 確率（面積）は移しても変わらない
 
-0から1の一様分布に従う $X$ を2乗してみます。$X$ を4つの帯に分けて、それぞれを2乗した先へ移します。
+$X$ を「0から1のどの値も同じ出やすさで出る数」（0から1の一様分布）とします。たとえば一辺が $X$ メートルの正方形をでたらめな大きさで作ると、面積は $Y = X^2$ です。一辺の長さの出やすさが分かっているとき、面積はどの値が出やすいでしょうか。
+
+$X$ のとりうる値を4つの範囲（0〜0.25、0.25〜0.5、0.5〜0.75、0.75〜1）に分け、それぞれの範囲の値を2乗すると $Y$ のどこへ移るかを見ます。$X$ が0〜0.25 なら $Y$ は0〜0.0625 の狭い範囲に、$X$ が0.75〜1 なら $Y$ は約0.56〜1 の広い範囲に移ります。下の図の4色の帯が、この4つの範囲です。
 
 [[f-transform-strips]]
 
