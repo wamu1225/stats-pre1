@@ -1584,6 +1584,27 @@ function varRatioCi(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
+function poissonTest(): string {
+  const W = 340, H = 226, lam = 4, obs = 9;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: -0.5, xMax: 13.5, yMax: 0.22 };
+  const ks = range(0, 13);
+  let fact = 1;
+  const ps = ks.map((k) => { if (k > 0) fact *= k; return Math.exp(-lam) * lam ** k / fact; });
+  const tail = 1 - ps.slice(0, obs).reduce((s, p) => s + p, 0);
+  const svg = `${svgOpen(W, H, '平均4のポアソン分布。4件前後が最も出やすく、9件以上の棒を足すと約0.021で、これがP値')}
+    ${axes(b, [0, 2, 4, 6, 8, 10, 12])}
+    ${bars(b, ks.slice(0, obs), ps.slice(0, obs), INDIGO, 0.3)}${bars(b, ks.slice(obs), ps.slice(obs), ROSE, 0.3)}
+    <line x1="${f1(PX(b, obs - 0.5))}" y1="${b.y + 20}" x2="${f1(PX(b, obs - 0.5))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 11))}" y="${f1(PY(b, 0.075))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">9件以上の合計</text>
+    <text x="${f1(PX(b, 11))}" y="${f1(PY(b, 0.075) + 16)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">P値 ＝ ${tail.toFixed(3)}</text>
+    <text x="${f1(PX(b, 4))}" y="${b.y - 10}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">平均 λ ＝ 4 件</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 1年の事故の件数／高さ ＝ 確率（H₀: λ ＝ 4）</text>
+  </svg>`;
+  const cap = `年平均4件が正しいとしたときの、1年の事故の件数の分布です。今年の9件以上になる赤い棒をすべて足した約${(tail * 100).toFixed(1)}%が P値です。左右対称でなく、右に裾を引いている形にも注目します。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.14：尤度関数（10回中7回表） ============
 function likelihood(): string {
   const W = 350, H = 220;
@@ -1763,7 +1784,6 @@ function varianceEstimators(): string {
   const fH = (x: number) => n * chi(n * x);
   const mS = 1, mH = k / n;
   const vS = 2 / k, vH = (k / n) ** 2 * (2 / k);
-  const mseS = vS, mseH = vH + (mH - 1) ** 2;
   const svg = `${svgOpen(W, H, '正規分布から5個とったときの、不偏分散 S² と n で割った分散の分布。S² の平均は真の値1、n で割った方は0.8で、少し左にずれるが幅は狭い')}
     <line x1="${f1(PX(b, 1))}" y1="${b.y - 4}" x2="${f1(PX(b, 1))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${f1(PX(b, 1) + 4)}" y="${b.y + 4}" font-size="12.4" fill="${ROSE}">真の σ² = 1</text>
@@ -1775,7 +1795,7 @@ function varianceEstimators(): string {
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／軸の下の短い線＝分布の平均</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">正規分布から5個とった場合</text>
   </svg>`;
-  const cap = `S² は平均がちょうど1（不偏）ですが広く散らばり、n で割った方は平均 ${f2(mH)} と小さめで、幅は狭くなります。平均二乗誤差は S² が ${f2(mseS)}、n で割った方が ${f2(mseH)} です。`;
+  const cap = `S² は平均がちょうど1（不偏）ですが広く散らばり、n で割った方は平均 ${f2(mH)} と小さめで、幅は狭くなります。どちらが真の値に近いかは、下の平均二乗誤差で比べます。`;
   return fig(svg, cap);
 }
 
@@ -2612,7 +2632,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
-  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi,
+  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
