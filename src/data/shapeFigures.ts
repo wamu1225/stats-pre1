@@ -1584,6 +1584,121 @@ function varRatioCi(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.4：分位点関数（CDF を逆に読む） ============
+function quantileFn(): string {
+  const W = 340, H = 216;
+  const b: Box = { x: 34, y: 24, w: 290, h: 150, xMin: 0, xMax: 3.2, yMax: 1.05 };
+  const F = (x: number) => 1 - Math.exp(-x);
+  const pts = [{ p: 0.5, c: TEAL }, { p: 0.9, c: ROSE }].map((o) => ({ ...o, x: -Math.log(1 - o.p) }));
+  const svg = `${svgOpen(W, H, '指数分布の累積分布関数を逆に読む。確率0.5から横へ進むと0.69年、確率0.9からだと2.30年')}
+    <line x1="${b.x}" y1="${b.y + b.h}" x2="${b.x + b.w}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" />
+    <line x1="${b.x}" y1="${b.y}" x2="${b.x}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" />
+    <text x="${b.x - 6}" y="${f1(PY(b, 1) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1</text>
+    <text x="${b.x - 6}" y="${f1(PY(b, 0) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">0</text>
+    ${curve(b, F, AMBER, 0, 3.2, 2.2)}
+    ${pts.map(({ p, c, x }) => `
+    <line x1="${b.x}" y1="${f1(PY(b, p))}" x2="${f1(PX(b, x))}" y2="${f1(PY(b, p))}" stroke="${c}" stroke-width="1.6" stroke-dasharray="5 3" />
+    <line x1="${f1(PX(b, x))}" y1="${f1(PY(b, p))}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.6" stroke-dasharray="5 3" />
+    <polygon points="${f1(PX(b, x) - 4)},${b.y + b.h - 8} ${f1(PX(b, x) + 4)},${b.y + b.h - 8} ${f1(PX(b, x))},${b.y + b.h - 1}" fill="${c}" />
+    <circle cx="${f1(PX(b, x))}" cy="${f1(PY(b, p))}" r="3.2" fill="${c}" />
+    <text x="${b.x - 6}" y="${f1(PY(b, p) + 4)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${c}">${p}</text>
+    <text x="${f1(PX(b, x))}" y="${b.y + b.h + 15}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${c}">${f2(x)}</text>`).join('')}
+    <text x="${f1(PX(b, 2.45))}" y="${f1(PY(b, 0.8))}" font-size="12.4" font-weight="700" fill="#b45309">F(x)</text>
+    <text x="${f1(PX(b, 0.72) + 6)}" y="${f1(PY(b, 0.5) + 16)}" font-size="12.4" fill="${TEAL}">中央値</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 故障までの年数／縦軸 ＝ 確率 F(x)</text>
+  </svg>`;
+  const cap = `確率 p から横へ進んで曲線に当て、真下の x を読むのが分位点関数です。p ＝ 0.5 なら中央値の ${f2(pts[0].x)} 年、p ＝ 0.9 なら ${f2(pts[1].x)} 年です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.15：n−1 で割る理由（データ自身の平均からのずれは小さい） ============
+function nMinus1(): string {
+  const W = 340, H = 246, xs = [11, 12, 13, 14, 15], mu = 10, xbar = 13;
+  const b: Box = { x: 20, y: 0, w: 300, h: 210, xMin: 9, xMax: 16, yMax: 1 };
+  const ss = (c: number) => xs.reduce((s, x) => s + (x - c) ** 2, 0);
+  const rows = (c: number, y0: number, col: string) => xs.map((x, i) => {
+    const y = y0 + i * 12;
+    return `<line x1="${f1(PX(b, c))}" y1="${y}" x2="${f1(PX(b, x))}" y2="${y}" stroke="${col}" stroke-width="2" stroke-opacity="0.55" /><circle cx="${f1(PX(b, x))}" cy="${y}" r="3.6" fill="${INK}" />`;
+  }).join('');
+  const vline = (c: number, y1: number, y2: number, col: string) => `<line x1="${f1(PX(b, c))}" y1="${y1}" x2="${f1(PX(b, c))}" y2="${y2}" stroke="${col}" stroke-width="1.5" stroke-dasharray="4 3" />`;
+  const svg = `${svgOpen(W, H, '5個のデータを真の平均10から測るとずれの2乗の和は55、データ自身の平均13から測ると10')}
+    <text x="4" y="18" font-size="12.4" font-weight="700" fill="${ROSE}">真の平均 μ ＝ ${mu} から：2乗の和 ${ss(mu)}</text>
+    ${vline(mu, 28, 92, ROSE)}${rows(mu, 36, ROSE)}
+    <text x="4" y="118" font-size="12.4" font-weight="700" fill="${INDIGO}">標本平均 x̄ ＝ ${xbar} から：2乗の和 ${ss(xbar)}</text>
+    ${vline(xbar, 128, 192, INDIGO)}${rows(xbar, 136, INDIGO)}
+    ${axes(b, [9, 10, 11, 12, 13, 14, 15, 16])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差 ${ss(mu) - ss(xbar)} ＝ 5 ×（13 − 10）² ＝ n(x̄ − μ)²</text>
+  </svg>`;
+  const cap = `5個のデータ（11〜15）のずれを、真の平均 μ ＝ 10 から測った場合と、データ自身の平均 x̄ ＝ 13 から測った場合です。x̄ はデータの真ん中にあるので、2乗の和はほかのどの点から測るより小さくなります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.16：標本平均の95%が入る範囲（σ 既知・身長の例） ============
+function ciZ(): string {
+  const W = 340, H = 226, se = 1.2, m = 1.96 * se;
+  const b: Box = { x: 14, y: 34, w: 312, h: 140, xMin: -4.5, xMax: 4.5, yMax: 0.36 };
+  const f = (x: number) => normPdf(x, 0, se);
+  const base = b.y + b.h;
+  const tick = (x: number, t: string, c: string) => `<line x1="${f1(PX(b, x))}" y1="${base}" x2="${f1(PX(b, x))}" y2="${base + 4}" stroke="${c}" stroke-width="1.2" /><text x="${f1(PX(b, x))}" y="${base + 17}" text-anchor="middle" font-size="12.4" fill="${c}">${t}</text>`;
+  const svg = `${svgOpen(W, H, '25人の平均身長の分布。真の平均から上下2.35cmの内側に95%が入り、外側は左右2.5%ずつ')}
+    ${area(b, f, -m, m, INDIGO, 0.22)}${area(b, f, -4.5, -m, ROSE, 0.45)}${area(b, f, m, 4.5, ROSE, 0.45)}
+    ${curve(b, f, INDIGO, -4.5, 4.5, 2.2)}
+    <line x1="${b.x}" y1="${base}" x2="${b.x + b.w}" y2="${base}" stroke="${SLATE}" stroke-width="1" />
+    ${[-m, m].map((x) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 14)}" x2="${f1(PX(b, x))}" y2="${base}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />`).join('')}
+    ${tick(-m, 'μ − 2.35', ROSE)}${tick(0, 'μ', INK)}${tick(m, 'μ ＋ 2.35', ROSE)}
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.1))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, -3.5))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, 3.5))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">25人の平均 X̄ の分布（標準誤差 6/√25 ＝ 1.2 cm）</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">±2.35 ＝ 1.96 × 1.2（1.96 は標準正規分布で中央95%の端）</text>
+  </svg>`;
+  const cap = `25人の平均 X̄ は、真の平均 μ を中心に標準誤差 1.2 cm で散らばります。μ から ±2.35 cm の内側に95%が入り、外側に出るのは左右2.5%ずつです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.16：信頼区間の被覆（コンピュータで20回くり返した模擬） ============
+function ciCoverage(): string {
+  const W = 340, H = 244, mu = 171, se = 1.2, m = 1.96 * se, n = 20;
+  const b: Box = { x: 14, y: 30, w: 312, h: 176, xMin: 165, xMax: 177, yMax: 1 };
+  const g = gaussFrom(mulberry32(1016));
+  const xb = Array.from({ length: n }, () => mu + se * g());
+  const miss = xb.filter((x) => Math.abs(x - mu) > m).length;
+  const svg = `${svgOpen(W, H, `25人を測って95%信頼区間を作ることを20回くり返した模擬。20本中${miss}本が真の平均を外す`)}
+    <line x1="${f1(PX(b, mu))}" y1="22" x2="${f1(PX(b, mu))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.5" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, mu))}" y="15" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">真の平均 μ ＝ ${mu}（動かない）</text>
+    ${xb.map((x, i) => {
+      const y = b.y + 6 + i * 8.4, c = Math.abs(x - mu) > m ? ROSE : INDIGO;
+      return `<line x1="${f1(PX(b, x - m))}" y1="${f1(y)}" x2="${f1(PX(b, x + m))}" y2="${f1(y)}" stroke="${c}" stroke-width="2" /><circle cx="${f1(PX(b, x))}" cy="${f1(y)}" r="2.2" fill="${c}" />`;
+    }).join('')}
+    ${axes(b, [166, 168, 170, 172, 174, 176])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 身長（cm）／点 ＝ その回の x̄、横線 ＝ x̄ ± 2.35</text>
+  </svg>`;
+  const cap = `μ ＝ 171、σ ＝ 6 として、25人を測り区間を作ることをコンピュータで20回くり返しました。区間は標本ごとに左右に揺れ、20本中${miss}本が μ を外しています（赤）。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.16：母分散の信頼区間（自由度9のカイ二乗分布の中央95%） ============
+function ciChi2(): string {
+  const W = 340, H = 226, k = 9, lo = 2.7004, hi = 19.0228;
+  const b: Box = { x: 14, y: 30, w: 312, h: 144, xMin: 0, xMax: 26, yMax: 0.115 };
+  const f = chi2Pdf(k);
+  const base = b.y + b.h;
+  const svg = `${svgOpen(W, H, '自由度9のカイ二乗分布。2.70から19.02の間に95%が入り、左右に2.5%ずつ残る。山は左に寄っている')}
+    ${area(b, f, lo, hi, INDIGO, 0.22)}${area(b, f, 0.001, lo, ROSE, 0.5)}${area(b, f, hi, 26, ROSE, 0.5)}
+    ${curve(b, f, INDIGO, 0.01, 26, 2.2)}
+    ${[lo, hi].map((x) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 16)}" x2="${f1(PX(b, x))}" y2="${base}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />`).join('')}
+    ${axes(b, [0, 10])}
+    <text x="${f1(PX(b, lo))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.70</text>
+    <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
+    <text x="${f1(PX(b, 9))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9s²/σ²（自由度9のカイ二乗分布）</text>
+  </svg>`;
+  const cap = `ボルト10本の 9s²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。山の頂上は7で左に寄っているので、2つの端は頂上から等しい距離になりません。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -2633,6 +2748,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
