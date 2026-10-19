@@ -1978,7 +1978,7 @@ $$M_X(t) = \\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)$$
 
 上の点数の例で、合計点 $Z = X + Y$（$X \\sim N(60, 100)$、$Y \\sim N(55, 64)$、独立）が $N(115, 164)$ になることを確かめます。
 
-独立な変数の和のMGFは積になるので（$M_{X+Y}(t) = M_X(t) \\cdot M_Y(t)$）：
+上の2つ目の性質（独立な和のMGFは積）を使います。
 
 $$\\begin{aligned} M_Z(t) &= \\exp\\!\\left(60t + \\frac{100t^2}{2}\\right) \\\\ &\\quad \\times \\exp\\!\\left(55t + \\frac{64t^2}{2}\\right) \\\\ &= \\exp\\!\\left(115t + \\frac{164t^2}{2}\\right) \\end{aligned}$$
 
