@@ -823,7 +823,7 @@ function transformStrips(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">4色の帯は、どれも面積（確率）0.25</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
   </svg>`;
-  const cap = `0〜1の一様分布を4つの帯に分けて2乗しました。どの帯も面積0.25のままで、縮んだ帯は高く、広がった帯は低くなります。`;
+  const cap = `X の値を4つの範囲に分け、それぞれの範囲の値を2乗した先へ移しました。X がその範囲に入る確率（帯の面積）は0.25のままなので、狭い範囲に移った帯は高く、広い範囲に移った帯は低くなります。`;
   return fig(svg, cap);
 }
 
