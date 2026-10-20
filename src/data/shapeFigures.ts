@@ -1699,6 +1699,164 @@ function ciChi2(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.16：母比率の区間と人数（520/1000 と同じ 52% を 250人・4000人で） ============
+function ciPropN(): string {
+  const W = 340, H = 196, ph = 0.52;
+  const b: Box = { x: 70, y: 40, w: 256, h: 110, xMin: 0.44, xMax: 0.6, yMax: 1 };
+  const rows = [250, 1000, 4000].map((n, i) => {
+    const h = 1.96 * Math.sqrt((ph * (1 - ph)) / n), y = b.y + 18 + i * 36, c = ph - h > 0.5 ? TEAL : INDIGO;
+    return `<text x="${b.x - 8}" y="${y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">${n}人</text>
+    <line x1="${f1(PX(b, ph - h))}" y1="${y}" x2="${f1(PX(b, ph + h))}" y2="${y}" stroke="${c}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${f1(PX(b, ph))}" cy="${y}" r="4.5" fill="${INK}" />
+    <text x="${f1(Math.abs(ph - h - 0.5) < 0.015 ? PX(b, 0.5) + 4 : PX(b, ph - h))}" y="${y - 9}" text-anchor="${Math.abs(ph - h - 0.5) < 0.015 ? 'start' : 'middle'}" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${(ph - h).toFixed(3)}</text>
+    <text x="${f1(Math.abs(ph - h - 0.5) < 0.015 ? PX(b, ph + h) + 6 : PX(b, ph + h))}" y="${Math.abs(ph - h - 0.5) < 0.015 ? y + 4 : y - 9}" text-anchor="${Math.abs(ph - h - 0.5) < 0.015 ? 'start' : 'middle'}" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${(ph + h).toFixed(3)}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '標本比率0.52の95%信頼区間。250人と1000人では0.5をまたぎ、4000人では0.505から0.535で0.5を含まない')}
+    <line x1="${f1(PX(b, 0.5))}" y1="${b.y - 6}" x2="${f1(PX(b, 0.5))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 0.5))}" y="${b.y - 12}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">過半数の境目 0.5</text>
+    ${rows}
+    ${axes(b, [0.44, 0.48, 0.52, 0.56, 0.6])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">黒丸 ＝ 標本比率 0.52（どの人数でも同じ）</text>
+  </svg>`;
+  const cap = `標本比率が同じでも、聞いた人数で区間の幅が変わります。幅は人数の平方根に反比例するので、4倍の4000人に聞くと幅が半分になり、区間が0.5の右に収まります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.17：2つの平均の差の区間（パン工場 A・B、各30個） ============
+function ciDiff(): string {
+  const W = 340, H = 262, se1 = 2.5 / Math.sqrt(30), se2 = 1.5 / Math.sqrt(30), t29 = 2.045;
+  const se = Math.sqrt(se1 ** 2 + se2 ** 2), h = 2.012 * se;
+  const top: Box = { x: 70, y: 30, w: 256, h: 64, xMin: 46, xMax: 52, yMax: 1 };
+  const bot: Box = { x: 70, y: 158, w: 256, h: 50, xMin: -1, xMax: 4, yMax: 1 };
+  const row = (b: Box, y: number, m: number, hw: number, lab: string, c: string) => `
+    <text x="${b.x - 8}" y="${y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">${lab}</text>
+    <line x1="${f1(PX(b, m - hw))}" y1="${y}" x2="${f1(PX(b, m + hw))}" y2="${y}" stroke="${c}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${f1(PX(b, m))}" cy="${y}" r="4.5" fill="${INK}" />`;
+  const bl = bot.y + bot.h;
+  const svg = `${svgOpen(W, H, '工場Aの平均50.0gと工場Bの平均48.0gの区間、その下に差2.0gの95%信頼区間0.93から3.07。差の区間は0を含まない')}
+    <text x="4" y="16" font-size="12.4" font-weight="700" fill="${INK}">それぞれの平均（g）と95%区間</text>
+    ${row(top, top.y + 14, 50, t29 * se1, '工場A', INDIGO)}${row(top, top.y + 44, 48, t29 * se2, '工場B', AMBER)}
+    ${axes(top, [46, 48, 50, 52])}
+    <text x="4" y="${bot.y - 22}" font-size="12.4" font-weight="700" fill="${INK}">差 A − B の95%信頼区間</text>
+    <line x1="${f1(PX(bot, 0))}" y1="${bot.y - 10}" x2="${f1(PX(bot, 0))}" y2="${bl}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(bot, 0) + 5)}" y="${bot.y - 1}" font-size="12.4" fill="${ROSE}">差 0</text>
+    ${row(bot, bl - 20, 2, h, 'A − B', TEAL)}
+    <text x="${f1(PX(bot, 2 - h))}" y="${bl - 30}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">${f2(2 - h)}</text>
+    <text x="${f1(PX(bot, 2 + h))}" y="${bl - 30}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">${f2(2 + h)}</text>
+    ${axes(bot, [-1, 0, 1, 2, 3, 4])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差の標準誤差 ＝ √(${f2(se1)}² ＋ ${f2(se2)}²) ＝ ${f2(se)}</text>
+  </svg>`;
+  const cap = `差の区間の幅は、2つの区間の幅を足したものより狭くなります。標準誤差は足すのではなく、2乗して足してから平方根をとるからです。区間は0を含みません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.17：対応のあるデータ（6人の血圧の前後） ============
+function pairedDiff(): string {
+  const W = 340, H = 250, bef = [150, 138, 162, 145, 170, 155], aft = [144, 135, 154, 141, 163, 150];
+  const L: Box = { x: 40, y: 34, w: 130, h: 170, xMin: 0, xMax: 1, yMax: 1 };
+  const yv = (v: number) => L.y + L.h - ((v - 130) / 45) * L.h;
+  const R: Box = { x: 236, y: 34, w: 90, h: 170, xMin: 0, xMax: 1, yMax: 1 };
+  const yd = (v: number) => R.y + R.h - (v / 10) * R.h;
+  const d = bef.map((x, i) => x - aft[i]);
+  const lo = 5.5 - 1.963, hi = 5.5 + 1.963;
+  const svg = `${svgOpen(W, H, '6人の血圧の前後を線で結んだ図と、6人の下がり幅。人どうしの差は138から170と大きいが、下がり幅は3から8にまとまり、平均5.5の区間は3.54から7.46')}
+    <text x="${L.x + L.w / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">6人の前と後</text>
+    ${[130, 145, 160, 175].map((v) => `<text x="${L.x - 6}" y="${f1(yv(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text><line x1="${L.x}" y1="${f1(yv(v))}" x2="${L.x + L.w}" y2="${f1(yv(v))}" stroke="#e2e8f0" />`).join('')}
+    ${bef.map((x, i) => `<line x1="${L.x + 20}" y1="${f1(yv(x))}" x2="${L.x + L.w - 20}" y2="${f1(yv(aft[i]))}" stroke="${INDIGO}" stroke-width="1.6" /><circle cx="${L.x + 20}" cy="${f1(yv(x))}" r="3.4" fill="${INDIGO}" /><circle cx="${L.x + L.w - 20}" cy="${f1(yv(aft[i]))}" r="3.4" fill="${AMBER}" />`).join('')}
+    <text x="${L.x + 20}" y="${L.y + L.h + 16}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">前</text>
+    <text x="${L.x + L.w - 20}" y="${L.y + L.h + 16}" text-anchor="middle" font-size="12.4" fill="${AMBER}">後</text>
+    <text x="${R.x + R.w / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">下がり幅</text>
+    ${[0, 5, 10].map((v) => `<text x="${R.x - 6}" y="${f1(yd(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text><line x1="${R.x}" y1="${f1(yd(v))}" x2="${R.x + R.w}" y2="${f1(yd(v))}" stroke="#e2e8f0" />`).join('')}
+    ${d.map((v, i) => `<circle cx="${R.x + 18 + (i % 2) * 12}" cy="${f1(yd(v))}" r="3.6" fill="${TEAL}" />`).join('')}
+    <line x1="${R.x + 62}" y1="${f1(yd(lo))}" x2="${R.x + 62}" y2="${f1(yd(hi))}" stroke="${TEAL}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${R.x + 62}" cy="${f1(yd(5.5))}" r="4.5" fill="${INK}" />
+    <text x="${R.x + 62}" y="${f1(yd(hi) - 8)}" text-anchor="middle" font-size="12.4" fill="${TEAL}">${f2(hi)}</text>
+    <text x="${R.x + 62}" y="${f1(yd(lo) + 16)}" text-anchor="middle" font-size="12.4" fill="${TEAL}">${f2(lo)}</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸の単位 mmHg／右の縦線 ＝ 下がり幅の平均の95%区間</text>
+  </svg>`;
+  const cap = `左の6本の線は高さが大きく違いますが、どれも同じくらい右下がりです。人ごとに差をとると人どうしの違いが消え、右の下がり幅は3〜8にまとまります。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.17：両側の区間と片側の限界（標準正規分布で） ============
+function oneSided(): string {
+  const W = 340, H = 286;
+  const t: Box = { x: 14, y: 30, w: 312, h: 84, xMin: -3.6, xMax: 3.6, yMax: 0.42 };
+  const s: Box = { x: 14, y: 168, w: 312, h: 84, xMin: -3.6, xMax: 3.6, yMax: 0.42 };
+  const f = (x: number) => normPdf(x);
+  const cut = (b: Box, x: number, lab: string) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 12)}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" /><text x="${f1(PX(b, x))}" y="${b.y + b.h + 15}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">${lab}</text>`;
+  const base = (b: Box) => `<line x1="${b.x}" y1="${b.y + b.h}" x2="${b.x + b.w}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" />`;
+  const svg = `${svgOpen(W, H, '上は両側の区間で、左右の裾に2.5%ずつ残し端は±1.96。下は片側の限界で、右の裾だけに5%を残し端は1.645')}
+    <text x="4" y="16" font-size="12.4" font-weight="700" fill="${INK}">両側の区間：左右に 2.5% ずつ</text>
+    ${area(t, f, -1.96, 1.96, INDIGO, 0.2)}${area(t, f, -3.6, -1.96, ROSE, 0.5)}${area(t, f, 1.96, 3.6, ROSE, 0.5)}${curve(t, f, INDIGO, -3.6, 3.6, 2)}${base(t)}
+    ${cut(t, -1.96, '−1.96')}${cut(t, 1.96, '1.96')}
+    <text x="${f1(PX(t, 0))}" y="${f1(PY(t, 0.12))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="4" y="${s.y - 14}" font-size="12.4" font-weight="700" fill="${INK}">片側の限界：右だけに 5%</text>
+    ${area(s, f, -3.6, 1.645, INDIGO, 0.2)}${area(s, f, 1.645, 3.6, ROSE, 0.5)}${curve(s, f, INDIGO, -3.6, 3.6, 2)}${base(s)}
+    ${cut(s, 1.645, '1.645')}
+    <text x="${f1(PX(s, -0.3))}" y="${f1(PY(s, 0.12))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(s, 2.75))}" y="${f1(PY(s, 0.1))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">5%</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ (X̄ − μ) ÷ 標準誤差</text>
+  </svg>`;
+  const cap = `片側の限界は、外れる5%を片方の裾にまとめます。端が1.96から1.645に下がるので、「最低でもこれ以上」と言える値が、両側の区間の下端より内側に来ます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.17：母比率の区間の被覆確率（20人・正規近似の式） ============
+function waldCoverage(): string {
+  const W = 340, H = 236, n = 20;
+  const b: Box = { x: 40, y: 24, w: 286, h: 160, xMin: 0, xMax: 1, yMax: 1 };
+  const yc = (c: number) => b.y + b.h - c * b.h;
+  const cov = (p: number) => {
+    let c = 0;
+    for (let k = 0; k <= n; k++) {
+      const q = k / n, h = 1.96 * Math.sqrt((q * (1 - q)) / n);
+      if (q - h <= p && p <= q + h) c += binom(n, p, k);
+    }
+    return c;
+  };
+  const pts: string[] = [];
+  for (let i = 4; i <= 396; i++) { const p = i / 400; pts.push(`${f1(PX(b, p))},${f1(yc(cov(p)))}`); }
+  const c05 = cov(0.05);
+  const svg = `${svgOpen(W, H, `20人に聞いて正規近似の式で作った95%区間が、真の比率を含む割合。pが0.5付近では95%前後だが、pが0や1に近いと大きく下がり、p＝0.05で${pct(c05, 0)}`)}
+    ${[0, 0.5, 0.95].map((v) => `<text x="${b.x - 6}" y="${f1(yc(v) + 4)}" text-anchor="end" font-size="12.4" fill="${v === 0.95 ? ROSE : SLATE}">${pct(v, 0)}</text>`).join('')}
+    <line x1="${b.x}" y1="${f1(yc(0.95))}" x2="${b.x + b.w}" y2="${f1(yc(0.95))}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <line x1="${b.x}" y1="${b.y}" x2="${b.x}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" />
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${INDIGO}" stroke-width="1.4" />
+    <circle cx="${f1(PX(b, 0.05))}" cy="${f1(yc(c05))}" r="4" fill="${ROSE}" />
+    <text x="${f1(PX(b, 0.05) + 8)}" y="${f1(yc(c05) + 4)}" font-size="12.4" font-weight="700" fill="${ROSE}">p ＝ 0.05 で ${pct(c05, 0)}</text>
+    ${axes(b, [0, 0.25, 0.5, 0.75, 1])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 真の比率 p／縦軸 ＝ 区間が p を含む確率</text>
+  </svg>`;
+  const cap = `20人の結果は0〜20人の21通りしかないので、線はギザギザになります。公称は95%でも、p が0や1に近いと大きく下回ります。確率は二項分布から正確に計算しました。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.6：ジャックナイフ法（5個のデータを1個ずつ除く） ============
+function jackknife(): string {
+  const W = 340, H = 236, xs = [3, 5, 6, 8, 13];
+  const b: Box = { x: 20, y: 30, w: 236, h: 160, xMin: 2, xMax: 14, yMax: 1 };
+  const mean = (a: number[]) => a.reduce((s, v) => s + v, 0) / a.length;
+  const rows = xs.map((_, i) => {
+    const y = b.y + 14 + i * 30, rest = xs.filter((_, j) => j !== i), m = mean(rest);
+    return `${xs.map((x, j) => j === i
+      ? `<circle cx="${f1(PX(b, x))}" cy="${y}" r="4.6" fill="none" stroke="${ROSE}" stroke-width="1.6" />`
+      : `<circle cx="${f1(PX(b, x))}" cy="${y}" r="4.6" fill="${INDIGO}" />`).join('')}
+    <line x1="${f1(PX(b, m))}" y1="${y - 10}" x2="${f1(PX(b, m))}" y2="${y + 10}" stroke="${AMBER}" stroke-width="2.4" />
+    <text x="${b.x + b.w + 14}" y="${y + 4}" font-size="12.4" fill="${INK}">${m}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '5個のデータ3,5,6,8,13から1個ずつ除いた5通りの平均は8,7.5,7.25,6.75,5.5。13を除いたときに最も大きく動く')}
+    <text x="${b.x + b.w + 14}" y="${b.y - 10}" font-size="12.4" font-weight="700" fill="${AMBER}">残りの平均</text>
+    <line x1="${f1(PX(b, 7))}" y1="${b.y - 2}" x2="${f1(PX(b, 7))}" y2="${b.y + b.h - 8}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 7))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" fill="${SLATE}">全体の平均 7</text>
+    ${rows}
+    ${axes(b, [2, 4, 6, 8, 10, 12, 14])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">白抜き ＝ 除いた1個／縦線 ＝ 残り4個の平均</text>
+  </svg>`;
+  const cap = `1行に1通りずつ、白抜きの1個を除いて残り4個の平均を縦線で示しました。離れた13を除くと平均が大きく動きます。この動き方の大きさから標準誤差を見積もります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -2748,7 +2906,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
