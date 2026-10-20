@@ -1,7 +1,7 @@
 // stats-app/src/components/MixedQuiz.tsx
 // 複数モジュールの問題を混ぜて出す出題画面（章のまとめテスト・全範囲クイズで共用）。
 // 選択肢の順番は入れ替えない（解説が「選択肢2は…」と位置で指している問題があるため）
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, CheckCircle2, XCircle, Shuffle } from 'lucide-react';
 import type { QuizQuestion } from '../data/modules';
@@ -27,7 +27,18 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, renderI
   const [results, setResults] = useState<{ moduleId: string; moduleTitle: string; correct: boolean }[]>([]);
   const [done, setDone] = useState(false);
 
-  const top = () => window.scrollTo({ top: 0, behavior: 'instant' });
+  // 次の問題・結果へ進んだら、ページ先頭でなく出題カードの先頭に合わせる
+  // （章の見出しや目次の分だけ毎回スクロールし直させない）。カードが見えていれば動かさない
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [scrollTick, setScrollTick] = useState(0);
+  useEffect(() => {
+    if (scrollTick === 0) return;
+    const el = rootRef.current;
+    if (!el) return;
+    const y = el.getBoundingClientRect().top;
+    if (y < 0 || y > window.innerHeight * 0.4) window.scrollTo({ top: window.scrollY + y - 12, behavior: 'instant' });
+  }, [scrollTick]);
+  const top = () => setScrollTick(t => t + 1);
 
   const retry = () => {
     setItems(draw());
@@ -62,7 +73,7 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, renderI
     });
     const weak = Object.entries(byModule).filter(([, v]) => v.correct < v.total);
     return (
-      <div>
+      <div ref={rootRef}>
         <div className="card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '2.5rem', fontWeight: 900, color: accent ?? 'var(--primary)' }}>
             {score} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>/ {results.length} 問正解</span>
@@ -103,7 +114,7 @@ export const MixedQuiz: React.FC<Props> = ({ title, draw, renderContent, renderI
   if (!cur) return null;
   const isCorrect = selected !== null && selected === cur.q.correctAnswer;
   return (
-    <div className="card" style={{ border: '1px solid var(--border)' }}>
+    <div ref={rootRef} className="card" style={{ border: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', gap: '0.5rem' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{title}</h3>
