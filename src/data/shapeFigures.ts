@@ -1857,6 +1857,128 @@ function jackknife(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.17：比率の差（それぞれの区間は重なるが、差の区間は0を含まない） ============
+function ciAd(): string {
+  const W = 340, H = 262, p1 = 0.12, p2 = 0.09, n = 1000;
+  const h1 = 1.96 * Math.sqrt((p1 * (1 - p1)) / n), h2 = 1.96 * Math.sqrt((p2 * (1 - p2)) / n);
+  const se = Math.sqrt((p1 * (1 - p1)) / n + (p2 * (1 - p2)) / n), h = 1.96 * se, d = p1 - p2;
+  const top: Box = { x: 70, y: 30, w: 256, h: 64, xMin: 6, xMax: 16, yMax: 1 };
+  const bot: Box = { x: 70, y: 158, w: 256, h: 50, xMin: -1, xMax: 7, yMax: 1 };
+  const row = (b: Box, y: number, m: number, hw: number, lab: string, c: string) => `
+    <text x="${b.x - 8}" y="${y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">${lab}</text>
+    <line x1="${f1(PX(b, m - hw))}" y1="${y}" x2="${f1(PX(b, m + hw))}" y2="${y}" stroke="${c}" stroke-width="4" stroke-linecap="round" />
+    <circle cx="${f1(PX(b, m))}" cy="${y}" r="4.5" fill="${INK}" />`;
+  const oL = 100 * (p1 - h1), oR = 100 * (p2 + h2), bl = bot.y + bot.h;
+  const svg = `${svgOpen(W, H, '案Aのクリック率12%の区間10.0から14.0%と案Bの9%の区間7.2から10.8%は一部が重なる。それでも差3ポイントの95%信頼区間0.3から5.7ポイントは0を含まない')}
+    <text x="4" y="16" font-size="12.4" font-weight="700" fill="${INK}">それぞれのクリック率（%）と95%区間</text>
+    <rect x="${f1(PX(top, oL))}" y="${top.y}" width="${f1(PX(top, oR) - PX(top, oL))}" height="${top.h}" fill="${ROSE}" fill-opacity="0.12" />
+    <text x="${f1((PX(top, oL) + PX(top, oR)) / 2)}" y="${top.y + 32}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">重なる</text>
+    ${row(top, top.y + 12, 100 * p1, 100 * h1, '案A', INDIGO)}${row(top, top.y + 52, 100 * p2, 100 * h2, '案B', AMBER)}
+    ${axes(top, [6, 8, 10, 12, 14, 16])}
+    <text x="4" y="${bot.y - 22}" font-size="12.4" font-weight="700" fill="${INK}">差 A − B の95%信頼区間（ポイント）</text>
+    <line x1="${f1(PX(bot, 0))}" y1="${bot.y - 10}" x2="${f1(PX(bot, 0))}" y2="${bl}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(bot, 0) - 5)}" y="${bot.y - 1}" text-anchor="end" font-size="12.4" fill="${ROSE}">差 0</text>
+    ${row(bot, bl - 20, 100 * d, 100 * h, 'A − B', TEAL)}
+    <text x="${f1(PX(bot, 100 * (d - h)))}" y="${bl - 30}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">${(100 * (d - h)).toFixed(1)}</text>
+    <text x="${f1(PX(bot, 100 * (d + h)))}" y="${bl - 30}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">${(100 * (d + h)).toFixed(1)}</text>
+    ${axes(bot, [-1, 0, 1, 2, 3, 4, 5, 6, 7])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差の標準誤差 ＝ √(1.03² ＋ 0.90²) ＝ ${(100 * se).toFixed(2)} ポイント</text>
+  </svg>`;
+  const cap = `上の2本の区間は ${oL.toFixed(1)}〜${oR.toFixed(1)}% の範囲で重なっていますが、下の差の区間は0を含みません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.18：検出力（50人ずつと82人ずつ、2つの山と境界） ============
+function powerDesign(): string {
+  const W = 340, H = 306, sd = 8, delta = 3.5;
+  const panel = (n: number, y0: number, showSplit: boolean) => {
+    const se = sd * Math.sqrt(2 / n), c = 1.96 * se, pw = Phi((delta - c) / se) + Phi((-c - delta) / se);
+    const b: Box = { x: 14, y: y0 + 22, w: 312, h: 76, xMin: -4, xMax: 8, yMax: 0.34 };
+    const f0 = (x: number) => normPdf(x, 0, se), f1d = (x: number) => normPdf(x, delta, se);
+    const base = b.y + b.h;
+    return `
+    <text x="4" y="${y0 + 12}" font-size="12.4" font-weight="700" fill="${INK}">${n}人ずつ（標準誤差 ${f2(se)}）：検出力 ${f2(pw)}</text>
+    ${area(b, f1d, -4, c, SLATE, 0.32)}${area(b, f1d, c, 8, TEAL, 0.22)}
+    ${area(b, f0, c, 8, ROSE, 0.55)}${area(b, f0, -4, -c, ROSE, 0.55)}
+    ${curve(b, f0, INDIGO)}${curve(b, f1d, TEAL)}
+    <line x1="${f1(PX(b, c))}" y1="${b.y - 4}" x2="${f1(PX(b, c))}" y2="${base}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, c) + 4)}" y="${b.y + 6}" font-size="12.4" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">境界 ${f2(c)}</text>
+    <text x="${f1(PX(b, -2.4))}" y="${b.y + 30}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">差 0</text>
+    <text x="${f1(PX(b, 5.6))}" y="${b.y + 30}" text-anchor="start" font-size="12.4" font-weight="700" fill="${TEAL}">差 3.5</text>
+    <text x="${f1(PX(b, c - 0.45))}" y="${base - 5}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">β</text>
+    ${showSplit ? `
+    <line x1="${f1(PX(b, 0))}" y1="${base + 28}" x2="${f1(PX(b, c))}" y2="${base + 28}" stroke="${INDIGO}" stroke-width="2" />
+    <line x1="${f1(PX(b, c))}" y1="${base + 28}" x2="${f1(PX(b, delta))}" y2="${base + 28}" stroke="${TEAL}" stroke-width="2" />
+    ${[0, c, delta].map((x) => `<line x1="${f1(PX(b, x))}" y1="${base + 23}" x2="${f1(PX(b, x))}" y2="${base + 33}" stroke="${INK}" stroke-width="1.2" />`).join('')}
+    <text x="${f1(PX(b, c / 2))}" y="${base + 46}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">1.96 × SE</text>
+    <text x="${f1(PX(b, delta) + 4)}" y="${base + 46}" text-anchor="start" font-size="12.4" fill="${TEAL}">0.84 × SE</text>` : ``}
+    ${axes(b, [-4, -2, 0, 2, 4, 6, 8])}`;
+  };
+  const svg = `${svgOpen(W, H, '差が0の山と差が3.5の山。50人ずつでは境界3.14の右に出る確率が0.59、82人ずつでは山が細くなり境界2.45で検出力0.80。境界までの距離は1.96SEと0.84SEの和')}
+    ${panel(50, 0, false)}
+    ${panel(82, 136, true)}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">赤 ＝ α（両側で5%）／灰 ＝ β／緑 ＝ 検出力</text>
+  </svg>`;
+  const cap = `横軸は観測される差（mmHg）。青の山は差が本当に0のとき、緑の山は差が本当に3.5のときの分布です。境界より外に出たら棄却します。人数を増やすと2つの山が細くなり、同じ α のまま検出力が上がります。下段では、境界までの 1.96 個分と、境界から 3.5 までの 0.84 個分の標準誤差が、差 3.5 をちょうど埋めています。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.18：検出力曲線（本当の差ごとの検出力、人数3通り） ============
+function powerCurve(): string {
+  const W = 340, H = 250, sd = 8, delta = 3.5;
+  const b: Box = { x: 40, y: 24, w: 282, h: 176, xMin: 0, xMax: 8, yMax: 1 };
+  const ns = [[20, SLATE], [50, INDIGO], [82, TEAL]] as const;
+  const pw = (n: number) => (d: number) => { const se = sd * Math.sqrt(2 / n), c = 1.96 * se; return Phi((d - c) / se) + Phi((-c - d) / se); };
+  const grid = [0.05, 0.5, 0.8, 1].map((v) => `<line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#e2e8f0" />
+    <text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('');
+  const dots = ns.map(([n, c]) => { const v = pw(n)(delta); return `<circle cx="${f1(PX(b, delta))}" cy="${f1(PY(b, v))}" r="4" fill="${c}" />
+    <text x="${f1(PX(b, delta) - 7)}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${f2(v)}</text>`; }).join('');
+  const legend = ns.map(([n, c], i) => `<line x1="${b.x + 196}" y1="${b.y + 112 + i * 18}" x2="${b.x + 216}" y2="${b.y + 112 + i * 18}" stroke="${c}" stroke-width="2.4" />
+    <text x="${b.x + 222}" y="${b.y + 116 + i * 18}" font-size="12.4" fill="${c}">${n}人ずつ</text>`).join('');
+  const svg = `${svgOpen(W, H, '本当の差が0から8までの検出力。差0ではどれも0.05。差3.5で20人ずつ0.28、50人ずつ0.59、82人ずつ0.80')}
+    ${grid}
+    <line x1="${f1(PX(b, delta))}" y1="${b.y}" x2="${f1(PX(b, delta))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
+    ${ns.map(([n, c]) => curve(b, pw(n), c, 0, 8, 2.2)).join('')}
+    ${dots}${legend}
+    ${axes(b, [0, 1, 2, 3, 3.5, 4, 5, 6, 7, 8].filter((t) => t !== 3 && t !== 4))}
+    <text x="${b.x - 34}" y="${b.y - 10}" font-size="12.4" fill="${SLATE}">検出力</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">本当の差（mmHg）</text>
+  </svg>`;
+  const cap = `標準偏差 8、有意水準 5%（両側）で2群を比べたときの検出力です。差が0の左端ではどの線も 0.05 で、これは第1種の過誤の確率です。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.1：重み付き最小二乗法（大きい店ほど振れ幅が大きい） ============
+function wls(): string {
+  const W = 340, H = 250;
+  const xs = Array.from({ length: 40 }, (_, i) => 10 + Math.round((90 * i) / 39));
+  const ys = [7.8, 9.1, 9.4, 10.3, 13.5, 10.8, 10.9, 17, 18.4, 17.9, 20, 13.2, 21.9, 23.4, 20.1, 25.4, 22.6, 29.3, 28.3, 25.3, 30, 29.7, 36.1, 41.3, 37.9, 45.2, 33.3, 34.1, 41.2, 45.1, 45, 56.2, 43, 41.5, 45.3, 41.4, 50.1, 50.3, 59, 47.1];
+  const fit = (w: number[]) => {
+    let sw = 0, sx = 0, sy = 0, sxx = 0, sxy = 0;
+    xs.forEach((x, i) => { sw += w[i]; sx += w[i] * x; sy += w[i] * ys[i]; sxx += w[i] * x * x; sxy += w[i] * x * ys[i]; });
+    const b1 = (sw * sxy - sx * sy) / (sw * sxx - sx * sx);
+    return [(sy - b1 * sx) / sw, b1];
+  };
+  const o = fit(xs.map(() => 1)), g = fit(xs.map((x) => 1 / (x * x)));
+  const b: Box = { x: 36, y: 20, w: 290, h: 184, xMin: 0, xMax: 100, yMax: 70 };
+  const PYv = (v: number) => b.y + b.h - (v / 70) * b.h;
+  const band = [...xs.map((x) => `${f1(PX(b, x))},${f1(PYv(2 + 0.5 * x + 0.16 * x))}`), ...[...xs].reverse().map((x) => `${f1(PX(b, x))},${f1(PYv(2 + 0.5 * x - 0.16 * x))}`)].join(' ');
+  const line = (c: number[], col: string, dash = '') => `<line x1="${f1(PX(b, 5))}" y1="${f1(PYv(c[0] + c[1] * 5))}" x2="${f1(PX(b, 100))}" y2="${f1(PYv(c[0] + c[1] * 100))}" stroke="${col}" stroke-width="2.2"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  const svg = `${svgOpen(W, H, '店の広さ10から100平方メートルの40店の売上。広い店ほど点の散らばりが大きい。最小二乗法と重み付き最小二乗法の直線はほぼ重なる')}
+    ${[0, 20, 40, 60].map((v) => `<line x1="${b.x}" y1="${f1(PYv(v))}" x2="${b.x + b.w}" y2="${f1(PYv(v))}" stroke="#e2e8f0" /><text x="${b.x - 6}" y="${f1(PYv(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <polygon points="${band}" fill="${INDIGO}" fill-opacity="0.07" />
+    ${xs.map((x, i) => `<circle cx="${f1(PX(b, x))}" cy="${f1(PYv(ys[i]))}" r="${f1(1.6 + 30 / x)}" fill="${INDIGO}" fill-opacity="0.7" />`).join('')}
+    ${line(o, AMBER, '6 4')}${line(g, TEAL)}
+    <text x="${b.x + 4}" y="${b.y + 12}" font-size="12.4" fill="${AMBER}">点線 ＝ 最小二乗法（傾き ${o[1].toFixed(3)}）</text>
+    <text x="${b.x + 4}" y="${b.y + 30}" font-size="12.4" fill="${TEAL}">実線 ＝ 重み付き（傾き ${g[1].toFixed(3)}）</text>
+    ${axes(b, [0, 20, 40, 60, 80, 100])}
+    <text x="${b.x - 30}" y="${b.y - 6}" font-size="12.4" fill="${SLATE}">売上</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">店の広さ（㎡）　点が大きいほど重みが大きい</text>
+  </svg>`;
+  const cap = `模擬データです（真の直線は 売上 ＝ 2 ＋ 0.5 × 広さ、誤差の標準偏差は広さの 0.08 倍）。薄い帯は真の直線から標準偏差2つ分の範囲で、右へ行くほど広がります。重み付き最小二乗法は、散らばりの小さい左側の店を重く数えます。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -2137,7 +2259,7 @@ function estimatorClasses(): string {
 function pValue(): string {
   const W = 350, H = 220;
   const b: Box = { x: 14, y: 30, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.44 };
-  const z = 2.17;
+  const z = 2.19;
   const p = 2 * (1 - Phi(z));
   const svg = `${svgOpen(W, H, 'P値は帰無仮説のもとでの分布で、観測値より極端な側の面積')}
     ${area(b, normPdf, -4, -z, ROSE, 0.45)}${area(b, normPdf, z, 4, ROSE, 0.45)}
@@ -2906,7 +3028,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
