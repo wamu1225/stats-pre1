@@ -3131,6 +3131,99 @@ function correspondenceMap(): string {
   return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表します。原点は全体の平均的な好みです。数値は上の表（240人の架空データ）を特異値分解して計算しました。');
 }
 
+// ── 無記憶性（1.7b 幾何分布・1.8 指数分布）：待った後の残りを切り出して伸ばすと、元の形に重なる ──
+function memorylessGeo(): string {
+  const W = 340, H = 316, p = 1 / 6, m = 5, K = 12;
+  const x0 = 34, x1 = 326, bw = (x1 - x0) / K;
+  const top = { y0: 30, h: 96 }, bot = { y0: 190, h: 96 };
+  const pm = (k: number) => Math.pow(1 - p, k - 1) * p;
+  const hmax = p * 1.05;
+  const bx = (i: number) => x0 + i * bw;
+  const bar = (i: number, v: number, y0: number, h: number, fill: string, op: number) =>
+    `<rect x="${f1(bx(i) + 2)}" y="${f1(y0 + h - (v / hmax) * h)}" width="${f1(bw - 4)}" height="${f1((v / hmax) * h)}" fill="${fill}" fill-opacity="${op}" />`;
+  const topBars = Array.from({ length: K }, (_, i) => bar(i, pm(i + 1), top.y0, top.h, i + 1 > m ? AMBER : INDIGO, i + 1 > m ? 0.85 : 0.55)).join('');
+  const scale = 1 / Math.pow(1 - p, m);
+  const J = K - m;
+  const botBars = Array.from({ length: J }, (_, j) => bar(j, pm(m + j + 1) * scale, bot.y0, bot.h, AMBER, 0.85)).join('');
+  const botRef = Array.from({ length: J }, (_, j) => `<rect x="${f1(bx(j) + 2)}" y="${f1(bot.y0 + bot.h - (pm(j + 1) / hmax) * bot.h)}" width="${f1(bw - 4)}" height="${f1((pm(j + 1) / hmax) * bot.h)}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />`).join('');
+  const ticks = (y: number, from: number, n: number) => Array.from({ length: n }, (_, i) => `<text x="${f1(bx(i) + bw / 2)}" y="${y}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${from + i}</text>`).join('');
+  const svg = `${svgOpen(W, H, 'サイコロで初めて6が出るまでの回数の分布。5回外れた後の残りの部分だけを切り出して高さを伸ばすと、最初の分布と同じ形に重なる')}
+    <text x="${x0}" y="18" font-size="13.2" font-weight="700" fill="${INK}">最初から：初めて6が出るまでの回数</text>
+    <line x1="${x0}" y1="${top.y0 + top.h}" x2="${x1}" y2="${top.y0 + top.h}" stroke="${SLATE}" />
+    ${topBars}${ticks(top.y0 + top.h + 15, 1, K)}
+    <text x="${f1(bx(m) + 4)}" y="${top.y0 + 14}" font-size="12.4" fill="#b45309">5回外れた後に残る部分</text>
+    <text x="${x0}" y="178" font-size="13.2" font-weight="700" fill="${INK}">残りを切り出し、高さを ${scale.toFixed(2)} 倍に伸ばす</text>
+    <line x1="${x0}" y1="${bot.y0 + bot.h}" x2="${x1}" y2="${bot.y0 + bot.h}" stroke="${SLATE}" />
+    ${botBars}${botRef}${ticks(bot.y0 + bot.h + 15, 1, J)}
+    <text x="${x1}" y="${bot.y0 + 14}" text-anchor="end" font-size="12.4" fill="${INDIGO}">青い枠：最初の分布</text>
+    <text x="${x1}" y="${bot.y0 + 30}" text-anchor="end" font-size="12.4" fill="#b45309">橙：切り出した残り</text>
+  </svg>`;
+  const cap = `上は、サイコロを振って初めて6が出るまでの回数の分布です。5回目まで外れた場合に残る部分（橙）だけを取り出し、1回目から数え直して高さを ${scale.toFixed(2)} 倍に伸ばしたのが下の橙の棒で、青い枠で示した最初の分布にぴったり重なります。何回外れていても、そこから先の待ち方は変わらないことが、形として見えます。`;
+  return fig(svg, cap);
+}
+
+function memorylessExp(): string {
+  const W = 340, H = 316, lam = 1, s = 1.5, X = 5;
+  const x0 = 34, x1 = 326, top = { y0: 30, h: 96 }, bot = { y0: 190, h: 96 };
+  const px = (x: number) => x0 + (x / X) * (x1 - x0);
+  const fmax = lam * 1.05;
+  const py = (v: number, b: { y0: number; h: number }) => b.y0 + b.h - (v / fmax) * b.h;
+  const N = 100;
+  const curve = (g: (x: number) => number, b: { y0: number; h: number }, xs: number, xe: number) =>
+    Array.from({ length: N + 1 }, (_, i) => { const x = xs + ((xe - xs) * i) / N; return `${f1(px(x))},${f1(py(g(x), b))}`; }).join(' ');
+  const f = (x: number) => lam * Math.exp(-lam * x);
+  const tailArea = `${curve(f, top, s, X)} ${f1(px(X))},${f1(top.y0 + top.h)} ${f1(px(s))},${f1(top.y0 + top.h)}`;
+  const g = (t: number) => f(s + t) * Math.exp(lam * s);
+  const tickXs = [0, 1, 2, 3, 4, 5];
+  const axisX = (b: { y0: number; h: number }, from: number) => `<line x1="${x0}" y1="${b.y0 + b.h}" x2="${x1}" y2="${b.y0 + b.h}" stroke="${SLATE}" />` +
+    tickXs.map(t => `<text x="${f1(px(t))}" y="${b.y0 + b.h + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t + from}</text>`).join('');
+  const svg = `${svgOpen(W, H, '指数分布の密度。s分待った後の残りの部分だけを切り出して高さを伸ばすと、最初の曲線と同じ形に重なる')}
+    <text x="${x0}" y="18" font-size="13.2" font-weight="700" fill="${INK}">最初から：待ち時間の分布</text>
+    ${axisX(top, 0)}
+    <polygon points="${tailArea}" fill="${AMBER}" fill-opacity="0.35" />
+    <polyline points="${curve(f, top, 0, X)}" fill="none" stroke="${INDIGO}" stroke-width="2" />
+    <line x1="${f1(px(s))}" y1="${top.y0}" x2="${f1(px(s))}" y2="${top.y0 + top.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(px(s) + 6)}" y="${top.y0 + 14}" font-size="12.4" fill="#b45309">${s} 分待った後に残る部分</text>
+    <text x="${x0}" y="178" font-size="13.2" font-weight="700" fill="${INK}">残りを切り出し、高さを ${Math.exp(lam * s).toFixed(2)} 倍に伸ばす</text>
+    ${axisX(bot, 0)}
+    <polyline points="${curve(f, bot, 0, X)}" fill="none" stroke="${INDIGO}" stroke-width="4.5" stroke-opacity="0.35" />
+    <polyline points="${curve(g, bot, 0, X)}" fill="none" stroke="${AMBER}" stroke-width="1.8" />
+    <text x="${x1}" y="${bot.y0 + 14}" text-anchor="end" font-size="12.4" fill="${INDIGO}">太い青：最初の曲線</text>
+    <text x="${x1}" y="${bot.y0 + 30}" text-anchor="end" font-size="12.4" fill="#b45309">橙：切り出した残り</text>
+  </svg>`;
+  const cap = `上は指数分布（λ=1）の密度で、橙の部分が ${s} 分待った後に残る領域です。これを横軸の左端に寄せ、面積が1に戻るよう高さを e^${s} ≈ ${Math.exp(lam * s).toFixed(2)} 倍に伸ばしたのが下の橙の線で、太い青線の最初の曲線とぴったり重なります。待った時間は、この先の待ち時間の分布に影響しないことが、形として見えます。`;
+  return fig(svg, cap);
+}
+
+// ── EMアルゴリズム（3.6）：155cmの人が、2つの山のどちらに属するか（負担率）──
+function emResponsibility(): string {
+  const W = 340, H = 236, mu1 = 150, mu2 = 170, sd = 10, xo = 155;
+  const x0 = 24, x1 = 326, y0 = 30, h = 134, xmin = 124, xmax = 196;
+  const px = (x: number) => x0 + ((x - xmin) / (xmax - xmin)) * (x1 - x0);
+  const dens = (x: number, mu: number) => Math.exp(-((x - mu) ** 2) / (2 * sd * sd));
+  const py = (v: number) => y0 + h - v * (h - 10);
+  const line = (mu: number) => Array.from({ length: 73 }, (_, i) => { const x = xmin + i; return `${f1(px(x))},${f1(py(dens(x, mu)))}`; }).join(' ');
+  const a = dens(xo, mu1), b = dens(xo, mu2), r = a / (a + b);
+  const svg = `${svgOpen(W, H, '女性の山（平均150）と男性の山（平均170）を同じ軸に描き、身長155cmでの2つの高さの比から、女性である確率0.73を求める')}
+    <line x1="${x0}" y1="${y0 + h}" x2="${x1}" y2="${y0 + h}" stroke="${SLATE}" />
+    ${[130, 150, 170, 190].map(t => `<text x="${f1(px(t))}" y="${y0 + h + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${x1}" y="${y0 + h + 31}" text-anchor="end" font-size="12.4" fill="${SLATE}">身長（cm）</text>
+    <polyline points="${line(mu1)}" fill="none" stroke="${ROSE}" stroke-width="2" />
+    <polyline points="${line(mu2)}" fill="none" stroke="${INDIGO}" stroke-width="2" />
+    <text x="${f1(px(mu1) - 6)}" y="${y0 + 12}" text-anchor="end" font-size="13.2" font-weight="700" fill="${ROSE}">女性（平均150）</text>
+    <text x="${f1(px(mu2) + 6)}" y="${y0 + 12}" text-anchor="start" font-size="13.2" font-weight="700" fill="${INDIGO}">男性（平均170）</text>
+    <line x1="${f1(px(xo))}" y1="${y0}" x2="${f1(px(xo))}" y2="${y0 + h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <circle cx="${f1(px(xo))}" cy="${f1(py(a))}" r="4.5" fill="${ROSE}" />
+    <circle cx="${f1(px(xo))}" cy="${f1(py(b))}" r="4.5" fill="${INDIGO}" />
+    <text x="${f1(px(xo) + 8)}" y="${f1(py(a) - 4)}" font-size="12.4" font-weight="700" fill="${ROSE}">高さ ${a.toFixed(2)}</text>
+    <text x="${f1(px(xo) + 8)}" y="${f1(py(b) + 4)}" font-size="12.4" font-weight="700" fill="${INDIGO}">高さ ${b.toFixed(2)}</text>
+    <text x="${f1(px(xo))}" y="${y0 + h + 31}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">155</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">女性の確率 ＝ ${a.toFixed(2)} ÷ (${a.toFixed(2)}＋${b.toFixed(2)}) ＝ ${r.toFixed(2)}</text>
+  </svg>`;
+  const cap = `女性（平均150cm）と男性（平均170cm）の身長が、標準偏差10cmの正規分布に従うと仮に置いた図です。155cmの人のところで縦線を引くと、女性の山の高さは ${a.toFixed(2)}、男性の山の高さは ${b.toFixed(2)} です。この2つの高さの比が、その人が女性である確率（負担率）になります。山の頂上を1とした相対的な高さなので、割合を取れば同じ値になります。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -3178,4 +3271,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dag-basic': dagBasic,
   'f-dag-front': dagFront,
   'f-ca': correspondenceMap,
+  'f-memoryless-geo': memorylessGeo,
+  'f-memoryless-cont': memorylessExp,
+  'f-em': emResponsibility,
 };
