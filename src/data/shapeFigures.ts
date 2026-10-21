@@ -831,8 +831,8 @@ function transformStrips(): string {
 // 1.9：分散共分散行列のどこに何を置くか（行と列に X, Y を割り当てた表）と、図の2例への当てはめ
 function covMatrix(): string {
   const W = 344, H = 300;
-  const sub = (s: string) => `<tspan baseline-shift="sub" font-size="11.9">${s}</tspan>`;
-  const sup = (s: string) => `<tspan baseline-shift="super" font-size="11.9">${s}</tspan>`;
+  const sub = (s: string) => `<tspan baseline-shift="sub" font-size="12.4">${s}</tspan>`;
+  const sup = (s: string) => `<tspan baseline-shift="super" font-size="12.4">${s}</tspan>`;
   const V = '#e0e7ff', C = '#fef3c7';
   const cell = (x: number, y: number, w: number, h: number, fill: string, lines: string[], col: string, fs = 12.4) =>
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${SLATE}" stroke-width="1" />` +
