@@ -2109,6 +2109,38 @@ function canonicalDisc(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.20：順位和検定（作業時間の2群・外れ値1つ） ============
+function rankSum(): string {
+  const W = 350, H = 246;
+  const A = [11, 12, 13, 14, 15, 16, 60], B = [17, 18, 19, 20, 21, 22, 23];
+  const all = [...A, ...B].sort((p, q) => p - q);
+  const rank = (v: number) => all.indexOf(v) + 1;
+  const x0 = 34, x1 = 274;
+  const px = (v: number) => (v >= 50 ? 322 : x0 + ((v - 10) / 14) * (x1 - x0));
+  const axisY = 166;
+  const row = (vals: number[], y: number, color: string, label: string, lw: number) => `
+    <rect x="10" y="${y - 46}" width="${lw}" height="19" fill="#ffffff" />
+    <text x="14" y="${y - 32}" font-size="12.8" font-weight="700" fill="${color}">${label}</text>
+    ${vals.map((v) => `<text x="${f1(px(v))}" y="${y - 10}" text-anchor="middle" font-size="12.4" fill="${INK}">${rank(v)}</text>
+    <circle cx="${f1(px(v))}" cy="${y}" r="5.5" fill="${color}" />
+    <line x1="${f1(px(v))}" y1="${y + 6}" x2="${f1(px(v))}" y2="${axisY}" stroke="${color}" stroke-width="0.8" stroke-dasharray="2 3" />`).join('')}`;
+  const ticks = [10, 15, 20].map((t) => `<line x1="${f1(px(t))}" y1="${axisY}" x2="${f1(px(t))}" y2="${axisY + 5}" stroke="${SLATE}" /><text x="${f1(px(t))}" y="${axisY + 19}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('');
+  const svg = `${svgOpen(W, H, '順位和検定：14人の作業時間を小さい順に並べ、A の順位は1から6と14、B の順位は7から13')}
+    ${row(A, 74, INDIGO, 'A 新しい手順（数字＝順位）', 190)}
+    ${row(B, 136, '#b45309', 'B 今の手順', 80)}
+    <line x1="${x0 - 10}" y1="${axisY}" x2="296" y2="${axisY}" stroke="${SLATE}" stroke-width="1.2" />
+    <line x1="304" y1="${axisY}" x2="336" y2="${axisY}" stroke="${SLATE}" stroke-width="1.2" />
+    <line x1="294" y1="${axisY + 6}" x2="300" y2="${axisY - 6}" stroke="${SLATE}" stroke-width="1.2" />
+    <line x1="302" y1="${axisY + 6}" x2="308" y2="${axisY - 6}" stroke="${SLATE}" stroke-width="1.2" />
+    ${ticks}
+    <line x1="322" y1="${axisY}" x2="322" y2="${axisY + 5}" stroke="${SLATE}" /><text x="322" y="${axisY + 19}" text-anchor="middle" font-size="12.4" fill="${SLATE}">60</text>
+    <text x="${W / 2}" y="${axisY + 37}" text-anchor="middle" font-size="12.4" fill="${SLATE}">作業時間（分）</text>
+    <text x="14" y="${H - 8}" font-size="12.8" font-weight="700" fill="${INDIGO}">A の順位の和＝1+2+3+4+5+6+14＝35</text>
+  </svg>`;
+  const cap = `2つのグループの14人を合わせて、作業時間の短い順に順位を付けました。A は7人中6人が B の全員より短く、60分の1人だけが最後の14位です。この人が25分でも60分でも、順位は14のまま変わりません。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -2672,43 +2704,52 @@ function logLikCurvature(): string {
 
 // ============ 1.20：正規 Q-Q プロット ============
 function qqPlot(): string {
-  const W = 350, H = 276;
+  const W = 350, H = 236;
   const n = 30;
   const rnd = gaussFrom(mulberry32(7));
   const normalSample = Array.from({ length: n }, () => rnd()).sort((a, b) => a - b);
-  // 右に裾の長いデータ：指数分布の分位点（確率 (i-0.5)/n）
-  const skewSample = Array.from({ length: n }, (_, i) => -Math.log(1 - (i + 0.5) / n)).sort((a, b) => a - b);
-  const zq = (p: number) => {
-    let lo = -6, hi = 6;
-    for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (Phi(m) < p) lo = m; else hi = m; }
+  const pr = (i: number) => (i + 0.5) / n;
+  const inv = (cdf: (x: number) => number, p: number) => {
+    let lo = -40, hi = 40;
+    for (let k = 0; k < 80; k++) { const m = (lo + hi) / 2; if (cdf(m) < p) lo = m; else hi = m; }
     return (lo + hi) / 2;
   };
-  const theo = Array.from({ length: n }, (_, i) => zq((i + 0.5) / n));
+  // 右に裾の長いデータ＝指数分布の分位点／両裾が重いデータ＝自由度3の t 分布の分位点
+  const skewSample = Array.from({ length: n }, (_, i) => -Math.log(1 - pr(i)));
+  const t3cdf = (x: number) => 0.5 + (x / (Math.sqrt(3) * (1 + (x * x) / 3)) + Math.atan(x / Math.sqrt(3))) / Math.PI;
+  const heavySample = Array.from({ length: n }, (_, i) => inv(t3cdf, pr(i)));
+  const theo = Array.from({ length: n }, (_, i) => inv(Phi, pr(i)));
   const std = (a: number[]) => {
     const m = a.reduce((s, x) => s + x, 0) / a.length;
     const sd = Math.sqrt(a.reduce((s, x) => s + (x - m) ** 2, 0) / (a.length - 1));
     return a.map((x) => (x - m) / sd);
   };
-  const ys1 = std(normalSample), ys2 = std(skewSample);
-  const L = 40, T = 22, S = 200;
-  const lim = 3;
-  const px = (v: number) => L + ((v + lim) / (2 * lim)) * S;
-  const py = (v: number) => T + S - ((v + lim) / (2 * lim)) * S;
-  const dots = (ys: number[], color: string) => ys.map((y, i) => `<circle cx="${f1(px(theo[i]))}" cy="${f1(py(Math.max(-lim, Math.min(lim, y))))}" r="3" fill="${color}" fill-opacity="0.8" />`).join('');
-  const ticks = [-2, 0, 2];
-  const svg = `${svgOpen(W, H, '正規 Q-Q プロット：正規分布のデータは直線上に並び、右に裾の長いデータは右上で直線から上にはずれる')}
-    <rect x="${L}" y="${T}" width="${S}" height="${S}" fill="none" stroke="${SLATE}" stroke-width="1" />
-    <line x1="${px(-lim)}" y1="${py(-lim)}" x2="${px(lim)}" y2="${py(lim)}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    ${ticks.map((t) => `<text x="${f1(px(t))}" y="${T + S + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text><text x="${L - 6}" y="${f1(py(t) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
-    ${dots(ys1, INDIGO)}${dots(ys2, AMBER)}
-    <text x="${L + S + 10}" y="${T + 40}" font-size="13.2" font-weight="700" fill="${INDIGO}">正規データ</text>
-    <text x="${L + S + 10}" y="${T + 58}" font-size="12.4" fill="${INDIGO}">直線上に並ぶ</text>
-    <text x="${L + S + 10}" y="${T + 100}" font-size="13.2" font-weight="700" fill="#b45309">右に裾が長い</text>
-    <text x="${L + S + 10}" y="${T + 118}" font-size="12.4" fill="#b45309">右上で上にそる</text>
-    <text x="${L + S / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝正規分布の理論分位点</text>
-    <text x="${L + S / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝標準化したデータの分位点</text>
+  const S = 96, T = 34, lim = 3.4;
+  const xs0 = [18, 132, 246];
+  const panels: [number[], string, string, string, string][] = [
+    [std(normalSample), INDIGO, '正規分布', '直線上に並ぶ', ''],
+    [std(skewSample), '#b45309', '右に裾が長い', '弓なりで', '右上が上へそる'],
+    [std(heavySample), TEAL, '両裾が重い', '左下は下、', '右上は上へ離れる'],
+  ];
+  const body = panels.map(([ys, color, title, d1, d2], k) => {
+    const L = xs0[k];
+    const px = (v: number) => L + ((v + lim) / (2 * lim)) * S;
+    const py = (v: number) => T + S - ((v + lim) / (2 * lim)) * S;
+    const dots = ys.map((y, i) => `<circle cx="${f1(px(theo[i]))}" cy="${f1(py(Math.max(-lim, Math.min(lim, y))))}" r="2.6" fill="${color}" fill-opacity="0.85" />`).join('');
+    const ticks = [-2, 0, 2].map((t) => `<text x="${f1(px(t))}" y="${T + S + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('');
+    return `<rect x="${L}" y="${T}" width="${S}" height="${S}" fill="none" stroke="${SLATE}" stroke-width="1" />
+    <line x1="${f1(px(-lim))}" y1="${f1(py(-lim))}" x2="${f1(px(lim))}" y2="${f1(py(lim))}" stroke="${SLATE}" stroke-width="1.1" stroke-dasharray="4 3" />
+    ${dots}${ticks}
+    <text x="${L + S / 2}" y="${T - 10}" text-anchor="middle" font-size="12.8" font-weight="700" fill="${color}">${title}</text>
+    <text x="${L + S / 2}" y="${T + S + 32}" text-anchor="middle" font-size="12" fill="${color}">${d1}</text>
+    <text x="${L + S / 2}" y="${T + S + 47}" text-anchor="middle" font-size="12" fill="${color}">${d2}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '正規 Q-Q プロット3例：正規分布のデータは直線上、右に裾の長いデータは弓なりで右上が上へそり、両裾の重いデータは左下が下に右上が上に離れる')}
+    ${body}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸＝正規分布なら来るはずの値</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12" fill="${SLATE}">縦軸＝データを小さい順に並べて標準化した値</text>
   </svg>`;
-  const cap = `Q-Q プロットは、データを小さい順に並べた値（縦軸）を、正規分布なら同じ順位に来るはずの値（横軸）に対して描いた図です。データが正規分布に従えば点は破線の直線上に並びます。青は正規乱数 ${n} 個で、ほぼ直線上です。橙は右に裾の長い（指数分布の）データで、右上の大きい値が直線より上にそれます。検定の p 値だけでは分からない「どこがどうずれているか」が見えるのが利点です。`;
+  const cap = `どれも30個のデータです。左は正規乱数、中央は指数分布、右は自由度3の t 分布から作りました。正規分布でないデータは、どちらの端がどちら向きに直線から離れるかで見分けられます。`;
   return fig(svg, cap);
 }
 
@@ -3046,6 +3087,24 @@ function dagFront(): string {
   return fig(svg, '点線の U は測れない共通原因。X と Y を直接比べても U の影響が混ざるが、途中の M を観測できれば、X→M と M→Y の2段に分けて効果を求められる。');
 }
 
+function dagIV(): string {
+  const W = 350, H = 170;
+  const mk = 'dagiv-arrow';
+  const nodes: DagNode[] = [{ id: 'U', x: 230, y: 30, label: 'U', hidden: true }, { id: 'Z', x: 40, y: 108, label: 'Z' }, { id: 'X', x: 160, y: 108, label: 'X' }, { id: 'Y', x: 300, y: 108, label: 'Y' }];
+  const g = dagPanel(nodes, [['Z', 'X', TEAL], ['X', 'Y', INDIGO], ['U', 'X', SLATE], ['U', 'Y', SLATE]], mk);
+  const svg = `${svgOpen(W, H, '操作変数のDAG：くじで配ったクーポン Z が利用時間 X を動かし、X が点数 Y に届く。測れないやる気 U は X と Y の両方に影響するが、Z とはつながっていない')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${g}
+    <text x="252" y="26" font-size="12.3" fill="${SLATE}">やる気</text>
+    <text x="252" y="42" font-size="12.3" fill="${SLATE}">（測れない）</text>
+    <text x="40" y="142" text-anchor="middle" font-size="12.3" fill="${TEAL}">クーポン</text>
+    <text x="40" y="158" text-anchor="middle" font-size="12.3" fill="${TEAL}">（くじ）</text>
+    <text x="160" y="142" text-anchor="middle" font-size="12.3" fill="${INK}">利用時間</text>
+    <text x="300" y="142" text-anchor="middle" font-size="12.3" fill="${INK}">点数</text>
+  </svg>`;
+  return fig(svg, 'Z から Y へは X を通る道しか無く、Z は U とつながっていません。Z が動かした分の X の変化だけを使えば、U の混ざらない効果が求まります。');
+}
+
 // ── 対応分析（2.7）：年代×好きな飲み物の分割表を特異値分解して2次元に置く ──
 function jacobiEigen(a0: number[][]): { vals: number[]; vecs: number[][] } {
   const n = a0.length;
@@ -3263,6 +3322,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
   'f-qq': qqPlot,
+  'f-rank-ab': rankSum,
   'f-factor-path': factorPath,
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
@@ -3270,6 +3330,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic,
   'f-dag-front': dagFront,
+  'f-dag-iv': dagIV,
   'f-ca': correspondenceMap,
   'f-memoryless-geo': memorylessGeo,
   'f-memoryless-cont': memorylessExp,
