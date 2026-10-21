@@ -1979,6 +1979,136 @@ function wls(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.19：ネイマン・ピアソンの棄却域（2つの山と尤度比） ============
+function npRegion(): string {
+  const W = 340, H = 330, se = 0.2, mu1 = 0.5, k = 1.6449 * se;
+  const b: Box = { x: 14, y: 40, w: 312, h: 100, xMin: -0.6, xMax: 1.1, yMax: 2.1 };
+  const f0 = (x: number) => normPdf(x, 0, se), f1d = (x: number) => normPdf(x, mu1, se);
+  const pw = 1 - Phi((k - mu1) / se);
+  // 下段：尤度比 Λ を対数目盛りで（1/1000 〜 1000）
+  const lb = { x: 40, y: 196, w: 286, h: 96 };
+  const LX = (x: number) => lb.x + ((x - b.xMin) / (b.xMax - b.xMin)) * lb.w;
+  const lmin = -3, lmax = 3; // log10
+  const LY = (v: number) => lb.y + lb.h - ((Math.max(lmin, Math.min(lmax, v)) - lmin) / (lmax - lmin)) * lb.h;
+  const log10L = (x: number) => (25 * (mu1 * x - mu1 * mu1 / 2)) / Math.LN10;
+  let d = '';
+  for (let i = 0; i <= 120; i++) {
+    const x = b.xMin + ((b.xMax - b.xMin) * i) / 120;
+    const v = log10L(x);
+    if (v < lmin || v > lmax) continue;
+    d += `${d ? 'L' : 'M'}${f1(LX(x))},${f1(LY(v))}`;
+  }
+  const c = Math.exp(25 * (mu1 * k - mu1 * mu1 / 2));
+  const yT = [[-2, '1/100'], [0, '1'], [2, '100']] as const;
+  const svg = `${svgOpen(W, H, '上段は帰無仮説と対立仮説のもとでの標本平均の分布。標本平均が0.329を超えたら棄却し、αは0.05、検出力は0.80。下段は尤度比で、標本平均が大きいほど大きくなり、0.329でちょうど2.68になる')}
+    <text x="4" y="14" font-size="12.4" font-weight="700" fill="${INK}">標本平均の分布（25個の平均）</text>
+    ${area(b, f1d, k, 1.1, TEAL, 0.25)}${area(b, f0, k, 1.1, ROSE, 0.6)}
+    ${curve(b, f0, INDIGO)}${curve(b, f1d, TEAL)}
+    <text x="${f1(PX(b, -0.2))}" y="${f1(PY(b, 1.75))}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">μ = 0</text>
+    <text x="${f1(PX(b, 0.72))}" y="${f1(PY(b, 1.75))}" text-anchor="start" font-size="12.4" font-weight="700" fill="${TEAL}">μ = 0.5</text>
+    <text x="${f1(PX(b, 0.72))}" y="${f1(PY(b, 1.4))}" text-anchor="start" font-size="12.4" fill="${TEAL}" stroke="#fff" stroke-width="3" paint-order="stroke">検出力 ${f2(pw)}</text>
+    <text x="${f1(PX(b, 0.36))}" y="${f1(PY(b, 0.08) - 2)}" text-anchor="start" font-size="12.4" font-weight="700" fill="${ROSE}" stroke="#fff" stroke-width="3" paint-order="stroke">α</text>
+    ${axes(b, [-0.5, 0, 0.5, 1])}
+    <line x1="${f1(PX(b, k))}" y1="${b.y - 12}" x2="${f1(PX(b, k))}" y2="${lb.y + lb.h}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, k) + 4)}" y="${b.y - 2}" font-size="12.4" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">k = ${k.toFixed(3)}</text>
+    <text x="4" y="${lb.y - 16}" font-size="12.4" font-weight="700" fill="${INK}">尤度比 Λ ＝ L(0.5) ／ L(0)（対数目盛り）</text>
+    ${yT.map(([v, t]) => `<line x1="${lb.x}" y1="${f1(LY(v))}" x2="${lb.x + lb.w}" y2="${f1(LY(v))}" stroke="#e2e8f0" />
+    <text x="${lb.x - 5}" y="${f1(LY(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    <line x1="${lb.x}" y1="${f1(LY(Math.log10(c)))}" x2="${lb.x + lb.w}" y2="${f1(LY(Math.log10(c)))}" stroke="${AMBER}" stroke-width="1.6" />
+    <text x="${lb.x + 4}" y="${f1(LY(Math.log10(c)) - 5)}" font-size="12.4" font-weight="700" fill="${AMBER}" stroke="#fff" stroke-width="3" paint-order="stroke">c = ${c.toFixed(2)}</text>
+    <path d="${d}" fill="none" stroke="${INK}" stroke-width="2" />
+    <circle cx="${f1(LX(k))}" cy="${f1(LY(Math.log10(c)))}" r="4" fill="${AMBER}" />
+    <line x1="${lb.x}" y1="${lb.y + lb.h}" x2="${lb.x + lb.w}" y2="${lb.y + lb.h}" stroke="${SLATE}" />
+    ${[-0.5, 0, 0.5, 1].map((x) => `<text x="${f1(LX(x))}" y="${lb.y + lb.h + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${x}</text>`).join('')}
+    <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸はどちらも標本平均 x̄</text>
+  </svg>`;
+  const cap = `上段の赤は μ = 0 のときに棄却してしまう確率（α = 0.05）、緑は μ = 0.5 のときに棄却できる確率（検出力）です。下段の尤度比は x̄ が大きいほど大きくなるので、「Λ が ${c.toFixed(2)} を超える」と「x̄ が ${k.toFixed(3)} を超える」は同じ棄却域を指します。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.19：尤度比・ワルド・スコアを対数尤度の曲線で見る ============
+function threeTests(): string {
+  const W = 340, H = 300, n = 50, x = 32, p0 = 0.5, ph = x / n;
+  const ll = (p: number) => x * Math.log(p) + (n - x) * Math.log(1 - p);
+  const bx = { x: 44, y: 26, w: 282, h: 216 };
+  const xMin = 0.38, xMax = 0.82, yMin = -38.4, yMax = -31.0;
+  const X = (p: number) => bx.x + ((p - xMin) / (xMax - xMin)) * bx.w;
+  const Y = (v: number) => bx.y + bx.h - ((v - yMin) / (yMax - yMin)) * bx.h;
+  let d = '';
+  for (let i = 0; i <= 100; i++) {
+    const p = xMin + ((xMax - xMin) * i) / 100;
+    const v = ll(p);
+    if (v < yMin) continue;
+    d += `${d ? 'L' : 'M'}${f1(X(p))},${f1(Y(v))}`;
+  }
+  const U = x / p0 - (n - x) / (1 - p0); // 28
+  const tan = (p: number) => ll(p0) + U * (p - p0);
+  const LR = 2 * (ll(ph) - ll(p0)), Wd = (ph - p0) ** 2 / (ph * (1 - ph) / n), S = U * U / (n / (p0 * (1 - p0)));
+  const yAx = bx.y + bx.h;
+  const svg = `${svgOpen(W, H, 'コイン50回で表32回のときの対数尤度の曲線。尤度比検定は山頂とp=0.5の高さの差、ワルド検定は山頂の位置と0.5の横の距離、スコア検定はp=0.5での曲線の傾きを測る')}
+    ${[-38, -36, -34, -32].map((v) => `<line x1="${bx.x}" y1="${f1(Y(v))}" x2="${bx.x + bx.w}" y2="${f1(Y(v))}" stroke="#e2e8f0" />
+    <text x="${bx.x - 5}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <path d="${d}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
+    <line x1="${f1(X(0.43))}" y1="${f1(Y(tan(0.43)))}" x2="${f1(X(0.57))}" y2="${f1(Y(tan(0.57)))}" stroke="${TEAL}" stroke-width="2" />
+    <line x1="${f1(X(p0))}" y1="${f1(Y(ll(p0)))}" x2="${f1(X(ph))}" y2="${f1(Y(ll(p0)))}" stroke="${SLATE}" stroke-dasharray="3 3" />
+    <line x1="${f1(X(ph))}" y1="${f1(Y(ll(p0)))}" x2="${f1(X(ph))}" y2="${f1(Y(ll(ph)))}" stroke="${ROSE}" stroke-width="2.6" />
+    <line x1="${f1(X(p0))}" y1="${yAx - 14}" x2="${f1(X(ph))}" y2="${yAx - 14}" stroke="${AMBER}" stroke-width="2.6" />
+    ${[p0, ph].map((p) => `<line x1="${f1(X(p))}" y1="${f1(Y(ll(p)))}" x2="${f1(X(p))}" y2="${yAx}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 3" />
+    <circle cx="${f1(X(p))}" cy="${f1(Y(ll(p)))}" r="3.6" fill="${INK}" />`).join('')}
+    <text x="${f1(X(ph) + 6)}" y="${f1(Y(-31.45))}" font-size="12.4" font-weight="700" fill="${ROSE}">尤度比：高さの差</text>
+    <text x="${f1(X(ph) + 6)}" y="${f1(Y(-31.45) + 16)}" font-size="12.4" fill="${ROSE}">${f2(ll(ph) - ll(p0))}（2倍で ${f2(LR)}）</text>
+    <text x="${f1(X(ph) + 6)}" y="${yAx - 24}" font-size="12.4" font-weight="700" fill="${AMBER}">ワルド：横の距離</text>
+    <text x="${f1(X(ph) + 6)}" y="${yAx - 8}" font-size="12.4" fill="${AMBER}">${f2(ph - p0)}（→ ${f2(Wd)}）</text>
+    <text x="${f1(X(0.51))}" y="${f1(Y(-36.0))}" font-size="12.4" font-weight="700" fill="${TEAL}">スコア：傾き</text>
+    <text x="${f1(X(0.51))}" y="${f1(Y(-36.0) + 16)}" font-size="12.4" fill="${TEAL}">${U}（→ ${f2(S)}）</text>
+    <line x1="${bx.x}" y1="${yAx}" x2="${bx.x + bx.w}" y2="${yAx}" stroke="${SLATE}" />
+    ${[0.4, 0.5, 0.6, 0.7, 0.8].map((p) => `<text x="${f1(X(p))}" y="${yAx + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${p}</text>`).join('')}
+    <text x="${f1(X(p0))}" y="${yAx + 34}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">p₀</text>
+    <text x="${f1(X(ph))}" y="${yAx + 34}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">推定値</text>
+    <text x="${bx.x + bx.w}" y="${yAx + 34}" text-anchor="end" font-size="12.4" fill="${SLATE}">表の確率 p</text>
+    <text x="4" y="13" font-size="12.4" fill="${SLATE}">対数尤度 ℓ(p)</text>
+  </svg>`;
+  const cap = `50回投げて表が32回のときの対数尤度です。3つの検定は、同じ曲線の別の場所を測っています。括弧の中は、それぞれを χ²(1) と比べる統計量に直した値です。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.3：正準判別（3品種の豆を1本の軸で分ける） ============
+function canonicalDisc(): string {
+  const W = 340, H = 396;
+  // 3品種15粒ずつの模擬データ（長さ mm, 幅 mm）。正準軸は W^{-1}B の第1固有ベクトル
+  const G: number[][][] = [[[10.1,5.7],[8.3,4.9],[10.1,6],[10.8,6.3],[9.9,5.9],[11.5,6.8],[11,6.9],[11.3,6.6],[11.2,6.3],[11.1,6.7],[10.4,6.4],[9.2,5.7],[10.9,6.4],[10.9,6.7],[9.9,6]],[[11.1,6],[12.8,6.9],[12.3,6.8],[10.9,6.3],[10.5,5.9],[11.8,6.1],[11,6.3],[10.1,5.5],[12,7.1],[10.6,6.1],[11.6,6.7],[9.9,5],[10.9,6.3],[11.5,6.5],[9.7,5.1]],[[12,6.3],[13.5,6.8],[12.7,6.5],[13.6,6.9],[12.8,6.9],[11.9,6.6],[12.3,6.3],[12.4,6.4],[12.1,6.4],[12.5,6.4],[12.7,6.4],[12.1,6.4],[11.2,5.7],[12.3,6],[13,6.5]]];
+  const a = [0.598, -0.802];
+  const cols = [INDIGO, AMBER, TEAL], names = ['品種A', '品種B', '品種C'];
+  const b: Box = { x: 36, y: 22, w: 290, h: 160, xMin: 8, xMax: 14, yMax: 1 };
+  const yMin = 4.6, yMax = 7.4;
+  const py = (v: number) => b.y + b.h - ((v - yMin) / (yMax - yMin)) * b.h;
+  const dots = G.map((g, k) => g.map(([l, w]) => `<circle cx="${f1(PX(b, l))}" cy="${f1(py(w))}" r="3.4" fill="${cols[k]}" fill-opacity="0.75" />`).join('')).join('');
+  // 軸の向き（細長さ）：平均の点から矢印。図の縦横の目盛りの比をそろえて向きを描く
+  const cx0 = 11.3, cy0 = 6.27, L = 0.9;
+  const ax = `<line x1="${f1(PX(b, cx0 - a[0] * L))}" y1="${f1(py(cy0 - a[1] * L))}" x2="${f1(PX(b, cx0 + a[0] * L))}" y2="${f1(py(cy0 + a[1] * L))}" stroke="${ROSE}" stroke-width="2.4" marker-end="url(#cdaArrow)" />`;
+  const strip = (y0: number, label: string, val: (p: number[]) => number, lo: number, hi: number, ticks: number[]) => {
+    const X = (v: number) => 36 + ((v - lo) / (hi - lo)) * 290;
+    return `<text x="4" y="${y0}" font-size="12.4" font-weight="700" fill="${INK}">${label}</text>
+    ${G.map((g, k) => g.map((p) => `<circle cx="${f1(X(val(p)))}" cy="${y0 + 14 + k * 12}" r="3.2" fill="${cols[k]}" fill-opacity="0.75" />`).join('')).join('')}
+    <line x1="36" y1="${y0 + 50}" x2="326" y2="${y0 + 50}" stroke="${SLATE}" />
+    ${ticks.map((t) => `<text x="${f1(X(t))}" y="${y0 + 64}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}`;
+  };
+  const svg = `${svgOpen(W, H, '3品種の豆の長さと幅の散布図。長さだけでは品種が重なるが、細長さの向きの軸に射影すると3品種がよく分かれる')}
+    <defs><marker id="cdaArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROSE}" /></marker></defs>
+    ${[5, 6, 7].map((v) => `<line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#e2e8f0" /><text x="${b.x - 5}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${dots}${ax}
+    <text x="${f1(PX(b, 12.3))}" y="${f1(py(5.25))}" font-size="12.4" font-weight="700" fill="${ROSE}" stroke="#fff" stroke-width="3" paint-order="stroke">正準軸の向き</text>
+    ${axes(b, [8, 10, 12, 14])}
+    <text x="4" y="13" font-size="12.4" fill="${SLATE}">幅（mm）</text>
+    <text x="${b.x + b.w}" y="${b.y + b.h + 30}" text-anchor="end" font-size="12.4" fill="${SLATE}">長さ（mm）</text>
+    ${names.map((nm, k) => `<circle cx="${b.x + 10 + k * 70}" cy="${b.y + 6}" r="4" fill="${cols[k]}" /><text x="${b.x + 18 + k * 70}" y="${b.y + 10}" font-size="12.4" fill="${cols[k]}">${nm}</text>`).join('')}
+    ${strip(236, '長さだけで並べる', (p) => p[0], 8, 14, [8, 10, 12, 14])}
+    ${strip(326, '正準得点 0.60×長さ − 0.80×幅', (p) => a[0] * p[0] + a[1] * p[1], 0.8, 2.8, [1, 1.5, 2, 2.5])}
+  </svg>`;
+  const cap = `品種ごとに15粒の模擬データです。長さと幅は、どの品種の中でも一緒に増える（大きい豆はどちらも大きい）ので、長さだけで並べると品種が大きく重なります。大きさの違いを打ち消す「細長さ」の向きに並べ直すと、重なりが減ります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -2271,11 +2401,12 @@ function pValue(): string {
     <line x1="${f1(PX(b, -z))}" y1="${b.y + 40}" x2="${f1(PX(b, -z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="3 2" />
     <text x="${f1(PX(b, 3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
     <text x="${f1(PX(b, -3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
-    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.14))}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">「差がない」なら普通に出る範囲</text>
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.15))}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">「差がない」なら</text>
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.15) + 16)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">普通に出る範囲</text>
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${f2(p)}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
   </svg>`;
-  const cap = `曲線は「本当に差がない」と仮定したときに、検定統計量がとる値の分布です。今回の観測値が ${z} だったとすると、P値はそれより極端な側（両側なので左右とも）の面積で、${f2(p)} です。P値は「帰無仮説が正しい確率」ではなく、「帰無仮説が正しいとしたら、これ以上に極端な結果がどれだけ出にくいか」をこの面積で表したものです。`;
+  const cap = `曲線は、本当に差がないと仮定したときに検定統計量がとる値の分布です。赤い面積は観測値 ${z} より外側（左右とも）で、合わせて ${f2(p)} です。`;
   return fig(svg, cap);
 }
 
@@ -3028,7 +3159,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
