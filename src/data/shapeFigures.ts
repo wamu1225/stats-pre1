@@ -2141,6 +2141,36 @@ function rankSum(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.21：交互作用プロット（トッピング×立地の2×2） ============
+function interactionPlot(): string {
+  const W = 350, H = 236;
+  const T = 44, PH = 132;
+  const py = (v: number) => T + ((63 - v) / (63 - 45)) * PH;
+  const N = '#b45309';
+  const panel = (x1: number, x2: number, nit: [number, number], cha: [number, number], title: string, values: boolean) => {
+    const line = (v: [number, number], color: string) => `<line x1="${x1}" y1="${f1(py(v[0]))}" x2="${x2}" y2="${f1(py(v[1]))}" stroke="${color}" stroke-width="2.4" />
+      <circle cx="${x1}" cy="${f1(py(v[0]))}" r="4.5" fill="${color}" /><circle cx="${x2}" cy="${f1(py(v[1]))}" r="4.5" fill="${color}" />`;
+    const lab = (x: number, v: number, color: string, below: boolean) => values ? `<text x="${x}" y="${f1(py(v) + (below ? 19 : -10))}" text-anchor="middle" font-size="12.4" fill="${color}">${v}</text>` : '';
+    const mid = (x1 + x2) / 2;
+    return `<rect x="${x1 - 26}" y="${T - 6}" width="${x2 - x1 + 52}" height="${PH + 12}" fill="none" stroke="${SLATE}" stroke-width="0.8" />
+      ${line(nit, N)}${line(cha, INDIGO)}
+      ${lab(x1, nit[0], N, true)}${lab(x1, cha[0], INDIGO, false)}${lab(x2, nit[1], N, false)}${lab(x2, cha[1], INDIGO, true)}
+      <text x="${mid}" y="${T - 14}" text-anchor="middle" font-size="12.8" font-weight="700" fill="${INK}">${title}</text>
+      <text x="${x1}" y="${T + PH + 24}" text-anchor="middle" font-size="12.4" fill="${SLATE}">オフィス街</text>
+      <text x="${x2}" y="${T + PH + 24}" text-anchor="middle" font-size="12.4" fill="${SLATE}">住宅街</text>`;
+  };
+  const svg = `${svgOpen(W, H, '交互作用プロット：この例では煮玉子とチャーシューの線が交わり、交互作用が無いときは2本が平行になる')}
+    ${panel(44, 132, [50, 54], [60, 52], 'この例：線が交わる', true)}
+    ${panel(222, 310, [50, 48], [60, 58], '交互作用が無いとき', false)}
+    <line x1="70" y1="${H - 12}" x2="92" y2="${H - 12}" stroke="${INDIGO}" stroke-width="2.4" />
+    <text x="98" y="${H - 8}" font-size="12.8" font-weight="700" fill="${INDIGO}">チャーシュー</text>
+    <line x1="200" y1="${H - 12}" x2="222" y2="${H - 12}" stroke="${N}" stroke-width="2.4" />
+    <text x="228" y="${H - 8}" font-size="12.8" font-weight="700" fill="${N}">煮玉子</text>
+  </svg>`;
+  const cap = '縦は各組み合わせ3日分の平均売上（万円）です。左の実際の例では、オフィス街ではチャーシューが10万円高く、住宅街では煮玉子が2万円高くなり、線が交わります。右のように2本が平行なら、トッピングの差はどちらの立地でも同じで、交互作用はありません。';
+  return fig(svg, cap);
+}
+
 // ============ 1.20：ポアソン分布の検定（年平均4件のとき9件以上） ============
 function poissonTest(): string {
   const W = 340, H = 226, lam = 4, obs = 9;
@@ -3323,6 +3353,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-loglik': logLikCurvature,
   'f-qq': qqPlot,
   'f-rank-ab': rankSum,
+  'f-interaction': interactionPlot,
   'f-factor-path': factorPath,
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
