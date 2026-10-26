@@ -573,20 +573,23 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${F(H(e,2.55))}" y="${F(U(e,.16))}" font-size="12.4" font-weight="700" fill="${M}">右の面積 ${L(n)}</text>
     ${W(e,[0,1,2,3,4])}
     <text x="${e.x+e.w/2}" y="222" text-anchor="middle" font-size="12.4" fill="${N}">F(10, 15)：母分散が等しいときの s₁²/s₂² の分布</text>
-  </svg>`,`母分散が等しくても、標本分散の比は1（点線）のまわりで大きくばらつきます。赤く塗った部分が、比が2.0以上になる確率です。`)}function jt(){let e=2.262,t=e*e,n=Et(9),r=Dt(1,9),i=2*wt(n,e,60,2e3),a=wt(r,t,400,8e3),o={x:14,y:30,w:316,h:106,xMin:-4,xMax:4,yMax:.42},s={x:14,y:226,w:316,h:106,xMin:0,xMax:10,yMax:.42},c=(e,t,n,r)=>`<line x1="${F(H(e,t))}" y1="${e.y+18}" x2="${F(H(e,t))}" y2="${e.y+e.h}" stroke="${M}" stroke-width="1.3" stroke-dasharray="4 3" />
+  </svg>`,`母分散が等しくても、標本分散の比は1（点線）のまわりで大きくばらつきます。赤く塗った部分が、比が2.0以上になる確率です。`)}function jt(){let e=2.262,t=e*e,n=Et(9),r=Dt(1,9),i=2*wt(n,e,60,2e3),a=wt(r,t,400,8e3),o=.01;for(;r(o)>.41;)o+=.005;let s={x:14,y:30,w:316,h:106,xMin:-4,xMax:4,yMax:.42},c={x:14,y:226,w:316,h:106,xMin:0,xMax:10,yMax:.42},l=(e,t,n,r)=>`<line x1="${F(H(e,t))}" y1="${e.y+18}" x2="${F(H(e,t))}" y2="${e.y+e.h}" stroke="${M}" stroke-width="1.3" stroke-dasharray="4 3" />
     <text x="${F(H(e,t)+(r===`end`?-4:4))}" y="${e.y+28}" text-anchor="${r}" font-size="12.4" font-weight="700" fill="${M}">${n}</text>`;return q(`${J(344,360,`上は自由度9のt分布で、2.262より外側の左右の裾が合わせて5%。2乗すると左右が重なり、下のF(1,9)分布の5.12より右の裾5%になる`)}
     <defs><marker id="tf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${P}" /></marker></defs>
     <text x="2" y="14" font-size="12.4" font-weight="700" fill="${k}">t(9)：左右の裾を合わせて ${L(i)}</text>
-    ${K(o,n,-4,-e,M,.45)}${K(o,n,e,4,M,.45)}${G(o,n,k,-4,4,2.2)}
-    ${c(o,-e,`−2.262`,`end`)}${c(o,e,`2.262`,`start`)}
-    ${W(o,[-4,-2,0,2,4])}
+    ${K(s,n,-4,-e,M,.7)}${K(s,n,e,4,M,.7)}${G(s,n,k,-4,4,2.2)}
+    ${l(s,-e,`−2.262`,`end`)}${l(s,e,`2.262`,`start`)}
+    <text x="${F(H(s,-3.3))}" y="${F(U(s,.07))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">${L(i/2)}</text>
+    <text x="${F(H(s,3.3))}" y="${F(U(s,.07))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">${L(i/2)}</text>
+    ${W(s,[-4,-2,0,2,4])}
     <line x1="${344/2}" y1="164" x2="${344/2}" y2="194" stroke="${P}" stroke-width="1.6" marker-end="url(#tf-arrow)" />
     <text x="182" y="176" font-size="12.4" fill="${P}">2乗する</text>
     <text x="182" y="192" font-size="12.4" fill="${N}">−3 も 3 も 9 になる</text>
     <text x="2" y="210" font-size="12.4" font-weight="700" fill="${A}">F(1, 9)：右の裾 ${L(a)}</text>
-    ${K(s,r,t,10,M,.45)}${G(s,r,A,.05,10,2.2)}
-    ${c(s,t,`2.262² = `+t.toFixed(2),`start`)}
-    ${W(s,[0,2,4,6,8,10])}
+    ${K(c,r,t,10,M,.7)}${G(c,r,A,o,10,2.2)}
+    ${l(c,t,`2.262² = `+t.toFixed(2),`start`)}
+    <text x="${F(H(c,7.6))}" y="${F(U(c,.08))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">右の裾 ${L(a)}</text>
+    ${W(c,[0,2,4,6,8,10])}
   </svg>`,`2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${L(i,0)}）が重なって、F(1, 9) の右の裾（${L(a,0)}）になります。`)}function Mt(){let e={x:14,y:30,w:316,h:170,xMin:0,xMax:1,yMax:5.2},t=e=>Math.exp(z(6)-z(e)-z(5-e+1)),n=e=>n=>t(e)*n**(e-1)*(1-n)**(5-e),r=[{k:1,c:N,x:.06,y:4.3,a:`start`,t:`1番目（最小）`},{k:2,c:j,x:.25,y:2.35,a:`middle`,t:`2番目`},{k:3,c:k,x:.5,y:2.1,a:`middle`,t:`3番目（中央値）`},{k:4,c:`#b45309`,x:.75,y:2.35,a:`middle`,t:`4番目`},{k:5,c:M,x:.94,y:4.3,a:`end`,t:`5番目（最大）`}];return q(`${J(344,250,`0から1の一様分布から5個とったときの、小さい方から1番目から5番目の値の分布。1番目は0の近く、5番目は1の近くに山があり、3番目の中央値は0.5を中心に左右対称`)}
     ${r.map(({k:t,c:r})=>G(e,n(t),r,5e-4,.9995,2)).join(``)}
     ${r.map(({c:t,x:n,y:r,a:i,t:a})=>`<text x="${F(H(e,n))}" y="${F(U(e,r))}" text-anchor="${i}" font-size="12.4" font-weight="700" fill="${t}">${a}</text>`).join(``)}
