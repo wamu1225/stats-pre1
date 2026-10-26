@@ -230,8 +230,12 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         { x: -span * dir.x, y: -span * dir.y },
         { x: span * dir.x, y: span * dir.y },
       ];
+      const axis2 = [
+        { x: -span * 0.5 * dir.x, y: span * 0.5 * dir.y },
+        { x: span * 0.5 * dir.x, y: -span * 0.5 * dir.y },
+      ];
       const contribution = (1 + rho) / 2;
-      return { points, axis, contribution };
+      return { points, axis, axis2, contribution, rho };
     } else if (type === 'outlier') {
       // 判別分析：等分散2群 Σ=[[1,ρ],[ρ,1]]、平均差 μ1-μ2=(-2sep,0) のとき、
       // フィッシャーの判別方向は w ∝ Σ^-1(μ1-μ2) ∝ (1, -ρ)。境界（wに直交）は方向 (ρ, 1) を通る。
@@ -328,23 +332,27 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
     }
 
     if (type === 'pca') {
-      const { points, axis, contribution } = chartData as { points: { x: number; y: number }[]; axis: { x: number; y: number }[]; contribution: number };
+      const { points, axis, axis2, contribution, rho } = chartData as { points: { x: number; y: number }[]; axis: { x: number; y: number }[]; axis2: { x: number; y: number }[]; contribution: number; rho: number };
       return (
         <div style={{ position: 'relative' }}>
           <div className="stat-badge" style={{ position: 'absolute', top: -10, right: 0, zIndex: 10, background: 'var(--primary)', color: 'white' }}>
             第1主成分の寄与率: {(contribution * 100).toFixed(0)}%
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart margin={{ top: 20, right: 20, left: 4, bottom: 0 }}>
+          <ResponsiveContainer width="100%" height={260}>
+            <ComposedChart margin={{ top: 24, right: 16, left: 0, bottom: 18 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" domain={[-3, 3]} hide />
-              <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
+              <XAxis type="number" dataKey="x" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} label={{ value: '変数1（標準化）', position: 'insideBottom', offset: -12, fontSize: 11 }} />
+              <YAxis type="number" dataKey="y" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} width={28} label={{ value: '変数2', angle: -90, position: 'insideLeft', offset: 8, fontSize: 11 }} />
               <Scatter data={points} dataKey="y" fill="var(--primary)" fillOpacity={0.55} isAnimationActive={false} />
               <Line data={axis} dataKey="y" stroke="#ef4444" strokeWidth={2.5} dot={false} isAnimationActive={false} />
+              <Line data={axis2} dataKey="y" stroke="#64748b" strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            赤線: 第1主成分の方向。相関を強めるとデータが赤線上に集中し、寄与率が上がります。
+          <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary, #64748b)', marginTop: 2 }}>
+            固有値 λ₁ = 1 + {rho.toFixed(2)} = {(1 + rho).toFixed(2)}、λ₂ = 1 − {rho.toFixed(2)} = {(1 - rho).toFixed(2)}
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: 2 }}>
+            赤線: 第1主成分、灰色の破線: 第2主成分。相関を強めるとデータが赤線上に集中し、寄与率 (1+r)/2 が上がります。
           </div>
         </div>
       );
