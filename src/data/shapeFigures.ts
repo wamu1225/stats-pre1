@@ -1525,8 +1525,8 @@ function dfThree(): string {
     const dot = r.v === 70
       ? `<circle cx="${f1(x)}" cy="${y}" r="6" fill="#fff" stroke="${r.c}" stroke-width="2.2" />`
       : `<circle cx="${f1(x)}" cy="${y}" r="6" fill="${r.c}" />`;
-    const lx = r.v === 70 ? x + 12 : r.v < 70 ? x - 10 : x + 10;
-    const anchor = r.v < 70 ? 'end' : 'start';
+    const lx = r.v === 70 ? x + 12 : r.v < 70 ? x - 10 : x + 8;
+    const anchor = r.v === 70 ? 'start' : 'end';
     return `<text x="4" y="${y + 4}" font-size="12.4" font-weight="700" fill="${r.c}">${r.n}</text>
     ${arrow}${dot}
     <text x="${f1(lx)}" y="${y - 10}" text-anchor="${anchor}" font-size="12.4" fill="${r.c}">${r.t}</text>`;
