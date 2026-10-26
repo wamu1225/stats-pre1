@@ -590,7 +590,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${l(c,t,`2.262² = `+t.toFixed(2),`start`)}
     <text x="${F(H(c,7.6))}" y="${F(U(c,.08))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">右の裾 ${L(a)}</text>
     ${W(c,[0,2,4,6,8,10])}
-  </svg>`,`2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${L(i,0)}）が重なって、F(1, 9) の右の裾（${L(a,0)}）になります。`)}function Mt(){let e={x:74,y:30,w:252,h:124,xMin:50,xMax:90,yMax:1},t=`df3-arrow`,n=[{n:`1人目`,v:60,c:k,t:`60点（差 −10）`},{n:`2人目`,v:80,c:k,t:`80点（差 +10）`},{n:`3人目`,v:70,c:M,t:`差は 0 しか残らない`}],r=H(e,70),i=n.map((n,i)=>{let a=58+i*38,o=H(e,n.v),s=n.v===70?``:`<line x1="${F(r)}" y1="${a}" x2="${F(o+(n.v<70?7:-7))}" y2="${a}" stroke="${n.c}" stroke-width="1.8" marker-end="url(#${t})" />`,c=n.v===70?`<circle cx="${F(o)}" cy="${a}" r="6" fill="#fff" stroke="${n.c}" stroke-width="2.2" />`:`<circle cx="${F(o)}" cy="${a}" r="6" fill="${n.c}" />`,l=n.v===70?o+12:n.v<70?o-10:o+10,u=n.v<70?`end`:`start`;return`<text x="4" y="${a+4}" font-size="12.4" font-weight="700" fill="${n.c}">${n.n}</text>
+  </svg>`,`2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${L(i,0)}）が重なって、F(1, 9) の右の裾（${L(a,0)}）になります。`)}function Mt(){let e={x:74,y:30,w:252,h:124,xMin:50,xMax:90,yMax:1},t=`df3-arrow`,n=[{n:`1人目`,v:60,c:k,t:`60点（差 −10）`},{n:`2人目`,v:80,c:k,t:`80点（差 +10）`},{n:`3人目`,v:70,c:M,t:`差は 0 しか残らない`}],r=H(e,70),i=n.map((n,i)=>{let a=58+i*38,o=H(e,n.v),s=n.v===70?``:`<line x1="${F(r)}" y1="${a}" x2="${F(o+(n.v<70?7:-7))}" y2="${a}" stroke="${n.c}" stroke-width="1.8" marker-end="url(#${t})" />`,c=n.v===70?`<circle cx="${F(o)}" cy="${a}" r="6" fill="#fff" stroke="${n.c}" stroke-width="2.2" />`:`<circle cx="${F(o)}" cy="${a}" r="6" fill="${n.c}" />`,l=n.v===70?o+12:n.v<70?o-10:o+8,u=n.v===70?`start`:`end`;return`<text x="4" y="${a+4}" font-size="12.4" font-weight="700" fill="${n.c}">${n.n}</text>
     ${s}${c}
     <text x="${F(l)}" y="${a-10}" text-anchor="${u}" font-size="12.4" fill="${n.c}">${n.t}</text>`}).join(``);return q(`${J(344,206,`3人の点数の平均が70点のとき、1人目60点と2人目80点が分かると、3人目の平均からの差は0しか残らず70点に決まる`)}
     <defs><marker id="${t}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${k}" /></marker></defs>
@@ -2892,7 +2892,7 @@ $$Z = \\frac{\\bar{X} - \\mu}{\\sigma / \\sqrt{n}} \\sim N(0, 1)$$
 
 $$s^2 = \\frac{1}{n-1}\\sum_{i=1}^{n} (X_i - \\bar{X})^2$$
 
-その平方根 $s$ を標本標準偏差と呼びます。$n$ でなく $n-1$ で割るのは、平均からの差 $X_i - \\bar{X}$ の合計が必ず0になり、自由に動ける差が $n-1$ 個しかないからです。たとえば3人の点数の平均が70点なら、2人が60点と80点と分かった時点で3人目は70点に決まります。この $n-1$ を**自由度**と呼びます。$n-1$ で割ると $\\sigma^2$ を偏りなく推定できることは、[推定量の性質](/stats-pre1/1.15-estimator-props/)で確かめます。
+その平方根 $s$ を標本標準偏差と呼びます。$n$ でなく $n-1$ で割るのは、平均からの差 $X_i - \\bar{X}$ の合計が必ず0になり、自由に動ける差が $n-1$ 個しかないからです（下の図）。この $n-1$ を**自由度**と呼びます。$n-1$ で割ると $\\sigma^2$ を偏りなく推定できることは、[推定量の性質](/stats-pre1/1.15-estimator-props/)で確かめます。
 
 [[f-df-three]]
 
