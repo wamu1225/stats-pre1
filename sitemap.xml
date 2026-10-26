@@ -218,7 +218,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.7-multivariate/</loc>
-    <lastmod>2026-10-18</lastmod>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.7b-cca-sem/</loc>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -278,7 +284,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/3.7-causal/</loc>
-    <lastmod>2026-10-22</lastmod>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/3.7b-causal-advanced/</loc>
+    <lastmod>2026-10-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
