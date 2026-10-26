@@ -1508,6 +1508,74 @@ function tFold(): string {
   const cap = `2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${pct(pT, 0)}）が重なって、F(1, 9) の右の裾（${pct(pF, 0)}）になります。`;
   return fig(svg, cap);
 }
+// 1.12：自由度。3人の平均が70点なら、2人の点が分かった時点で3人目は70点に決まる
+function dfThree(): string {
+  const W = 344, H = 206;
+  const b: Box = { x: 74, y: 30, w: 252, h: 124, xMin: 50, xMax: 90, yMax: 1 };
+  const mk = 'df3-arrow';
+  const rows = [
+    { n: '1人目', v: 60, c: INDIGO, t: '60点（差 −10）' },
+    { n: '2人目', v: 80, c: INDIGO, t: '80点（差 +10）' },
+    { n: '3人目', v: 70, c: ROSE, t: '差は 0 しか残らない' },
+  ];
+  const mx = PX(b, 70);
+  const body = rows.map((r, i) => {
+    const y = 58 + i * 38, x = PX(b, r.v);
+    const arrow = r.v === 70 ? '' : `<line x1="${f1(mx)}" y1="${y}" x2="${f1(x + (r.v < 70 ? 7 : -7))}" y2="${y}" stroke="${r.c}" stroke-width="1.8" marker-end="url(#${mk})" />`;
+    const dot = r.v === 70
+      ? `<circle cx="${f1(x)}" cy="${y}" r="6" fill="#fff" stroke="${r.c}" stroke-width="2.2" />`
+      : `<circle cx="${f1(x)}" cy="${y}" r="6" fill="${r.c}" />`;
+    const lx = r.v === 70 ? x + 12 : r.v < 70 ? x - 10 : x + 10;
+    const anchor = r.v < 70 ? 'end' : 'start';
+    return `<text x="4" y="${y + 4}" font-size="12.4" font-weight="700" fill="${r.c}">${r.n}</text>
+    ${arrow}${dot}
+    <text x="${f1(lx)}" y="${y - 10}" text-anchor="${anchor}" font-size="12.4" fill="${r.c}">${r.t}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '3人の点数の平均が70点のとき、1人目60点と2人目80点が分かると、3人目の平均からの差は0しか残らず70点に決まる')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INDIGO}" /></marker></defs>
+    <line x1="${f1(mx)}" y1="30" x2="${f1(mx)}" y2="${b.y + b.h}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(mx)}" y="22" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">平均 70</text>
+    ${body}
+    ${axes(b, [50, 60, 70, 80, 90])}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差の合計は必ず0。自由に動けるのは2人分</text>
+  </svg>`;
+  const cap = `平均からの差は、足すと必ず0になります。2人分の差（−10 と +10）が決まると、3人目の差は0しか残りません。`;
+  return fig(svg, cap);
+}
+
+// 1.12：同じデータを5倍に伸ばしても T は変わらない（σ の大きさに T の分布がよらない）
+function tScale(): string {
+  const W = 344, H = 286;
+  const base = [-4, -2, 0, 3, 4, 5, 8, 10, 12, 14];
+  const n = base.length;
+  const panel = (top: number, k: number, title: string, color: string, xMin: number, xMax: number, ticks: number[]) => {
+    const xs = base.map((v) => v * k);
+    const mean = xs.reduce((a, v) => a + v, 0) / n;
+    const s = Math.sqrt(xs.reduce((a, v) => a + (v - mean) ** 2, 0) / (n - 1));
+    const T = mean / (s / Math.sqrt(n));
+    const b: Box = { x: 14, y: top + 30, w: 316, h: 80, xMin, xMax, yMax: 1 };
+    const px = (v: number) => f1(PX(b, v));
+    const yDot = top + 66, yBr = top + 92;
+    return `<text x="2" y="${top + 16}" font-size="12.4" font-weight="700" fill="${color}">${title}</text>
+    <text x="${W - 2}" y="${top + 16}" text-anchor="end" font-size="13.2" font-weight="700" fill="${ROSE}">T = ${T.toFixed(2)}</text>
+    <line x1="${px(0)}" y1="${top + 36}" x2="${px(0)}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, 0) - 4)}" y="${top + 44}" text-anchor="end" font-size="12.4" fill="${SLATE}">μ = 0</text>
+    <line x1="${px(mean)}" y1="${top + 36}" x2="${px(mean)}" y2="${b.y + b.h}" stroke="${color}" stroke-width="1.6" />
+    <text x="${f1(PX(b, mean) + 4)}" y="${top + 44}" font-size="12.4" font-weight="700" fill="${color}">x̄ = ${num(mean)}</text>
+    ${xs.map((v) => `<circle cx="${px(v)}" cy="${yDot}" r="4.5" fill="${color}" fill-opacity="0.75" />`).join('')}
+    <line x1="${px(mean)}" y1="${yBr}" x2="${px(mean + s)}" y2="${yBr}" stroke="${INK}" stroke-width="1.6" />
+    <line x1="${px(mean + s)}" y1="${yBr - 5}" x2="${px(mean + s)}" y2="${yBr + 5}" stroke="${INK}" stroke-width="1.6" />
+    <text x="${f1(PX(b, mean + s) + 5)}" y="${yBr + 4}" font-size="12.4" fill="${INK}">s = ${num(s)}</text>
+    ${axes(b, ticks)}`;
+  };
+  const svg = `${svgOpen(W, H, '上は薬の例の10人のデータで平均5、標準偏差6、T は2.64。下は散らばりが5倍の母集団から取った場合で、データ全体が5倍に伸び、平均25、標準偏差30になるが、T は同じ2.64')}
+    ${panel(0, 1, '薬の例の10人（mmHg）', INDIGO, -10, 20, [-10, -5, 0, 5, 10, 15, 20])}
+    ${panel(146, 5, '散らばりが5倍の母集団なら', TEAL, -50, 100, [-50, -25, 0, 25, 50, 75, 100])}
+  </svg>`;
+  const cap = `下の目盛りは上の5倍です。データは全体が5倍に伸びるだけで、同じ形に見えます。平均のずれも s も5倍になるので、比の T は変わりません。`;
+  return fig(svg, cap);
+}
+
 // 1.13：一様分布 U(0,1) から5個とったときの、小さい方から k 番目の値の分布（ベータ分布 Be(k, 6−k)）
 function orderStats(): string {
   const W = 344, H = 250, n = 5;
@@ -3372,7 +3440,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
-  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-f-tail': fTail,
+  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
