@@ -1475,6 +1475,34 @@ function fTail(): string {
   return fig(svg, cap);
 }
 
+// 1.12：t(9) の左右の裾（|T| > 2.262）を2乗すると、F(1, 9) の右の裾（T² > 5.12）に重なる
+function tFold(): string {
+  const W = 344, H = 360, k = 9, c = 2.262, c2 = c * c;
+  const ft = tPdf(k), ff = fPdf(1, k);
+  const pT = 2 * simpsonInt(ft, c, 60, 2000);
+  const pF = simpsonInt(ff, c2, 400, 8000);
+  const b1: Box = { x: 14, y: 30, w: 316, h: 106, xMin: -4, xMax: 4, yMax: 0.42 };
+  const b2: Box = { x: 14, y: 226, w: 316, h: 106, xMin: 0, xMax: 10, yMax: 0.42 };
+  const vline = (b: Box, x: number, txt: string, anchor: string) =>
+    `<line x1="${f1(PX(b, x))}" y1="${b.y + 18}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, x) + (anchor === 'end' ? -4 : 4))}" y="${b.y + 28}" text-anchor="${anchor}" font-size="12.4" font-weight="700" fill="${ROSE}">${txt}</text>`;
+  const svg = `${svgOpen(W, H, '上は自由度9のt分布で、2.262より外側の左右の裾が合わせて5%。2乗すると左右が重なり、下のF(1,9)分布の5.12より右の裾5%になる')}
+    <defs><marker id="tf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">t(9)：左右の裾を合わせて ${pct(pT)}</text>
+    ${area(b1, ft, -4, -c, ROSE, 0.45)}${area(b1, ft, c, 4, ROSE, 0.45)}${curve(b1, ft, INDIGO, -4, 4, 2.2)}
+    ${vline(b1, -c, '−2.262', 'end')}${vline(b1, c, '2.262', 'start')}
+    ${axes(b1, [-4, -2, 0, 2, 4])}
+    <line x1="${W / 2}" y1="164" x2="${W / 2}" y2="194" stroke="${INK}" stroke-width="1.6" marker-end="url(#tf-arrow)" />
+    <text x="${W / 2 + 10}" y="176" font-size="12.4" fill="${INK}">2乗する</text>
+    <text x="${W / 2 + 10}" y="192" font-size="12.4" fill="${SLATE}">−3 も 3 も 9 になる</text>
+    <text x="2" y="210" font-size="12.4" font-weight="700" fill="${AMBER}">F(1, 9)：右の裾 ${pct(pF)}</text>
+    ${area(b2, ff, c2, 10, ROSE, 0.45)}${curve(b2, ff, AMBER, 0.05, 10, 2.2)}
+    ${vline(b2, c2, '2.262² = ' + c2.toFixed(2), 'start')}
+    ${axes(b2, [0, 2, 4, 6, 8, 10])}
+  </svg>`;
+  const cap = `2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${pct(pT, 0)}）が重なって、F(1, 9) の右の裾（${pct(pF, 0)}）になります。`;
+  return fig(svg, cap);
+}
 // 1.13：一様分布 U(0,1) から5個とったときの、小さい方から k 番目の値の分布（ベータ分布 Be(k, 6−k)）
 function orderStats(): string {
   const W = 344, H = 250, n = 5;
@@ -3339,7 +3367,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
-  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-f-tail': fTail,
+  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
