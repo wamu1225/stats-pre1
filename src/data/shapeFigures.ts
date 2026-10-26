@@ -1481,6 +1481,8 @@ function tFold(): string {
   const ft = tPdf(k), ff = fPdf(1, k);
   const pT = 2 * simpsonInt(ft, c, 60, 2000);
   const pF = simpsonInt(ff, c2, 400, 8000);
+  let x0 = 0.01;
+  while (ff(x0) > 0.41) x0 += 0.005; // 0 の近くは無限に高くなるので、枠の上端から描き始める（上端に張り付いた平らな線にしない）
   const b1: Box = { x: 14, y: 30, w: 316, h: 106, xMin: -4, xMax: 4, yMax: 0.42 };
   const b2: Box = { x: 14, y: 226, w: 316, h: 106, xMin: 0, xMax: 10, yMax: 0.42 };
   const vline = (b: Box, x: number, txt: string, anchor: string) =>
@@ -1489,15 +1491,18 @@ function tFold(): string {
   const svg = `${svgOpen(W, H, '上は自由度9のt分布で、2.262より外側の左右の裾が合わせて5%。2乗すると左右が重なり、下のF(1,9)分布の5.12より右の裾5%になる')}
     <defs><marker id="tf-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
     <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">t(9)：左右の裾を合わせて ${pct(pT)}</text>
-    ${area(b1, ft, -4, -c, ROSE, 0.45)}${area(b1, ft, c, 4, ROSE, 0.45)}${curve(b1, ft, INDIGO, -4, 4, 2.2)}
+    ${area(b1, ft, -4, -c, ROSE, 0.7)}${area(b1, ft, c, 4, ROSE, 0.7)}${curve(b1, ft, INDIGO, -4, 4, 2.2)}
     ${vline(b1, -c, '−2.262', 'end')}${vline(b1, c, '2.262', 'start')}
+    <text x="${f1(PX(b1, -3.3))}" y="${f1(PY(b1, 0.07))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">${pct(pT / 2)}</text>
+    <text x="${f1(PX(b1, 3.3))}" y="${f1(PY(b1, 0.07))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">${pct(pT / 2)}</text>
     ${axes(b1, [-4, -2, 0, 2, 4])}
     <line x1="${W / 2}" y1="164" x2="${W / 2}" y2="194" stroke="${INK}" stroke-width="1.6" marker-end="url(#tf-arrow)" />
     <text x="${W / 2 + 10}" y="176" font-size="12.4" fill="${INK}">2乗する</text>
     <text x="${W / 2 + 10}" y="192" font-size="12.4" fill="${SLATE}">−3 も 3 も 9 になる</text>
     <text x="2" y="210" font-size="12.4" font-weight="700" fill="${AMBER}">F(1, 9)：右の裾 ${pct(pF)}</text>
-    ${area(b2, ff, c2, 10, ROSE, 0.45)}${curve(b2, ff, AMBER, 0.05, 10, 2.2)}
+    ${area(b2, ff, c2, 10, ROSE, 0.7)}${curve(b2, ff, AMBER, x0, 10, 2.2)}
     ${vline(b2, c2, '2.262² = ' + c2.toFixed(2), 'start')}
+    <text x="${f1(PX(b2, 7.6))}" y="${f1(PY(b2, 0.08))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">右の裾 ${pct(pF)}</text>
     ${axes(b2, [0, 2, 4, 6, 8, 10])}
   </svg>`;
   const cap = `2乗すると、絶対値が同じ左右の値が同じ1つの値になります。t の左右の裾（合わせて ${pct(pT, 0)}）が重なって、F(1, 9) の右の裾（${pct(pF, 0)}）になります。`;
