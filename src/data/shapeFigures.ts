@@ -2143,6 +2143,48 @@ function wls(): string {
   return fig(svg, cap);
 }
 
+
+// ============ 2.1b：Lasso のひし形と Ridge の円に、残差平方和の等高線が触れる点 ============
+function lassoRidge(): string {
+  const W = 340, H = 248, bh = [2, 0.4], rho = 0.5, t = 1.5;
+  // 残差平方和は最小二乗推定量 bh からのずれの2次式（説明変数の相関 rho）
+  const rss = (p: number[]) => { const d0 = p[0] - bh[0], d1 = p[1] - bh[1]; return d0 * d0 + 2 * rho * d0 * d1 + d1 * d1; };
+  const best = (edge: (s: number) => number[]) => {
+    let m = edge(0), v = rss(m);
+    for (let i = 1; i <= 4000; i++) { const p = edge((2 * Math.PI * i) / 4000); if (rss(p) < v) { v = rss(p); m = p; } }
+    return m;
+  };
+  const diamond = (s: number) => { const c = Math.cos(s), d = Math.sin(s), k = t / (Math.abs(c) + Math.abs(d)); return [k * c, k * d]; };
+  const circle = (s: number) => [t * Math.cos(s), t * Math.sin(s)];
+  const lo = -1.6, hi = 2.8, S = 136, top = 46;
+  const panel = (x0: number, name: string, col: string, shape: (s: number) => number[]) => {
+    const p = best(shape), c = rss(p);
+    const X = (v: number) => x0 + ((v - lo) / (hi - lo)) * S, Y = (v: number) => top + S - ((v - lo) / (hi - lo)) * S;
+    const ring = Array.from({ length: 121 }, (_, i) => { const s = (2 * Math.PI * i) / 120, u = [Math.cos(s), Math.sin(s)], r = Math.sqrt(c / rss([bh[0] + u[0], bh[1] + u[1]])); return `${f1(X(bh[0] + r * u[0]))},${f1(Y(bh[1] + r * u[1]))}`; }).join(' ');
+    const region = Array.from({ length: 121 }, (_, i) => { const q = shape((2 * Math.PI * i) / 120); return `${f1(X(q[0]))},${f1(Y(q[1]))}`; }).join(' ');
+    const p1 = Math.abs(p[1]) < 0.005 ? 0 : p[1];
+    return { p, svg: `
+    <text x="${x0 + S / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${col}">${name}</text>
+    <line x1="${X(lo)}" y1="${f1(Y(0))}" x2="${X(hi)}" y2="${f1(Y(0))}" stroke="${SLATE}" />
+    <line x1="${f1(X(0))}" y1="${Y(lo)}" x2="${f1(X(0))}" y2="${Y(hi)}" stroke="${SLATE}" />
+    ${[-1, 1].map((v) => `<text x="${f1(X(v))}" y="${f1(Y(0) + 14)}" text-anchor="middle" font-size="12" fill="${SLATE}" stroke="#fff" stroke-width="3" paint-order="stroke">${v}</text>`).join('')}
+    ${[-1, 1, 2].map((v) => `<text x="${f1(X(0) - 4)}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}" stroke="#fff" stroke-width="3" paint-order="stroke">${v}</text>`).join('')}
+    <text x="${f1(X(0) + 5)}" y="${Y(hi) + 10}" font-size="12.4" fill="${INK}">β₂</text>
+    <polygon points="${region}" fill="${col}" fill-opacity="0.16" stroke="${col}" stroke-width="1.6" />
+    <polygon points="${ring}" fill="none" stroke="${AMBER}" stroke-width="1.8" />
+    <circle cx="${f1(X(bh[0]))}" cy="${f1(Y(bh[1]))}" r="3.5" fill="${AMBER}" />
+    <circle cx="${f1(X(p[0]))}" cy="${f1(Y(p[1]))}" r="4.5" fill="${INK}" />
+    <text x="${x0 + S / 2}" y="${top + S + 34}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">答え (${f2(p[0])}, ${f2(p1)})</text>` };
+  };
+  const L = panel(18, 'Lasso：ひし形', INDIGO, diamond), R = panel(184, 'Ridge：円', TEAL, circle);
+  const svg = `${svgOpen(W, H, `係数2つの平面。オレンジの点が最小二乗推定量 (2, 0.4)、オレンジの楕円は残差平方和の等高線。Lasso のひし形には角 (${f2(L.p[0])}, 0) で触れ、β₂ がちょうど0になる。Ridge の円には (${f2(R.p[0])}, ${f2(R.p[1])}) で触れ、β₂ は0にならない`)}
+    <text x="${W / 2}" y="34" text-anchor="middle" font-size="12" fill="${AMBER}">● 最小二乗推定量 (β₁, β₂) = (2, 0.4)　◯ 等高線</text>
+    ${L.svg}${R.svg}
+    <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 β₁・縦軸 β₂</text>
+  </svg>`;
+  const cap = `係数が2つ、説明変数の相関が 0.5 の模擬の例です。どちらも係数の大きさを ${t} 以下に抑えた範囲（Lasso は |β₁|＋|β₂| ≤ ${t}、Ridge は β₁²＋β₂² ≤ ${t}²）の中で、残差平方和が最も小さい点（等高線が範囲に初めて触れる黒い点）が答えです。Lasso は角で触れて β₂ がちょうど 0、Ridge は β₂ が ${f2(R.p[1])} に縮むだけで 0 になりません。`;
+  return fig(svg, cap);
+}
 // ============ 1.19：ネイマン・ピアソンの棄却域（2つの山と尤度比） ============
 function npRegion(): string {
   const W = 340, H = 330, se = 0.2, mu1 = 0.5, k = 1.6449 * se;
@@ -3505,7 +3547,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
