@@ -620,15 +620,15 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="276" y="${r+44/2+4}" font-size="12.4" fill="${N}">平均 ${R(i)}</text>`}).join(``);return q(`${J(344,250,`4枚の畑それぞれを3区画に分け、肥料A・B・Cをくじで1区画ずつ割り当てた配置。下の畑ほど土が良く収量が多い`)}
     <text x="4" y="16" font-size="12.4" fill="${N}">色が濃い畑ほど土が良い</text>
     ${n}
-  </svg>`,`どの畑にも A・B・C が1つずつ入り、畑の中の並びはくじで決めます。土の良い畑に特定の肥料が集まらないので、畑の違いは肥料の比較に偏りを生みません。`)}function Ft(){let e=e=>e/243.7*316,t=(t,n)=>{let r=14;return n.map(n=>{let i=e(n.v),a=`<rect x="${F(r)}" y="${t}" width="${F(i)}" height="34" fill="${n.c}" fill-opacity="0.8" />`+(i>40?`<text x="${F(r+i/2)}" y="${t+22}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#fff">${n.t} ${n.v}</text>`:``);return r+=i,a}).join(``)};return q(`${J(344,228,`平方和の分け方。畑を無視すると畑の違い206.3が誤差に入り誤差は211.0、畑をブロックにすると誤差は4.7だけになる`)}
+  </svg>`,`どの畑にも A・B・C が1つずつ入り、畑の中の並びはくじで決めます。土の良い畑に特定の肥料が集まらないので、畑の違いは肥料の比較に偏りを生みません。`)}function Ft(){let e=e=>e/243.7*316,t=(t,n)=>{let r=14;return n.map(n=>{let i=e(n.v),a=`<rect x="${F(r)}" y="${t}" width="${F(i)}" height="34" fill="${n.c}" fill-opacity="0.8" />`+(i>75?`<text x="${F(r+i/2)}" y="${t+22}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#fff">${n.t} ${n.v}</text>`:``);return r+=i,a}).join(``)};return q(`${J(344,228,`平方和の分け方。畑を無視すると畑の違い206.3が誤差に入り誤差は211.0、畑をブロックにすると誤差は4.7だけになる`)}
     <text x="14" y="18" font-size="12.4" font-weight="700" fill="${P}">畑を無視した一元配置</text>
     ${t(26,[{v:32.7,c:A,t:`肥料`},{v:211,c:N,t:`誤差`}])}
-    <text x="14" y="80" font-size="12.4" fill="${N}">誤差の平均平方 ${R(211)}÷9＝23.4 → F＝0.70</text>
+    <text x="14" y="80" font-size="12.4" fill="${N}">肥料（橙）32.7、誤差の平均平方 ${R(211)}÷9＝23.4 → F＝0.70</text>
     <text x="14" y="122" font-size="12.4" font-weight="700" fill="${P}">畑をブロックにした二元配置</text>
     ${t(130,[{v:32.7,c:A,t:`肥料`},{v:206.3,c:j,t:`畑`},{v:4.7,c:N,t:`誤差`}])}
     <line x1="${F(330-e(4.7)/2)}" y1="166" x2="${F(320)}" y2="180" stroke="${N}" stroke-width="1" />
     <text x="330" y="192" text-anchor="end" font-size="12.4" fill="${N}">誤差 4.7</text>
-    <text x="14" y="214" font-size="12.4" fill="${N}">誤差の平均平方 4.7÷6＝0.78 → F＝21.0</text>
+    <text x="14" y="214" font-size="12.4" fill="${N}">肥料（橙）32.7、誤差の平均平方 4.7÷6＝0.78 → F＝21.0</text>
   </svg>`,`棒の長さは平方和で、どちらも合計 243.7 です。肥料の分（橙）は同じなのに、畑を無視すると畑の違い（緑）が誤差（灰）に入り、肥料の差が埋もれます。`)}function It(){let e={x:14,y:30,w:316,h:170,xMin:0,xMax:1,yMax:5.2},t=e=>Math.exp(z(6)-z(e)-z(5-e+1)),n=e=>n=>t(e)*n**(e-1)*(1-n)**(5-e),r=[{k:1,c:N,x:.06,y:4.3,a:`start`,t:`1番目（最小）`},{k:2,c:j,x:.25,y:2.35,a:`middle`,t:`2番目`},{k:3,c:k,x:.5,y:2.1,a:`middle`,t:`3番目（中央値）`},{k:4,c:`#b45309`,x:.75,y:2.35,a:`middle`,t:`4番目`},{k:5,c:M,x:.94,y:4.3,a:`end`,t:`5番目（最大）`}];return q(`${J(344,250,`0から1の一様分布から5個とったときの、小さい方から1番目から5番目の値の分布。1番目は0の近く、5番目は1の近くに山があり、3番目の中央値は0.5を中心に左右対称`)}
     ${r.map(({k:t,c:r})=>G(e,n(t),r,5e-4,.9995,2)).join(``)}
     ${r.map(({c:t,x:n,y:r,a:i,t:a})=>`<text x="${F(H(e,n))}" y="${F(U(e,r))}" text-anchor="${i}" font-size="12.4" font-weight="700" fill="${t}">${a}</text>`).join(``)}
