@@ -198,6 +198,20 @@ function checkFile(filePath) {
 console.log('--- Data Integrity Validation ---');
 filesToWatch.forEach(checkFile);
 
+// 4. Module-number references in prose, e.g. "（3.4）" — readers never see module numbers, so link the module by
+//    name instead. Matches only numbers that are real module IDs, so "（0.90）" or "Po(1.5)" are not flagged
+//    (2026-10-17 2.7 / O-3-51).
+{
+  const raw = fs.readFileSync(path.join(root, 'src/data/modules.ts'), 'utf8');
+  const nums = new Set([...raw.matchAll(/id:\s*`(\d+\.\d+[a-z]?)-/g)].map(m => m[1]));
+  for (const m of raw.matchAll(/(?:（|(?<![A-Za-z\\}_^)\]\d.])\()(\d+\.\d+[a-z]?)[)）]/g)) {
+    if (nums.has(m[1])) {
+      const lineNum = raw.slice(0, m.index).split('\n').length;
+      errors.push(`[Error] Module-number reference '${m[0]}' at src/data/modules.ts:${lineNum}. Link the module by name, e.g. [分割表の解析](/stats-pre1/3.4-contingency/).`);
+    }
+  }
+}
+
 if (errors.length > 0) {
   console.error('\n❌ VALIDATION FAILED!\n');
   [...new Set(errors)].forEach(err => console.error(err));
