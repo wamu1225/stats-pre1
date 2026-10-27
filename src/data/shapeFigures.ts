@@ -2185,6 +2185,60 @@ function lassoRidge(): string {
   const cap = `係数が2つ、説明変数の相関が 0.5 の模擬の例です。どちらも係数の大きさを ${t} 以下に抑えた範囲（Lasso は |β₁|＋|β₂| ≤ ${t}、Ridge は β₁²＋β₂² ≤ ${t}²）の中で、残差平方和が最も小さい点（等高線が範囲に初めて触れる黒い点）が答えです。Lasso は角で触れて β₂ がちょうど 0、Ridge は β₂ が ${f2(R.p[1])} に縮むだけで 0 になりません。`;
   return fig(svg, cap);
 }
+
+// ============ 1.13：合計3人と分かれば、内訳の確率は λ によらない ============
+function suffPoisson(): string {
+  const W = 340, H = 236, lams = [1, 3], cols = [INDIGO, TEAL];
+  const splits = [[0, 3], [1, 2], [2, 1], [3, 0]];
+  const fact = (k: number) => [1, 1, 2, 6][k];
+  const joint = (l: number, s: number[]) => Math.exp(-2 * l) * l ** 3 / (fact(s[0]) * fact(s[1]));
+  const panel = (x0: number, title: string, val: (l: number, s: number[]) => number, yMax: number, ticks: number[], fmt: (v: number) => string) => {
+    const bx = { x: x0, y: 44, w: 132, h: 130 };
+    const Y = (v: number) => bx.y + bx.h - (v / yMax) * bx.h;
+    const gw = bx.w / 4;
+    return `<text x="${x0 + bx.w / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
+    ${ticks.map((v) => `<line x1="${bx.x}" y1="${f1(Y(v))}" x2="${bx.x + bx.w}" y2="${f1(Y(v))}" stroke="#e2e8f0" /><text x="${bx.x - 4}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${fmt(v)}</text>`).join('')}
+    ${splits.map((s, i) => lams.map((l, j) => { const v = val(l, s), x = bx.x + i * gw + 5 + j * 12; return `<rect x="${f1(x)}" y="${f1(Y(v))}" width="11" height="${f1(bx.y + bx.h - Y(v))}" fill="${cols[j]}" fill-opacity="0.8" />`; }).join('') + `<text x="${f1(bx.x + i * gw + gw / 2)}" y="${bx.y + bx.h + 15}" text-anchor="middle" font-size="12" fill="${SLATE}">(${s[0]},${s[1]})</text>`).join('')}
+    <line x1="${bx.x}" y1="${bx.y + bx.h}" x2="${bx.x + bx.w}" y2="${bx.y + bx.h}" stroke="${SLATE}" />`;
+  };
+  const svg = `${svgOpen(W, H, '2時間の客数の内訳4通り。左は内訳の確率で、λ=1 と λ=3 で高さが違う。右は合計3人と分かったときの内訳の確率で、どちらの λ でも 1/8・3/8・3/8・1/8 と同じ')}
+    <text x="${W / 2}" y="34" text-anchor="middle" font-size="12"><tspan fill="${INDIGO}">■ λ = 1</tspan>　<tspan fill="${TEAL}">■ λ = 3</tspan></text>
+    ${panel(34, '内訳の確率', joint, 0.08, [0, 0.04, 0.08], (v) => String(v))}
+    ${panel(200, '合計3人のときの内訳', (l, s) => joint(l, s) / (Math.exp(-2 * l) * (2 * l) ** 3 / 6), 0.5, [0, 0.25, 0.5], (v) => String(v))}
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">(1時間目, 2時間目) の人数・合計はどれも3人</text>
+  </svg>`;
+  const cap = `左は内訳ごとの確率で、λ によって高さが変わります（λ = 3 では約半分）。右は合計が3人と分かったときの確率で、どちらの λ でも 1/8・3/8・3/8・1/8 と同じです。合計が分かれば、内訳を見ても λ について何も分かりません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.13：割合のぶれを、累積分布関数の傾きで中央値のぶれに直す ============
+function medianCdf(): string {
+  const W = 340, H = 250, n = 25, e = 1 / (2 * Math.sqrt(n)), r3 = Math.sqrt(3), BROWN = '#b45309';
+  const b = { x: 44, y: 40, w: 286, h: 170, xMin: -1, xMax: 1, yMax: 1 };
+  const p0 = 0.2, p1 = 0.8;
+  const X = (x: number) => b.x + ((x - b.xMin) / (b.xMax - b.xMin)) * b.w, Y = (p: number) => b.y + b.h - ((p - p0) / (p1 - p0)) * b.h;
+  const Fu = (x: number) => (x + r3) / (2 * r3);
+  const path = (F: (x: number) => number) => Array.from({ length: 81 }, (_, i) => { const x = -0.82 + (1.64 * i) / 80; return `${i ? 'L' : 'M'}${f1(X(x))},${f1(Y(F(x)))}`; }).join('');
+  const dn = e / normPdf(0), du = e * 2 * r3;
+  const drop = (d: number, col: string, dy: number) => [-d, d].map((x) => `<line x1="${f1(X(x))}" y1="${f1(Y(x > 0 ? 0.5 + e : 0.5 - e))}" x2="${f1(X(x))}" y2="${b.y + b.h + dy}" stroke="${col}" stroke-width="1.2" stroke-dasharray="3 3" />`).join('')
+    + `<line x1="${f1(X(-d))}" y1="${b.y + b.h + dy}" x2="${f1(X(d))}" y2="${b.y + b.h + dy}" stroke="${col}" stroke-width="5" />`;
+  const svg = `${svgOpen(W, H, `累積分布関数の真ん中を拡大。縦の0.4から0.6の帯（25個のうち中央値以下に来る割合のぶれ）が、正規分布では横の ±${f2(dn)}、一様分布では ±${f2(du)} に写る`)}
+    <text x="4" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">正規（傾き 0.40）→ 中央値のぶれ ±${f2(dn)}</text>
+    <text x="4" y="31" font-size="12.4" font-weight="700" fill="${BROWN}">一様（傾き 0.29）→ 中央値のぶれ ±${f2(du)}</text>
+    <rect x="${b.x}" y="${f1(Y(0.5 + e))}" width="${b.w}" height="${f1(Y(0.5 - e) - Y(0.5 + e))}" fill="${AMBER}" fill-opacity="0.15" />
+    ${[0.2, 0.4, 0.5, 0.6, 0.8].map((p) => `<text x="${b.x - 5}" y="${f1(Y(p) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${p}</text>`).join('')}
+    <text x="${b.x + 4}" y="${f1(Y(0.5) + 4)}" font-size="12" fill="${AMBER}">割合のぶれ 0.5 ± ${e}</text>
+    <path d="${path(Fu)}" fill="none" stroke="${BROWN}" stroke-width="2" />
+    <path d="${path(Phi)}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
+    ${drop(du, BROWN, -4)}${drop(dn, INDIGO, -11)}
+    <line x1="${b.x}" y1="${b.y + b.h}" x2="${b.x + b.w}" y2="${b.y + b.h}" stroke="${SLATE}" />
+    ${[-0.5, 0, 0.5].map((t) => `<text x="${f1(X(t))}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">x（どちらも平均0・分散1）　縦軸は F(x)</text>
+  </svg>`;
+  const cap = `25個のうち中央値以下に来る割合は、0.5 のまわりで標準偏差 ${e} ぶれます（橙の帯）。この帯を曲線で横軸に写した幅が中央値のぶれで、真ん中の傾き f(m) が急な正規分布ほど狭くなります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.19：ネイマン・ピアソンの棄却域（2つの山と尤度比） ============
 function npRegion(): string {
   const W = 340, H = 330, se = 0.2, mu1 = 0.5, k = 1.6449 * se;
@@ -3547,7 +3601,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
