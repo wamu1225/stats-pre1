@@ -1619,7 +1619,7 @@ function rcbdSS(): string {
     return parts.map((p) => {
       const w = sx(p.v);
       const s = `<rect x="${f1(x)}" y="${y}" width="${f1(w)}" height="34" fill="${p.c}" fill-opacity="0.8" />` +
-        (w > 40 ? `<text x="${f1(x + w / 2)}" y="${y + 22}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#fff">${p.t} ${p.v}</text>` : '');
+        (w > 75 ? `<text x="${f1(x + w / 2)}" y="${y + 22}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#fff">${p.t} ${p.v}</text>` : '');
       x += w;
       return s;
     }).join('');
@@ -1628,12 +1628,12 @@ function rcbdSS(): string {
   const svg = `${svgOpen(W, H, '平方和の分け方。畑を無視すると畑の違い206.3が誤差に入り誤差は211.0、畑をブロックにすると誤差は4.7だけになる')}
     <text x="${x0}" y="18" font-size="12.4" font-weight="700" fill="${INK}">畑を無視した一元配置</text>
     ${bar(26, [{ v: 32.7, c: AMBER, t: '肥料' }, { v: e1, c: SLATE, t: '誤差' }])}
-    <text x="${x0}" y="80" font-size="12.4" fill="${SLATE}">誤差の平均平方 ${num(e1)}÷9＝23.4 → F＝0.70</text>
+    <text x="${x0}" y="80" font-size="12.4" fill="${SLATE}">肥料（橙）32.7、誤差の平均平方 ${num(e1)}÷9＝23.4 → F＝0.70</text>
     <text x="${x0}" y="122" font-size="12.4" font-weight="700" fill="${INK}">畑をブロックにした二元配置</text>
     ${bar(130, [{ v: 32.7, c: AMBER, t: '肥料' }, { v: 206.3, c: TEAL, t: '畑' }, { v: 4.7, c: SLATE, t: '誤差' }])}
     <line x1="${f1(x0 + bw - sx(4.7) / 2)}" y1="166" x2="${f1(x0 + bw - 10)}" y2="180" stroke="${SLATE}" stroke-width="1" />
     <text x="${x0 + bw}" y="192" text-anchor="end" font-size="12.4" fill="${SLATE}">誤差 4.7</text>
-    <text x="${x0}" y="214" font-size="12.4" fill="${SLATE}">誤差の平均平方 4.7÷6＝0.78 → F＝21.0</text>
+    <text x="${x0}" y="214" font-size="12.4" fill="${SLATE}">肥料（橙）32.7、誤差の平均平方 4.7÷6＝0.78 → F＝21.0</text>
   </svg>`;
   const cap = `棒の長さは平方和で、どちらも合計 243.7 です。肥料の分（橙）は同じなのに、畑を無視すると畑の違い（緑）が誤差（灰）に入り、肥料の差が埋もれます。`;
   return fig(svg, cap);
