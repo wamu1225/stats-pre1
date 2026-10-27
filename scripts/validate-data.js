@@ -41,6 +41,13 @@ function checkFile(filePath) {
     }
   });
 
+  // 2a. Combinations are written as {}_{n}\mathrm{C}_{k} across the site (2026-10-27 user). \binom / \choose only in
+  //     the 1.6 sentence that introduces it as another notation ("…と書くこともあります")
+  const binoms = raw.split('\n').flatMap((l) => (l.match(/[^。]*\\(?:[dt]?binom|choose)\b[^。]*/g) || [])).filter((x) => !x.includes('と書くこともあります'));
+  if (binoms.length) {
+    errors.push(`[Error] Combination written with \\binom/\\choose in ${filePath} (${binoms.length}). Use {}_{n}\\mathrm{C}_{k}: ${binoms[0].slice(-60)}`);
+  }
+
   // 2b. Single backslash before LaTeX spacing (\, \; \! \:) — in a template literal it collapses to the bare
   //     punctuation, so a thin space shows up on screen as a stray comma (2026-10-12 nCk)
   const spacing = raw.match(/(?<!\\)\\[,;!:]/g);
