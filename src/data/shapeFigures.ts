@@ -3250,9 +3250,56 @@ function ldaBoundary(): string {
     <text x="46" y="256" font-size="12.4" fill="${INK}">LDA の境界（楕円の形を考慮）</text>
     <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" />
     <text x="46" y="276" font-size="12.4" fill="${INK}">2 つの平均の中点で垂直に切る境界</text>
-    <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝平均からマハラノビス距離 ${r} の範囲</text>
+    <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝各群の点の大半が入る範囲</text>
   </svg>`;
-  const cap = `2群の広がりが同じ向きの楕円（ここでは相関 ${rho}）のとき、灰の破線のように2つの平均の中点で垂直に切ると、楕円の長軸方向に伸びた裾が相手側にはみ出します。LDA の境界（赤）は、グループ内の分散共分散行列の逆行列を平均の差にかけた方向に垂直な線で、楕円の形に合わせて傾きます。この図では、灰の破線から約 ${Math.abs(ang(w) - ang(d))} 度回っています。楕円はマハラノビス距離が等しい点を結んだ線で、次の節のマハラノビス距離は、この楕円を測る物差しです。`;
+  const cap = `2群は同じ向きの楕円に広がっています（相関 ${rho}）。平均の中点で垂直に切る灰の破線では、楕円の長い向きに伸びた裾が相手側にはみ出します。LDA の境界（赤）は楕円の形に合わせて約 ${Math.abs(ang(w) - ang(d))} 度傾き、裾を分けます。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.3：閾値1つが混同行列の1組になり、閾値を動かすと ROC 曲線を描く ============
+function rocCurve(): string {
+  const W = 340, H = 372, dp = 2.5, th = 1.25, nP = 200, nN = 800;
+  const fpr = 1 - Phi(th), tpr = 1 - Phi(th - dp), auc = Phi(dp / Math.SQRT2);
+  // 第3節の混同行列は、この閾値で数えた通数（約85通・約179通）
+  const fp = Math.round(nN * fpr), tp = Math.round(nP * tpr);
+  // 上：得点の分布（正常 N(0,1)、スパム N(dp,1)）と閾値
+  const t = { x: 20, y: 40, w: 310, h: 92, lo: -3, hi: 5.5 };
+  const X = (v: number) => t.x + ((v - t.lo) / (t.hi - t.lo)) * t.w, Yd = (v: number) => t.y + t.h - (v / 0.42) * t.h;
+  const curve = (m: number, from: number, to: number, close: boolean) => {
+    const xs = Array.from({ length: 81 }, (_, i) => from + ((to - from) * i) / 80);
+    const d = xs.map((x, i) => `${i ? 'L' : 'M'}${f1(X(x))},${f1(Yd(normPdf(x, m)))}`).join('');
+    return close ? `${d}L${f1(X(to))},${t.y + t.h}L${f1(X(from))},${t.y + t.h}Z` : d;
+  };
+  // 下：ROC 曲線
+  const r = { x: 96, y: 186, s: 150 };
+  const RX = (v: number) => r.x + v * r.s, RY = (v: number) => r.y + r.s - v * r.s;
+  const roc = Array.from({ length: 121 }, (_, i) => { const c = 6 - (10 * i) / 120; return `${i ? 'L' : 'M'}${f1(RX(1 - Phi(c)))},${f1(RY(1 - Phi(c - dp)))}`; }).join('');
+  const svg = `${svgOpen(W, H, `上は正常とスパムの判別得点の分布と閾値 ${th}。閾値より右の正常が偽陽性 ${pct(fpr)}、右のスパムが真陽性 ${pct(tpr)}。下は閾値を動かしたときの ROC 曲線で、この閾値は点 (${f2(fp / nN)}, ${f2(tp / nP)})、AUC は ${f2(auc)}`)}
+    <text x="4" y="14" font-size="12.4" font-weight="700" fill="${INK}">判別得点の分布と閾値</text>
+    <text x="4" y="31" font-size="12"><tspan fill="${TEAL}">■ 正常（陰性）</tspan>　<tspan fill="${ROSE}">■ スパム（陽性）</tspan></text>
+    <path d="${curve(dp, th, t.hi, true)}" fill="${ROSE}" fill-opacity="0.25" />
+    <path d="${curve(0, th, t.hi, true)}" fill="${TEAL}" fill-opacity="0.45" />
+    <path d="${curve(0, t.lo, t.hi, false)}" fill="none" stroke="${TEAL}" stroke-width="1.8" />
+    <path d="${curve(dp, t.lo, t.hi, false)}" fill="none" stroke="${ROSE}" stroke-width="1.8" />
+    <line x1="${t.x}" y1="${t.y + t.h}" x2="${t.x + t.w}" y2="${t.y + t.h}" stroke="${SLATE}" />
+    ${[-2, 0, 2, 4].map((v) => `<text x="${f1(X(v))}" y="${t.y + t.h + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <line x1="${f1(X(th))}" y1="${t.y - 4}" x2="${f1(X(th))}" y2="${t.y + t.h}" stroke="${INK}" stroke-width="1.6" stroke-dasharray="4 3" />
+    <text x="${f1(X(th) + 4)}" y="${t.y + 6}" font-size="12" fill="${INK}">閾値</text>
+    <text x="${f1(X(th) + 6)}" y="${f1(Yd(0.05))}" font-size="12" fill="${TEAL}" stroke="#fff" stroke-width="3" paint-order="stroke">偽陽性 ${pct(fpr)}</text>
+    <text x="${f1(X(dp) + 12)}" y="${f1(Yd(0.3))}" font-size="12" fill="${ROSE}" stroke="#fff" stroke-width="3" paint-order="stroke">真陽性 ${pct(tpr)}</text>
+    <text x="4" y="${r.y - 14}" font-size="12.4" font-weight="700" fill="${INK}">閾値を動かすと → ROC 曲線（AUC ${f2(auc)}）</text>
+    <path d="${roc}L${RX(1)},${RY(0)}Z" fill="${INDIGO}" fill-opacity="0.12" />
+    <rect x="${r.x}" y="${r.y}" width="${r.s}" height="${r.s}" fill="none" stroke="${SLATE}" />
+    <line x1="${RX(0)}" y1="${RY(0)}" x2="${RX(1)}" y2="${RY(1)}" stroke="${SLATE}" stroke-dasharray="4 3" />
+    <path d="${roc}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
+    <circle cx="${f1(RX(fpr))}" cy="${f1(RY(tpr))}" r="5" fill="${INK}" />
+    <text x="${f1(RX(fpr) + 8)}" y="${f1(RY(tpr) + 16)}" font-size="12" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">上の閾値 (${f2(fp / nN)}, ${f2(tp / nP)})</text>
+    <text x="${f1(RX(0.97))}" y="${f1(RY(0.08))}" text-anchor="end" font-size="12" fill="${SLATE}">破線＝対角線（AUC 0.5）</text>
+    ${[0, 0.5, 1].map((v) => `<text x="${f1(RX(v))}" y="${r.y + r.s + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${v}</text><text x="${r.x - 4}" y="${f1(RY(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <text x="${r.x + r.s / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 偽陽性率</text>
+    <text x="${r.x - 30}" y="${r.y + r.s / 2}" text-anchor="middle" font-size="12" fill="${SLATE}" transform="rotate(-90 ${r.x - 30} ${r.y + r.s / 2})">縦軸 真陽性率</text>
+  </svg>`;
+  const cap = `正常 ${nN}通・スパム ${nP}通の得点の分布（模擬）です。閾値より右が「スパムと判定」で、正常の ${pct(fpr)}（約 ${fp}通）と、スパムの ${pct(tpr)}（約 ${tp}通）が入ります。閾値を右へ動かすと、点は ROC 曲線を左下へ進みます。`;
   return fig(svg, cap);
 }
 
@@ -3618,6 +3665,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
   'f-lda': ldaBoundary,
+  'f-roc': rocCurve,
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic,
   'f-dag-front': dagFront,

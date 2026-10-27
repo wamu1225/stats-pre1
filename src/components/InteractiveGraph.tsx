@@ -253,7 +253,10 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         { x: -span * (rho / bLen), y: -span * (1 / bLen) },
         { x: span * (rho / bLen), y: span * (1 / bLen) },
       ];
-      return { group1, group2, boundary };
+      // 誤りの数：LDA は w·x の符号（w ∝ (1, −ρ)）、中点で垂直に切る境界は x の符号で振り分ける
+      const errLda = group1.filter((p) => p.x - rho * p.y > 0).length + group2.filter((p) => p.x - rho * p.y < 0).length;
+      const errMid = group1.filter((p) => p.x > 0).length + group2.filter((p) => p.x < 0).length;
+      return { group1, group2, boundary, errLda, errMid };
     } else if (type === 'mcmc') {
       const used = mcmcSamples.slice(0, mcmcN);
       const binWidth = 0.5;
@@ -359,21 +362,24 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
     }
 
     if (type === 'outlier') {
-      const { group1, group2, boundary } = chartData as { group1: { x: number; y: number }[]; group2: { x: number; y: number }[]; boundary: { x: number; y: number }[] };
+      const { group1, group2, boundary, errLda, errMid } = chartData as { group1: { x: number; y: number }[]; group2: { x: number; y: number }[]; boundary: { x: number; y: number }[]; errLda: number; errMid: number };
       return (
         <div>
-          <ResponsiveContainer width="100%" height={200}>
-            <ComposedChart margin={{ top: 10, right: 20, left: 4, bottom: 0 }}>
+          <ResponsiveContainer width="100%" height={250}>
+            <ComposedChart margin={{ top: 10, right: 16, left: 0, bottom: 18 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" domain={[-4, 4]} hide />
-              <YAxis type="number" dataKey="y" domain={[-3, 3]} hide />
+              <XAxis type="number" dataKey="x" domain={[-4, 4]} ticks={[-4, -2, 0, 2, 4]} allowDataOverflow tick={{ fontSize: 11 }} label={{ value: '横軸 変数1・縦軸 変数2', position: 'insideBottom', offset: -12, fontSize: 11 }} />
+              <YAxis type="number" dataKey="y" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} allowDataOverflow tick={{ fontSize: 11 }} width={28} />
               <Scatter data={group1} dataKey="y" fill="#3b82f6" fillOpacity={0.6} isAnimationActive={false} />
               <Scatter data={group2} dataKey="y" fill="#f59e0b" fillOpacity={0.6} isAnimationActive={false} />
               <Line data={boundary} dataKey="y" stroke="#1e293b" strokeWidth={2.5} strokeDasharray="6 3" dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            破線: 判別境界。2群の分散共分散が同じでも、変数間の相関が変わると境界の傾きが変わります。
+          <div style={{ textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: 2 }}>
+            破線: LDA の境界。相関が強いほど大きく傾き、縦の線（中点で垂直に切る境界）より誤りがはっきり減ります。
+          </div>
+          <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary, #64748b)', marginTop: 2 }}>
+            誤って振り分けた点（{group1.length + group2.length}点中）：LDA の境界 {errLda}点／縦の線 {errMid}点
           </div>
         </div>
       );
