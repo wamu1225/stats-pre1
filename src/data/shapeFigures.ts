@@ -1576,6 +1576,69 @@ function tScale(): string {
   return fig(svg, cap);
 }
 
+// 1.21b：乱塊法の配置。4枚の畑（ブロック）それぞれに3つの肥料をくじで1区画ずつ割り当てる
+function rcbdLayout(): string {
+  const W = 344, H = 250;
+  const rows = [
+    { name: '畑1', order: ['B', 'A', 'C'], y: { A: 20, B: 23, C: 23 } as Record<string, number>, shade: 0.12 },
+    { name: '畑2', order: ['C', 'B', 'A'], y: { A: 26, B: 27, C: 29 } as Record<string, number>, shade: 0.24 },
+    { name: '畑3', order: ['A', 'C', 'B'], y: { A: 27, B: 30, C: 33 } as Record<string, number>, shade: 0.36 },
+    { name: '畑4', order: ['B', 'C', 'A'], y: { A: 31, B: 34, C: 35 } as Record<string, number>, shade: 0.48 },
+  ];
+  const col: Record<string, string> = { A: INDIGO, B: AMBER, C: ROSE };
+  const x0 = 52, cw = 66, rh = 44, y0 = 30;
+  const body = rows.map((r, i) => {
+    const y = y0 + i * (rh + 8);
+    const mean = (r.y.A + r.y.B + r.y.C) / 3;
+    const cells = r.order.map((t, j) => {
+      const x = x0 + j * (cw + 4);
+      return `<rect x="${x}" y="${y}" width="${cw}" height="${rh}" rx="4" fill="#fff" stroke="${col[t]}" stroke-width="2" />
+      <text x="${x + cw / 2}" y="${y + 19}" text-anchor="middle" font-size="14" font-weight="700" fill="${col[t]}">${t}</text>
+      <text x="${x + cw / 2}" y="${y + 36}" text-anchor="middle" font-size="12.4" fill="${INK}">${r.y[t]} kg</text>`;
+    }).join('');
+    return `<rect x="${x0 - 6}" y="${y - 4}" width="${3 * cw + 8 + 12}" height="${rh + 8}" rx="6" fill="${TEAL}" fill-opacity="${r.shade}" />
+    <text x="4" y="${y + rh / 2 + 4}" font-size="12.4" font-weight="700" fill="${INK}">${r.name}</text>
+    ${cells}
+    <text x="${x0 + 3 * (cw + 4) + 14}" y="${y + rh / 2 + 4}" font-size="12.4" fill="${SLATE}">平均 ${num(mean)}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '4枚の畑それぞれを3区画に分け、肥料A・B・Cをくじで1区画ずつ割り当てた配置。下の畑ほど土が良く収量が多い')}
+    <text x="4" y="16" font-size="12.4" fill="${SLATE}">色が濃い畑ほど土が良い</text>
+    ${body}
+  </svg>`;
+  const cap = `どの畑にも A・B・C が1つずつ入り、畑の中の並びはくじで決めます。土の良い畑に特定の肥料が集まらないので、畑の違いは肥料の比較に偏りを生みません。`;
+  return fig(svg, cap);
+}
+
+// 1.21b：同じ12個のデータの平方和を、一元配置とブロック計画で分ける
+function rcbdSS(): string {
+  const W = 344, H = 228;
+  const total = 243.7, x0 = 14, bw = 316;
+  const sx = (v: number) => (v / total) * bw;
+  const bar = (y: number, parts: { v: number; c: string; t: string }[]) => {
+    let x = x0;
+    return parts.map((p) => {
+      const w = sx(p.v);
+      const s = `<rect x="${f1(x)}" y="${y}" width="${f1(w)}" height="34" fill="${p.c}" fill-opacity="0.8" />` +
+        (w > 40 ? `<text x="${f1(x + w / 2)}" y="${y + 22}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#fff">${p.t} ${p.v}</text>` : '');
+      x += w;
+      return s;
+    }).join('');
+  };
+  const e1 = 206.3 + 4.7;
+  const svg = `${svgOpen(W, H, '平方和の分け方。畑を無視すると畑の違い206.3が誤差に入り誤差は211.0、畑をブロックにすると誤差は4.7だけになる')}
+    <text x="${x0}" y="18" font-size="12.4" font-weight="700" fill="${INK}">畑を無視した一元配置</text>
+    ${bar(26, [{ v: 32.7, c: AMBER, t: '肥料' }, { v: e1, c: SLATE, t: '誤差' }])}
+    <text x="${x0}" y="80" font-size="12.4" fill="${SLATE}">誤差の平均平方 ${num(e1)}÷9＝23.4 → F＝0.70</text>
+    <text x="${x0}" y="122" font-size="12.4" font-weight="700" fill="${INK}">畑をブロックにした二元配置</text>
+    ${bar(130, [{ v: 32.7, c: AMBER, t: '肥料' }, { v: 206.3, c: TEAL, t: '畑' }, { v: 4.7, c: SLATE, t: '誤差' }])}
+    <line x1="${f1(x0 + bw - sx(4.7) / 2)}" y1="166" x2="${f1(x0 + bw - 10)}" y2="180" stroke="${SLATE}" stroke-width="1" />
+    <text x="${x0 + bw}" y="192" text-anchor="end" font-size="12.4" fill="${SLATE}">誤差 4.7</text>
+    <text x="${x0}" y="214" font-size="12.4" fill="${SLATE}">誤差の平均平方 4.7÷6＝0.78 → F＝21.0</text>
+  </svg>`;
+  const cap = `棒の長さは平方和で、どちらも合計 243.7 です。肥料の分（橙）は同じなのに、畑を無視すると畑の違い（緑）が誤差（灰）に入り、肥料の差が埋もれます。`;
+  return fig(svg, cap);
+}
+
 // 1.13：一様分布 U(0,1) から5個とったときの、小さい方から k 番目の値の分布（ベータ分布 Be(k, 6−k)）
 function orderStats(): string {
   const W = 344, H = 250, n = 5;
@@ -3440,7 +3503,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-lln': lln,
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
-  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-f-tail': fTail,
+  'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
