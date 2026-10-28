@@ -2688,7 +2688,7 @@ function meanVsMedian(): string {
   return fig(svg, cap);
 }
 
-// ============ 1.15：推定量の範囲の入れ子（ガウス・マルコフと MVUE） ============
+// ============ 2.1：推定量の範囲の入れ子（ガウス・マルコフと MVUE） ============
 function estimatorClasses(): string {
   const W = 344, H = 250;
   const box = (x: number, y: number, w: number, h: number, c: string, t: string, s: string) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${c}" fill-opacity="0.08" stroke="${c}" stroke-width="1.5" />

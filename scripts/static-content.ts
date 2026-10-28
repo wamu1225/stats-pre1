@@ -73,7 +73,6 @@ export function buildCheatsheetHtml(base: string): string {
   <p style="color:#444"><strong>最尤推定法（MLE）</strong>：L(θ)=Πf(xᵢ;θ) を最大化するθ̂_MLE を求める方法。対数尤度 logL を微分してゼロとおいた尤度方程式を解きます。</p>
   <p style="color:#444"><strong>モーメント法</strong>：k次母モーメントE[X^k]をk次標本モーメント(1/n)ΣXᵢ^kで置き換えて連立方程式を解きます。パラメータが2つなら2つの方程式が必要。</p>
   <p style="color:#444"><strong>十分統計量</strong>：ネイマンの分解定理：T(X)が十分統計量 ⟺ f(x;θ)=g(T(x),θ)h(x)と分解できます。Tに含まれない情報はθに無関係。</p>
-  <p style="color:#444"><strong>ガウス・マルコフの定理</strong>：線形モデルの仮定（誤差の期待値0・等分散・無相関）のもとで、OLS推定量はBLUE（最良線形不偏推定量）。</p>
 
   <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">区間推定（信頼区間）</h2>
   <p style="color:#444"><strong>母平均（σ²既知）</strong>：X̄ ± z_{α/2}·σ/√n。95%信頼区間はz_{0.025}=1.96。</p>
@@ -109,6 +108,7 @@ export function buildCheatsheetHtml(base: string): string {
   <p style="color:#444"><strong>Lasso（L1正則化）</strong>：ペナルティ項λΣ|βⱼ|を加えた最小化。係数を完全にゼロにして変数選択を行います。Ridge（L2正則化）は係数を縮小しますが変数選択はしません。</p>
   <p style="color:#444"><strong>クックの距離</strong>：各データ点が全推定係数に与える影響度。値が1以上（または4/nが目安）の点は影響力のある外れ値と判断します。</p>
   <p style="color:#444"><strong>ロジスティック回帰</strong>：log(p/(1−p))=β₀+β₁x₁+…。係数の解釈：xⱼが1増えるとオッズがe^βⱼ倍になります。</p>
+  <p style="color:#444"><strong>ガウス・マルコフの定理</strong>：線形モデルの仮定（誤差の期待値0・等分散・無相関）のもとで、OLS推定量はBLUE（最良線形不偏推定量）。</p>
 
   <h2 style="font-size:1.2rem;font-weight:700;margin:24px 0 10px;padding-left:10px;border-left:4px solid #2563eb">多変量解析</h2>
   <p style="color:#444"><strong>主成分分析（PCA）</strong>：分散共分散行列（または相関行列）の固有ベクトルが主成分軸。第1主成分は分散最大方向。固有値=主成分の分散。寄与率=固有値の和の何%かを示します。</p>
