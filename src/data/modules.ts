@@ -2132,6 +2132,8 @@ $$\\begin{aligned} \\text{MSE}(\\hat{\\theta}) &= E[(\\hat{\\theta} - \\theta)^2
 
 $$\\text{Var}(\\hat{\\theta}) \\geq \\frac{1}{n\\,I(\\theta)}, \\qquad I(\\theta) = E\\!\\left[\\left(\\frac{\\partial \\log f(X; \\theta)}{\\partial \\theta}\\right)^2\\right]$$
 
+左の不等式が**クラーメル・ラオの不等式**です。左辺は不偏推定量 $\\hat{\\theta}$ の分散、右辺の $1/(n\\,I(\\theta))$ がその下限（**クラーメル・ラオの下限**）で、どの不偏推定量の分散もこれより小さくなりません。右の式は、下限の分母に入る $I(\\theta)$ の定義です。
+
 $I(\\theta)$ は**フィッシャー情報量**で、1個のデータが $\\theta$ についてもつ情報の量です。
 
 - かっこの中の微分は、$\\theta$ を少し動かしたときに対数尤度がどれだけ変わるか（傾き）
