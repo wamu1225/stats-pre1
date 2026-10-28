@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-D-kk-CmM.js"></script>
+    <script type="module" crossorigin src="../assets/index-CwURxYOv.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -99,6 +99,22 @@
 <p class="content-p">最小二乗法の推定量が、線形で偏りのない推定量の中で分散が最小になるには、誤差項について次の3つが要ります。</p>
 <ol><li>期待値が0（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>）：系統的なずれが無い</li><li>分散がどのデータでも同じ（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>）：崩れたときの対処は一般化最小二乗法</li><li>誤差どうしが無相関：時系列で前日のずれが翌日に残ると崩れる（ダービン・ワトソン比で調べる）</li></ol>
 <p class="content-p">正規分布であることは要りません。正規性は、係数の t 検定や区間を正確に出すときに使う追加の仮定です。この仮定が満たされるとき、OLS推定量は<strong>最良線形不偏推定量（BLUE: Best Linear Unbiased Estimator）</strong>になることを<strong>ガウス＝マルコフの定理</strong>が保証します。</p>
+<p class="content-p">「最良」は、比べる相手を <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.1944em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">y</span></span></span></span></span> の1次式で不偏な推定量に限ったときの話です。誤差が正規分布ならさらに、線形に限らずすべての不偏推定量の中で分散が最小（推定量の性質で学んだ最小分散不偏推定量）になります。偏りを許すと、OLS より平均二乗誤差の小さい推定量（回帰診断・正則化のリッジ回帰など）があります。</p>
+<figure class="venn-figure"><svg viewBox="0 0 344 250" role="img" aria-label="すべての推定量の中に不偏推定量があり、その中に線形不偏推定量がある。ガウス・マルコフの定理は線形不偏の中で最小分散、正規誤差ならすべての不偏の中で最小分散" class="venn-svg">
+    <rect x="6" y="6" width="332" height="238" rx="10" fill="#64748b" fill-opacity="0.08" stroke="#64748b" stroke-width="1.5" />
+    <text x="16" y="24" font-size="13.2" font-weight="700" fill="#1e293b">すべての推定量</text>
+    <text x="16" y="40" font-size="12.4" fill="#64748b">偏りがあるもの（リッジ回帰など）も含む</text>
+    <rect x="22" y="50" width="300" height="184" rx="10" fill="#0f766e" fill-opacity="0.08" stroke="#0f766e" stroke-width="1.5" />
+    <text x="32" y="68" font-size="13.2" font-weight="700" fill="#0f766e">不偏推定量</text>
+    <text x="32" y="84" font-size="12.4" fill="#64748b">正規誤差なら OLS がこの中で最小分散</text>
+    <rect x="38" y="98" width="268" height="126" rx="10" fill="#4338ca" fill-opacity="0.08" stroke="#4338ca" stroke-width="1.5" />
+    <text x="48" y="116" font-size="13.2" font-weight="700" fill="#4338ca">線形不偏推定量</text>
+    <text x="48" y="132" font-size="12.4" fill="#64748b">y の1次式で、不偏なもの</text>
+    <circle cx="172" cy="182" r="22" fill="#be123c" fill-opacity="0.15" stroke="#be123c" stroke-width="1.6" />
+    <text x="172" y="187" text-anchor="middle" font-size="13.2" font-weight="700" fill="#be123c">OLS</text>
+    <text x="204" y="178" font-size="12.4" fill="#be123c">← この中で</text>
+    <text x="204" y="194" font-size="12.4" fill="#be123c">分散が最小</text>
+  </svg><figcaption class="venn-caption">ガウス・マルコフの定理が言えるのは、藍の枠（線形不偏推定量）の中で OLS の分散が最小ということです。誤差が正規分布なら、緑の枠（すべての不偏推定量）の中でも最小になります。</figcaption></figure>
 <hr class="content-hr">
 <h3 class="content-h3">2. モデルの評価：その方程式、信じて大丈夫？</h3>
 <p class="content-p">変数を増やせば増やすほど、手元のデータへの「無理なこじつけ（過学習）」が起きてしまいます。</p>
