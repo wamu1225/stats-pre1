@@ -3056,11 +3056,13 @@ function factorPath(): string {
   const rows = names.map((nm, i) => {
     const y = ys[i];
     const mid = { x: (fcx + 38 + rx) / 2, y: (fcy + y) / 2 };
+    // 矢印の線の中点（ラベルを線の上か下へ逃がす）
+    const lineMid = (fcy + (y - fcy) * 0.35 + y) / 2;
     return `
     <rect x="${rx}" y="${y - rh / 2}" width="${rw}" height="${rh}" rx="3" fill="#ffffff" stroke="${INDIGO}" stroke-width="1.6" />
     <text x="${rx + rw / 2}" y="${y + 4.5}" text-anchor="middle" font-size="12.3" fill="${INK}">${nm}</text>
     ${arrow(fcx + 38, fcy + (y - fcy) * 0.35, rx - 1, y, INDIGO)}
-    <text x="${f1(mid.x)}" y="${f1(mid.y - 8)}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">${f1(lam[i])}</text>
+    <text x="${f1(mid.x - (i === 2 ? 10 : 0))}" y="${f1(lineMid + (i === 2 ? 16 : -7))}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">${f1(lam[i])}</text>
     ${arrow(318 - 16, y, rx + rw + 1, y, AMBER)}
     <circle cx="322" cy="${y}" r="15" fill="#fff7ed" stroke="${AMBER}" stroke-width="1.6" />
     <text x="322" y="${y + 4.5}" text-anchor="middle" font-size="12.3" fill="#b45309">u${i + 1}</text>`;
@@ -3090,6 +3092,46 @@ function factorPath(): string {
   const comm = lam.map((l) => f2(l * l));
   const uniq = lam.map((l) => f2(1 - l * l));
   const cap = `上は因子分析のパス図です。矢印の上の数が因子負荷量 λ で、「外向性が高いほど、その行動をとりやすい」強さを表します。各変数を標準化すると、λ の2乗が因子で説明できる割合（共通性）で、${comm.join('・')} になります。残りの ${uniq.join('・')} は、その変数だけに固有の独自因子 u の分です。下の主成分分析は矢印の向きが逆で、観測変数を合成して主成分を作ります。因子分析は「原因（因子）から結果（変数）」、主成分分析は「結果（変数）から要約（主成分）」の向きです。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.4：因子回転（同じ6点を、軸を回して読み直す） ============
+// 回転後の負荷量（本文の表と同じ数）を θ だけ戻したものを初期解として描く
+const FACTOR_LOADINGS: [string, number, number][] = [
+  ['人前で話せる', 0.8, 0.1], ['友人が多い', 0.7, 0.2], ['パーティー好き', 0.6, 0.0],
+  ['計画的', 0.1, 0.7], ['約束を守る', 0.2, 0.8], ['きれい好き', 0.0, 0.5],
+];
+function factorRotation(): string {
+  const W = 340, H = 340, th = (40 * Math.PI) / 180, c = Math.cos(th), s = Math.sin(th);
+  const pts = FACTOR_LOADINGS.map(([, a, b]) => ({ u: a * c + b * s, v: -a * s + b * c, a, b }));
+  const sc = 190, ox = 70, oy = 175;
+  const X = (u: number) => ox + u * sc, Y = (v: number) => oy - v * sc;
+  const e1 = [c, -s], e2 = [s, c], L1 = 1.0, L2 = 0.95;
+  const p0 = pts[0], h0 = p0.a ** 2 + p0.b ** 2;
+  const dots = pts.map((p, i) => {
+    const col = i < 3 ? INDIGO : AMBER;
+    return `<circle cx="${f1(X(p.u))}" cy="${f1(Y(p.v))}" r="5" fill="${col}" />
+    <text x="${f1(X(p.u) + (i === 2 ? -16 : 8))}" y="${f1(Y(p.v) + (i === 2 ? 16 : 4))}" font-size="12" font-weight="700" fill="${col}" stroke="#fff" stroke-width="3" paint-order="stroke">${i + 1}</text>`;
+  }).join('');
+  const ticks = [-0.5, 0.5].map((v) => `<line x1="${X(-0.04)}" y1="${f1(Y(v))}" x2="${X(0.04)}" y2="${f1(Y(v))}" stroke="${SLATE}" /><text x="${X(-0.06)}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')
+    + [0.5, 1].map((u) => `<line x1="${f1(X(u))}" y1="${Y(-0.04)}" x2="${f1(X(u))}" y2="${Y(0.04)}" stroke="${SLATE}" /><text x="${f1(X(u))}" y="${oy - 11}" text-anchor="middle" font-size="12" fill="${SLATE}">${u}</text>`).join('');
+  const svg = `${svgOpen(W, H, `因子負荷量を点で描いた図。初期解の軸では6項目とも横軸に0.4から0.7で負荷し、縦軸の符号で2組に分かれる。軸を40度回すと、1から3は回転後の外向性の軸に、4から6は誠実性の軸に乗る。原点からの距離の2乗が共通性で、回転しても変わらない`)}
+    <line x1="${X(-0.25)}" y1="${oy}" x2="${X(1.4)}" y2="${oy}" stroke="${SLATE}" stroke-width="1.4" />
+    <line x1="${ox}" y1="${Y(-0.72)}" x2="${ox}" y2="${Y(0.82)}" stroke="${SLATE}" stroke-width="1.4" />
+    <text x="${X(1.4)}" y="${oy + 16}" text-anchor="end" font-size="12" fill="${SLATE}">初期解 F1</text>
+    <text x="${ox - 6}" y="${Y(0.82) + 10}" text-anchor="end" font-size="12" fill="${SLATE}">初期解 F2</text>
+    ${ticks}
+    <line x1="${ox}" y1="${oy}" x2="${f1(X(e1[0] * L1))}" y2="${f1(Y(e1[1] * L1))}" stroke="${INDIGO}" stroke-width="1.8" stroke-dasharray="6 4" />
+    <line x1="${ox}" y1="${oy}" x2="${f1(X(e2[0] * L2))}" y2="${f1(Y(e2[1] * L2))}" stroke="${AMBER}" stroke-width="1.8" stroke-dasharray="6 4" />
+    <text x="${f1(X(e1[0] * L1) + 6)}" y="${f1(Y(e1[1] * L1) + 4)}" font-size="12" font-weight="700" fill="${INDIGO}">回転後の軸：外向性</text>
+    <text x="${f1(X(e2[0] * L2) + 6)}" y="${f1(Y(e2[1] * L2) + 4)}" font-size="12" font-weight="700" fill="#b45309">回転後の軸：誠実性</text>
+    <path d="M${f1(X(0.3))},${oy} A${0.3 * sc},${0.3 * sc} 0 0 1 ${f1(X(0.3 * c))},${f1(Y(-0.3 * s))}" fill="none" stroke="${INK}" stroke-width="1.2" />
+    <text x="${f1(X(0.33))}" y="${f1(Y(-0.12))}" font-size="12" fill="${INK}">40°</text>
+    <line x1="${ox}" y1="${oy}" x2="${f1(X(p0.u))}" y2="${f1(Y(p0.v))}" stroke="${INK}" stroke-width="1" stroke-dasharray="2 3" />
+    ${dots}
+    <text x="${X(-0.3)}" y="${H - 8}" font-size="12" fill="${INK}">1 の原点からの距離² ＝ ${f2(h0)}（共通性）</text>
+  </svg>`;
+  const cap = `点の番号は下の表の行です。初期解では、6項目とも F1 に ${f2(Math.min(...pts.map((p) => p.u)))}〜${f2(Math.max(...pts.map((p) => p.u)))} で負荷し、F2 の符号で2組に分かれるだけで、F1 に名前が付けられません。軸を 40° 回すと、1〜3 は外向性の軸に、4〜6 は誠実性の軸に乗ります。点は動かないので、原点からの距離（共通性）も、データを説明する力も変わりません。`;
   return fig(svg, cap);
 }
 
@@ -3662,6 +3704,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-rank-ab': rankSum,
   'f-interaction': interactionPlot,
   'f-factor-path': factorPath,
+  'f-factor-rotation': factorRotation,
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
   'f-lda': ldaBoundary,
