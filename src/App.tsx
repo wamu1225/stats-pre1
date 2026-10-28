@@ -16,6 +16,7 @@ import { ModuleSidebar } from './components/ModuleSidebar';
 import { ExamGuide } from './components/ExamGuide';
 import { MixedQuiz, type MixedItem } from './components/MixedQuiz';
 import { shuffle } from './utils/shuffle';
+import { sitePath, spaClick } from './utils/spaLink';
 import { buildUsecaseHtml } from './data/usecaseGuide';
 import { ChevronLeft, Book, LayoutDashboard, ArrowRight, Search as SearchIcon, X, Lightbulb, Target, ArrowDown, Dumbbell, Trash2, FileText, Shuffle, Sigma, ChevronUp, ListOrdered, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -778,6 +779,11 @@ function App() {
     const idx = modules.findIndex(m => m.id === activeModuleId);
     return idx >= 0 && idx < modules.length - 1 ? modules[idx + 1] : null;
   }, [activeModuleId]);
+  const prevModule = useMemo(() => {
+    if (!activeModuleId) return null;
+    const idx = modules.findIndex(m => m.id === activeModuleId);
+    return idx > 0 ? modules[idx - 1] : null;
+  }, [activeModuleId]);
   const findModulesByTerm = useCallback((termId: string) => modules.filter(m => m.content.includes(`[[term:${termId}]]`)), []);
 
   // モジュール目次（h2 見出しを抽出）
@@ -821,34 +827,34 @@ function App() {
   return (
     <div className="container" style={{ maxWidth: activeModuleId ? '800px' : view === 'glossary' ? '1000px' : '800px' }}>
       <header className="header">
-        <div className="brand" onClick={() => updateModuleId(null)}>
+        <a className="brand" href={sitePath(null)} onClick={spaClick(() => updateModuleId(null))}>
           <Sigma className="brand-icon" strokeWidth={1.5} />
           <h1 className="title">統計検定 準1級</h1>
-        </div>
+        </a>
         <p className="subtitle">学習リファレンス</p>
       </header>
 
       {!activeModuleId && (
         <nav style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', flexWrap: 'wrap' }}>
-          <button onClick={() => switchView('dashboard')} className={`nav-tab ${view === 'dashboard' ? 'active' : ''}`}>
+          <a href={sitePath(null)} onClick={spaClick(() => switchView('dashboard'))} className={`nav-tab ${view === 'dashboard' ? 'active' : ''}`}>
             <LayoutDashboard size={18} /> ロードマップ
             {completedCount > 0 && <span className="nav-progress-badge">{completedCount}/{totalModules}</span>}
-          </button>
-          <button onClick={() => switchView('glossary')} className={`nav-tab ${view === 'glossary' ? 'active' : ''}`}>
+          </a>
+          <a href={sitePath('glossary')} onClick={spaClick(() => switchView('glossary'))} className={`nav-tab ${view === 'glossary' ? 'active' : ''}`}>
             <Book size={18} /> 用語集
-          </button>
-          <button onClick={() => switchView('cheatsheet')} className={`nav-tab ${view === 'cheatsheet' ? 'active' : ''}`}>
+          </a>
+          <a href={sitePath('cheatsheet')} onClick={spaClick(() => switchView('cheatsheet'))} className={`nav-tab ${view === 'cheatsheet' ? 'active' : ''}`}>
             <FileText size={18} /> 公式集
-          </button>
-          <button onClick={startRandomQuiz} className={`nav-tab ${view === 'randomquiz' ? 'active' : ''}`}>
+          </a>
+          <a href={sitePath('randomquiz')} onClick={spaClick(startRandomQuiz)} className={`nav-tab ${view === 'randomquiz' ? 'active' : ''}`}>
             <Shuffle size={18} /> 全範囲クイズ
-          </button>
-          <button onClick={() => switchView('guide')} className={`nav-tab ${view === 'guide' ? 'active' : ''}`}>
+          </a>
+          <a href={sitePath('guide')} onClick={spaClick(() => switchView('guide'))} className={`nav-tab ${view === 'guide' ? 'active' : ''}`}>
             <Target size={18} /> 試験ガイド
-          </button>
-          <button onClick={() => switchView('usecase')} className={`nav-tab ${view === 'usecase' ? 'active' : ''}`}>
+          </a>
+          <a href={sitePath('usecase')} onClick={spaClick(() => switchView('usecase'))} className={`nav-tab ${view === 'usecase' ? 'active' : ''}`}>
             <Lightbulb size={18} /> 使い分けガイド
-          </button>
+          </a>
           <button onClick={toggleTheme} className="nav-tab" title={theme === 'light' ? 'ダークモードに切替' : 'ライトモードに切替'} aria-label="テーマ切替">
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
@@ -860,7 +866,7 @@ function App() {
           {activeModuleId ? (
             <motion.div key={activeModuleId} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}>
               <ModuleSidebar modules={modules} activeId={activeModuleId} onSelect={updateModuleId} onSelectTest={openChapterTest} chapterNames={chapterNames} chapterColors={chapterColors} />
-              <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
+              <a className="btn-back" href={sitePath(null)} onClick={spaClick(() => updateModuleId(null))}><ChevronLeft size={18} /> 一覧に戻る</a>
               <div
                 className="scroll-progress"
                 style={{
@@ -914,12 +920,22 @@ function App() {
                   </div>
                 )}
                 <div className="module-bottom-nav">
-                  <button
+                  {prevModule && (
+                    <a
+                      className="btn-back-to-list"
+                      href={sitePath(prevModule.id)}
+                      onClick={spaClick(() => updateModuleId(prevModule.id))}
+                    >
+                      <ChevronLeft size={16} /> 前のモジュール：{prevModule.title}
+                    </a>
+                  )}
+                  <a
                     className="btn-back-to-list"
-                    onClick={() => updateModuleId(null)}
+                    href={sitePath(null)}
+                    onClick={spaClick(() => updateModuleId(null))}
                   >
-                    <ChevronLeft size={16} /> モジュール一覧へ
-                  </button>
+                    モジュール一覧へ
+                  </a>
                   {lastInChapter && activeModule && (
                     <button
                       className="btn-next-module btn-chapter-test"
@@ -929,12 +945,13 @@ function App() {
                     </button>
                   )}
                   {nextModule && (
-                    <button
+                    <a
                       className="btn-next-module"
-                      onClick={() => updateModuleId(nextModule.id)}
+                      href={sitePath(nextModule.id)}
+                      onClick={spaClick(() => updateModuleId(nextModule.id))}
                     >
                       次のモジュール：{nextModule.title} <ArrowRight size={16} />
-                    </button>
+                    </a>
                   )}
                 </div>
               </div>
@@ -963,18 +980,18 @@ function App() {
                     </div>
                   )}
                   <div style={{ display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-                    <button className="btn" onClick={() => updateModuleId(null)} style={{ flex: 1, background: 'var(--bg-warm)', color: 'var(--text)', border: '1px solid var(--border)' }}>
+                    <a className="btn" href={sitePath(null)} onClick={spaClick(() => updateModuleId(null))} style={{ flex: 1, background: 'var(--bg-warm)', color: 'var(--text)', border: '1px solid var(--border)' }}>
                       <ChevronLeft size={16} /> 一覧に戻る
-                    </button>
+                    </a>
                     {lastInChapter && activeModule && (
                       <button className="btn" onClick={() => openChapterTest(activeModule.chapter)} style={{ flex: 2 }}>
                         第{activeModule.chapter}章のまとめテストへ（10問） <ArrowRight size={16} />
                       </button>
                     )}
                     {nextModule && (
-                      <button className="btn" onClick={() => updateModuleId(nextModule.id)} style={{ flex: 2 }}>
+                      <a className="btn" href={sitePath(nextModule.id)} onClick={spaClick(() => updateModuleId(nextModule.id))} style={{ flex: 2 }}>
                         次のモジュールへ：{nextModule.title} <ArrowRight size={16} />
-                      </button>
+                      </a>
                     )}
                   </div>
                 </div>
@@ -982,7 +999,7 @@ function App() {
             </motion.div>
           ) : view === 'randomquiz' ? (
             <motion.div key="rq" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-              <button className="btn-back" onClick={() => switchView('dashboard')}><ChevronLeft size={18} /> 一覧に戻る</button>
+              <a className="btn-back" href={sitePath(null)} onClick={spaClick(() => switchView('dashboard'))}><ChevronLeft size={18} /> 一覧に戻る</a>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0 0 1rem' }}>
                 全{modules.length}モジュールのうち{RANDOM_QUIZ_SIZE}モジュールから、1問ずつ出題します。
               </p>
@@ -992,7 +1009,7 @@ function App() {
           ) : view === 'chaptertest' && testChapter ? (
             <motion.div key={`ct-${testChapter}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
               <ModuleSidebar modules={modules} activeId={null} activeTest={testChapter} onSelect={updateModuleId} onSelectTest={openChapterTest} chapterNames={chapterNames} chapterColors={chapterColors} />
-              <button className="btn-back" onClick={() => updateModuleId(null)}><ChevronLeft size={18} /> 一覧に戻る</button>
+              <a className="btn-back" href={sitePath(null)} onClick={spaClick(() => updateModuleId(null))}><ChevronLeft size={18} /> 一覧に戻る</a>
               <div className="chapter-test-head" style={{ '--ch-accent': chapterColors[testChapter].accent, '--ch-bg': chapterColors[testChapter].bg, '--ch-text': chapterColors[testChapter].text } as React.CSSProperties}>
                 <span className="chapter-test-badge" style={{ background: chapterColors[testChapter].accent }}>第{testChapter}章のまとめテスト</span>
                 <h2 className="chapter-test-title">{chapterNames[testChapter]}</h2>
@@ -1018,9 +1035,9 @@ function App() {
                     <h3 className="content-h3" style={{ margin: '0.25rem 0 0' }}>{chapterNames[ch]}</h3>
                   </div>
                   {modules.filter(m => m.chapter === ch && m.keyFormulas && m.keyFormulas.length > 0).map(m => (
-                    <div key={m.id} className="card cs-module-card" onClick={() => updateModuleId(m.id)} style={{ cursor: 'pointer' }}>
+                    <div key={m.id} className="card cs-module-card card-linked">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                        <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800 }}>{m.title}</h4>
+                        <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 800 }}><a className="card-link" href={sitePath(m.id)} onClick={spaClick(() => updateModuleId(m.id))}>{m.title}</a></h4>
                         {progress[m.id] && (
                           <span className="progress-badge-small">
                             {progress[m.id].score}/{progress[m.id].total}点
@@ -1087,7 +1104,7 @@ function App() {
                   const charCount = m.content.length;
                   const readMin = Math.max(5, Math.round(charCount / 600));
                   acc.push(
-                    <div key={m.id} className="card-module" onClick={() => updateModuleId(m.id)}
+                    <div key={m.id} className="card-module card-linked"
                       style={{
                         '--ch-accent': cc.accent,
                         '--ch-light': cc.light,
@@ -1117,7 +1134,7 @@ function App() {
                           </span>
                         )}
                       </div>
-                      <h4 style={{ margin: '0.4rem 0 0.2rem', fontSize: '0.95rem' }}>{parseContent(m.title)}</h4>
+                      <h4 style={{ margin: '0.4rem 0 0.2rem', fontSize: '0.95rem' }}><a className="card-link" href={sitePath(m.id)} onClick={spaClick(() => updateModuleId(m.id))}>{parseContent(m.title)}</a></h4>
                       <div className="module-desc">{parseContent(m.description)}</div>
                     </div>
                   );
@@ -1290,9 +1307,9 @@ function App() {
                             <p className="label-related">解説ページ：</p>
                             <div className="links-row">
                               {relatedModules.map(m => (
-                                <button key={m.id} className="btn-link" onClick={() => updateModuleId(m.id)}>
+                                <a key={m.id} className="btn-link" href={sitePath(m.id)} onClick={spaClick(() => updateModuleId(m.id))}>
                                   {parseContent(m.title)} <ArrowRight size={12} />
-                                </button>
+                                </a>
                               ))}
                             </div>
                           </div>
@@ -1311,8 +1328,8 @@ function App() {
           本サイトは個人による学習支援サイトであり、統計質保証推進協会および日本統計学会の公式サイトではありません。掲載内容は個人の見解に基づくものであり、公式の情報を保証するものではありません。
         </p>
         <div className="footer-links">
-          <button className="footer-link" onClick={() => switchView('about')}>サイトについて</button>
-          <button className="footer-link" onClick={() => switchView('privacy')}>プライバシーポリシー</button>
+          <a className="footer-link" href={sitePath('about')} onClick={spaClick(() => switchView('about'))}>サイトについて</a>
+          <a className="footer-link" href={sitePath('privacy')} onClick={spaClick(() => switchView('privacy'))}>プライバシーポリシー</a>
           <a className="footer-link" href="https://study-apps.com/editorial-policy/">編集方針</a>
           <a className="footer-link" href="https://forms.gle/ccMv7oKwz6ysDHBe6" target="_blank" rel="noopener noreferrer">お問い合わせ</a>
         </div>

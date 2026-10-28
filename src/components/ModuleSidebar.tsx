@@ -2,6 +2,7 @@
 // 読書中も章→モジュールの地図が見える左レール（広い画面の左余白に固定表示）。
 // 中央800pxの読書カラムには干渉せず、狭い画面では非表示（既存レイアウト不変）。
 import React from 'react';
+import { sitePath, spaClick } from '../utils/spaLink';
 import type { Module } from '../data/modules';
 
 interface Props {
@@ -32,14 +33,15 @@ export const ModuleSidebar: React.FC<Props> = ({ modules, activeId, activeTest, 
                 const active = m.id === activeId;
                 return (
                   <li key={m.id}>
-                    <button
+                    <a
                       className={`module-nav-link${active ? ' active' : ''}`}
                       style={active ? { borderLeftColor: chapterColors[ch]?.accent, color: chapterColors[ch]?.accent } : undefined}
-                      onClick={() => onSelect(m.id)}
-                      aria-current={active ? 'true' : undefined}
+                      href={sitePath(m.id)}
+                      onClick={spaClick(() => onSelect(m.id))}
+                      aria-current={active ? 'page' : undefined}
                     >
                       {m.title}
-                    </button>
+                    </a>
                   </li>
                 );
               })}
