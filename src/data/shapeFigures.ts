@@ -2768,8 +2768,9 @@ function anovaDots(): string {
 }
 
 // ============ 2.5：デンドログラム（6人の顧客） ============
+const CLUSTER_PTS: [string, number, number][] = [['A', 1, 1], ['B', 1.5, 1.4], ['C', 1.2, 2.2], ['D', 5, 5], ['E', 5.6, 4.6], ['F', 5.2, 6.2]];
 function dendrogram(): string {
-  const pts: [string, number, number][] = [['A', 1, 1], ['B', 1.5, 1.4], ['C', 1.2, 2.2], ['D', 5, 5], ['E', 5.6, 4.6], ['F', 5.2, 6.2]];
+  const pts = CLUSTER_PTS;
   type Node = { ids: number[]; h: number; l?: Node; r?: Node; x?: number };
   let clusters: Node[] = pts.map((_, i) => ({ ids: [i], h: 0 }));
   const d = (i: number, j: number) => Math.hypot(pts[i][1] - pts[j][1], pts[i][2] - pts[j][2]);
@@ -2805,7 +2806,7 @@ function dendrogram(): string {
   const svg = `${svgOpen(W, H, '6人の顧客の散布図と、近い順に併合していくデンドログラム')}
     <text x="${S.x}" y="${S.y - 12}" font-size="13.2" font-weight="700" fill="${INK}">顧客の位置（2つの指標）</text>
     <rect x="${S.x}" y="${S.y}" width="${S.w}" height="${S.h}" fill="none" stroke="#e2e8f0" />
-    ${pts.map(([n, x, y], i) => `<circle cx="${f1(PX(S, x))}" cy="${f1(S.y + S.h - (y / 7) * S.h)}" r="4" fill="${i < 3 ? AMBER : TEAL}" /><text x="${f1(PX(S, x) + 7)}" y="${f1(S.y + S.h - (y / 7) * S.h + 4)}" font-size="13.2" fill="${INK}">${n}</text>`).join('')}
+    ${pts.map(([n, x, y], i) => `<circle cx="${f1(PX(S, x))}" cy="${f1(S.y + S.h - (y / 7) * S.h)}" r="4" fill="${i < 3 ? AMBER : TEAL}" /><text x="${f1(PX(S, x) + (n === 'A' || n === 'D' ? -7 : 7))}" y="${f1(S.y + S.h - (y / 7) * S.h + 4)}"${n === 'A' || n === 'D' ? ' text-anchor="end"' : ''} font-size="13.2" fill="${INK}">${n}</text>`).join('')}
     <text x="${D.x}" y="${D.y - 12}" font-size="13.2" font-weight="700" fill="${INK}">デンドログラム</text>
     ${tree}
     <line x1="${D.x}" y1="${f1(dy(cut))}" x2="${D.x + D.w}" y2="${f1(dy(cut))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
@@ -2817,6 +2818,153 @@ function dendrogram(): string {
   </svg>`;
   const sm = [...merges].sort((a, b) => a - b);
   const cap = `左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 ${f2(sm[0])} の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 ${f1(Math.max(root.l!.h, root.r!.h))} 以下でまとまりますが、2つの群どうしは距離 ${f1(root.h)} になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.5：リンク法（2つの群の距離の測り方） ============
+function linkage(): string {
+  const pts = CLUSTER_PTS;
+  const L = [0, 1, 2], R = [3, 4, 5];
+  const d = (i: number, j: number) => Math.hypot(pts[i][1] - pts[j][1], pts[i][2] - pts[j][2]);
+  const pairs = L.flatMap((i) => R.map((j) => ({ i, j, v: d(i, j) })));
+  const mn = pairs.reduce((a, b) => (b.v < a.v ? b : a)), mx = pairs.reduce((a, b) => (b.v > a.v ? b : a));
+  const avg = pairs.reduce((s, p) => s + p.v, 0) / pairs.length;
+  const cen = (g: number[]) => [g.reduce((s, i) => s + pts[i][1], 0) / g.length, g.reduce((s, i) => s + pts[i][2], 0) / g.length];
+  const cL = cen(L), cR = cen(R);
+  const ward = ((L.length * R.length) / (L.length + R.length)) * ((cL[0] - cR[0]) ** 2 + (cL[1] - cR[1]) ** 2);
+  const W = 350, H = 250;
+  const S: Box = { x: 30, y: 16, w: 200, h: 200, xMin: 0, xMax: 7, yMax: 7 };
+  const X = (x: number) => PX(S, x), Y = (y: number) => S.y + S.h - (y / 7) * S.h;
+  const seg = (i: number, j: number, col: string, dash: string) => `<line x1="${f1(X(pts[i][1]))}" y1="${f1(Y(pts[i][2]))}" x2="${f1(X(pts[j][1]))}" y2="${f1(Y(pts[j][2]))}" stroke="${col}" stroke-width="2"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  const lx = 246;
+  const svg = `${svgOpen(W, H, '同じ2つの群でも、最も近い組で測るか、最も遠い組で測るかで、群どうしの距離が変わる')}
+    <rect x="${S.x}" y="${S.y}" width="${S.w}" height="${S.h}" fill="none" stroke="#e2e8f0" />
+    ${seg(mn.i, mn.j, ROSE, '')}
+    ${seg(mx.i, mx.j, INDIGO, '6 4')}
+    ${pts.map(([n, x, y], i) => `<circle cx="${f1(X(x))}" cy="${f1(Y(y))}" r="4.5" fill="${i < 3 ? AMBER : TEAL}" /><text x="${f1(X(x) + (n === 'A' || n === 'D' ? -7 : 7))}" y="${f1(Y(y) + 4)}"${n === 'A' || n === 'D' ? ' text-anchor="end"' : ''} font-size="13" fill="${INK}">${n}</text>`).join('')}
+    <text x="${lx}" y="40" font-size="12.4" font-weight="700" fill="${ROSE}">単リンク法</text>
+    <text x="${lx}" y="56" font-size="12.4" fill="${INK}">最も近い組 ${pts[mn.i][0]}–${pts[mn.j][0]}</text>
+    <text x="${lx}" y="72" font-size="12.4" fill="${INK}">距離 ${f2(mn.v)}</text>
+    <text x="${lx}" y="100" font-size="12.4" font-weight="700" fill="${INDIGO}">完全リンク法</text>
+    <text x="${lx}" y="116" font-size="12.4" fill="${INK}">最も遠い組 ${pts[mx.i][0]}–${pts[mx.j][0]}</text>
+    <text x="${lx}" y="132" font-size="12.4" fill="${INK}">距離 ${f2(mx.v)}</text>
+    <text x="${lx}" y="160" font-size="12.4" font-weight="700" fill="${INK}">群平均法</text>
+    <text x="${lx}" y="176" font-size="12.4" fill="${INK}">9組の平均 ${f2(avg)}</text>
+    <text x="${lx}" y="204" font-size="12.4" font-weight="700" fill="${INK}">ウォード法</text>
+    <text x="${lx}" y="220" font-size="12.4" fill="${INK}">平方和の増分 ${f1(ward)}</text>
+  </svg>`;
+  const cap = `デンドログラムと同じ6人で、A・B・C の群と D・E・F の群の距離を測ります。赤の実線は最も近い組、青の点線は最も遠い組です。どの組の距離を使うかで ${f2(mn.v)}〜${f2(mx.v)} と変わり、併合の順番や群の形が変わります。ウォード法だけは距離ではなく、まとめたときに群の中の平方和がどれだけ増えるかで比べます。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.5：k-means の手順（割り当てと重心の更新をくり返す） ============
+const KM_PTS: [number, number][] = [[1, 1], [1.6, 2.2], [2.2, 1.2], [2.6, 2.6], [5, 4.2], [5.8, 5], [6.4, 4], [5.4, 3.2]];
+function kmeansSteps(): string {
+  const P = KM_PTS;
+  const d2 = (a: number[], b: number[]) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+  let C: number[][] = [[...P[1]], [...P[3]]];
+  const steps: { C: number[][]; a: number[]; w: number }[] = [];
+  for (let it = 0; it < 10; it++) {
+    const a = P.map((p) => (d2(p, C[0]) <= d2(p, C[1]) ? 0 : 1));
+    steps.push({ C: C.map((c) => [...c]), a, w: P.reduce((s, p, i) => s + d2(p, C[a[i]]), 0) });
+    const N = [0, 1].map((k) => { const m = P.filter((_, i) => a[i] === k); return [m.reduce((s, p) => s + p[0], 0) / m.length, m.reduce((s, p) => s + p[1], 0) / m.length]; });
+    if (N.every((c, k) => d2(c, C[k]) < 1e-12)) break;
+    C = N;
+  }
+  const W = 350, pw = 108, gap = 9, top = 34, ph = 108;
+  const H = top + ph + 58;
+  const panel = (k: number, title: string) => {
+    const s = steps[k], x0 = k * (pw + gap) + 2;
+    const X = (x: number) => x0 + 6 + (x / 7) * (pw - 12), Y = (y: number) => top + ph - 6 - (y / 6) * (ph - 12);
+    const col = (g: number) => (g === 0 ? AMBER : TEAL);
+    return `<text x="${x0 + pw / 2}" y="${top - 18}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
+      <rect x="${x0}" y="${top}" width="${pw}" height="${ph}" fill="#fff" stroke="#e2e8f0" />
+      ${P.map((p, i) => `<line x1="${f1(X(p[0]))}" y1="${f1(Y(p[1]))}" x2="${f1(X(s.C[s.a[i]][0]))}" y2="${f1(Y(s.C[s.a[i]][1]))}" stroke="${col(s.a[i])}" stroke-opacity="0.45" />`).join('')}
+      ${P.map((p, i) => `<circle cx="${f1(X(p[0]))}" cy="${f1(Y(p[1]))}" r="4" fill="${col(s.a[i])}" />`).join('')}
+      ${s.C.map((c, g) => `<path d="M${f1(X(c[0]) - 6)},${f1(Y(c[1]) - 6)} L${f1(X(c[0]) + 6)},${f1(Y(c[1]) + 6)} M${f1(X(c[0]) + 6)},${f1(Y(c[1]) - 6)} L${f1(X(c[0]) - 6)},${f1(Y(c[1]) + 6)}" stroke="${g === 0 ? '#b45309' : TEAL}" stroke-width="3" />`).join('')}
+      <text x="${x0 + pw / 2}" y="${top + ph + 18}" text-anchor="middle" font-size="12.4" fill="${INK}">平方和 ${f1(s.w)}</text>`;
+  };
+  const last = steps.length - 1;
+  const svg = `${svgOpen(W, H, 'k-means の手順：重心に近い方へ割り当て、群の平均へ重心を移すことをくり返すと、平方和が減って止まる')}
+    ${panel(0, '① 初めの重心')}
+    ${panel(1, '② 重心を移す')}
+    ${panel(last, `③ ${last === 2 ? 'もう一度' : '止まる'}`)}
+    <text x="${W / 2}" y="${H - 8}" text-anchor="middle" font-size="12.4" fill="${SLATE}">× ＝重心・線＝割り当て先・平方和＝線の長さの2乗の合計</text>
+  </svg>`;
+  const moved = steps[0].a.filter((g, i) => g !== steps[1].a[i]).length;
+  const cap = `8人を k＝2 で分けます。① 重心を左下の2人の位置に置くと、右の4人も近い方の重心に割り当てられ、平方和は ${f1(steps[0].w)} です。② 重心をそれぞれの群の平均へ移して割り当て直すと、${moved}人が群を移り、平方和は ${f1(steps[1].w)} に減ります。③ もう一度移しても割り当てが変わらないので止まり、平方和は ${f1(steps[last].w)} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.5：k の決め方（エルボー法とシルエット係数） ============
+const ELBOW_PTS: [number, number][] = [[1, 1.2], [1.6, 0.8], [1.4, 1.8], [2, 1.4], [0.8, 1.6], [5, 1.4], [5.6, 0.8], [6, 1.6], [5.4, 2], [4.8, 0.9], [3.2, 4.6], [3.8, 5.2], [3, 5.4], [3.6, 4.2], [4.2, 4.8]];
+function elbowSilhouette(): string {
+  const P = ELBOW_PTS, n = P.length;
+  const d2 = (a: number[], b: number[]) => (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2;
+  const lloyd = (C0: number[][]) => {
+    let C = C0, a: number[] = [];
+    for (let it = 0; it < 30; it++) {
+      a = P.map((p) => { let b = 0; C.forEach((c, k) => { if (d2(p, c) < d2(p, C[b])) b = k; }); return b; });
+      const N = C.map((c, k) => { const m = P.filter((_, i) => a[i] === k); return m.length ? [m.reduce((s, p) => s + p[0], 0) / m.length, m.reduce((s, p) => s + p[1], 0) / m.length] : c; });
+      if (N.every((c, k) => d2(c, C[k]) < 1e-12)) break;
+      C = N;
+    }
+    return { a, w: P.reduce((s, p, i) => s + d2(p, C[a[i]]), 0) };
+  };
+  // 初めの重心をデータ点の全組み合わせから選び、平方和が最小の結果を使う
+  const best = (k: number) => {
+    let b = { a: [] as number[], w: Infinity };
+    const rec = (st: number, cur: number[]) => {
+      if (cur.length === k) { const r = lloyd(cur.map((i) => [...P[i]])); if (r.w < b.w - 1e-9) b = r; return; }
+      for (let i = st; i < n; i++) rec(i + 1, [...cur, i]);
+    };
+    rec(0, []);
+    return b;
+  };
+  const dist = (i: number, j: number) => Math.sqrt(d2(P[i], P[j]));
+  const sil = (a: number[], k: number) => {
+    let S = 0;
+    for (let i = 0; i < n; i++) {
+      const own = P.map((_, j) => j).filter((j) => j !== i && a[j] === a[i]);
+      if (!own.length) continue;
+      const ai = own.reduce((s, j) => s + dist(i, j), 0) / own.length;
+      let bi = Infinity;
+      for (let c = 0; c < k; c++) {
+        if (c === a[i]) continue;
+        const o = P.map((_, j) => j).filter((j) => a[j] === c);
+        if (o.length) bi = Math.min(bi, o.reduce((s, j) => s + dist(i, j), 0) / o.length);
+      }
+      S += (bi - ai) / Math.max(ai, bi);
+    }
+    return S / n;
+  };
+  const ks = [1, 2, 3, 4, 5];
+  const res = ks.map((k) => { const r = best(k); return { k, w: r.w, s: k > 1 ? sil(r.a, k) : NaN }; });
+  const W = 350, H = 230;
+  const A = { x: 36, y: 34, w: 124, h: 140 }, B = { x: 206, y: 34, w: 118, h: 140 };
+  const wMax = Math.ceil(res[0].w / 20) * 20;
+  const ax = (bx: typeof A, k: number) => bx.x + ((k - 1) / 4) * bx.w;
+  const ay = (v: number) => A.y + A.h - (v / wMax) * A.h;
+  const by = (v: number) => B.y + B.h - (v / 1) * B.h;
+  const xt = (bx: typeof A) => ks.map((k) => `<text x="${f1(ax(bx, k))}" y="${bx.y + bx.h + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${k}</text>`).join('');
+  const sr = res.filter((r) => r.k > 1);
+  const top = sr.reduce((a, b) => (b.s > a.s ? b : a));
+  const svg = `${svgOpen(W, H, '15人のデータで k を1から5まで変えたときの平方和とシルエット係数。平方和は k＝3 で急に減り方が緩くなり、シルエット係数は k＝3 で最大')}
+    <text x="${A.x - 30}" y="${A.y - 16}" font-size="12.4" font-weight="700" fill="${INK}">エルボー法（平方和）</text>
+    <text x="${B.x - 26}" y="${B.y - 16}" font-size="12.4" font-weight="700" fill="${INK}">平均シルエット係数</text>
+    <line x1="${A.x}" y1="${A.y + A.h}" x2="${A.x + A.w}" y2="${A.y + A.h}" stroke="${SLATE}" /><line x1="${A.x}" y1="${A.y}" x2="${A.x}" y2="${A.y + A.h}" stroke="${SLATE}" />
+    <line x1="${B.x}" y1="${B.y + B.h}" x2="${B.x + B.w}" y2="${B.y + B.h}" stroke="${SLATE}" /><line x1="${B.x}" y1="${B.y}" x2="${B.x}" y2="${B.y + B.h}" stroke="${SLATE}" />
+    ${[0, wMax / 2, wMax].map((v) => `<text x="${A.x - 5}" y="${f1(ay(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${[0, 0.5, 1].map((v) => `<text x="${B.x - 5}" y="${f1(by(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${xt(A)}${xt(B)}
+    <polyline points="${res.map((r) => `${f1(ax(A, r.k))},${f1(ay(r.w))}`).join(' ')}" fill="none" stroke="${INDIGO}" stroke-width="2" />
+    ${res.map((r) => `<circle cx="${f1(ax(A, r.k))}" cy="${f1(ay(r.w))}" r="${r.k === 3 ? 5.5 : 3.5}" fill="${r.k === 3 ? ROSE : INDIGO}" />`).join('')}
+    <text x="${f1(ax(A, 3) + 4)}" y="${f1(ay(res[2].w) - 10)}" font-size="12.4" fill="${ROSE}">肘 k＝3</text>
+    <polyline points="${sr.map((r) => `${f1(ax(B, r.k))},${f1(by(r.s))}`).join(' ')}" fill="none" stroke="${TEAL}" stroke-width="2" />
+    ${sr.map((r) => `<circle cx="${f1(ax(B, r.k))}" cy="${f1(by(r.s))}" r="${r.k === top.k ? 5.5 : 3.5}" fill="${r.k === top.k ? ROSE : TEAL}" /><text x="${f1(ax(B, r.k))}" y="${f1(by(r.s) + (r.k === top.k ? -10 : 18))}" text-anchor="middle" font-size="12.4" fill="${r.k === top.k ? ROSE : INK}">${f2(r.s)}</text>`).join('')}
+    <text x="${W / 2}" y="${H - 8}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝クラスターの数 k（15人・3つのまとまり）</text>
+  </svg>`;
+  const cap = `3つのまとまりがある15人のデータに、k＝1〜5 で k-means を当てはめました。平方和は k＝2 で ${f1(res[1].w)}、k＝3 で ${f1(res[2].w)} と大きく減り、その先は ${f1(res[3].w)}・${f1(res[4].w)} とほとんど減りません。この曲がり目（肘）が k＝3 です。平均シルエット係数も k＝3 の ${f2(res[2].s)} が最も大きく、2つの方法の答えがそろいます。`;
   return fig(svg, cap);
 }
 
@@ -3131,7 +3279,7 @@ function factorRotation(): string {
     ${dots}
     <text x="${X(-0.3)}" y="${H - 8}" font-size="12" fill="${INK}">1 の原点からの距離² ＝ ${f2(h0)}（共通性）</text>
   </svg>`;
-  const cap = `点の番号は下の表の行です。初期解では、6項目とも F1 に ${f2(Math.min(...pts.map((p) => p.u)))}〜${f2(Math.max(...pts.map((p) => p.u)))} で負荷し、F2 の符号で2組に分かれるだけで、F1 に名前が付けられません。軸を 40° 回すと、1〜3 は外向性の軸に、4〜6 は誠実性の軸に乗ります。点は動かないので、原点からの距離（共通性）も、データを説明する力も変わりません。`;
+  const cap = `点の番号は上の負荷量の表の行です。初期解では、6項目とも F1 に ${f2(Math.min(...pts.map((p) => p.u)))}〜${f2(Math.max(...pts.map((p) => p.u)))} で負荷し、F2 の符号で2組に分かれるだけで、F1 に名前が付けられません。軸を 40° 回すと、1〜3 は外向性の軸に、4〜6 は誠実性の軸に乗ります。点は動かないので、原点からの距離（共通性）も、データを説明する力も変わりません。`;
   return fig(svg, cap);
 }
 
@@ -3696,6 +3844,9 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
+  'f-linkage': linkage,
+  'f-kmeans-steps': kmeansSteps,
+  'f-elbow': elbowSilhouette,
   'f-timeseries': timeSeries,
   'f-km': kaplanMeier,
   'f-montecarlo': monteCarloPi,
