@@ -2186,6 +2186,60 @@ function lassoRidge(): string {
   return fig(svg, cap);
 }
 
+
+// ============ 2.6：年齢と発症の確率（シグモイドと、直線で当てはめた場合） ============
+function logitAge(): string {
+  const W = 340, H = 236, b0 = -5, b1 = 0.08;
+  const bx = { x: 40, y: 22, w: 286, h: 170 }, xMin = 20, xMax = 100, yMin = -0.2, yMax = 1.1;
+  const X = (v: number) => bx.x + ((v - xMin) / (xMax - xMin)) * bx.w;
+  const Y = (v: number) => bx.y + bx.h - ((v - yMin) / (yMax - yMin)) * bx.h;
+  const p = (a: number) => 1 / (1 + Math.exp(-(b0 + b1 * a)));
+  const s = (p(60) - p(40)) / 20, line = (a: number) => p(40) + s * (a - 40);
+  const pts = Array.from({ length: 81 }, (_, i) => xMin + i).map((a) => `${f1(X(a))},${f1(Y(p(a)))}`).join(' ');
+  const ages = [30, 40, 50, 60, 70];
+  const xOver = 40 + (1 - p(40)) / s, xUnder = 40 - p(40) / s;
+  const svg = `${svgOpen(W, H, `横軸は年齢、縦軸は発症の確率。曲線は −5＋0.08×年齢 から求めた確率で、0と1の間に収まる。灰色の破線は確率をそのまま直線で表した場合で、${Math.round(xUnder)}歳より下で0を下回り、${Math.round(xOver)}歳より上で1を超える`)}
+    ${[0, 0.5, 1].map((v) => `<line x1="${bx.x}" y1="${f1(Y(v))}" x2="${bx.x + bx.w}" y2="${f1(Y(v))}" stroke="${v === 0.5 ? '#e2e8f0' : '#cbd5e1'}" ${v === 0.5 ? '' : 'stroke-dasharray="3 3"'} /><text x="${bx.x - 5}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <line x1="${bx.x}" y1="${bx.y + bx.h}" x2="${bx.x + bx.w}" y2="${bx.y + bx.h}" stroke="${SLATE}" />
+    ${[20, 40, 60, 80, 100].map((v) => `<text x="${f1(X(v))}" y="${bx.y + bx.h + 15}" text-anchor="middle" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <line x1="${f1(X(xMin))}" y1="${f1(Y(line(xMin)))}" x2="${f1(X(xMax))}" y2="${f1(Y(line(xMax)))}" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5 3" />
+    <polyline points="${pts}" fill="none" stroke="${TEAL}" stroke-width="2.4" />
+    ${ages.map((a) => `<circle cx="${f1(X(a))}" cy="${f1(Y(p(a)))}" r="3.6" fill="${TEAL}" />`).join('')}
+    <text x="${f1(X(70) + 6)}" y="${f1(Y(p(70)) + 14)}" font-size="12" fill="${TEAL}" stroke="#fff" stroke-width="3" paint-order="stroke">70歳 ${f2(p(70))}</text>
+    <text x="${f1(X(30) + 8)}" y="${f1(Y(-0.1) + 4)}" font-size="12" fill="${TEAL}" stroke="#fff" stroke-width="3" paint-order="stroke">30歳 ${f2(p(30))}</text>
+    <text x="${f1(X(xMax) - 2)}" y="${f1(Y(1.07) + 2)}" text-anchor="end" font-size="12" fill="#64748b" stroke="#fff" stroke-width="3" paint-order="stroke">直線は1を超える</text>
+    <text x="${bx.x + 4}" y="${bx.y - 8}" font-size="12" fill="${SLATE}">確率 p</text>
+    <text x="${W / 2 + 10}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">年齢（歳）</text>
+  </svg>`;
+  const cap = `点は下の表の5つの年齢です。曲線は確率が0と1の間に収まり、確率が0.5になる62.5歳で最も急に上がります。灰色の破線は、40歳と60歳の確率を通る直線で確率を表した場合で、${Math.round(xUnder)}歳より下で0を下回り、${Math.round(xOver)}歳より上で1を超えてしまいます。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.6：ロジットとプロビットの曲線を比べる ============
+function logitProbit(): string {
+  const W = 340, H = 232, k = 1.7;
+  const lg = (z: number) => 1 / (1 + Math.exp(-z));
+  const maxDiff = (f: (z: number) => number, g: (z: number) => number) => { let m = 0; for (let z = -5; z <= 5; z += 0.01) m = Math.max(m, Math.abs(f(z) - g(z))); return m; };
+  const d1 = maxDiff(lg, Phi), d2 = maxDiff((z) => lg(k * z), Phi);
+  const panel = (x0: number, title: string, f: (z: number) => number, xl: string) => {
+    const bx = { x: x0, y: 46, w: 136, h: 130 };
+    const X = (z: number) => bx.x + ((z + 4) / 8) * bx.w, Y = (v: number) => bx.y + bx.h - v * bx.h;
+    const path = (g: (z: number) => number) => Array.from({ length: 161 }, (_, i) => -4 + i * 0.05).map((z) => `${f1(X(z))},${f1(Y(g(z)))}`).join(' ');
+    return `<text x="${x0 + bx.w / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
+    ${[0, 0.5, 1].map((v) => `<line x1="${bx.x}" y1="${f1(Y(v))}" x2="${bx.x + bx.w}" y2="${f1(Y(v))}" stroke="#e2e8f0" /><text x="${bx.x - 4}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${[-4, -2, 0, 2, 4].map((v) => `<text x="${f1(X(v))}" y="${bx.y + bx.h + 15}" text-anchor="middle" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <polyline points="${path(f)}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
+    <polyline points="${path(Phi)}" fill="none" stroke="${TEAL}" stroke-width="2.2" stroke-dasharray="5 3" />
+    <text x="${x0 + bx.w / 2}" y="${bx.y + bx.h + 31}" text-anchor="middle" font-size="12" fill="${SLATE}">${xl}</text>`;
+  };
+  const svg = `${svgOpen(W, H, `左は同じ線形予測子で比べたロジスティック曲線とΦで、Φの方が急に立ち上がり、差は最大 ${f2(d1)}。右はロジスティック曲線の横軸を ${k} 倍に縮めたもので、Φとほぼ重なり差は最大 ${d2.toFixed(3)}`)}
+    <text x="${W / 2}" y="34" text-anchor="middle" font-size="12"><tspan fill="${INDIGO}">― ロジット</tspan>　<tspan fill="${TEAL}">‐‐ プロビット Φ</tspan></text>
+    ${panel(30, '同じ線形予測子', lg, '線形予測子')}
+    ${panel(196, `ロジットだけ ×${k}`, (z) => lg(k * z), '線形予測子')}
+  </svg>`;
+  const cap = `左：同じ値の線形予測子を入れると、プロビットの方が急に上がります（確率の差は最大 ${f2(d1)}）。右：ロジットの線形予測子を ${k} 倍にすると、2本はほぼ重なり、差は最大 ${d2.toFixed(3)} です。ロジットの係数がプロビットの約 ${k} 倍になるのはこのためです。`;
+  return fig(svg, cap);
+}
 // ============ 1.13：合計3人と分かれば、内訳の確率は λ によらない ============
 function suffPoisson(): string {
   const W = 340, H = 236, lams = [1, 3], cols = [INDIGO, TEAL];
@@ -3838,7 +3892,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
