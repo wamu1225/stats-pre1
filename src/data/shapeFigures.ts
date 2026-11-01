@@ -3438,15 +3438,14 @@ function mdsMap(): string {
     <circle cx="${f1(sx(T[i].x))}" cy="${f1(sy(T[i].y))}" r="7" fill="none" stroke="${SLATE}" stroke-width="1.6" />
     <circle cx="${f1(sx(q.x))}" cy="${f1(sy(q.y))}" r="4" fill="${INDIGO}" />
     <text x="${f1(sx(T[i].x) + labelDx[i] * (anchor[i] === 'end' ? 1 : 1.4))}" y="${f1(sy(T[i].y) - 12)}" text-anchor="${anchor[i]}" font-size="12.4" font-weight="700" fill="${INK}">${cities[i].n}</text>`).join('');
-  const dkm = (i: number, j: number) => Math.round(D[i][j] / 10) * 10;
   const svg = `${svgOpen(W, H, '多次元尺度法：都市間の距離だけから都市の位置を復元すると、実際の地図の位置にほぼ重なる')}
     <text x="8" y="18" font-size="13" font-weight="700" fill="${INK}">距離（km）だけから位置を復元</text>
     ${dots}
     <text x="8" y="${H - 38}" font-size="12.4" fill="${SLATE}">灰の輪＝実際の位置／青の点＝復元した位置</text>
-    <text x="8" y="${H - 22}" font-size="12.4" fill="${SLATE}">入力は 4 都市の距離 6 個だけ（東京−大阪は ${dkm(0, 2)} km など）</text>
+    <text x="8" y="${H - 22}" font-size="12.4" fill="${SLATE}">入力は上の表の距離 6 個だけ</text>
     <text x="8" y="${H - 6}" font-size="12.4" fill="${SLATE}">北は上（向きは実際にそろえた）</text>
   </svg>`;
-  const cap = `MDS に渡したのは、4都市の間の距離（球面上の最短距離）だけです。地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ平面に並んでいて、2次元で距離をほとんど説明できるからです。`;
+  const cap = `地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ平面に並んでいて、2次元で距離をほとんど説明できるからです。`;
   return fig(svg, cap);
 }
 
