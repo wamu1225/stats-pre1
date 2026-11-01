@@ -3863,6 +3863,102 @@ function emResponsibility(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.7b：共分散構造分析のパス図（測定モデルと構造モデル、モデルが表す相関） ============
+function semPath(): string {
+  const W = 360, H = 352;
+  const arrow = (x1: number, y1: number, x2: number, y2: number, color: string, w = 1.8) =>
+    `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="${color}" stroke-width="${w}" marker-end="url(#sem-arrow-${color === ROSE ? 'r' : 'i'})" />`;
+  const box = (cx: number, cy: number, w: number, label: string) => `
+    <rect x="${cx - w / 2}" y="${cy - 14}" width="${w}" height="28" rx="3" fill="#ffffff" stroke="${INDIGO}" stroke-width="1.6" />
+    <text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="12.3" fill="${INK}">${label}</text>`;
+  const ell = (cx: number, cy: number, label: string) => `
+    <ellipse cx="${cx}" cy="${cy}" rx="44" ry="25" fill="#eef2ff" stroke="${INDIGO}" stroke-width="1.8" />
+    <text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">${label}</text>`;
+  const lab = (x: number, y: number, t: string, color = INDIGO, anchor = 'middle') =>
+    `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}" font-size="12.3" font-weight="700" fill="${color}">${t}</text>`;
+  // 学習意欲（左上）と、その観測変数2つ（上）
+  const mx = 90, my = 132;
+  const top = [{ x: 48, t: '自習時間', l: 0.8 }, { x: 132, t: '宿題提出', l: 0.6 }];
+  // 学力（右）と、その観測変数3つ（下）
+  const sx = 258, sy = 132;
+  const bot = [{ x: 190, t: '語彙', l: 0.8 }, { x: 258, t: '読解', l: 0.7 }, { x: 326, t: '計算', l: 0.6 }];
+  const topY = 58, botY = 220;
+  const topRows = top.map((b) => {
+    const x0 = mx + (b.x - mx) * 0.45, y0 = my - 24;
+    return `${box(b.x, topY, 76, b.t)}${arrow(x0, y0, b.x, topY + 15, INDIGO)}${lab((x0 + b.x) / 2 + (b.x < mx ? -20 : 20), (y0 + topY + 15) / 2 + 6, f1(b.l))}`;
+  }).join('');
+  const botRows = bot.map((b) => {
+    const x0 = sx + (b.x - sx) * 0.45, y0 = sy + 24;
+    return `${box(b.x, botY, 56, b.t)}${arrow(x0, y0, b.x, botY - 15, INDIGO)}${lab((x0 + b.x) / 2 + (b.x < sx ? -20 : b.x > sx ? 20 : 16), (y0 + botY - 15) / 2 + 4, f1(b.l))}`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '共分散構造分析のパス図：学習意欲（潜在変数）が自習時間と宿題提出に表れ、学力（潜在変数）が語彙・読解・計算に表れる。学習意欲から学力へ係数0.5の矢印。自習時間と語彙の相関はモデルでは0.8×0.5×0.8＝0.32')}
+    <defs>
+      <marker id="sem-arrow-i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INDIGO}" /></marker>
+      <marker id="sem-arrow-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROSE}" /></marker>
+    </defs>
+    <text x="8" y="18" font-size="12.3" fill="${INK}">楕円＝潜在変数（直接測れない）</text>
+    <text x="8" y="34" font-size="12.3" fill="${INK}">四角＝観測変数（実際に測った値）</text>
+    ${lab(352, 54, '測定モデル', INDIGO, 'end')}${lab(352, 70, '（青の矢印）', INDIGO, 'end')}
+    ${topRows}
+    ${ell(mx, my, '学習意欲')}
+    ${ell(sx, sy, '学力')}
+    ${arrow(mx + 45, my, sx - 46, sy, ROSE, 2.6)}
+    ${lab((mx + sx) / 2, my - 8, '0.5', ROSE)}
+    ${lab((mx + sx) / 2, my + 22, '構造モデル', ROSE)}
+    ${botRows}
+    <line x1="8" y1="252" x2="352" y2="252" stroke="#cbd5e1" stroke-width="1" />
+    <text x="8" y="274" font-size="12.3" font-weight="700" fill="${INK}">モデルが表す相関（矢印に沿って掛ける）</text>
+    <text x="8" y="296" font-size="12.3" fill="${INK}">自習時間と語彙：0.8 × 0.5 × 0.8 ＝ 0.32</text>
+    <text x="8" y="316" font-size="12.3" fill="${INK}">語彙と読解：0.8 × 0.7 ＝ 0.56</text>
+    <text x="8" y="340" font-size="12.3" fill="${SLATE}">各四角の誤差（独自因子）は省略</text>
+  </svg>`;
+  const cap = `矢印の数はどれも、変数を標準化したときのパス係数です。こうして求めた相関を、データで測った相関と組ごとに比べます。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.5：第9章の多変量解析の選び方（目的変数の有無→何を見たいか） ============
+function mvChoose(): string {
+  const W = 360;
+  const rows: { g: string; q: string; a: string[] }[] = [
+    { g: 'ある', q: '量的（金額など）', a: ['重回帰分析', '数量化 I 類'] },
+    { g: 'ある', q: '質的（グループ）', a: ['判別分析・数量化 II 類', 'ロジスティック回帰'] },
+    { g: 'ない', q: '変数を少数にまとめる', a: ['主成分分析・因子分析'] },
+    { g: 'ない', q: '個体をグループに分ける', a: ['クラスター分析'] },
+    { g: 'ない', q: '距離や分割表を平面に描く', a: ['多次元尺度法', '対応分析（III 類）'] },
+    { g: 'ない', q: '2組の変数の関連を測る', a: ['正準相関分析'] },
+    { g: 'ない', q: '仮説のモデルを確かめる', a: ['共分散構造分析'] },
+  ];
+  const rh = 40, gap = 8;
+  let y = 64;
+  let out = '';
+  let lastG = '';
+  rows.forEach((r) => {
+    if (r.g !== lastG) {
+      if (lastG) y += 14;
+      out += `<text x="8" y="${y + 4}" font-size="12.3" font-weight="700" fill="${r.g === 'ある' ? TEAL : INDIGO}">${r.g === 'ある' ? '目的変数がある：その型は？' : '目的変数がない：何を見たい？'}</text>`;
+      y += 16;
+      lastG = r.g;
+    }
+    const c = r.g === 'ある' ? TEAL : INDIGO;
+    out += `
+      <rect x="8" y="${y}" width="162" height="${rh}" rx="4" fill="#f8fafc" stroke="${c}" stroke-width="1.4" />
+      <text x="16" y="${y + rh / 2 + 4.5}" font-size="12.3" fill="${INK}">${r.q}</text>
+      <line x1="172" y1="${y + rh / 2}" x2="186" y2="${y + rh / 2}" stroke="${c}" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="${y}" width="162" height="${rh}" rx="4" fill="#ffffff" stroke="${c}" stroke-width="1.4" />
+      ${r.a.map((t, i) => `<text x="198" y="${y + rh / 2 + 4.5 + (i - (r.a.length - 1) / 2) * 15}" font-size="12.3" font-weight="700" fill="${c}">${t}</text>`).join('')}`;
+    y += rh + gap;
+  });
+  const H = y + 4;
+  const svg = `${svgOpen(W, H, '多変量解析の手法の選び方：目的変数があれば、その型（量的か質的か）で重回帰・数量化I類、または判別分析・ロジスティック回帰・数量化II類。目的変数がなければ、何を見たいかで主成分分析・因子分析、クラスター分析、多次元尺度法・対応分析、正準相関分析、共分散構造分析')}
+    <defs><marker id="mvc-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
+    <rect x="8" y="8" width="344" height="32" rx="4" fill="#fdf4ff" stroke="#c026d3" stroke-width="1.6" />
+    <text x="180" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">当てたい値（目的変数）があるか</text>
+    ${out}
+  </svg>`;
+  const cap = `数量化 I〜III 類は、説明変数がカテゴリのときの手法です。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -3918,6 +4014,8 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dag-front': dagFront,
   'f-dag-iv': dagIV,
   'f-ca': correspondenceMap,
+  'f-sem-path': semPath,
+  'f-mv-choose': mvChoose,
   'f-memoryless-geo': memorylessGeo,
   'f-memoryless-cont': memorylessExp,
   'f-em': emResponsibility,
