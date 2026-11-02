@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-BSXvsPPK.js"></script>
+    <script type="module" crossorigin src="../assets/index-rwndWmNs.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -180,7 +180,51 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <hr class="content-hr">
 <h3 class="content-h3">5. 階層型と k-means の使い分け</h3>
 <div class="content-table-wrap"><table class="content-table"><thead><tr><th></th><th>k-means</th><th>階層型</th></tr></thead><tbody><tr><td>規模</td><td>大きいデータ（1回の計算量が人数に比例）</td><td>数千人まで（全組の距離が人数の2乗に比例）</td></tr><tr><td><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span></td><td>先に決める</td><td>デンドログラムを見て後から決める</td></tr><tr><td>結果</td><td>初めの重心で変わることがある</td><td>同じデータなら同じ</td></tr><tr><td>形</td><td>丸く大きさの近いもの</td><td>リンク法で変わる</td></tr></tbody></table></div>
-<p class="content-p"><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span> の見当がついていて大きなデータを速く分けたいなら k-means、<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span> が分からずまず構造を眺めたいなら階層型を使います。</p></div>
+<p class="content-p"><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span> の見当がついていて大きなデータを速く分けたいなら k-means、<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span></span> が分からずまず構造を眺めたいなら階層型を使います。</p>
+<hr class="content-hr">
+<h3 class="content-h3">6. 第9章の手法の選び方</h3>
+<p class="content-p">主成分分析からクラスター分析まで、第9章の手法は、まず当てたい値（目的変数）があるかで分かれ、無いときは何を見たいかで分かれます。</p>
+<figure class="venn-figure"><svg viewBox="0 0 360 450" role="img" aria-label="多変量解析の手法の選び方：目的変数があれば、その型（量的か質的か）で重回帰・数量化I類、または判別分析・ロジスティック回帰・数量化II類。目的変数がなければ、何を見たいかで主成分分析・因子分析、クラスター分析、多次元尺度法・対応分析、正準相関分析、共分散構造分析" class="venn-svg">
+    <defs><marker id="mvc-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#64748b" /></marker></defs>
+    <rect x="8" y="8" width="344" height="32" rx="4" fill="#fdf4ff" stroke="#c026d3" stroke-width="1.6" />
+    <text x="180" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="#1e293b">当てたい値（目的変数）があるか</text>
+    <text x="8" y="68" font-size="12.3" font-weight="700" fill="#0f766e">目的変数がある：その型は？</text>
+      <rect x="8" y="80" width="162" height="40" rx="4" fill="#f8fafc" stroke="#0f766e" stroke-width="1.4" />
+      <text x="16" y="104.5" font-size="12.3" fill="#1e293b">量的（金額など）</text>
+      <line x1="172" y1="100" x2="186" y2="100" stroke="#0f766e" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="80" width="162" height="40" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.4" />
+      <text x="198" y="97" font-size="12.3" font-weight="700" fill="#0f766e">重回帰分析</text><text x="198" y="112" font-size="12.3" font-weight="700" fill="#0f766e">数量化 I 類</text>
+      <rect x="8" y="128" width="162" height="40" rx="4" fill="#f8fafc" stroke="#0f766e" stroke-width="1.4" />
+      <text x="16" y="152.5" font-size="12.3" fill="#1e293b">質的（グループ）</text>
+      <line x1="172" y1="148" x2="186" y2="148" stroke="#0f766e" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="128" width="162" height="40" rx="4" fill="#ffffff" stroke="#0f766e" stroke-width="1.4" />
+      <text x="198" y="145" font-size="12.3" font-weight="700" fill="#0f766e">判別分析・数量化 II 類</text><text x="198" y="160" font-size="12.3" font-weight="700" fill="#0f766e">ロジスティック回帰</text><text x="8" y="194" font-size="12.3" font-weight="700" fill="#4338ca">目的変数がない：何を見たい？</text>
+      <rect x="8" y="206" width="162" height="40" rx="4" fill="#f8fafc" stroke="#4338ca" stroke-width="1.4" />
+      <text x="16" y="230.5" font-size="12.3" fill="#1e293b">変数を少数にまとめる</text>
+      <line x1="172" y1="226" x2="186" y2="226" stroke="#4338ca" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="206" width="162" height="40" rx="4" fill="#ffffff" stroke="#4338ca" stroke-width="1.4" />
+      <text x="198" y="230.5" font-size="12.3" font-weight="700" fill="#4338ca">主成分分析・因子分析</text>
+      <rect x="8" y="254" width="162" height="40" rx="4" fill="#f8fafc" stroke="#4338ca" stroke-width="1.4" />
+      <text x="16" y="278.5" font-size="12.3" fill="#1e293b">個体をグループに分ける</text>
+      <line x1="172" y1="274" x2="186" y2="274" stroke="#4338ca" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="254" width="162" height="40" rx="4" fill="#ffffff" stroke="#4338ca" stroke-width="1.4" />
+      <text x="198" y="278.5" font-size="12.3" font-weight="700" fill="#4338ca">クラスター分析</text>
+      <rect x="8" y="302" width="162" height="40" rx="4" fill="#f8fafc" stroke="#4338ca" stroke-width="1.4" />
+      <text x="16" y="326.5" font-size="12.3" fill="#1e293b">距離や分割表を平面に描く</text>
+      <line x1="172" y1="322" x2="186" y2="322" stroke="#4338ca" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="302" width="162" height="40" rx="4" fill="#ffffff" stroke="#4338ca" stroke-width="1.4" />
+      <text x="198" y="319" font-size="12.3" font-weight="700" fill="#4338ca">多次元尺度法</text><text x="198" y="334" font-size="12.3" font-weight="700" fill="#4338ca">対応分析（III 類）</text>
+      <rect x="8" y="350" width="162" height="40" rx="4" fill="#f8fafc" stroke="#4338ca" stroke-width="1.4" />
+      <text x="16" y="374.5" font-size="12.3" fill="#1e293b">2組の変数の関連を測る</text>
+      <line x1="172" y1="370" x2="186" y2="370" stroke="#4338ca" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="350" width="162" height="40" rx="4" fill="#ffffff" stroke="#4338ca" stroke-width="1.4" />
+      <text x="198" y="374.5" font-size="12.3" font-weight="700" fill="#4338ca">正準相関分析</text>
+      <rect x="8" y="398" width="162" height="40" rx="4" fill="#f8fafc" stroke="#4338ca" stroke-width="1.4" />
+      <text x="16" y="422.5" font-size="12.3" fill="#1e293b">仮説のモデルを確かめる</text>
+      <line x1="172" y1="418" x2="186" y2="418" stroke="#4338ca" stroke-width="1.6" marker-end="url(#mvc-arrow)" />
+      <rect x="190" y="398" width="162" height="40" rx="4" fill="#ffffff" stroke="#4338ca" stroke-width="1.4" />
+      <text x="198" y="422.5" font-size="12.3" font-weight="700" fill="#4338ca">共分散構造分析</text>
+  </svg><figcaption class="venn-caption">数量化 I〜III 類は、説明変数がカテゴリのときの手法です。</figcaption></figure></div>
   <section style="margin-top:28px">
   <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
   <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
