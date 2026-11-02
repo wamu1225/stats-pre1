@@ -168,7 +168,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       const postMean = postVar * (pMean/(pStd**2) + (n * dMean)/(dStd**2));
       const postStd = Math.sqrt(postVar);
       for (let x = -4; x <= 4; x += 0.1) {
-        data.push({ x: x.toFixed(1), prior: normalPDF(x, pMean, pStd), posterior: normalPDF(x, postMean, postStd) });
+        data.push({ x: Math.round(x * 10) / 10, prior: normalPDF(x, pMean, pStd), posterior: normalPDF(x, postMean, postStd) });
       }
     } else if (type === 'skewkurt') {
       const skewData: { x: string; sym: number; right: number; left: number }[] = [];
@@ -392,14 +392,14 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           <ResponsiveContainer width="100%" height={200}>
             <ComposedChart data={hist} margin={{ top: 10, right: 10, left: 4, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="x" hide />
+              <XAxis dataKey="x" type="number" domain={[-5, 5]} ticks={[-4, -2, 0, 2, 4]} tick={{ fontSize: 11, fill: '#64748b' }} />
               <YAxis hide />
               <Bar dataKey="density" fill="var(--primary)" fillOpacity={0.5} isAnimationActive={false} />
               <Line dataKey="target" stroke="#ef4444" strokeWidth={2} dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            赤線: 目標分布（双峰）。棒: これまでに生成したサンプルのヒストグラム。サンプル数を増やすと棒が赤線に近づきます。
+          <div style={{ textAlign: 'center', fontSize: '0.72rem', color: '#64748b', marginTop: 2 }}>
+            横軸：母数の値。赤線：目標の分布（山が2つ）。棒：これまでに作ったサンプルのヒストグラム。サンプル数を増やすと棒が赤線に近づきます。
           </div>
         </div>
       );
@@ -539,7 +539,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       <ResponsiveContainer width="100%" height={200}>
         <ComposedChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="x" tick={{ fontSize: 11, fill: '#64748b' }} interval="preserveStartEnd" minTickGap={28} tickFormatter={(v) => (typeof v === 'number' ? String(Math.round(v * 100) / 100) : v)} />
+          <XAxis dataKey="x" {...(type === 'update' ? { type: 'number' as const, domain: [-4, 4], ticks: [-4, -2, 0, 1.5, 4] } : {})} tick={{ fontSize: 11, fill: '#64748b' }} interval="preserveStartEnd" minTickGap={28} tickFormatter={(v) => (typeof v === 'number' ? String(Math.round(v * 100) / 100) : v)} />
           <YAxis width={38} tick={{ fontSize: 11, fill: '#64748b' }} tickFormatter={(v) => (typeof v === 'number' ? String(Math.round(v * 100) / 100) : v)} />
           <Tooltip />
           {type === 'update' ? (

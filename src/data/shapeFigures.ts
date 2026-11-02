@@ -3959,6 +3959,102 @@ function mvChoose(): string {
   return fig(svg, cap);
 }
 
+// ============ 3.1 節1：迷惑メールの事前分布 → 尤度を掛ける → 合計で割る ============
+function bayesSpam(): string {
+  const W = 360, H = 296;
+  const prior = 0.3, lS = 0.8, lN = 0.05;
+  const a = prior * lS, b = (1 - prior) * lN, z = a + b;
+  const x0 = 12, w = 336;
+  const seg = (y: number, x: number, ww: number, c: string, op: number, dash = false) =>
+    `<rect x="${f1(x)}" y="${y}" width="${f1(Math.max(ww, 1.5))}" height="30" fill="${c}" fill-opacity="${op}" stroke="${c}" stroke-width="1.2"${dash ? ' stroke-dasharray="4 3"' : ''} />`;
+  const t = (x: number, y: number, s: string, c = INK, anchor = 'start', bold = false) =>
+    `<text x="${f1(x)}" y="${y}" text-anchor="${anchor}" font-size="12.4"${bold ? ' font-weight="700"' : ''} fill="${c}">${s}</text>`;
+  // 1段目：事前分布（幅＝確率）
+  const y1 = 36, y2 = 116, y3 = 236;
+  const svg = `${svgOpen(W, H, `迷惑メールのベイズ更新：事前分布はスパム0.3・正常0.7。尤度0.8と0.05を掛けると0.24と0.035が残る。合計0.275で割るとスパム${f2(a / z)}・正常${f2(b / z)}`)}
+    ${t(x0, y1 - 10, '① 事前分布：メール全体', INK, 'start', true)}
+    ${seg(y1, x0, w * prior, ROSE, 0.55)}${seg(y1, x0 + w * prior, w * (1 - prior), SLATE, 0.25)}
+    ${t(x0 + 6, y1 + 20, 'スパム 0.3', '#ffffff', 'start', true)}${t(x0 + w * prior + 6, y1 + 20, '正常 0.7')}
+    ${t(x0, y2 - 10, '② × 尤度：2語を含むメールだけ残す', INK, 'start', true)}
+    ${seg(y2, x0, w * prior, ROSE, 0.08, true)}${seg(y2, x0 + w * prior, w * (1 - prior), SLATE, 0.06, true)}
+    ${seg(y2, x0, w * a, ROSE, 0.55)}${seg(y2, x0 + w * prior, w * b, SLATE, 0.6)}
+    ${t(x0 + 4, y2 + 48, `0.3×0.8＝${f2(a)}`, ROSE, 'start', true)}${t(x0 + w * prior + 4, y2 + 48, '0.7×0.05＝0.035', INK, 'start', true)}
+    ${t(x0, y2 + 66, `残った合計 ${f2(a)}＋0.035＝${(z).toFixed(3)}（ベイズの定理の分母）`, SLATE)}
+    ${t(x0, y3 - 10, `③ 合計 ${z.toFixed(3)} で割る：事後分布`, INK, 'start', true)}
+    ${seg(y3, x0, w * (a / z), ROSE, 0.55)}${seg(y3, x0 + w * (a / z), w * (b / z), SLATE, 0.6)}
+    ${t(x0 + 6, y3 + 20, `スパム ${f2(a / z)}`, '#ffffff', 'start', true)}${t(x0 + w * (a / z) - 4, y3 + 48, `正常 ${f2(b / z)}`, INK, 'end')}
+  </svg>`;
+  const cap = `帯の幅が確率です。②で点線の部分（2語を含まないメール）は、見たデータと合わないので消えます。残った2本の比 ${f2(a)} : 0.035 は③でも変わらず、全体を1に戻すために合計で割るだけです。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.1 節2：ベータ事前分布の更新（10回中7回表）、事前分布の強さで事後分布が引き寄せられる ============
+function betaUpdate(): string {
+  const W = 360, H = 330;
+  const k = 7, n = 10, mle = k / n;
+  const panels = [
+    { a: 1, b: 1, y: 40, name: '弱い事前分布 Beta(1, 1)（一様）' },
+    { a: 5, b: 5, y: 196, name: '強い事前分布 Beta(5, 5)（0.5 のまわり）' },
+  ];
+  let out = '';
+  panels.forEach((P) => {
+    const A = P.a + k, B = P.b + n - k, mean = A / (A + B);
+    const bx: Box = { x: 14, y: P.y + 16, w: 330, h: 90, xMin: 0, xMax: 1, yMax: 3.8 };
+    out += `<text x="14" y="${P.y}" font-size="12.4" font-weight="700" fill="${INK}">${P.name}</text>
+      ${area(bx, betaPdf(A, B), 0.001, 0.999, INDIGO, 0.25)}
+      ${curve(bx, betaPdf(A, B), INDIGO, 0.001, 0.999, 2)}
+      ${curve(bx, betaPdf(P.a, P.b), SLATE, 0.001, 0.999, 1.6, '5 4')}
+      <line x1="${f1(PX(bx, mle))}" y1="${bx.y}" x2="${f1(PX(bx, mle))}" y2="${bx.y + bx.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="3 3" />
+      <line x1="${f1(PX(bx, mean))}" y1="${bx.y + 6}" x2="${f1(PX(bx, mean))}" y2="${bx.y + bx.h}" stroke="${INDIGO}" stroke-width="1.6" />
+      <text x="${f1(PX(bx, mean) - 4)}" y="${bx.y + 4}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">事後 Beta(${A}, ${B})・平均 ${f2(mean)}</text>
+      ${axes(bx, [0, 0.5, 1])}
+      <text x="${f1(PX(bx, mle))}" y="${bx.y + bx.h + 14}" text-anchor="middle" font-size="12.4" fill="${ROSE}">0.7</text>`;
+  });
+  const svg = `${svgOpen(W, H, 'コインを10回投げて7回表。一様な事前分布Beta(1,1)では事後分布Beta(8,4)で平均0.67。0.5のまわりの事前分布Beta(5,5)では事後分布Beta(12,8)で平均0.60と、0.5の側へ引き寄せられる')}
+    <text x="14" y="16" font-size="12.4" fill="${SLATE}">点線＝事前分布　塗り＝事後分布　赤の点線＝最尤推定 0.7</text>
+    ${out}
+  </svg>`;
+  const cap = `横軸は表の確率 p です。同じ「10回中7回」でも、0.5 のまわりに山のある事前分布から始めると、事後分布の山は 0.7 まで動ききりません。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.1 節5：階層ベイズの縮小（データの少ない学校ほど全体の平均へ寄る） ============
+function shrinkage(): string {
+  const W = 360;
+  const mu = 60, sigma = 10, tau = 5;
+  const schools = [
+    { name: 'A', n: 50, m: 70 }, { name: 'B', n: 5, m: 75 }, { name: 'C', n: 40, m: 52 }, { name: 'D', n: 4, m: 45 },
+  ].map((s) => { const wgt = (s.n / sigma ** 2) / (s.n / sigma ** 2 + 1 / tau ** 2); return { ...s, wgt, est: mu + wgt * (s.m - mu) }; });
+  const bx: Box = { x: 92, y: 0, w: 256, h: 0, xMin: 40, xMax: 80, yMax: 1 };
+  const top = 44, rh = 40;
+  const colors: Record<string, string> = { A: INDIGO, B: ROSE, C: TEAL, D: AMBER };
+  const rows = schools.map((s, i) => {
+    const c = colors[s.name], y = top + i * rh;
+    const xa = PX(bx, s.m), xb = PX(bx, s.est);
+    const dir = xb > xa ? 1 : -1;
+    return `<text x="8" y="${y + 4.5}" font-size="12.4" font-weight="700" fill="${c}">${s.name}校 ${s.n}人</text>
+      <line x1="${f1(xa + dir * 7)}" y1="${y}" x2="${f1(xb - dir * 8)}" y2="${y}" stroke="${c}" stroke-width="2" marker-end="url(#shr-arrow-${s.name})" />
+      <circle cx="${f1(xa)}" cy="${y}" r="5.5" fill="#ffffff" stroke="${c}" stroke-width="2" />
+      <circle cx="${f1(xb)}" cy="${y}" r="5.5" fill="${c}" />
+      ${Math.abs(xb - xa) < 26
+        ? `<text x="${f1((xa + xb) / 2)}" y="${y - 10}" text-anchor="middle" font-size="12" font-weight="700" fill="${c}">${s.m}→${num(s.est)}</text>`
+        : `<text x="${f1(xa)}" y="${y - 10}" text-anchor="middle" font-size="12" fill="${c}">${s.m}</text>
+      <text x="${f1(xb)}" y="${y - 10}" text-anchor="middle" font-size="12" font-weight="700" fill="${c}">${num(s.est)}</text>`}`;
+  }).join('');
+  const base = top + schools.length * rh - 10;
+  const H = base + 44;
+  const svg = `${svgOpen(W, H, '4校の平均点を別々に推定した値（白丸）と、階層ベイズで推定した値（塗り）。50人のA校は70から69.3、40人のC校は52から52.7とほとんど動かず、5人のB校は75から68.3、4人のD校は45から52.5へ、全体の平均60点の側へ大きく寄る')}
+    <defs>${Object.entries(colors).map(([k, c]) => `<marker id="shr-arrow-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${c}" /></marker>`).join('')}</defs>
+    <text x="8" y="16" font-size="12.4" fill="${SLATE}">白丸＝学校ごとの平均　塗り＝階層ベイズ</text>
+    <line x1="${f1(PX(bx, mu))}" y1="${top - 22}" x2="${f1(PX(bx, mu))}" y2="${base}" stroke="${SLATE}" stroke-dasharray="4 3" />
+    ${rows}
+    ${axes({ ...bx, y: base - 0, h: 0 }, [40, 50, 60, 70, 80])}
+    <text x="${f1(PX(bx, mu))}" y="${base + 32}" text-anchor="middle" font-size="12.4" fill="${SLATE}">全体の平均 ${mu}</text>
+  </svg>`;
+  const cap = `点数の標準偏差を10点、学校の平均どうしのばらつきを5点、全体の平均を60点とした図です（実際はこれらもデータから推定します）。推定値は、学校の平均と60点を重み n/(n＋4) で混ぜた値で、50人のA校は重み0.93、5人のB校は0.56です。75点だったB校は、70点のA校より下になります。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -4016,6 +4112,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-ca': correspondenceMap,
   'f-sem-path': semPath,
   'f-mv-choose': mvChoose,
+  'f-bayes-spam': bayesSpam, 'f-conjugate-coin': betaUpdate, 'f-shrinkage': shrinkage,
   'f-memoryless-geo': memorylessGeo,
   'f-memoryless-cont': memorylessExp,
   'f-em': emResponsibility,
