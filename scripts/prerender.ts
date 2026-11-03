@@ -173,7 +173,7 @@ const FIGURES: Record<string, string> = {
     <text x="180" y="181" text-anchor="middle" font-size="12.6" font-weight="700" fill="#334155">0.4</text>
     <text x="33" y="114" text-anchor="middle" font-size="12.6" font-weight="700" fill="#b45309">0.8</text>
     <text x="327" y="114" text-anchor="middle" font-size="12.6" font-weight="700" fill="#1d4ed8">0.6</text>
-  </svg><figcaption class="venn-caption">天気を晴れ・雨の2状態にしたマルコフ連鎖。矢印は推移確率 pᵢⱼ（晴→雨 = 0.2、雨→晴 = 0.4、自己ループは晴→晴 = 0.8、雨→雨 = 0.6）。各状態から出る矢印の確率の和は必ず1で、これが推移確率行列 P の各行の和が1になることに対応する。次の状態は今の状態だけで決まり、それより前の履歴にはよらない（マルコフ性）。</figcaption></figure>`,
+  </svg><figcaption class="venn-caption">行列 P の1行目（晴れから出る矢印）が 0.8 と 0.2、2行目（雨から出る矢印）が 0.4 と 0.6 で、どちらも足すと1です。</figcaption></figure>`,
   'logistic-sigmoid': `<figure class="venn-figure">${logisticSigmoidSvg()}<figcaption class="venn-caption">ロジスティック回帰のシグモイド関数 p = 1 / (1 + e^−(β₀+β·x))。線形予測子（横軸）がどれだけ大きく・小さくなっても、確率（縦軸）は必ず0と1の間に収まる。確率をそのまま直線で当てはめると（灰の破線）0を下回り1を超えてしまうのに対し、シグモイドはなめらかに0↔1を結ぶ。中央 β₀+β·x = 0 で p = 0.5、そこで傾きが最も急になる。</figcaption></figure>`,
   'pvalue-table': `<div style="overflow-x:auto;margin:1rem 0"><table style="width:100%;border-collapse:collapse;font-size:0.85rem">
     <thead><tr><th style="background:#fef2f2;color:#991b1b;padding:0.6rem 0.75rem;border:1px solid #fecaca;text-align:left;font-weight:800">❌ 間違った解釈</th><th style="background:#f0fdf4;color:#166534;padding:0.6rem 0.75rem;border:1px solid #bbf7d0;text-align:left;font-weight:800">✅ 正しい解釈</th></tr></thead>

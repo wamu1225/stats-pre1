@@ -4142,6 +4142,99 @@ function stateSpace(): string {
   return fig(svg, cap);
 }
 
+// ============ 3.3：晴れ・雨の連鎖が定常分布 2/3 へ近づく ============
+function markovConverge(): string {
+  const days = 8;
+  const fromSun: number[] = [1], fromRain: number[] = [0];
+  for (let t = 1; t <= days; t++) {
+    const s = fromSun[t - 1], r = fromRain[t - 1];
+    fromSun.push(0.8 * s + 0.4 * (1 - s));
+    fromRain.push(0.8 * r + 0.4 * (1 - r));
+  }
+  const W = 350, H = 230;
+  const x0 = 44, x1 = 336, yT = 26, yB = 186;
+  const px = (t: number) => x0 + (t / days) * (x1 - x0);
+  const py = (p: number) => yB - p * (yB - yT);
+  const line = (v: number[], c: string, dash = '') => `<polyline points="${v.map((p, t) => `${f1(px(t))},${f1(py(p))}`).join(' ')}" fill="none" stroke="${c}" stroke-width="2" ${dash ? `stroke-dasharray="${dash}"` : ''} />
+    ${v.map((p, t) => `<circle cx="${f1(px(t))}" cy="${f1(py(p))}" r="3.2" fill="${c}" />`).join('')}`;
+  const lab = (v: number[], t: number, c: string, dy: number) => `<text x="${f1(px(t) + 13)}" y="${f1(py(v[t]) + dy)}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${c}">${v[t] === 1 || v[t] === 0 ? v[t] : f2(v[t])}</text>`;
+  const svg = `${svgOpen(W, H, '今日が晴れでも雨でも、何日か先に晴れである確率は 2/3 に近づく')}
+    ${[0, 0.5, 1].map((p) => `<line x1="${x0}" y1="${f1(py(p))}" x2="${x1}" y2="${f1(py(p))}" stroke="#e2e8f0" /><text x="${x0 - 6}" y="${f1(py(p) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${p}</text>`).join('')}
+    <line x1="${x0}" y1="${f1(py(2 / 3))}" x2="${x1}" y2="${f1(py(2 / 3))}" stroke="${INK}" stroke-dasharray="4 3" />
+    <text x="${x1}" y="${f1(py(2 / 3) - 6)}" text-anchor="end" font-size="12" font-weight="700" fill="${INK}">2/3</text>
+    ${line(fromSun, AMBER)}${line(fromRain, INDIGO)}
+    ${[1, 2, 3].map((t) => lab(fromSun, t, '#b45309', -8)).join('')}
+    ${[1, 2, 3].map((t) => lab(fromRain, t, INDIGO, 17)).join('')}
+    <text x="${f1(px(0) + 8)}" y="${f1(py(1) + 4)}" font-size="12" font-weight="700" fill="#b45309">今日が晴れ</text>
+    <text x="${f1(px(0) + 8)}" y="${f1(py(0) - 6)}" font-size="12" font-weight="700" fill="${INDIGO}">今日が雨</text>
+    ${range(0, days).map((t) => `<text x="${f1(px(t))}" y="${yB + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${(x0 + x1) / 2}" y="${H - 8}" text-anchor="middle" font-size="12" fill="${SLATE}">何日後か　（縦軸：その日が晴れの確率）</text>
+  </svg>`;
+  const cap = `今日が晴れなら 1 → 0.8 → 0.72 → 0.688、雨なら 0 → 0.4 → 0.56 → 0.624 と進み、どちらも 2/3（点線）に近づきます。2本の差は1日ごとに 0.4 倍に縮みます。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.3：定常分布に近づかない2つの連鎖 ============
+function markovFail(): string {
+  const W = 350, H = 236;
+  const node = (x: number, y: number, txt: string, c: string, fill: string) =>
+    `<circle cx="${x}" cy="${y}" r="20" fill="${fill}" stroke="${c}" stroke-width="2" /><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="14" font-weight="700" fill="${INK}">${txt}</text>`;
+  const loop = (x: number, y: number, side: 1 | -1) =>
+    `<path d="M${x + side * 18},${y - 9} C${x + side * 46},${y - 26} ${x + side * 46},${y + 26} ${x + side * 19},${y + 9}" fill="none" stroke="${SLATE}" stroke-width="1.5" marker-end="url(#mf-arr)" /><text x="${x + side * 50}" y="${y + 4}" text-anchor="${side > 0 ? 'start' : 'end'}" font-size="12" fill="${SLATE}">1</text>`;
+  const svg = `${svgOpen(W, H, '左：行き来できない2つの状態。どちらから出発したかで長期の割合が変わる。右：必ず交互に移る2つの状態。A にいる確率が1と0をくり返し、近づかない')}
+    <defs><marker id="mf-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
+    <text x="88" y="18" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">既約でない</text>
+    <text x="262" y="18" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">周期 2</text>
+    <line x1="175" y1="8" x2="175" y2="${H - 6}" stroke="#e2e8f0" />
+    ${node(88, 60, 'A', INDIGO, '#eef2ff')}${loop(88, 60, 1)}
+    ${node(88, 130, 'B', TEAL, '#f0fdfa')}${loop(88, 130, 1)}
+    <text x="40" y="99" text-anchor="middle" font-size="12" fill="${SLATE}">行き来</text>
+    <text x="40" y="114" text-anchor="middle" font-size="12" fill="${SLATE}">なし</text>
+    ${node(222, 92, 'A', INDIGO, '#eef2ff')}${node(302, 92, 'B', TEAL, '#f0fdfa')}
+    <path d="M238,80 Q262,60 286,80" fill="none" stroke="${SLATE}" stroke-width="1.5" marker-end="url(#mf-arr)" />
+    <path d="M286,104 Q262,124 238,104" fill="none" stroke="${SLATE}" stroke-width="1.5" marker-end="url(#mf-arr)" />
+    <text x="262" y="60" text-anchor="middle" font-size="12" fill="${SLATE}">1</text>
+    <text x="262" y="134" text-anchor="middle" font-size="12" fill="${SLATE}">1</text>
+    <text x="88" y="180" text-anchor="middle" font-size="12" fill="${INK}">A から出発 → ずっと A</text>
+    <text x="88" y="198" text-anchor="middle" font-size="12" fill="${INK}">B から出発 → ずっと B</text>
+    <text x="88" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="${ROSE}">出発点で行き先が変わる</text>
+    <text x="262" y="180" text-anchor="middle" font-size="12" fill="${INK}">A にいる確率</text>
+    <text x="262" y="198" text-anchor="middle" font-size="12" fill="${INK}">1, 0, 1, 0, 1, …</text>
+    <text x="262" y="220" text-anchor="middle" font-size="12" font-weight="700" fill="${ROSE}">どの値にも近づかない</text>
+  </svg>`;
+  const cap = `左は (1, 0) も (0, 1) も定常分布で、1つに決まりません。右の定常分布は (1/2, 1/2) ですが、A にいる確率はそこへ近づかず揺れ続けます。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.3：対称ランダムウォークは √t の幅で広がる ============
+function randomWalkPaths(): string {
+  let s = 20261104;
+  const rnd = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+  const T = 100, K = 6;
+  const paths = Array.from({ length: K }, () => { const v = [0]; for (let t = 1; t <= T; t++) v.push(v[t - 1] + (rnd() < 0.5 ? 1 : -1)); return v; });
+  const W = 350, H = 250;
+  const x0 = 40, x1 = 336, yT = 10, yB = 206, lim = 25;
+  const px = (t: number) => x0 + (t / T) * (x1 - x0);
+  const py = (v: number) => (yT + yB) / 2 - (v / lim) * ((yB - yT) / 2);
+  const band = (k: number) => {
+    const up = range(0, T).map((t) => `${f1(px(t))},${f1(py(k * Math.sqrt(t)))}`).join(' ');
+    const dn = range(0, T).map((t) => `${f1(px(t))},${f1(py(-k * Math.sqrt(t)))}`).join(' ');
+    return `<polyline points="${up}" fill="none" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="${k === 1 ? '' : '4 3'}" /><polyline points="${dn}" fill="none" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="${k === 1 ? '' : '4 3'}" />`;
+  };
+  const cols = [INDIGO, TEAL, AMBER, '#7c3aed', SLATE, '#0369a1'];
+  const svg = `${svgOpen(W, H, '±1 ずつ動くランダムウォークを6本。散らばりは歩数 t の平方根に比例して広がり、100歩で標準偏差10')}
+    ${[-20, -10, 0, 10, 20].map((v) => `<line x1="${x0}" y1="${f1(py(v))}" x2="${x1}" y2="${f1(py(v))}" stroke="${v === 0 ? '#cbd5e1' : '#f1f5f9'}" /><text x="${x0 - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${paths.map((v, i) => `<polyline points="${v.map((y, t) => `${f1(px(t))},${f1(py(y))}`).join(' ')}" fill="none" stroke="${cols[i]}" stroke-width="1.3" stroke-opacity="0.85" />`).join('')}
+    ${band(1)}${band(2)}
+    <line x1="${x0 + 6}" y1="${f1(py(22))}" x2="${x0 + 26}" y2="${f1(py(22))}" stroke="${ROSE}" stroke-width="1.6" /><text x="${x0 + 30}" y="${f1(py(22) + 4)}" font-size="12" font-weight="700" fill="${ROSE}">±√t（100歩で ±10）</text>
+    <line x1="${x0 + 6}" y1="${f1(py(17.5))}" x2="${x0 + 26}" y2="${f1(py(17.5))}" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="4 3" /><text x="${x0 + 30}" y="${f1(py(17.5) + 4)}" font-size="12" font-weight="700" fill="${ROSE}">±2√t</text>
+    ${[0, 25, 50, 75, 100].map((t) => `<text x="${f1(px(t))}" y="${yB + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${(x0 + x1) / 2}" y="${H - 8}" text-anchor="middle" font-size="12" fill="${SLATE}">歩数 t（乱数で作った6本・縦軸は位置）</text>
+  </svg>`;
+  const cap = `100歩後の位置は、およそ3本に2本が ±10 の内側、ほとんどが ±20 の内側に入ります。100歩で100進むことはまずありません。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -4180,6 +4273,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-kmeans-steps': kmeansSteps,
   'f-elbow': elbowSilhouette,
   'f-timeseries': timeSeries, 'f-ts-diff': tsDiff, 'f-ts-acf': tsAcfPacf, 'f-state-space': stateSpace,
+  'f-markov-converge': markovConverge, 'f-markov-fail': markovFail, 'f-random-walk': randomWalkPaths,
   'f-km': kaplanMeier,
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
