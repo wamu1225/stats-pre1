@@ -3042,7 +3042,7 @@ function timeSeries(): string {
     <text x="${f1(PX(b, 0) + 4)}" y="${f1(py(y(0)) + 16)}" font-size="12.4" fill="${INK}">1月 ${Math.round(y(0))}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">月次売上（万円）の3年分</text>
   </svg>`;
-  const cap = `本文の数字（1月 ${Math.round(y(0))}万円・7月 ${Math.round(y(6))}万円・翌1月 ${Math.round(y(12))}万円）に合わせて3年分を描いたものです。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。12か月前の値と今の値がよく似ているので、ラグ12の自己相関が高くなります。トレンドがある系列は平均が時間とともに変わるので、そのままでは定常ではありません。差分をとると、この右上がりが取り除かれます。`;
+  const cap = `本文の数字（1月 ${Math.round(y(0))}万円・7月 ${Math.round(y(6))}万円・翌1月 ${Math.round(y(12))}万円）に合わせて3年分を描いたものです。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。`;
   return fig(svg, cap);
 }
 
@@ -4055,6 +4055,93 @@ function shrinkage(): string {
   return fig(svg, cap);
 }
 
+// ============ 3.2：ランダムウォークと差分 ============
+function tsDiff(): string {
+  let s = 20261103;
+  const rnd = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+  const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(2 * Math.PI * rnd());
+  const n = 60;
+  const e = Array.from({ length: n }, gauss);
+  const y: number[] = [];
+  e.forEach((v, i) => y.push((i ? y[i - 1] : 0) + v));
+  const W = 350;
+  const panel = (vals: number[], top: number, h: number, lo: number, hi: number, color: string, title: string, ticks: number[]) => {
+    const px = (t: number) => 40 + (t / (n - 1)) * 296;
+    const py = (v: number) => top + h - ((v - lo) / (hi - lo)) * h;
+    const pts = vals.map((v, t) => `${f1(px(t))},${f1(py(v))}`).join(' ');
+    return `<text x="8" y="${top - 8}" font-size="12.4" font-weight="700" fill="${color}">${title}</text>
+      ${ticks.map((v) => `<line x1="40" y1="${f1(py(v))}" x2="336" y2="${f1(py(v))}" stroke="${v === 0 ? '#cbd5e1' : '#f1f5f9'}" /><text x="34" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" />`;
+  };
+  const yLo = Math.floor(Math.min(...y) / 2) * 2, yHi = Math.ceil(Math.max(...y) / 2) * 2;
+  const yt = [yLo, Math.round(yLo / 2), 0];
+  const svg = `${svgOpen(W, 300, '上：ランダムウォーク。平均の位置が時間とともにさまよい、定常ではない。下：その隣どうしの差。0のまわりを同じ幅で上下する定常な系列になる')}
+    ${panel(y, 24, 110, yLo, yHi, INDIGO, '元の系列（ランダムウォーク）', yt)}
+    ${panel(e, 172, 90, -3, 3, TEAL, '差分（隣どうしの差）＝ 誤差 ε だけ', [-3, 0, 3])}
+    ${[0, 20, 40, 59].map((t) => `<text x="${f1(40 + (t / (n - 1)) * 296)}" y="280" text-anchor="middle" font-size="12" fill="${SLATE}">${t + 1}</text>`).join('')}
+    <text x="188" y="296" text-anchor="middle" font-size="12" fill="${SLATE}">時点 t（乱数で作った60期）</text>
+  </svg>`;
+  const cap = `上は乱数で作ったランダムウォークで、山や谷の位置が試行ごとに変わり、平均が一定になりません。下は同じ系列の差分で、0のまわりを同じ幅で上下します。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.2：コレログラムで AR と MA を見分ける ============
+function tsAcfPacf(): string {
+  const phi = 0.8, th = 0.8, K = 6;
+  const ks = range(1, K);
+  const arAcf = ks.map((k) => phi ** k);
+  const arPacf = ks.map((k) => (k === 1 ? phi : 0));
+  const maAcf = ks.map((k) => (k === 1 ? th / (1 + th * th) : 0));
+  const maPacf = ks.map((k) => (-((-th) ** k) * (1 - th * th)) / (1 - th ** (2 * (k + 1))));
+  const W = 360, cw = 160, ch = 84;
+  const cell = (vals: number[], x0: number, y0: number, color: string) => {
+    const mid = y0 + ch / 2;
+    const py = (v: number) => mid - v * (ch / 2);
+    const bw = 14;
+    const bx = (k: number) => x0 + 20 + (k - 1) * 23;
+    return `<rect x="${x0}" y="${f1(py(0.2))}" width="${cw}" height="${f1(py(-0.2) - py(0.2))}" fill="#e2e8f0" fill-opacity="0.7" />
+      <line x1="${x0}" y1="${mid}" x2="${x0 + cw}" y2="${mid}" stroke="${SLATE}" />
+      ${vals.map((v, i) => { const k = i + 1, yTop = Math.min(py(v), mid), hgt = Math.abs(py(v) - mid);
+        return `<rect x="${f1(bx(k) - bw / 2)}" y="${f1(yTop)}" width="${bw}" height="${f1(Math.max(hgt, 0.8))}" fill="${color}" fill-opacity="0.8" />
+        <text x="${f1(bx(k))}" y="${y0 + ch + 13}" text-anchor="middle" font-size="11.5" fill="${SLATE}">${k}</text>`; }).join('')}
+      <text x="${f1(bx(1))}" y="${f1(v0label(vals[0], py, mid))}" text-anchor="middle" font-size="11.5" font-weight="700" fill="${color}">${f2(vals[0])}</text>`;
+  };
+  const v0label = (v: number, py: (v: number) => number, mid: number) => (v >= 0 ? py(v) - 3 : mid + 12);
+  const xL = 40, xR = 192, yA = 44, yP = 166;
+  const svg = `${svgOpen(W, 296, 'AR(1)（係数0.8）とMA(1)（係数0.8）のコレログラム。AR(1)は自己相関がゆっくり減り偏自己相関が1期で途切れる。MA(1)は自己相関が1期で途切れ偏自己相関がゆっくり減る')}
+    <text x="${xL + cw / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">AR(1)　係数 0.8</text>
+    <text x="${xR + cw / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">MA(1)　係数 0.8</text>
+    <text x="4" y="${yA - 8}" font-size="12" fill="${INK}">自己相関</text>
+    <text x="4" y="${yP - 8}" font-size="12" fill="${INK}">偏自己相関</text>
+    ${cell(arAcf, xL, yA, INDIGO)}${cell(maAcf, xR, yA, ROSE)}
+    ${cell(arPacf, xL, yP, INDIGO)}${cell(maPacf, xR, yP, ROSE)}
+    <text x="${W / 2}" y="${yP + ch + 30}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸：ラグ k　灰色の帯：±0.2（n＝100 のとき）</text>
+  </svg>`;
+  const cap = `理論上の値です。AR(1) の自己相関は 0.8、0.64、0.51 と0.8倍ずつ減り、偏自己相関は1期で途切れます。MA(1) は逆で、自己相関が1期（${f2(maAcf[0])}）で途切れ、偏自己相関が符号を変えながら減ります。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.2：状態空間モデル（ローカルレベルモデル） ============
+function stateSpace(): string {
+  const W = 350, H = 176;
+  const xs = [70, 175, 280];
+  const lab = ['t−1', 't', 't＋1'];
+  const node = (x: number, y: number, txt: string, fill: string, stroke: string) =>
+    `<circle cx="${x}" cy="${y}" r="21" fill="${fill}" stroke="${stroke}" stroke-width="2" /><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${txt}</text>`;
+  const svg = `${svgOpen(W, H, '状態空間モデルの構造。上の段の見えない真の水準 μ が1期ずつ前の値から少し動き、各時点で下の段の観測値 y に誤差が乗って現れる')}
+    <defs><marker id="ss-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
+    <text x="6" y="22" font-size="12" fill="${INDIGO}">見えない状態</text>
+    <text x="6" y="146" font-size="12" fill="${TEAL}">観測値</text>
+    ${xs.map((x) => node(x, 50, 'μ', '#eef2ff', INDIGO)).join('')}
+    ${xs.map((x) => node(x, 120, 'y', '#f0fdfa', TEAL)).join('')}
+    ${xs.map((x, i) => `<text x="${x}" y="${H - 6}" text-anchor="middle" font-size="12" fill="${SLATE}">${lab[i]}</text>`).join('')}
+    ${[0, 1].map((i) => `<line x1="${xs[i] + 23}" y1="50" x2="${xs[i + 1] - 24}" y2="50" stroke="${SLATE}" stroke-width="1.6" marker-end="url(#ss-arr)" /><text x="${(xs[i] + xs[i + 1]) / 2}" y="42" text-anchor="middle" font-size="12" fill="${INDIGO}">＋w</text>`).join('')}
+    ${xs.map((x) => `<line x1="${x}" y1="73" x2="${x}" y2="96" stroke="${SLATE}" stroke-width="1.6" marker-end="url(#ss-arr)" /><text x="${x + 8}" y="89" font-size="12" fill="${TEAL}">＋v</text>`).join('')}
+  </svg>`;
+  const cap = `上の段の水準 μ は前の期の値に揺らぎ w を足して動き（状態方程式）、各時点の観測値 y は μ に誤差 v が乗ったものです（観測方程式）。見えるのは下の段だけです。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -4092,7 +4179,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-linkage': linkage,
   'f-kmeans-steps': kmeansSteps,
   'f-elbow': elbowSilhouette,
-  'f-timeseries': timeSeries,
+  'f-timeseries': timeSeries, 'f-ts-diff': tsDiff, 'f-ts-acf': tsAcfPacf, 'f-state-space': stateSpace,
   'f-km': kaplanMeier,
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
