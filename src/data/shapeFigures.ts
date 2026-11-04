@@ -4235,6 +4235,67 @@ function randomWalkPaths(): string {
   return fig(svg, cap);
 }
 
+// ============ 3.4：フィッシャーの正確検定（行計・列計を固定した a の超幾何分布） ============
+function fisherExact(): string {
+  const r1 = 10, c1 = 11, n = 20, obs = 8;
+  const lo = Math.max(0, r1 + c1 - n), hi = Math.min(r1, c1);
+  const P = (a: number) => choose(c1, a) * choose(n - c1, r1 - a) / choose(n, r1);
+  const pObs = P(obs);
+  const extreme = (a: number) => P(a) <= pObs + 1e-12;
+  const up = range(obs, hi).reduce((s, a) => s + P(a), 0);
+  const pTwo = range(lo, hi).filter(extreme).reduce((s, a) => s + P(a), 0);
+  const W = 350, H = 236;
+  const x0 = 44, x1 = 336, yT = 30, yB = 180, yMax = 0.35;
+  const bw = (x1 - x0) / (hi - lo + 1);
+  const px = (a: number) => x0 + (a - lo + 0.5) * bw;
+  const py = (v: number) => yB - (v / yMax) * (yB - yT);
+  const svg = `${svgOpen(W, H, `行計と列計を固定したときの、喫煙者10人中の肺がん有の人数 a の確率。観測の8以上と、反対側の3以下を合わせて両側 p 値 ${pTwo.toFixed(3)}`)}
+    ${[0, 0.1, 0.2, 0.3].map((v) => `<line x1="${x0}" y1="${f1(py(v))}" x2="${x1}" y2="${f1(py(v))}" stroke="${v === 0 ? '#cbd5e1' : '#f1f5f9'}" /><text x="${x0 - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v.toFixed(1)}</text>`).join('')}
+    ${range(lo, hi).map((a) => `<rect x="${f1(px(a) - bw * 0.36)}" y="${f1(py(P(a)))}" width="${f1(bw * 0.72)}" height="${f1(yB - py(P(a)))}" fill="${extreme(a) ? ROSE : INDIGO}" fill-opacity="${extreme(a) ? 0.9 : 0.35}" /><text x="${f1(px(a))}" y="${yB + 16}" text-anchor="middle" font-size="12" fill="${a === obs ? ROSE : SLATE}" font-weight="${a === obs ? 700 : 400}">${a}</text>`).join('')}
+    <text x="${f1(px(obs))}" y="${f1(py(P(obs)) - 6)}" text-anchor="middle" font-size="12" fill="${ROSE}">${P(obs).toFixed(3)}</text>
+    <text x="${f1(px(3))}" y="${f1(py(P(3)) - 6)}" text-anchor="middle" font-size="12" fill="${ROSE}">${P(3).toFixed(3)}</text>
+    <text x="${x1}" y="18" text-anchor="end" font-size="12" font-weight="700" fill="${ROSE}">8 以上：${up.toFixed(3)}</text>
+    <text x="${x0 + 4}" y="18" text-anchor="start" font-size="12" font-weight="700" fill="${ROSE}">3 以下：${(pTwo - up).toFixed(3)}</text>
+    <text x="${(x0 + x1) / 2}" y="${H - 14}" text-anchor="middle" font-size="12" fill="${SLATE}">喫煙者10人中の肺がん有の人数 a（観測は 8）</text>
+  </svg>`;
+  const cap = `赤い棒（観測の 8 と同じかそれより起きにくい表）の確率を足した ${pTwo.toFixed(3)} が両側 p 値です。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.4：条件付き独立（気温で分けると関連が消える） ============
+function condIndep(): string {
+  // [事故あり, 事故なし]（アイスが売れた日／売れなかった日）。説明のための数字
+  const strata = [
+    { name: '暑い日 40日', sold: [15, 15], not: [5, 5] },
+    { name: '涼しい日 40日', sold: [1, 9], not: [3, 27] },
+  ];
+  const all = { name: '合わせた 80日', sold: [16, 24], not: [8, 32] };
+  const panels = [...strata, all];
+  const rate = (c: number[]) => c[0] / (c[0] + c[1]);
+  const or = (p: { sold: number[]; not: number[] }) => (p.sold[0] * p.not[1]) / (p.sold[1] * p.not[0]);
+  const W = 350, H = 330, yT = 52, yB = 160, vMax = 0.6;
+  const py = (v: number) => yB - (v / vMax) * (yB - yT);
+  const panel = (p: typeof all, i: number) => {
+    const ox = 6 + i * 116, cx = [ox + 34, ox + 80];
+    const bars = [p.sold, p.not].map((c, j) => `<rect x="${cx[j] - 15}" y="${f1(py(rate(c)))}" width="30" height="${f1(yB - py(rate(c)))}" fill="${j === 0 ? AMBER : TEAL}" fill-opacity="0.85" /><text x="${cx[j]}" y="${f1(py(rate(c)) - 5)}" text-anchor="middle" font-size="12" fill="${INK}">${Math.round(rate(c) * 100)}%</text><text x="${cx[j]}" y="${yB + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${j === 0 ? '売れた' : '売れず'}</text>`).join('');
+    const o = or(p);
+    return `<text x="${ox + 57}" y="38" text-anchor="middle" font-size="12" font-weight="700" fill="${i === 2 ? ROSE : INK}">${p.name}</text>
+      <line x1="${ox + 10}" y1="${yB}" x2="${ox + 104}" y2="${yB}" stroke="#cbd5e1" />${bars}
+      <text x="${ox + 57}" y="${yB + 36}" text-anchor="middle" font-size="12" font-weight="700" fill="${i === 2 ? ROSE : INK}">オッズ比 ${Math.abs(o - 1) < 1e-9 ? '1' : f2(o)}</text>`;
+  };
+  const node = (x: number, y: number, t: string) => `<rect x="${x - 34}" y="${y - 15}" width="68" height="30" rx="15" fill="#f8fafc" stroke="${INDIGO}" stroke-width="1.6" /><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">${t}</text>`;
+  const svg = `${svgOpen(W, H, '事故があった日の割合。暑い日も涼しい日も、アイスが売れた日と売れなかった日で同じ。合わせると売れた日のほうが高く見える。下は気温だけが両方につながるグラフ')}
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="12" fill="${SLATE}">棒＝事故があった日の割合</text>
+    ${panels.map(panel).join('')}
+    <line x1="10" y1="214" x2="${W - 10}" y2="214" stroke="#e2e8f0" />
+    <line x1="175" y1="244" x2="72" y2="282" stroke="${INDIGO}" stroke-width="1.6" /><line x1="175" y1="244" x2="278" y2="282" stroke="${INDIGO}" stroke-width="1.6" />
+    <line x1="108" y1="290" x2="242" y2="290" stroke="${SLATE}" stroke-dasharray="4 4" /><text x="175" y="306" text-anchor="middle" font-size="12" fill="${SLATE}">辺なし</text>
+    ${node(175, 238, '気温')}${node(72, 290, 'アイス')}${node(278, 290, '事故')}
+  </svg>`;
+  const cap = `どちらの気温でも事故の割合はアイスと無関係です。暑い日に「売れた日」が多いため、合わせると関連が現れます（説明のための数字）。下のグラフでは、アイスと事故の間に辺がありません。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -4274,7 +4335,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-elbow': elbowSilhouette,
   'f-timeseries': timeSeries, 'f-ts-diff': tsDiff, 'f-ts-acf': tsAcfPacf, 'f-state-space': stateSpace,
   'f-markov-converge': markovConverge, 'f-markov-fail': markovFail, 'f-random-walk': randomWalkPaths,
-  'f-km': kaplanMeier,
+  'f-km': kaplanMeier, 'f-fisher-exact': fisherExact, 'f-cond-indep': condIndep,
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
   'f-qq': qqPlot,
