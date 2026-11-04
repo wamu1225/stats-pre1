@@ -3046,34 +3046,101 @@ function timeSeries(): string {
   return fig(svg, cap);
 }
 
-// ============ 3.5：カプラン・マイヤー曲線 ============
+// ============ 3.5：カプラン・マイヤー曲線（本文の表と同じ10人） ============
 function kaplanMeier(): string {
-  // 10人の追跡（年）。+ は打ち切り
-  const data: [number, boolean][] = [[0.8, true], [1.2, false], [1.5, true], [2.0, true], [2.4, false], [3.1, true], [3.5, false], [4.0, true], [4.6, false], [5.0, false]];
-  const sorted = [...data].sort((a, b) => a[0] - b[0]);
-  let S = 1, atRisk = sorted.length;
+  // 10人の追跡（か月）。true＝死亡、false＝打ち切り。10か月で調査終了（4人まだ生存）
+  const data: [number, boolean][] = [[2, true], [3, false], [5, true], [6, false], [8, true], [8, true], [10, false], [10, false], [10, false], [10, false]];
+  let S = 1, atRisk = data.length;
   const steps: [number, number][] = [[0, 1]];
   const cens: [number, number][] = [];
-  const rows: string[] = [];
-  for (const [t, ev] of sorted) {
-    if (ev) { const s0 = S; S = S * (1 - 1 / atRisk); steps.push([t, S]); rows.push(`${t}年 ${atRisk}人中1人 → ${f2(s0)}×(1−1/${atRisk}) = ${f2(S)}`); }
-    else cens.push([t, S]);
-    atRisk--;
+  const times = [...new Set(data.map((d) => d[0]))].sort((a, b) => a - b);
+  for (const t of times) {
+    const d = data.filter((x) => x[0] === t && x[1]).length;
+    const c = data.filter((x) => x[0] === t && !x[1]).length;
+    if (d > 0) { S = S * (1 - d / atRisk); steps.push([t, S]); }
+    if (c > 0 && t < 10) cens.push([t, S]);
+    atRisk -= d + c;
   }
-  const W = 350, H = 230;
-  const b: Box = { x: 36, y: 20, w: 296, h: 160, xMin: 0, xMax: 5.2, yMax: 1.05 };
+  const W = 350, H = 236;
+  const b: Box = { x: 36, y: 26, w: 296, h: 160, xMin: 0, xMax: 10.5, yMax: 1.05 };
   let path = `M${f1(PX(b, 0))},${f1(PY(b, 1))}`;
   for (let i = 1; i < steps.length; i++) path += ` H${f1(PX(b, steps[i][0]))} V${f1(PY(b, steps[i][1]))}`;
-  path += ` H${f1(PX(b, 5.2))}`;
+  path += ` H${f1(PX(b, 10))}`;
   const svg = `${svgOpen(W, H, 'カプラン・マイヤー曲線：死亡のたびに階段状に下がり、打ち切りは印だけで下がらない')}
-    ${axes(b, [0, 1, 2, 3, 4, 5])}
+    ${axes(b, [0, 2, 4, 6, 8, 10])}
     ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
     <path d="${path}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
-    ${cens.map(([t, s]) => `<line x1="${f1(PX(b, t))}" y1="${f1(PY(b, s) - 6)}" x2="${f1(PX(b, t))}" y2="${f1(PY(b, s) + 6)}" stroke="${AMBER}" stroke-width="2" />`).join('')}
-    <text x="${b.x + b.w}" y="${b.y + 12}" text-anchor="end" font-size="12.4" fill="#b45309">｜＝打ち切り（その時点まで生存）</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝追跡年数／縦軸＝推定した生存割合 Ŝ(t)</text>
+    ${steps.slice(1).map(([, s], i) => { const next = i + 2 < steps.length ? steps[i + 2][0] : 10; return `<text x="${f1(PX(b, next - 1))}" y="${f1(PY(b, s) + 16)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">${f2(s)}</text>`; }).join('')}
+    ${cens.map(([t, s]) => `<line x1="${f1(PX(b, t))}" y1="${f1(PY(b, s) - 7)}" x2="${f1(PX(b, t))}" y2="${f1(PY(b, s) + 7)}" stroke="${AMBER}" stroke-width="2.4" />`).join('')}
+    <text x="${b.x + b.w}" y="${b.y - 10}" text-anchor="end" font-size="12.4" fill="#b45309">｜＝打ち切り（下がらない）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝追跡か月／縦軸＝推定した生存割合 Ŝ(t)</text>
   </svg>`;
-  const cap = `10人を最長5年追跡した例です。死亡が起きた時点でだけ、そのときまだ観察中の人数（リスク集合）を分母にして曲線が下がります（${rows.slice(0, 2).join('、')} …）。橙の縦線は打ち切りで、その人は以後の分母から外れますが、曲線は下がりません。5年時点の推定生存割合は ${f2(S)} です。打ち切りを「死亡」として数えると下がり過ぎ、「最初からいなかった」として除くと分母を誤ります。`;
+  const cap = `上の表の10人を描いた曲線です。下がるのは死亡が起きた2・5・8か月だけで、橙の打ち切り（3・6か月）では下がらずに次の段の分母が1人減ります。10か月で調査が終わったとき、4人はまだ生存しています。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.5：ハザードの3つの形と生存関数 ============
+function hazardShapes(): string {
+  // 3本とも累積ハザード H(5)=1 → 5年生存割合 e^{-1}
+  const hs: { h: (t: number) => number; S: (t: number) => number; c: string; name: string; a: number }[] = [
+    { h: () => 0.2, S: (t) => Math.exp(-0.2 * t), c: INDIGO, name: '一定', a: 0 },
+    { h: (t) => (2 * t) / 25, S: (t) => Math.exp(-((t / 5) ** 2)), c: ROSE, name: '増える', a: 0 },
+    { h: (t) => 0.5 / Math.sqrt(5 * t), S: (t) => Math.exp(-Math.sqrt(t / 5)), c: TEAL, name: '減る', a: 0.6 },
+  ];
+  const W = 350, H = 238;
+  const L: Box = { x: 34, y: 34, w: 130, h: 140, xMin: 0, xMax: 5, yMax: 0.45 };
+  const R: Box = { x: 210, y: 34, w: 130, h: 140, xMin: 0, xMax: 5, yMax: 1.05 };
+  const e1 = Math.exp(-1);
+  const svg = `${svgOpen(W, H, 'ハザードが一定・増える・減るの3通りと、それぞれの生存関数。5年での生存割合はどれも0.37')}
+    <text x="${L.x}" y="16" font-size="12.4" font-weight="700" fill="${INK}">ハザード h(t)</text>
+    <text x="${R.x}" y="16" font-size="12.4" font-weight="700" fill="${INK}">生存関数 S(t)</text>
+    ${axes(L, [0, 1, 2, 3, 4, 5])}${axes(R, [0, 1, 2, 3, 4, 5])}
+    ${[0, 0.2, 0.4].map((v) => `<text x="${L.x - 5}" y="${f1(PY(L, v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${[0, 0.37, 1].map((v) => `<text x="${R.x - 5}" y="${f1(PY(R, v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    <line x1="${R.x}" y1="${f1(PY(R, e1))}" x2="${R.x + R.w}" y2="${f1(PY(R, e1))}" stroke="${SLATE}" stroke-dasharray="3 3" />
+    ${hs.map((z) => curve(L, z.h, z.c, z.a || 0.001, 5, 2.2)).join('')}
+    ${hs.map((z) => curve(R, z.S, z.c, 0, 5, 2.2)).join('')}
+    <circle cx="${f1(PX(R, 5))}" cy="${f1(PY(R, e1))}" r="3.5" fill="${INK}" />
+    ${hs.map((z, i) => `<line x1="${34 + i * 108}" y1="${H - 22}" x2="${52 + i * 108}" y2="${H - 22}" stroke="${z.c}" stroke-width="3" /><text x="${56 + i * 108}" y="${H - 18}" font-size="12.4" fill="${z.c}" font-weight="700">${z.name}</text>`).join('')}
+    <text x="${L.x + L.w}" y="${L.y + L.h + 30}" text-anchor="end" font-size="12" fill="${SLATE}">（年）</text>
+    <text x="${R.x + R.w}" y="${R.y + R.h + 30}" text-anchor="end" font-size="12" fill="${SLATE}">（年）</text>
+  </svg>`;
+  const cap = `3本とも5年までのハザードの面積（累積ハザード）が1なので、5年での生存割合は同じ e<sup>−1</sup> ≈ ${f2(e1)} です。ハザードが減る（初期の故障が多い）と最初に急に下がり、増える（摩耗・老化）と後で急に下がります。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.5：Cox モデルの比例ハザード（HR 0.61） ============
+function coxPH(): string {
+  const HR = Math.exp(-0.5);
+  const H0 = (t: number) => Math.LN2 * (t / 5) ** 2; // 5年で S0 = 0.50
+  const h0 = (t: number) => (2 * Math.LN2 * t) / 25;
+  const S0 = (t: number) => Math.exp(-H0(t));
+  const S1 = (t: number) => Math.exp(-HR * H0(t));
+  const W = 350, H = 244;
+  const L: Box = { x: 34, y: 34, w: 130, h: 140, xMin: 0, xMax: 5, yMax: 0.3 };
+  const R: Box = { x: 206, y: 34, w: 104, h: 140, xMin: 0, xMax: 5, yMax: 1.05 };
+  const arrow = (t: number) => `<line x1="${f1(PX(L, t))}" y1="${f1(PY(L, h0(t)) + 3)}" x2="${f1(PX(L, t))}" y2="${f1(PY(L, HR * h0(t)) - 4)}" stroke="${SLATE}" stroke-width="1.2" marker-end="url(#arCox)" />`;
+  const svg = `${svgOpen(W, H, 'Cox モデル：新薬群のハザードはどの時点でも従来薬群の0.61倍で、5年生存割合は0.50から0.66になる')}
+    <defs><marker id="arCox" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="${SLATE}" /></marker></defs>
+    <text x="${L.x}" y="16" font-size="12.4" font-weight="700" fill="${INK}">ハザード h(t)</text>
+    <text x="${R.x}" y="16" font-size="12.4" font-weight="700" fill="${INK}">生存関数 S(t)</text>
+    ${axes(L, [0, 1, 2, 3, 4, 5])}${axes(R, [0, 1, 2, 3, 4, 5])}
+    ${[0, 0.1, 0.2].map((v) => `<text x="${L.x - 5}" y="${f1(PY(L, v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${[0, 0.5, 1].map((v) => `<text x="${R.x - 5}" y="${f1(PY(R, v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${curve(L, h0, AMBER, 0, 5, 2.2)}${curve(L, (t) => HR * h0(t), INDIGO, 0, 5, 2.2)}
+    ${arrow(2.5)}${arrow(4.5)}
+    <text x="${f1(PX(L, 2.5) + 5)}" y="${f1(PY(L, 0.8 * h0(3.1)) + 5)}" font-size="12" fill="${SLATE}">×${f2(HR)}</text>
+    <text x="${f1(PX(L, 4.5) - 5)}" y="${f1(PY(L, 0.8 * h0(4.5)) + 5)}" text-anchor="end" font-size="12" fill="${SLATE}">×${f2(HR)}</text>
+    ${curve(R, S0, AMBER, 0, 5, 2.2)}${curve(R, S1, INDIGO, 0, 5, 2.2)}
+    <circle cx="${f1(PX(R, 5))}" cy="${f1(PY(R, S0(5)))}" r="3.5" fill="${AMBER}" /><circle cx="${f1(PX(R, 5))}" cy="${f1(PY(R, S1(5)))}" r="3.5" fill="${INDIGO}" />
+    <text x="${f1(PX(R, 5) + 6)}" y="${f1(PY(R, S1(5)) + 4)}" font-size="12.4" font-weight="700" fill="${INDIGO}">${f2(S1(5))}</text>
+    <text x="${f1(PX(R, 5) + 6)}" y="${f1(PY(R, S0(5)) + 4)}" font-size="12.4" font-weight="700" fill="#b45309">${f2(S0(5))}</text>
+    <line x1="40" y1="${H - 22}" x2="58" y2="${H - 22}" stroke="${AMBER}" stroke-width="3" /><text x="62" y="${H - 18}" font-size="12.4" fill="#b45309" font-weight="700">従来薬（x=0）</text>
+    <line x1="190" y1="${H - 22}" x2="208" y2="${H - 22}" stroke="${INDIGO}" stroke-width="3" /><text x="212" y="${H - 18}" font-size="12.4" fill="${INDIGO}" font-weight="700">新薬（x=1）</text>
+    <text x="${L.x + L.w}" y="${L.y + L.h + 30}" text-anchor="end" font-size="12" fill="${SLATE}">（年）</text>
+    <text x="${R.x + R.w}" y="${R.y + R.h + 30}" text-anchor="end" font-size="12" fill="${SLATE}">（年）</text>
+  </svg>`;
+  const cap = `左：新薬群のハザードは、どの時点でも従来薬群の ${f2(HR)} 倍（比が時間で変わらない＝比例ハザード）。右：同じ比でも生存割合は ${f2(S0(5))} → ${f2(S1(5))} で、6割にはなりません。`;
   return fig(svg, cap);
 }
 
@@ -4335,7 +4402,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-elbow': elbowSilhouette,
   'f-timeseries': timeSeries, 'f-ts-diff': tsDiff, 'f-ts-acf': tsAcfPacf, 'f-state-space': stateSpace,
   'f-markov-converge': markovConverge, 'f-markov-fail': markovFail, 'f-random-walk': randomWalkPaths,
-  'f-km': kaplanMeier, 'f-fisher-exact': fisherExact, 'f-cond-indep': condIndep,
+  'f-km': kaplanMeier, 'f-hazard-shapes': hazardShapes, 'f-cox-ph': coxPH, 'f-fisher-exact': fisherExact, 'f-cond-indep': condIndep,
   'f-montecarlo': monteCarloPi,
   'f-loglik': logLikCurvature,
   'f-qq': qqPlot,
