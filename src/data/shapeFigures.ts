@@ -3165,7 +3165,7 @@ function monteCarloPi(): string {
     <text x="${x0 + S + 14}" y="${y0 + 110}" font-size="13.2" font-weight="700" fill="${INK}">＝ ${est.toFixed(3)}</text>
     <text x="${x0 + S + 14}" y="${y0 + 134}" font-size="12.4" fill="${SLATE}">（π ＝ 3.142）</text>
   </svg>`;
-  const cap = `一辺1の正方形に ${N} 個の点を一様にばらまき、半径1の四分円の内側に落ちた点（青）を数えました。四分円の面積は π/4 なので、内側に落ちる割合の4倍が π の推定値になり、今回は 4 × ${inside} ÷ ${N} = ${est.toFixed(3)} です。点を増やすほど推定値は π に近づきますが、誤差は点の数の平方根に反比例してしか減りません（点を100倍にして誤差がようやく1/10）。`;
+  const cap = `一辺1の正方形に ${N} 個の点を一様にばらまき、半径1の四分円の内側に落ちた点（青）を数えました。四分円の面積は π/4 なので、内側に落ちる割合の4倍が π の推定値です。`;
   return fig(svg, cap);
 }
 
@@ -3921,12 +3921,95 @@ function emResponsibility(): string {
     <line x1="${f1(px(xo))}" y1="${y0}" x2="${f1(px(xo))}" y2="${y0 + h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
     <circle cx="${f1(px(xo))}" cy="${f1(py(a))}" r="4.5" fill="${ROSE}" />
     <circle cx="${f1(px(xo))}" cy="${f1(py(b))}" r="4.5" fill="${INDIGO}" />
-    <text x="${f1(px(xo) + 8)}" y="${f1(py(a) - 4)}" font-size="12.4" font-weight="700" fill="${ROSE}">高さ ${a.toFixed(2)}</text>
-    <text x="${f1(px(xo) + 8)}" y="${f1(py(b) + 4)}" font-size="12.4" font-weight="700" fill="${INDIGO}">高さ ${b.toFixed(2)}</text>
+    <text x="${f1(px(xo) - 7)}" y="${f1(py(a) + 17)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">${a.toFixed(2)}</text>
+    <text x="${f1(px(xo) + 7)}" y="${f1(py(b) + 17)}" font-size="12.4" font-weight="700" fill="${INDIGO}">${b.toFixed(2)}</text>
     <text x="${f1(px(xo))}" y="${y0 + h + 31}" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">155</text>
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">女性の確率 ＝ ${a.toFixed(2)} ÷ (${a.toFixed(2)}＋${b.toFixed(2)}) ＝ ${r.toFixed(2)}</text>
   </svg>`;
-  const cap = `女性（平均150cm）と男性（平均170cm）の身長が、標準偏差10cmの正規分布に従うと仮に置いた図です。155cmの人のところで縦線を引くと、女性の山の高さは ${a.toFixed(2)}、男性の山の高さは ${b.toFixed(2)} です。この2つの高さの比が、その人が女性である確率（負担率）になります。山の頂上を1とした相対的な高さなので、割合を取れば同じ値になります。`;
+  const cap = `女性（平均150cm）と男性（平均170cm）の身長が、標準偏差10cmの正規分布に従うと仮に置いた図です。高さは山の頂上を1とした相対的な値ですが、比を取れば同じ確率になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.6：逆関数法（一様乱数を累積分布関数の逆で写す） ============
+function inverseCdf(): string {
+  const W = 340, H = 250, lam = 2;
+  const b: Box = { x: 40, y: 22, w: 280, h: 170, xMin: 0, xMax: 2.5, yMax: 1 };
+  const F = (x: number) => 1 - Math.exp(-lam * x), Fi = (u: number) => -Math.log(1 - u) / lam;
+  const us = Array.from({ length: 10 }, (_, k) => 0.05 + 0.1 * k);
+  const base = b.y + b.h;
+  const path = (u: number, c: string, w: number) => `
+    <line x1="${b.x}" y1="${f1(PY(b, u))}" x2="${f1(PX(b, Fi(u)))}" y2="${f1(PY(b, u))}" stroke="${c}" stroke-width="${w}" stroke-dasharray="4 3" />
+    <line x1="${f1(PX(b, Fi(u)))}" y1="${f1(PY(b, u))}" x2="${f1(PX(b, Fi(u)))}" y2="${base}" stroke="${c}" stroke-width="${w}" stroke-dasharray="4 3" />`;
+  const svg = `${svgOpen(W, H, '縦軸の一様乱数uを、指数分布の累積分布関数F(x)=1−e^(−2x)で横軸に写す。u=0.5はx=0.35、u=0.9はx=1.15になり、等間隔のuが横軸では0の近くに詰まる')}
+    <line x1="${b.x}" y1="${b.y}" x2="${b.x}" y2="${base}" stroke="${SLATE}" />
+    ${[0, 0.5, 0.9, 1].map((t) => `<text x="${b.x - 6}" y="${f1(PY(b, t) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    ${us.map((u) => `<circle cx="${b.x}" cy="${f1(PY(b, u))}" r="3" fill="${INDIGO}" /><circle cx="${f1(PX(b, Fi(u)))}" cy="${base}" r="3" fill="${INDIGO}" />`).join('')}
+    ${path(0.5, AMBER, 1.6)}${path(0.9, ROSE, 1.6)}
+    ${curve(b, F, INK, 0, 2.5, 2)}
+    <text x="${f1(PX(b, 1.6))}" y="${f1(PY(b, F(1.6)) + 18)}" font-size="12.4" fill="${INK}">F(x) ＝ 1 − e<tspan baseline-shift="super" font-size="10">−2x</tspan></text>
+    <text x="${f1(PX(b, Fi(0.5)) + 5)}" y="${base - 6}" font-size="12.4" font-weight="700" fill="#b45309">0.35</text>
+    <text x="${f1(PX(b, Fi(0.9)) + 5)}" y="${base - 6}" font-size="12.4" font-weight="700" fill="${ROSE}">1.15</text>
+    ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5])}
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸 ＝ 一様乱数 u／横軸 ＝ 写した値 x</text>
+  </svg>`;
+  const cap = `縦軸に等間隔に置いた10個の u（0.05, 0.15, …, 0.95）を、曲線で横軸へ写しました。横軸では0の近くに詰まり、右へ行くほどまばらになります。これが指数分布の形です。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.6：棄却法（箱の中に点を打ち、密度の下に入った点だけ残す） ============
+function rejectionSampling(): string {
+  const r = mulberry32(3608);
+  const N = 300, M = 1.5;
+  const f = (x: number) => 6 * x * (1 - x);
+  const pts = Array.from({ length: N }, () => [r(), r() * M]);
+  const acc = pts.filter(([x, y]) => y <= f(x)).length;
+  const W = 340, H = 236;
+  const b: Box = { x: 34, y: 26, w: 290, h: 160, xMin: 0, xMax: 1, yMax: M };
+  const svg = `${svgOpen(W, H, '高さ1.5の箱に300点を打ち、密度6x(1−x)の山の下に入った点だけを残す。残ったのは約3分の2')}
+    <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="${SLATE}" />
+    ${pts.map(([x, y]) => `<circle cx="${f1(PX(b, x))}" cy="${f1(PY(b, y))}" r="2" fill="${y <= f(x) ? INDIGO : AMBER}" />`).join('')}
+    ${curve(b, f, INK, 0, 1, 2)}
+    <line x1="${b.x}" y1="${b.y}" x2="${b.x + b.w}" y2="${b.y}" stroke="${ROSE}" stroke-width="2.4" />
+    <text x="${b.x + 4}" y="${b.y - 6}" font-size="12.4" font-weight="700" fill="${ROSE}">箱の高さ M ＝ 1.5（山の頂上）</text>
+    ${[0, 1.5].map((t) => `<text x="${b.x - 6}" y="${f1(PY(b, t) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    ${axes(b, [0, 0.25, 0.5, 0.75, 1])}
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">青 ＝ 山の下で採択 ${acc}／橙 ＝ 棄却 ${N - acc}</text>
+  </svg>`;
+  const cap = `横の位置 x は0〜1の一様乱数、高さは0〜1.5の一様乱数です。山 f(x) = 6x(1−x) の下に入った点の x だけを残すと、その x は山の形の分布に従います。残る割合は面積の比 1/1.5 ≈ 0.67（今回は ${acc}/${N}）です。`;
+  return fig(svg, cap);
+}
+
+// ============ 3.6：ブートストラップ法（復元抽出で作り直した標本の平均を1000回） ============
+function bootstrap(): string {
+  const xs = [3, 5, 6, 8, 13], r = mulberry32(3607), B = 1000;
+  const ms: number[] = [], rows: number[][] = [];
+  for (let k = 0; k < B; k++) {
+    const s = Array.from({ length: 5 }, () => xs[Math.floor(r() * 5)]);
+    if (k < 3) rows.push(s);
+    ms.push(s.reduce((a, v) => a + v, 0) / 5);
+  }
+  const so = [...ms].sort((a, c) => a - c), lo = so[24], hi = so[974];
+  const m = ms.reduce((a, v) => a + v, 0) / B, sd = Math.sqrt(ms.reduce((a, v) => a + (v - m) ** 2, 0) / (B - 1));
+  const cnt = new Map<number, number>();
+  ms.forEach((v) => { const k = Math.round(v * 5); cnt.set(k, (cnt.get(k) || 0) + 1); });
+  const cmax = Math.max(...cnt.values());
+  const W = 340, H = 300;
+  const b: Box = { x: 20, y: 132, w: 304, h: 120, xMin: 3, xMax: 13, yMax: cmax };
+  const bw = (PX(b, 0.2) - PX(b, 0)) * 0.85;
+  const line = (y: number, s: number[], label: string, c: string) => `
+    <text x="20" y="${y}" font-size="12.4" fill="${SLATE}">${label}</text>
+    <text x="104" y="${y}" font-size="13.2" fill="${c}">${s.join('　')}</text>
+    <text x="324" y="${y}" text-anchor="end" font-size="13.2" font-weight="700" fill="${c}">平均 ${num(s.reduce((a, v) => a + v, 0) / 5)}</text>`;
+  const svg = `${svgOpen(W, H, `データ3,5,6,8,13から復元抽出で5個ずつ選び直し、平均を1000回計算した。平均の分布の標準偏差は${f2(sd)}、小さい順に25番目と975番目は${lo}と${hi}`)}
+    ${line(18, xs, '元のデータ', INK)}
+    ${rows.map((s, i) => line(42 + i * 20, s, `作り直し ${i + 1}`, INDIGO)).join('')}
+    <text x="20" y="${42 + 3 * 20}" font-size="12.4" fill="${SLATE}">…これを ${B} 回</text>
+    ${[...cnt.entries()].map(([k, c]) => { const v = k / 5, out = v < lo || v > hi; return `<rect x="${f1(PX(b, v) - bw / 2)}" y="${f1(PY(b, c))}" width="${f1(bw)}" height="${f1(b.y + b.h - PY(b, c))}" fill="${out ? AMBER : INDIGO}" fill-opacity="0.8" />`; }).join('')}
+    ${[lo, hi].map((v) => `<line x1="${f1(PX(b, v))}" y1="${b.y - 4}" x2="${f1(PX(b, v))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" /><text x="${f1(PX(b, v))}" y="${b.y - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">${v}</text>`).join('')}
+    ${axes(b, [3, 5, 7, 9, 11, 13])}
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">作り直した標本の平均 ${B} 個／橙 ＝ 両端の2.5%ずつ</text>
+  </svg>`;
+  const cap = `同じ値が2回選ばれたり、選ばれない値があったりするので、平均は毎回変わります。`;
   return fig(svg, cap);
 }
 
@@ -4425,4 +4508,5 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-memoryless-geo': memorylessGeo,
   'f-memoryless-cont': memorylessExp,
   'f-em': emResponsibility,
+  'f-inverse-cdf': inverseCdf, 'f-rejection': rejectionSampling, 'f-bootstrap': bootstrap,
 };
