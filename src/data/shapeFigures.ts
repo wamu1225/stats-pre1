@@ -3718,7 +3718,7 @@ function dagBasic(): string {
     ${t(270, '③ 合流点', 'X と Y の結果が C')}
     ${p3}
   </svg>`;
-  return fig(svg, '矢印は原因から結果の向き。①は Z で調整して交絡を切る。②は M を調整すると X の効果の通り道を塞ぐ。③は C を調整すると、もともと無関係の X と Y に見かけの関連が生まれる。');
+  return fig(svg, '矢印は原因から結果の向き。条件づけたときの開き方・閉じ方は下の表のとおりです。');
 }
 function dagFront(): string {
   const W = 350, H = 150;
@@ -3750,6 +3750,106 @@ function dagIV(): string {
     <text x="300" y="142" text-anchor="middle" font-size="12.3" fill="${INK}">点数</text>
   </svg>`;
   return fig(svg, 'Z から Y へは X を通る道しか無く、Z は U とつながっていません。Z が動かした分の X の変化だけを使えば、U の混ざらない効果が求まります。');
+}
+
+// ── 有向分離の練習（3.7）：A→B→C←D で条件 S を4通りに変え、経路が閉じる所に × を置く ──
+function dsepPractice(): string {
+  const W = 350, RH = 72, H = 4 * RH + 30;
+  const mk = 'dsep-arrow';
+  const xs = { A: 30, B: 90, C: 150, D: 210 } as Record<string, number>;
+  const R = 16;
+  const rows: { s: string; cond: string[]; cut: string[]; res: [string, string]; open: boolean }[] = [
+    { s: 'S = ∅（何も条件づけない）', cond: [], cut: ['C'], res: ['閉じる', '独立'], open: false },
+    { s: 'S = {B}', cond: ['B'], cut: ['B', 'C'], res: ['閉じる', '独立'], open: false },
+    { s: 'S = {C}', cond: ['C'], cut: [], res: ['開く', '独立でない'], open: true },
+    { s: 'S = {B, C}', cond: ['B', 'C'], cut: ['B'], res: ['閉じる', '条件付き独立'], open: false },
+  ];
+  const body = rows.map((r, i) => {
+    const y0 = 8 + i * RH, cy = y0 + 48;
+    const col = r.open ? ROSE : SLATE;
+    const edge = (a: string, b: string) => {
+      const dir = Math.sign(xs[b] - xs[a]);
+      return `<line x1="${xs[a] + dir * (R + 1)}" y1="${cy}" x2="${xs[b] - dir * (R + 3)}" y2="${cy}" stroke="${col}" stroke-width="2" marker-end="url(#${mk}-${r.open ? 'o' : 'c'})" />`;
+    };
+    const nodes = ['A', 'B', 'C', 'D'].map(n => {
+      const on = r.cond.includes(n);
+      return `<circle cx="${xs[n]}" cy="${cy}" r="${R}" fill="${on ? '#c7d2fe' : '#ffffff'}" stroke="${INDIGO}" stroke-width="1.8" />
+        <text x="${xs[n]}" y="${cy + 5}" text-anchor="middle" font-size="14" font-weight="700" fill="${INDIGO}">${n}</text>`;
+    }).join('');
+    const cuts = r.cut.map(n => `<text x="${xs[n]}" y="${cy - R - 3}" text-anchor="middle" font-size="15" font-weight="700" fill="${ROSE}">×</text>`).join('');
+    const sep = i > 0 ? `<line x1="10" y1="${y0 - 4}" x2="340" y2="${y0 - 4}" stroke="#e2e8f0" />` : '';
+    return `${sep}<text x="10" y="${y0 + 12}" font-size="12.3" fill="${INK}">${r.s}</text>
+      ${edge('A', 'B')}${edge('B', 'C')}${edge('D', 'C')}${nodes}${cuts}
+      <text x="262" y="${cy - 3}" font-size="13" font-weight="700" fill="${r.open ? ROSE : INK}">${r.res[0]}</text>
+      <text x="262" y="${cy + 14}" font-size="12.3" fill="${SLATE}">${r.res[1]}</text>`;
+  }).join('');
+  const ly = 4 * RH + 22;
+  const svg = `${svgOpen(W, H, 'A→B→C←D で条件づける変数を4通りに変えたときの経路の開閉：何もしない・Bだけは閉じる、Cだけは開く、BとCは閉じる')}
+    <defs>
+      <marker id="${mk}-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker>
+      <marker id="${mk}-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROSE}" /></marker>
+    </defs>
+    ${body}
+    <circle cx="16" cy="${ly - 4}" r="7" fill="#c7d2fe" stroke="${INDIGO}" stroke-width="1.5" />
+    <text x="28" y="${ly}" font-size="12.3" fill="${INK}">条件に入れた変数</text>
+    <text x="150" y="${ly + 1}" font-size="15" font-weight="700" fill="${ROSE}">×</text>
+    <text x="164" y="${ly}" font-size="12.3" fill="${INK}">経路が閉じる所</text>
+  </svg>`;
+  return fig(svg, '経路は × が1つでもあれば閉じます。S = {B, C} では合流点 C が開いても、B で閉じたままです。');
+}
+
+// ── シンプソンのパラドックス（3.7）：重症度 Z で層別した回復率と、そのまま合わせた回復率、調整公式の値 ──
+function simpsonFig(): string {
+  // 本文の表と同じ1000人（回復／人数）
+  const t = { mild: [90, 100], severe: [240, 400] }, u = { mild: [340, 400], severe: [50, 100] };
+  const r = (a: number[]) => a[0] / a[1];
+  const pz = 0.5;
+  const rows: [string, number, number][] = [
+    ['軽症', r(t.mild), r(u.mild)],
+    ['重症', r(t.severe), r(u.severe)],
+    ['全体（そのまま）', (t.mild[0] + t.severe[0]) / (t.mild[1] + t.severe[1]), (u.mild[0] + u.severe[0]) / (u.mild[1] + u.severe[1])],
+    ['調整公式', pz * r(t.mild) + pz * r(t.severe), pz * r(u.mild) + pz * r(u.severe)],
+  ];
+  const W = 350, H = 414;
+  const mk = 'simp-arrow';
+  const dag = dagPanel([{ id: 'Z', x: 175, y: 30, label: 'Z' }, { id: 'X', x: 70, y: 100, label: 'X' }, { id: 'Y', x: 280, y: 100, label: 'Y' }],
+    [['Z', 'X', AMBER], ['Z', 'Y', AMBER], ['X', 'Y', INDIGO]], mk);
+  const b: Box = { x: 140, y: 168, w: 190, h: 0, xMin: 0.4, xMax: 1.0, yMax: 1 };
+  const rowY = (i: number) => 180 + i * 46 + (i >= 2 ? 10 : 0);
+  const fmt = (v: number) => (Math.round(v * 1000) % 10 === 0 ? f2(v) : v.toFixed(3));
+  const dots = rows.map(([lab, a, c], i) => {
+    const y = rowY(i);
+    return `<text x="10" y="${y + 4}" font-size="12.3" fill="${INK}">${lab}</text>
+      <line x1="${b.x}" y1="${y}" x2="${b.x + b.w}" y2="${y}" stroke="#e2e8f0" />
+      <line x1="${f1(PX(b, a))}" y1="${y}" x2="${f1(PX(b, c))}" y2="${y}" stroke="${SLATE}" stroke-width="1.5" />
+      <circle cx="${f1(PX(b, a))}" cy="${y}" r="6" fill="${INDIGO}" />
+      <circle cx="${f1(PX(b, c))}" cy="${y}" r="6" fill="#ffffff" stroke="${AMBER}" stroke-width="2.2" />
+      <text x="${f1(PX(b, a))}" y="${y - 10}" text-anchor="middle" font-size="11.5" fill="${INDIGO}">${fmt(a)}</text>
+      <text x="${f1(PX(b, c))}" y="${y + 20}" text-anchor="middle" font-size="11.5" fill="${AMBER}">${fmt(c)}</text>`;
+  }).join('');
+  const axisY = rowY(3) + 34;
+  const ticks = [0.4, 0.6, 0.8, 1.0].map(v => `<line x1="${f1(PX(b, v))}" y1="${axisY}" x2="${f1(PX(b, v))}" y2="${axisY + 4}" stroke="${SLATE}" />
+    <text x="${f1(PX(b, v))}" y="${axisY + 17}" text-anchor="middle" font-size="12" fill="${SLATE}">${v.toFixed(1)}</text>`).join('');
+  const svg = `${svgOpen(W, H, '薬X・重症度Z・回復YのDAGと回復率の比較：軽症と重症のどちらの層でも、また調整公式でも治療群が上回るが、そのまま合わせた全体だけ逆になる')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${dag}
+    <text x="200" y="26" font-size="12.3" fill="${SLATE}">重症度</text>
+    <text x="70" y="136" text-anchor="middle" font-size="12.3" fill="${INK}">薬</text>
+    <text x="280" y="136" text-anchor="middle" font-size="12.3" fill="${INK}">回復</text>
+    <text x="40" y="58" font-size="12.3" fill="${AMBER}">バックドア経路</text>
+    <text x="175" y="94" text-anchor="middle" font-size="12.3" fill="${INDIGO}">薬の効果</text>
+    <line x1="10" y1="150" x2="340" y2="150" stroke="#e2e8f0" />
+    <text x="${b.x}" y="164" font-size="12.3" fill="${SLATE}">回復率</text>
+    ${dots}
+    <line x1="10" y1="${rowY(2) - 28}" x2="340" y2="${rowY(2) - 28}" stroke="#cbd5e1" stroke-dasharray="4 3" />
+    <line x1="${b.x}" y1="${axisY}" x2="${b.x + b.w}" y2="${axisY}" stroke="${SLATE}" />
+    ${ticks}
+    <circle cx="16" cy="${axisY + 36}" r="6" fill="${INDIGO}" />
+    <text x="28" y="${axisY + 40}" font-size="12.3" fill="${INK}">治療群</text>
+    <circle cx="96" cy="${axisY + 36}" r="6" fill="#ffffff" stroke="${AMBER}" stroke-width="2.2" />
+    <text x="108" y="${axisY + 40}" font-size="12.3" fill="${INK}">非治療群</text>
+  </svg>`;
+  return fig(svg, '右ほど回復率が高い。層ごとでも調整公式でも治療群が上回り、そのまま合わせた全体だけ逆になります。');
 }
 
 // ── 対応分析（2.7）：年代×好きな飲み物の分割表を特異値分解して2次元に置く ──
@@ -4498,7 +4598,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-lda': ldaBoundary,
   'f-roc': rocCurve,
   'f-biasvar': biasVariance,
-  'f-dag-basic': dagBasic,
+  'f-dag-basic': dagBasic, 'f-dsep-practice': dsepPractice, 'f-simpson': simpsonFig,
   'f-dag-front': dagFront,
   'f-dag-iv': dagIV,
   'f-ca': correspondenceMap,
