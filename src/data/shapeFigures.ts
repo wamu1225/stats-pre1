@@ -3819,35 +3819,35 @@ function simpsonFig(): string {
   const fmt = (v: number) => (Math.round(v * 1000) % 10 === 0 ? f2(v) : v.toFixed(3));
   const dots = rows.map(([lab, a, c], i) => {
     const y = rowY(i);
-    return `<text x="10" y="${y + 4}" font-size="12.3" fill="${INK}">${lab}</text>
+    return `<text x="10" y="${y + 4}" font-size="12.8" fill="${INK}">${lab}</text>
       <line x1="${b.x}" y1="${y}" x2="${b.x + b.w}" y2="${y}" stroke="#e2e8f0" />
       <line x1="${f1(PX(b, a))}" y1="${y}" x2="${f1(PX(b, c))}" y2="${y}" stroke="${SLATE}" stroke-width="1.5" />
       <circle cx="${f1(PX(b, a))}" cy="${y}" r="6" fill="${INDIGO}" />
       <circle cx="${f1(PX(b, c))}" cy="${y}" r="6" fill="#ffffff" stroke="${AMBER}" stroke-width="2.2" />
-      <text x="${f1(PX(b, a))}" y="${y - 10}" text-anchor="middle" font-size="11.5" fill="${INDIGO}">${fmt(a)}</text>
-      <text x="${f1(PX(b, c))}" y="${y + 20}" text-anchor="middle" font-size="11.5" fill="${AMBER}">${fmt(c)}</text>`;
+      <text x="${f1(PX(b, a))}" y="${y - 10}" text-anchor="middle" font-size="12.8" fill="${INDIGO}">${fmt(a)}</text>
+      <text x="${f1(PX(b, c))}" y="${y + 20}" text-anchor="middle" font-size="12.8" fill="${AMBER}">${fmt(c)}</text>`;
   }).join('');
   const axisY = rowY(3) + 34;
   const ticks = [0.4, 0.6, 0.8, 1.0].map(v => `<line x1="${f1(PX(b, v))}" y1="${axisY}" x2="${f1(PX(b, v))}" y2="${axisY + 4}" stroke="${SLATE}" />
-    <text x="${f1(PX(b, v))}" y="${axisY + 17}" text-anchor="middle" font-size="12" fill="${SLATE}">${v.toFixed(1)}</text>`).join('');
+    <text x="${f1(PX(b, v))}" y="${axisY + 17}" text-anchor="middle" font-size="12.8" fill="${SLATE}">${v.toFixed(1)}</text>`).join('');
   const svg = `${svgOpen(W, H, '薬X・重症度Z・回復YのDAGと回復率の比較：軽症と重症のどちらの層でも、また調整公式でも治療群が上回るが、そのまま合わせた全体だけ逆になる')}
     <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
     ${dag}
-    <text x="200" y="26" font-size="12.3" fill="${SLATE}">重症度</text>
-    <text x="70" y="136" text-anchor="middle" font-size="12.3" fill="${INK}">薬</text>
-    <text x="280" y="136" text-anchor="middle" font-size="12.3" fill="${INK}">回復</text>
-    <text x="40" y="58" font-size="12.3" fill="${AMBER}">バックドア経路</text>
-    <text x="175" y="94" text-anchor="middle" font-size="12.3" fill="${INDIGO}">薬の効果</text>
+    <text x="200" y="26" font-size="12.8" fill="${SLATE}">重症度</text>
+    <text x="70" y="136" text-anchor="middle" font-size="12.8" fill="${INK}">薬</text>
+    <text x="280" y="136" text-anchor="middle" font-size="12.8" fill="${INK}">回復</text>
+    <text x="40" y="58" font-size="12.8" fill="${AMBER}">バックドア経路</text>
+    <text x="175" y="94" text-anchor="middle" font-size="12.8" fill="${INDIGO}">薬の効果</text>
     <line x1="10" y1="150" x2="340" y2="150" stroke="#e2e8f0" />
-    <text x="${b.x}" y="164" font-size="12.3" fill="${SLATE}">回復率</text>
+    <text x="${b.x}" y="164" font-size="12.8" fill="${SLATE}">回復率</text>
     ${dots}
     <line x1="10" y1="${rowY(2) - 28}" x2="340" y2="${rowY(2) - 28}" stroke="#cbd5e1" stroke-dasharray="4 3" />
     <line x1="${b.x}" y1="${axisY}" x2="${b.x + b.w}" y2="${axisY}" stroke="${SLATE}" />
     ${ticks}
     <circle cx="16" cy="${axisY + 36}" r="6" fill="${INDIGO}" />
-    <text x="28" y="${axisY + 40}" font-size="12.3" fill="${INK}">治療群</text>
+    <text x="28" y="${axisY + 40}" font-size="12.8" fill="${INK}">治療群</text>
     <circle cx="96" cy="${axisY + 36}" r="6" fill="#ffffff" stroke="${AMBER}" stroke-width="2.2" />
-    <text x="108" y="${axisY + 40}" font-size="12.3" fill="${INK}">非治療群</text>
+    <text x="108" y="${axisY + 40}" font-size="12.8" fill="${INK}">非治療群</text>
   </svg>`;
   return fig(svg, '右ほど回復率が高い。層ごとでも調整公式でも治療群が上回り、そのまま合わせた全体だけ逆になります。');
 }
