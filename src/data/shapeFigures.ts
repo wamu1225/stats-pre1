@@ -662,6 +662,29 @@ function bayesTree(): string {
 }
 
 // ============ 1.1：3事象の包除原理 ============
+// ============ 1.1 節2：サイコロの目で見る包除原理と補事象 ============
+function diceVenn(): string {
+  const W = 340, H = 262;
+  const face = (x: number, y: number, s: string) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="18" font-weight="700" fill="${INK}">${s}</text>`;
+  const t = (x: number, y: number, s: string, col = INK, w = 400, fs = 13) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="${fs}" font-weight="${w}" fill="${col}">${s}</text>`;
+  const svg = `${svgOpen(W, H, 'サイコロの目のベン図：偶数 A と3の倍数 B、どちらでもない目は 1 と 5')}
+    <rect x="8" y="8" width="324" height="186" rx="8" fill="${SLATE}" fill-opacity="0.16" stroke="${SLATE}" stroke-width="1" />
+    <text x="20" y="28" font-size="13" font-weight="700" fill="${SLATE}">Ω（6つの目）</text>
+    <circle cx="140" cy="118" r="60" fill="#ffffff" />
+    <circle cx="210" cy="118" r="60" fill="#ffffff" />
+    <circle cx="140" cy="118" r="60" fill="${INDIGO}" fill-opacity="0.18" stroke="${INDIGO}" stroke-width="1.5" />
+    <circle cx="210" cy="118" r="60" fill="${AMBER}" fill-opacity="0.18" stroke="${AMBER}" stroke-width="1.5" />
+    ${t(126, 50, 'A 偶数', INDIGO, 700, 13)}${t(224, 50, 'B 3の倍数', '#b45309', 700, 13)}
+    ${face(116, 110, '2')}${face(116, 140, '4')}${face(175, 126, '6')}${face(236, 126, '3')}
+    ${face(40, 178, '1')}${face(300, 178, '5')}
+    <text x="320" y="28" text-anchor="end" font-size="12" fill="${SLATE}">灰色＝どちらでもない</text>
+    ${t(W / 2, 220, '包除原理：3 ＋ 2 − 1 ＝ 4 個 → 4/6 ＝ 2/3', INK, 700, 13)}
+    ${t(W / 2, 244, '補事象から：6 − 2（灰色の 1, 5）＝ 4 個 → 2/3', INK, 700, 13)}
+  </svg>`;
+  const cap = `A と B を足すと 6 を2回数えるので1回引きます。灰色は A も B も起きない目です。`;
+  return fig(svg, cap);
+}
+
 function venn3(): string {
   const W = 340, H = 250;
   const c = [{ x: 140, y: 95, n: 'A', col: INDIGO }, { x: 200, y: 95, n: 'B', col: AMBER }, { x: 170, y: 147, n: 'C', col: TEAL }];
@@ -676,7 +699,7 @@ function venn3(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="13.2" fill="${INK}">数字 ＝ 足す・引く・足すで、その領域を何回数えたか</text>
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">最後はどの領域もちょうど1回になる</text>
   </svg>`;
-  const cap = `P(A) + P(B) + P(C) と足すと、2つが重なる部分は2回、3つが重なる中心は3回数えられます。2つずつの重なり3つを引くと、2つの重なりは 2 − 1 = 1 回に直りますが、中心は3回引かれて 3 − 3 = 0 回、つまり<strong>引き過ぎ</strong>になります。そこで最後に P(A∩B∩C) を1回足し戻すと、すべての領域がちょうど1回になります。`;
+  const cap = `3つを足した時点で、2つの重なりは2回、中心は3回数えられています。`;
   return fig(svg, cap);
 }
 
@@ -4645,6 +4668,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-clt-coin': cltCoin,
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
+  'f-dice-venn': diceVenn,
   'f-overfit': overfit,
   'f-bivariate': bivariateNormal, 'f-cov-matrix': covMatrix, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-return-level': returnLevel, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
