@@ -3752,6 +3752,84 @@ function dagIV(): string {
   return fig(svg, 'Z から Y へは X を通る道しか無く、Z は U とつながっていません。Z が動かした分の X の変化だけを使えば、U の混ざらない効果が求まります。');
 }
 
+
+// ── フロントドア基準の2段階（3.7b）：横幅＝P(m|x)、高さ＝g(m)、塗った面積＝P(y|do(x)) ──
+function frontdoorCalc(): string {
+  // 説明のための数字：1段目 P(M=1|X=1)=0.8, P(M=1|X=0)=0.2／2段目 g(1)=0.7, g(0)=0.3
+  const pm1 = { 1: 0.8, 0: 0.2 } as Record<number, number>;
+  const g = { 1: 0.7, 0: 0.3 } as Record<number, number>;
+  const W = 350, H = 280, PW = 130, PH = 120, top = 46;
+  const panels = [{ x: 1, x0: 44 }, { x: 0, x0: 208 }];
+  const fmt = (v: number) => v.toFixed(2).replace(/0$/, '');
+  const body = panels.map(({ x, x0 }) => {
+    const bot = top + PH;
+    const segs = [{ m: 1, w: pm1[x], col: TEAL }, { m: 0, w: 1 - pm1[x], col: AMBER }];
+    let cx = x0;
+    const rects = segs.map(s => {
+      const w = s.w * PW, h = g[s.m] * PH;
+      const r = `<rect x="${f1(cx)}" y="${f1(bot - h)}" width="${f1(w)}" height="${f1(h)}" fill="${s.col}" fill-opacity="0.35" stroke="${s.col}" stroke-width="1.5" />
+        <text x="${f1(cx + w / 2)}" y="${f1(bot - h - 5)}" text-anchor="middle" font-size="12.3" fill="${s.col}">${fmt(g[s.m])}</text>
+        <text x="${f1(cx + w / 2)}" y="${bot + 16}" text-anchor="middle" font-size="12.3" fill="${s.col}">${fmt(s.w)}</text>`;
+      cx += w;
+      return r;
+    }).join('');
+    const area = pm1[x] * g[1] + (1 - pm1[x]) * g[0];
+    return `<text x="${x0 + PW / 2}" y="${top - 26}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">X = ${x} に固定</text>
+      <rect x="${x0}" y="${top}" width="${PW}" height="${PH}" fill="none" stroke="#cbd5e1" stroke-dasharray="4 3" />
+      ${rects}
+      <text x="${x0 + PW / 2}" y="${bot + 38}" text-anchor="middle" font-size="13" font-weight="700" fill="${INDIGO}">面積 ${fmt(area)}</text>`;
+  }).join('');
+  const ticks = [0, 0.5, 1].map(v => `<line x1="40" y1="${f1(top + PH - v * PH)}" x2="44" y2="${f1(top + PH - v * PH)}" stroke="${SLATE}" />
+    <text x="36" y="${f1(top + PH - v * PH + 4)}" text-anchor="end" font-size="12.3" fill="${SLATE}">${v === 0.5 ? '0.5' : v.toFixed(0)}</text>`).join('');
+  const e1 = pm1[1] * g[1] + (1 - pm1[1]) * g[0], e0 = pm1[0] * g[1] + (1 - pm1[0]) * g[0];
+  const ly = top + PH + 66;
+  const svg = `${svgOpen(W, H, 'フロントドア基準の計算：Xを1に固定するとM=1の割合0.8、0に固定すると0.2。M=1なら高さ0.7、M=0なら0.3。塗った面積がP(y|do(x))で、0.62と0.38、差は0.24')}
+    ${ticks}
+    <text x="10" y="${top - 14}" font-size="12.3" fill="${SLATE}">g(m)</text>
+    ${body}
+    <rect x="10" y="${ly - 10}" width="12" height="12" fill="${TEAL}" fill-opacity="0.35" stroke="${TEAL}" />
+    <text x="28" y="${ly}" font-size="12.3" fill="${INK}">M = 1</text>
+    <rect x="80" y="${ly - 10}" width="12" height="12" fill="${AMBER}" fill-opacity="0.35" stroke="${AMBER}" />
+    <text x="98" y="${ly}" font-size="12.3" fill="${INK}">M = 0</text>
+    <text x="10" y="${ly + 22}" font-size="12.3" fill="${INK}">横幅 = 1段目 P(m｜x)、高さ = 2段目 g(m)</text>
+    <text x="10" y="${ly + 44}" font-size="13" font-weight="700" fill="${INDIGO}">効果 = ${fmt(e1)} − ${fmt(e0)} = ${fmt(e1 - e0)}</text>
+  </svg>`;
+  return fig(svg, 'X を変えると横幅（M のなりやすさ）だけが変わり、高さ g(m) は共通です（説明のための数字）。');
+}
+
+// ── 直接効果と間接効果（3.7b）：係数を矢印に書き、M を調整しない／するで比べる ──
+function mediationFig(): string {
+  const W = 350, H = 300;
+  const mk = 'med-arrow';
+  const row = (y0: number, adj: boolean) => {
+    const X = { x: 40, y: y0 + 100 }, M = { x: 130, y: y0 + 38 }, Y = { x: 220, y: y0 + 100 };
+    const ind = adj ? '#cbd5e1' : TEAL;
+    const nodes: DagNode[] = [{ id: 'X', ...X, label: 'X' }, { id: 'M', ...M, label: 'M' }, { id: 'Y', ...Y, label: 'Y' }];
+    const g = dagPanel(nodes, [['X', 'M', ind], ['M', 'Y', ind], ['X', 'Y', INDIGO]], mk);
+    const fill = adj ? `<circle cx="${M.x}" cy="${M.y}" r="17" fill="#c7d2fe" stroke="${INDIGO}" stroke-width="1.8" /><text x="${M.x}" y="${M.y + 5}" text-anchor="middle" font-size="14" font-weight="700" fill="${INDIGO}">M</text>
+      <text x="${M.x + 24}" y="${M.y + 6}" font-size="15" font-weight="700" fill="${ROSE}">×</text>` : '';
+    const lab = `<text x="${(X.x + M.x) / 2 - 14}" y="${(X.y + M.y) / 2 - 4}" text-anchor="end" font-size="12.3" fill="${ind === TEAL ? TEAL : SLATE}">a=0.5</text>
+      <text x="${(M.x + Y.x) / 2 + 14}" y="${(M.y + Y.y) / 2 - 4}" font-size="12.3" fill="${ind === TEAL ? TEAL : SLATE}">b=0.8</text>
+      <text x="${(X.x + Y.x) / 2}" y="${X.y + 22}" text-anchor="middle" font-size="12.3" fill="${INDIGO}">c=0.3</text>`;
+    const title = `<text x="10" y="${y0 + 14}" font-size="13" font-weight="700" fill="${INK}">${adj ? 'M を調整する（回帰に M を入れる）' : 'M を調整しない'}</text>`;
+    const res = adj
+      ? `<text x="258" y="${y0 + 66}" font-size="12.3" fill="${SLATE}">間接：塞がる</text>
+         <text x="258" y="${y0 + 88}" font-size="12.3" fill="${INDIGO}">直接 0.3</text>
+         <text x="258" y="${y0 + 114}" font-size="13" font-weight="700" fill="${INK}">求まる 0.3</text>`
+      : `<text x="258" y="${y0 + 66}" font-size="12.3" fill="${TEAL}">間接 0.5×0.8</text>
+         <text x="258" y="${y0 + 82}" font-size="12.3" fill="${TEAL}">　　= 0.4</text>
+         <text x="258" y="${y0 + 102}" font-size="12.3" fill="${INDIGO}">直接 0.3</text>
+         <text x="258" y="${y0 + 126}" font-size="13" font-weight="700" fill="${INK}">総合 0.7</text>`;
+    return title + g + fill + lab + res;
+  };
+  const svg = `${svgOpen(W, H, '直接効果と間接効果：X→M が0.5、M→Y が0.8、X→Y が0.3。Mを調整しなければ間接0.4と直接0.3で総合0.7、Mを調整すると間接の道が塞がり直接0.3だけが求まる')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${INK}" /></marker></defs>
+    ${row(0, false)}
+    <line x1="10" y1="148" x2="340" y2="148" stroke="#e2e8f0" />
+    ${row(152, true)}
+  </svg>`;
+  return fig(svg, '間接効果は道に沿った係数の積、総合効果は直接と間接の和です。');
+}
 // ── 有向分離の練習（3.7）：A→B→C←D で条件 S を4通りに変え、経路が閉じる所に × を置く ──
 function dsepPractice(): string {
   const W = 350, RH = 72, H = 4 * RH + 30;
@@ -4600,7 +4678,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic, 'f-dsep-practice': dsepPractice, 'f-simpson': simpsonFig,
   'f-dag-front': dagFront,
-  'f-dag-iv': dagIV,
+  'f-dag-iv': dagIV, 'f-frontdoor-calc': frontdoorCalc, 'f-mediation': mediationFig,
   'f-ca': correspondenceMap,
   'f-sem-path': semPath,
   'f-mv-choose': mvChoose,
