@@ -661,6 +661,43 @@ function bayesTree(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.2 節1：合格者だけに絞ると女子の割合が変わる（条件付き確率） ============
+function passGrid(): string {
+  const W = 340, H = 262;
+  const t = (x: number, y: number, s: string, col = INK, w = 400, fs = 13) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="${fs}" font-weight="${w}" fill="${col}">${s}</text>`;
+  // 男子20人（合格12）・女子20人（合格18）。1行10人×4行（上2行が男子、下2行が女子）
+  const panel = (x0: number, onlyPass: boolean) => {
+    let out = '';
+    for (let g = 0; g < 2; g++) {
+      const pass = g === 0 ? 12 : 18;
+      const col = g === 0 ? INDIGO : AMBER;
+      for (let k = 0; k < 20; k++) {
+        const cx = x0 + 8 + (k % 10) * 14, cy = 62 + (g * 2 + Math.floor(k / 10)) * 16;
+        const isPass = k < pass;
+        if (isPass) out += `<circle cx="${cx}" cy="${cy}" r="5.5" fill="${col}" />`;
+        else out += onlyPass ? `<circle cx="${cx}" cy="${cy}" r="5" fill="none" stroke="#cbd5e1" stroke-width="1" />` : `<circle cx="${cx}" cy="${cy}" r="5" fill="#ffffff" stroke="${col}" stroke-width="1.4" />`;
+      }
+    }
+    return out;
+  };
+  const svg = `${svgOpen(W, H, '40人のうち合格者30人だけに絞ると、女子の割合が 20/40 から 18/30 に変わる')}
+    ${t(83, 22, '全体 40人', INK, 700, 13)}${t(257, 22, '合格者だけ 30人', INK, 700, 13)}
+    ${t(83, 40, '男子（上2行）・女子（下2行）', SLATE, 400, 12.5)}${t(257, 40, '不合格は数えない', SLATE, 400, 12.5)}
+    ${panel(13, false)}${panel(187, true)}
+    <rect x="183" y="50" width="148" height="72" rx="6" fill="none" stroke="${INK}" stroke-width="1.6" />
+    ${t(83, 150, '女子 20/40 ＝ 50%', '#b45309', 700, 14)}${t(257, 150, '女子 18/30 ＝ 60%', '#b45309', 700, 14)}
+    ${t(83, 170, 'P(女子)', SLATE, 400, 12.5)}${t(257, 170, 'P(女子 | 合格)', SLATE, 400, 12.5)}
+    <circle cx="70" cy="196" r="5.5" fill="${SLATE}" /><text x="80" y="200" font-size="12.5" fill="${INK}">合格</text>
+    <circle cx="130" cy="196" r="5" fill="#ffffff" stroke="${SLATE}" stroke-width="1.4" /><text x="140" y="200" font-size="12.5" fill="${INK}">不合格</text>
+    <rect x="200" y="190" width="11" height="11" fill="${INDIGO}" /><text x="215" y="200" font-size="12.5" fill="${INK}">男子</text>
+    <rect x="254" y="190" width="11" height="11" fill="${AMBER}" /><text x="269" y="200" font-size="12.5" fill="${INK}">女子</text>
+    ${t(W / 2, 230, 'P(女子 | 合格) ＝ P(合格∩女子) ÷ P(合格)', INK, 700, 13)}
+    ${t(W / 2, 250, '＝ (18/40) ÷ (30/40) ＝ 18/30', INK, 700, 13)}
+  </svg>`;
+  const cap = `「合格」とわかると、考える世界が右の枠の30人に縮みます。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.1：3事象の包除原理 ============
 // ============ 1.1 節2：サイコロの目で見る包除原理と補事象 ============
 function diceVenn(): string {
@@ -4669,6 +4706,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-bayes-tree': bayesTree,
   'f-venn3': venn3,
   'f-dice-venn': diceVenn,
+  'f-pass-grid': passGrid,
   'f-overfit': overfit,
   'f-bivariate': bivariateNormal, 'f-cov-matrix': covMatrix, 'f-transform-strips': transformStrips, 'f-conditional': conditionalNormal, 'f-max-shift': maxShift, 'f-mahalanobis': mahalanobis, 'f-uncorr-dependent': uncorrelatedDependent, 'f-fold-square': foldSquare, 'f-wait-pair': expSum, 'f-shear-area': shearArea, 'f-max-cdf': maxCdf, 'f-gev-types': gevTypes, 'f-return-level': returnLevel, 'f-marginal': marginalNormal, 'f-linear-uv': linearUV, 'f-independent-slices': independentSlices, 'f-min-parts': minParts,
   'f-lln': lln,
