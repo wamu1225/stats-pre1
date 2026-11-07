@@ -632,6 +632,34 @@ function cltCoin(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.3 節1：全確率の定理の樹形図（工場A・B の製品1000個） ============
+function factoryTree(): string {
+  const W = 350, H = 250;
+  const N = 1000, shareA = 0.6, defA = 0.02, defB = 0.05;
+  const nA = Math.round(N * shareA), nB = N - nA;
+  const dA = Math.round(nA * defA), dB = Math.round(nB * defB);
+  const box = (x: number, y: number, w: number, t1: string, t2: string, c: string) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="40" rx="4" fill="${c}" fill-opacity="0.14" stroke="${c}" stroke-width="1.2" />
+     <text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${t1}</text>
+     <text x="${x + w / 2}" y="${y + 33}" text-anchor="middle" font-size="13.2" fill="${INK}">${t2}</text>`;
+  const ln = (x1: number, y1: number, x2: number, y2: number) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SLATE}" stroke-width="1.2" />`;
+  const lab = (x: number, y: number, s: string) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="12.4" fill="${SLATE}" stroke="#fff" stroke-width="4" paint-order="stroke">${s}</text>`;
+  const svg = `${svgOpen(W, H, '製品1000個を工場ごとに分け、不良品を数えて足す樹形図')}
+    ${box(125, 4, 100, '製品', `${N}個`, SLATE)}
+    ${ln(150, 44, 80, 80)}${ln(200, 44, 270, 80)}${lab(78, 62, `シェア ${pct(shareA, 0)}`)}${lab(272, 62, `シェア ${pct(1 - shareA, 0)}`)}
+    ${box(20, 80, 110, '工場A', `${nA}個`, INDIGO)}${box(220, 80, 110, '工場B', `${nB}個`, TEAL)}
+    ${ln(55, 120, 40, 160)}${ln(95, 120, 110, 160)}${lab(75, 146, `不良率 ${pct(defA, 0)}`)}
+    ${ln(255, 120, 240, 160)}${ln(295, 120, 310, 160)}${lab(275, 146, `不良率 ${pct(defB, 0)}`)}
+    ${box(4, 160, 72, '不良', `${dA}個`, ROSE)}${box(80, 160, 62, '良品', `${nA - dA}個`, SLATE)}
+    ${box(206, 160, 72, '不良', `${dB}個`, ROSE)}${box(282, 160, 64, '良品', `${nB - dB}個`, SLATE)}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">不良品の合計 ${dA} ＋ ${dB} ＝ ${dA + dB}個</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${ROSE}">P(不良) ＝ ${dA + dB} ÷ ${N} ＝ ${((dA + dB) / N).toFixed(3)}</text>
+  </svg>`;
+  const cap = `赤い枠が不良品の枝。どの不良品もAかBのどちらか一方から来るので、2本の枝を足すと全体の不良品になります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.3：ベイズの樹形図（1000人） ============
 function bayesTree(): string {
   const W = 350, H = 250;
@@ -645,19 +673,19 @@ function bayesTree(): string {
      <text x="${x + w / 2}" y="${y + 17}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${t1}</text>
      <text x="${x + w / 2}" y="${y + 33}" text-anchor="middle" font-size="13.2" fill="${INK}">${t2}</text>`;
   const ln = (x1: number, y1: number, x2: number, y2: number, t: string) =>
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SLATE}" stroke-width="1.2" /><text x="${(x1 + x2) / 2 + (x2 > x1 ? 4 : -4)}" y="${(y1 + y2) / 2}" text-anchor="${x2 > x1 ? 'start' : 'end'}" font-size="12.4" fill="${SLATE}">${t}</text>`;
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${SLATE}" stroke-width="1.2" /><text x="${(x1 + x2) / 2 + (x2 > x1 ? 4 : -4)}" y="${(y1 + y2) / 2}" text-anchor="${x2 > x1 ? 'start' : 'end'}" font-size="12.4" fill="${SLATE}" stroke="#fff" stroke-width="4" paint-order="stroke">${t}</text>`;
   const svg = `${svgOpen(W, H, '1000人の検査を樹形図で数える')}
     ${box(125, 4, 100, '検査を受ける', `${N}人`, SLATE)}
     ${ln(150, 44, 80, 80, `有病率 ${pct(prev, 0)}`)}${ln(200, 44, 270, 80, '')}
     ${box(20, 80, 110, '病気', `${sick}人`, ROSE)}${box(220, 80, 110, '健康', `${healthy}人`, TEAL)}
-    ${ln(55, 120, 40, 160, '')}${ln(95, 120, 110, 160, '')}<text x="75" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}">感度 ${pct(sens, 0)}</text>
-    ${ln(255, 120, 240, 160, '')}${ln(295, 120, 310, 160, '')}<text x="275" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}">特異度 ${pct(spec, 0)}</text>
+    ${ln(55, 120, 40, 160, '')}${ln(95, 120, 110, 160, '')}<text x="75" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}" stroke="#fff" stroke-width="4" paint-order="stroke">感度 ${pct(sens, 0)}</text>
+    ${ln(255, 120, 240, 160, '')}${ln(295, 120, 310, 160, '')}<text x="275" y="146" text-anchor="middle" font-size="12.4" fill="${SLATE}" stroke="#fff" stroke-width="4" paint-order="stroke">特異度 ${pct(spec, 0)}</text>
     ${box(4, 160, 72, '陽性', `${num(tp)}人`, ROSE)}${box(80, 160, 62, '陰性', `${num(fn)}人`, SLATE)}
     ${box(206, 160, 72, '陽性', `${num(fp)}人`, AMBER)}${box(282, 160, 64, '陰性', `${num(tn)}人`, SLATE)}
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">陽性 ${num(pos)}人のうち、病気は ${num(tp)}人</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${ROSE}">P(病気 ∣ 陽性) = ${num(tp)} ÷ ${num(pos)} ≈ ${pct(post)}</text>
   </svg>`;
-  const cap = `${N}人で数えると、病気の${sick}人からは${num(tp)}人が陽性、健康な${healthy}人からも${num(fp)}人が誤って陽性になります。陽性の${num(pos)}人のうち本当に病気なのは${num(tp)}人だけなので、陽性とわかっても病気である確率は約 ${pct(post)} です。健康な人が圧倒的に多いため、わずか ${pct(1 - spec, 0)} の誤りでも陽性の大半を占めます。ベイズの定理の分母（全確率）は、この図の「陽性の合計」にあたります。`;
+  const cap = `健康な${healthy}人の${pct(1 - spec, 0)}という小さな誤りでも、陽性のほとんどを占めます。`;
   return fig(svg, cap);
 }
 
@@ -4704,6 +4732,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-normal-plus': normalSum,
   'f-clt-coin': cltCoin,
   'f-bayes-tree': bayesTree,
+  'f-factory-tree': factoryTree,
   'f-venn3': venn3,
   'f-dice-venn': diceVenn,
   'f-pass-grid': passGrid,
