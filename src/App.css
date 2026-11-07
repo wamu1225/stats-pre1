@@ -1374,3 +1374,6 @@ a.brand { color: inherit; }
 .card-linked a.card-link::after { content: ''; position: absolute; inset: 0; }
 .card-linked a.card-link:focus-visible { outline: none; }
 .card-linked:has(a.card-link:focus-visible) { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* 同じシリーズの ほかの級への入口（2026-11-07） */
+.footer-series { margin-top: 8px; font-size: 0.8rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: center; align-items: center; }
