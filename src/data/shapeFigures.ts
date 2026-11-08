@@ -4712,12 +4712,60 @@ function condIndep(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.5 節1：歪度の向きと 最頻値・中央値・平均 の並び ============
+function skewMeanMedian(): string {
+  const W = 340, H = 316;
+  const k = 3, th = 1.2, xMax = 11;
+  const g = gammaPdf(k);
+  const right = (x: number) => g(x / th) / th;
+  const left = (x: number) => right(xMax - x);
+  // 中央値は CDF を二分法で解く（形状3のガンマ）
+  const cdf3 = (t: number) => 1 - Math.exp(-t) * (1 + t + (t * t) / 2);
+  let lo = 0, hi = 10;
+  for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (cdf3(m) < 0.5) lo = m; else hi = m; }
+  const mode = (k - 1) * th, med = lo * th, mean = k * th;
+  const skew = 2 / Math.sqrt(k);
+  const panel = (y0: number, fn: (x: number) => number, title: string, color: string, xs: { v: number; name: string; c: string; row: 1 | 2; anchor: string }[]) => {
+    const b: Box = { x: 22, y: y0 + 22, w: 304, h: 70, xMin: 0, xMax, yMax: 0.25 };
+    const base = b.y + b.h;
+    const marks = xs.map((m) => {
+      const px = PX(b, m.v);
+      const ry = base + 18 + m.row * 16;
+      const dx = m.anchor === 'end' ? -3 : m.anchor === 'start' ? 3 : 0;
+      return `<line x1="${f1(px)}" y1="${f1(PY(b, fn(m.v)))}" x2="${f1(px)}" y2="${f1(ry - 11)}" stroke="${m.c}" stroke-width="1.6" stroke-dasharray="${m.row === 2 ? '' : '4 2'}" />
+        <text x="${f1(px + dx)}" y="${f1(ry)}" text-anchor="${m.anchor}" font-size="12.4" font-weight="700" fill="${m.c}">${m.name} ${num(m.v)}</text>`;
+    }).join('');
+    return `<text x="${b.x}" y="${y0 + 12}" font-size="13.2" font-weight="700" fill="${color}">${title}</text>
+      ${area(b, fn, 0, xMax, color, 0.16)}
+      ${curve(b, fn, color)}
+      <line x1="${b.x}" y1="${base}" x2="${b.x + b.w}" y2="${base}" stroke="${SLATE}" stroke-width="1" />
+      ${[0, 2, 4, 6, 8, 10].map((t) => `<text x="${f1(PX(b, t))}" y="${base + 13}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+      ${marks}`;
+  };
+  const MODE = SLATE, MED = TEAL, MEAN = '#b45309';
+  const svg = `${svgOpen(W, H, '右に裾が長い分布では最頻値・中央値・平均の順に右へ並び、左に裾が長い分布では逆に並ぶ')}
+    ${panel(0, right, `右に裾が長い（歪度 +${f2(skew)}）`, INDIGO, [
+      { v: mode, name: '最頻値', c: MODE, row: 1, anchor: 'end' },
+      { v: med, name: '中央値', c: MED, row: 2, anchor: 'middle' },
+      { v: mean, name: '平均', c: MEAN, row: 1, anchor: 'start' },
+    ])}
+    ${panel(158, left, `左に裾が長い（歪度 −${f2(skew)}）`, ROSE, [
+      { v: xMax - mean, name: '平均', c: MEAN, row: 1, anchor: 'end' },
+      { v: xMax - med, name: '中央値', c: MED, row: 2, anchor: 'middle' },
+      { v: xMax - mode, name: '最頻値', c: MODE, row: 1, anchor: 'start' },
+    ])}
+  </svg>`;
+  const cap = `最頻値は山の頂点、中央値は面積を半分に分ける点です。平均は長い裾の側の大きく外れた値に引っ張られ、右に裾が長いと<strong>最頻値 ＜ 中央値 ＜ 平均</strong>、左に裾が長いと逆の順になります。ただしこの並びは多くの分布で見られる目安で、歪度の符号から必ず言えるわけではありません。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
   'f-density-over-1': densityOver1,
   'f-survival': survival,
   'f-same-moments': sameMomentsDifferentShape,
+  'f-skew-mean-median': skewMeanMedian,
   'f-linear-transform': linearTransform,
   'f-binomial': binomialShapes,
   'f-uniform': uniformDice,

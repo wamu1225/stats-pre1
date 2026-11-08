@@ -33,7 +33,7 @@ const typeToTitle: Record<string, string> = {
   update: 'ベイズ更新：確信度の変化',
   overfit: '過学習：モデルの複雑さと汎化性能',
   multico: '多重共線性：不安定な係数',
-  skewkurt: '歪度と尖度：分布の形を読む'
+  skewkurt: '尖度：裾の重さを比べる'
 };
 
 // 固定シードの疑似乱数（mulberry32）。スライダーを動かすたびに点群が
@@ -171,19 +171,8 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
         data.push({ x: Math.round(x * 10) / 10, prior: normalPDF(x, pMean, pStd), posterior: normalPDF(x, postMean, postStd) });
       }
     } else if (type === 'skewkurt') {
-      const skewData: { x: string; sym: number; right: number; left: number }[] = [];
       const kurtData: { x: string; normal: number; fat: number }[] = [];
       const kurtTail: { x: string; normal: number; fat: number }[] = [];
-      // 横軸は 0 を中心に左右対称（-5〜5）にとる。以前は -4〜5 で、対称な曲線が左に寄って見えていた（2026-10-14）
-      for (let i = -50; i <= 50; i++) {
-        const x = i / 10;
-        const rU = x + 3;
-        const lU = 3 - x;
-        const right = rU > 0 ? (rU * rU * Math.exp(-rU)) / (4 * Math.exp(-2)) : 0;
-        const left = lU > 0 ? (lU * lU * Math.exp(-lU)) / (4 * Math.exp(-2)) : 0;
-        const sym = normalPDF(x, 0, 1.4) * 1.4 * Math.sqrt(2 * Math.PI);
-        skewData.push({ x: x.toFixed(1), sym, right, left });
-      }
       // 🔒 尖度の比較は「分散を揃えて・真のPDFで」描く（2026-10-07 修正・ユーザー指摘）。
       // 旧版の誤り2点：
       //  (1) ラプラスに b=1.2 を使っていた。Var=2b²=2.88 なので σ=1.70 で、正規(σ=1)の1.7倍。
@@ -204,7 +193,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       for (let x = 2; x <= 5; x += 0.05) {
         kurtTail.push({ x: x.toFixed(2), normal: pdfN(x), fat: pdfL(x) });
       }
-      return { skewData, kurtData, kurtTail };
+      return { kurtData, kurtTail };
     } else if (type === 'overfit') {
       const basePoints = [{ x: -3, y: -2 }, { x: -1, y: -0.5 }, { x: 0, y: 0.2 }, { x: 1, y: 0.8 }, { x: 3, y: 2.5 }];
       const line = [];
@@ -447,37 +436,19 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
     }
 
     if (type === 'skewkurt') {
-      const { skewData, kurtData, kurtTail } = chartData as { skewData: { x: string; sym: number; right: number; left: number }[], kurtData: { x: string; normal: number; fat: number }[], kurtTail: { x: string; normal: number; fat: number }[] };
-      const skewRows: { key: 'left' | 'sym' | 'right'; label: string; example: string; color: string }[] = [
-        { key: 'left',  label: '左に裾（歪度マイナス）', example: '例：簡単な試験の点数分布',  color: '#ef4444' },
-        { key: 'sym',   label: '対称（歪度ゼロ）',       example: '例：身長・体重など',         color: '#22c55e' },
-        { key: 'right', label: '右に裾（歪度プラス）',   example: '例：年収分布',               color: '#3b82f6' },
-      ];
+      const { kurtData, kurtTail } = chartData as { kurtData: { x: string; normal: number; fat: number }[], kurtTail: { x: string; normal: number; fat: number }[] };
       const kurtRows: { key: 'normal' | 'fat'; label: string; example: string; color: string }[] = [
         { key: 'normal', label: '正規分布（尖度3・基準）',      example: '身長・測定誤差など',   color: '#94a3b8' },
         { key: 'fat',    label: 'ラプラス分布（尖度6・高尖度）', example: '株価の日次変動など', color: 'var(--primary)' },
       ];
       return (
         <div>
-          <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', marginBottom: 4 }}>歪度の違い</div>
-          {skewRows.map(row => (
-            <div key={row.key} style={{ marginBottom: 6 }}>
-              <div style={{ fontSize: '0.68rem', fontWeight: 600, color: row.color }}>
-                {row.label} <span style={{ color: '#94a3b8', fontWeight: 400 }}>— {row.example}</span>
-              </div>
-              <ResponsiveContainer width="100%" height={52}>
-                <ComposedChart data={skewData} margin={{ top: 2, right: 4, left: 4, bottom: 0 }}>
-                  <YAxis hide domain={[0, 1.15]} />
-                  <Area type="monotone" dataKey={row.key} fill={row.color} fillOpacity={0.25} stroke={row.color} strokeWidth={2} dot={false} isAnimationActive={false} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          ))}
+          {/* 歪度の3つの形は本文の図 f-skew-mean-median（節1の直後）へ移した（2026-11-08 読者視点レビュー：図が説明から離れていた） */}
           {/* 🔒 尖度は「重ねて」見せる（2026-10-07 変更・ユーザー指摘「上下に見比べても裾が厚いことがわからない」）。
               上下に分けると、x=3 での 0.7px 対 1.6px という差を別々の枠で見ることになり、比較が成立しない。
               同じ軸に重ねると、2回交差する形（中心→肩→裾）がそのまま尖度の定義になる。 */}
           <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#64748b', margin: '10px 0 2px' }}>
-            尖度の違い（どちらも平均0・標準偏差1に揃えてあります）
+            正規分布とラプラス分布（どちらも平均0・標準偏差1に揃えてあります）
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 2 }}>
             {kurtRows.map(row => (
@@ -526,7 +497,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           </ResponsiveContainer>
           <div style={{ fontSize: '0.64rem', color: '#64748b', lineHeight: 1.5 }}>
             正規（グレー）は右へ行くほど<strong>急降下</strong>し、ラプラス（紫）は<strong>ほぼ直線</strong>のまま下がります。
-            この<strong>落ち方そのものの違い</strong>が裾の重さです。x=5 では高さが<strong>約230倍</strong>も開きます。
+            この<strong>落ち方そのものの違い</strong>が裾の重さです。x=5 では高さが<strong>約400倍</strong>も開きます。
             数で言うと、<strong>±3σ の外に出る確率は 正規 0.27%（1000回に約3回）に対し、ラプラスは 1.44%（約14回）＝5.3倍</strong>。
             これが「裾が厚い＝外れ値が出やすい」の中身です。
           </div>
