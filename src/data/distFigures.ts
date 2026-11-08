@@ -72,9 +72,9 @@ export function cdfPdfFigure(): string {
     <circle cx="${f1(px(x0))}" cy="${f1(py2(cdf(x0)))}" r="4.5" fill="${AMBER}" />
     <text x="${f1(px(x0) + 8)}" y="${f1(py2(cdf(x0)) + 20)}" font-size="12" font-weight="700" fill="#b45309">F(1) = ${f2(cdf(x0))}</text>
     <text x="${f1(px(1.6))}" y="${f1(py2(0.17))}" font-size="12" fill="${INK}">破線の傾き = f(1) = ${f2(slope)}</text>
-    <text x="${f1((L + R) / 2)}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 x（指数分布 λ = ${lam}）</text>
+    <text x="${f1((L + R) / 2)}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 x（指数分布）</text>
   </svg>`;
 
-  const cap = `指数分布（λ = ${lam}）で、同じ x = ${x0} を2つの図で見ています。上の図で 0 から ${x0} までの<strong>面積</strong>（青）は ${f2(cdf(x0))} で、これが下の図の F(${x0}) = ${f2(cdf(x0))}、つまり<strong>曲線の高さ</strong>になります。逆に、下の図の曲線の<strong>傾き</strong>（破線）は ${f2(slope)} で、これが上の図の f(${x0}) = ${f2(pdf(x0))} という高さです。「PDF を積分すると CDF、CDF を微分すると PDF」は、面積と傾きの往復を言っています。`;
+  const cap = `節2の図と同じ指数分布で、同じ x = ${x0} を2つの図で見ています。上の図で 0 から ${x0} までの<strong>面積</strong>（青）は ${f2(cdf(x0))} で、これが下の図の F(${x0}) = ${f2(cdf(x0))}、つまり<strong>曲線の高さ</strong>になります。逆に、下の図の曲線の<strong>傾き</strong>（破線）は ${f2(slope)} で、これが上の図の f(${x0}) = ${f2(pdf(x0))} という高さです。「PDF を積分すると CDF、CDF を微分すると PDF」は、面積と傾きの往復を言っています。`;
   return `<figure class="venn-figure">${svg}<figcaption class="venn-caption">${cap}</figcaption></figure>`;
 }
