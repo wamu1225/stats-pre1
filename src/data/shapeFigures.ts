@@ -4759,6 +4759,89 @@ function skewMeanMedian(): string {
   return fig(svg, cap);
 }
 
+// ---- 1.5b：無相関でも関係がある（Y = X²）----
+function zeroCorr(): string {
+  // X は 0 を中心に左右対称に並べる（-2〜2 を等間隔に21点）→ Y = X² との共分散はちょうど 0
+  const xs = Array.from({ length: 21 }, (_, i) => -2 + i * 0.2);
+  const ys = xs.map((x) => x * x);
+  const mx = xs.reduce((s, x) => s + x, 0) / xs.length;
+  const my = ys.reduce((s, y) => s + y, 0) / ys.length;
+  const cxy = xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0);
+  const r = Math.abs(cxy) < 1e-12 ? 0 : cxy / Math.sqrt(xs.reduce((s, x) => s + (x - mx) ** 2, 0) * ys.reduce((s, y) => s + (y - my) ** 2, 0));
+  const W = 340, H = 196;
+  const L = 34, R = 326, T = 26, B = 160;
+  const px = (x: number) => L + ((x + 2.2) / 4.4) * (R - L);
+  const py = (y: number) => B - ((y + 0.2) / 4.4) * (B - T);
+  const dots = xs.map((x, i) => `<circle cx="${f1(px(x))}" cy="${f1(py(ys[i]))}" r="3.4" fill="${INDIGO}" fill-opacity="0.85" />`).join('');
+  const svg = `${svgOpen(W, H, 'Y = X² の点は放物線にのり、Y は X で決まるのに、相関係数は 0 になる')}
+    <text x="${L}" y="14" font-size="13" font-weight="700" fill="${INDIGO}">Y = X²（X は 0 を中心に左右対称）　r = ${f2(r)}</text>
+    <line x1="${f1(px(0))}" y1="${T}" x2="${f1(px(0))}" y2="${B}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
+    <text x="${f1(px(0) + 4)}" y="${T + 10}" font-size="12" fill="${SLATE}">x̄</text>
+    <line x1="${L}" y1="${f1(py(my))}" x2="${R}" y2="${f1(py(my))}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
+    <text x="${R}" y="${f1(py(my) - 5)}" text-anchor="end" font-size="12" fill="${SLATE}">ȳ</text>
+    <line x1="${L}" y1="${B}" x2="${R}" y2="${B}" stroke="${SLATE}" stroke-width="1" />
+    <line x1="${L}" y1="${T}" x2="${L}" y2="${B}" stroke="${SLATE}" stroke-width="1" />
+    ${[-2, -1, 0, 1, 2].map((t) => `<text x="${f1(px(t))}" y="${B + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    ${[0, 1, 2, 3, 4].map((t) => `<text x="${L - 6}" y="${f1(py(t) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${(L + R) / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 X／縦軸 Y</text>
+    ${dots}
+  </svg>`;
+  const cap = `Y は X で完全に決まるのに、右上・左下（積が正）の点と左上・右下（積が負）の点が打ち消し合い、共分散も r も 0 になります。r が測るのは直線の関係だけです。`;
+  return fig(svg, cap);
+}
+
+// ---- 1.5b：全分散の法則（身長の例：男性 60%・平均170・分散36、女性 40%・平均157・分散25）----
+function totalVariance(): string {
+  const g = [
+    { name: '男性', p: 0.6, m: 170, v: 36, c: INDIGO },
+    { name: '女性', p: 0.4, m: 157, v: 25, c: ROSE },
+  ];
+  const mAll = g.reduce((s, k) => s + k.p * k.m, 0);
+  const within = g.reduce((s, k) => s + k.p * k.v, 0);
+  const between = g.reduce((s, k) => s + k.p * (k.m - mAll) ** 2, 0);
+  const W = 340, H = 262;
+  const b: Box = { x: 18, y: 40, w: 304, h: 130, xMin: 135, xMax: 190, yMax: 0.042 };
+  const base = b.y + b.h;
+  const mix = (x: number) => g.reduce((s, k) => s + k.p * normPdf(x, k.m, Math.sqrt(k.v)), 0);
+  const parts = g.map((k) => {
+    const fn = (x: number) => k.p * normPdf(x, k.m, Math.sqrt(k.v));
+    return `${area(b, fn, b.xMin, b.xMax, k.c, 0.16)}${curve(b, fn, k.c)}`;
+  }).join('');
+  // 群内：各群の平均 ±σ の横棒（山の上）／群間：各群の平均から全体平均への矢印（軸の下）
+  const sd = g.map((k, i) => {
+    const s = Math.sqrt(k.v);
+    const y = PY(b, k.p * normPdf(k.m + s, k.m, s)) - 2;
+    const x0 = PX(b, k.m - s), x1 = PX(b, k.m + s);
+    const lx = i === 0 ? x1 + 4 : x0 - 4;
+    return `<line x1="${f1(x0)}" y1="${f1(y)}" x2="${f1(x1)}" y2="${f1(y)}" stroke="${k.c}" stroke-width="2.4" />
+      <text x="${f1(lx)}" y="${f1(y + 4)}" text-anchor="${i === 0 ? 'start' : 'end'}" font-size="12" font-weight="700" fill="${k.c}">${k.name} σ²=${k.v}</text>`;
+  }).join('');
+  const arrows = g.map((k, i) => {
+    const y = base + 30 + i * 18;
+    const xa = PX(b, k.m), xb = PX(b, mAll);
+    const d = k.m - mAll;
+    const tip = xb + (xa < xb ? -1 : 1) * 0;
+    return `<line x1="${f1(xa)}" y1="${f1(y)}" x2="${f1(tip)}" y2="${f1(y)}" stroke="${k.c}" stroke-width="2" />
+      <circle cx="${f1(xa)}" cy="${f1(y)}" r="3" fill="${k.c}" />
+      <text x="${f1(i === 0 ? xa + 6 : xa - 6)}" y="${f1(y + 4)}" text-anchor="${i === 0 ? 'start' : 'end'}" font-size="12" font-weight="700" fill="${k.c}">差 ${d > 0 ? '+' : '−'}${num(Math.abs(d))}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '男性と女性の身長の分布を比率で重ねた図。群内のばらつきは各山の幅、群間のばらつきは各群の平均と全体平均の差')}
+    <text x="${b.x}" y="14" font-size="13" font-weight="700" fill="${INK}">身長（cm）：山の面積＝比率</text>
+    ${parts}
+    ${curve(b, mix, INK, b.xMin, b.xMax, 1.4, '4 3')}
+    ${sd}
+    <line x1="${b.x}" y1="${base}" x2="${b.x + b.w}" y2="${base}" stroke="${SLATE}" stroke-width="1" />
+    ${[140, 150, 160, 170, 180, 190].map((t) => `<text x="${f1(PX(b, t))}" y="${base + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    ${g.map((k) => `<line x1="${f1(PX(b, k.m))}" y1="${f1(PY(b, k.p * normPdf(k.m, k.m, Math.sqrt(k.v))))}" x2="${f1(PX(b, k.m))}" y2="${f1(base + 30 + (k === g[0] ? 0 : 18))}" stroke="${k.c}" stroke-width="1" stroke-dasharray="3 2" />`).join('')}
+    <line x1="${f1(PX(b, mAll))}" y1="${b.y}" x2="${f1(PX(b, mAll))}" y2="${base + 54}" stroke="${INK}" stroke-width="1.6" />
+    <text x="${b.x + b.w}" y="14" text-anchor="end" font-size="12" font-weight="700" fill="${INK}">黒線＝全体平均 ${num(mAll)}</text>
+    ${arrows}
+    <text x="${b.x}" y="${H - 6}" font-size="12" fill="${SLATE}">点線＝全員を合わせた分布</text>
+  </svg>`;
+  const cap = `山の幅（横棒は平均±σ）が群内のばらつき、各群の平均と全体平均の差が群間のばらつきです。比率で重み付けて平均すると、群内 ${num(within)}、群間 ${f2(between)}、合わせて全体の分散 ${f2(within + between)} になります。`;
+  return fig(svg, cap);
+}
+
 export const SHAPE_FIGS: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
@@ -4766,6 +4849,8 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-survival': survival,
   'f-same-moments': sameMomentsDifferentShape,
   'f-skew-mean-median': skewMeanMedian,
+  'f-zero-corr': zeroCorr,
+  'f-total-var': totalVariance,
   'f-linear-transform': linearTransform,
   'f-binomial': binomialShapes,
   'f-uniform': uniformDice,

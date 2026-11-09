@@ -151,6 +151,6 @@ export function partialCorrFigure(): string {
     ${panel(x1, y2, `③ Z で Y を説明`, `橙の線＝残差 e_Y`, zs, ys, { color: INDIGO, line: fy, resid: true })}
     ${panel(x2, y2, `④ 残差 e_X と e_Y`, `r = ${f2(pr)}（偏相関）`, rx, ry, { color: AMBER, zero: true })}
   </svg>`;
-  const cap = `X（アイスの売上）と Y（溺死者数）は、どちらも Z（気温）に引っぱられて動きます。① そのままでは r = ${f2(rXY)} と、強い正の相関に見えます。② ③ Z で X と Y をそれぞれ直線で説明し（Z との相関は r(X,Z) = ${f2(rXZ)}、r(Y,Z) = ${f2(rYZ)}）、直線で説明しきれなかった差（橙の線）を残差 e_X、e_Y とします。④ 気温の影響を引いた残差どうしを散布図にすると、相関は r = ${f2(pr)} までほぼ消えます。この ④ の相関が偏相関係数 r(XY·Z) で、前の式で計算した値と一致します。`;
+  const cap = `X（アイスの売上）と Y（溺死者数）は、どちらも Z（気温）に引っぱられて動きます。① そのままでは r = ${f2(rXY)} と、強い正の相関に見えます。② ③ Z で X と Y をそれぞれ直線で説明し（Z との相関は r(X,Z) = ${f2(rXZ)}、r(Y,Z) = ${f2(rYZ)}）、直線で説明しきれなかった差（橙の線）を残差 e_X、e_Y とします。④ 気温の影響を引いた残差どうしを散布図にすると、相関は r = ${f2(pr)} までほぼ消えます。この ④ の相関が偏相関係数 r(XY·Z) です。`;
   return `<figure class="venn-figure">${svg}<figcaption class="venn-caption">${cap}</figcaption></figure>`;
 }
