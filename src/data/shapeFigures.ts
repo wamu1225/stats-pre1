@@ -397,7 +397,7 @@ function exponentialShape(): string {
     <text x="${f1(PX(b, 52))}" y="${f1(PY(b, expPdf(40)) + 4)}" font-size="12.4" font-weight="700" fill="${INDIGO}">＝ 塗った面積 ${f2(over20)}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 t（次の電話までの待ち時間・分）／高さ ＝ 密度</text>
   </svg>`;
-  const cap = `1時間に平均3件の電話が来る窓口で、次の電話までの待ち時間の分布です。すぐ来ることがいちばん多く、長く待つほど起こりにくくなります。平均は20分ですが、20分より長く待つことも約${Math.round(over20 * 100)}%あります。`;
+  const cap = `1時間に平均3件の電話が来る窓口で、次の電話までの待ち時間の分布です。密度は0分で最も高く、待つほど下がります。`;
   return fig(svg, cap);
 }
 
@@ -4171,14 +4171,14 @@ function memorylessExp(): string {
   const g = (t: number) => f(s + t) * Math.exp(lam * s);
   const tickXs = [0, 1, 2, 3, 4, 5];
   const axisX = (b: { y0: number; h: number }, from: number) => `<line x1="${x0}" y1="${b.y0 + b.h}" x2="${x1}" y2="${b.y0 + b.h}" stroke="${SLATE}" />` +
-    tickXs.map(t => `<text x="${f1(px(t))}" y="${b.y0 + b.h + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t + from}</text>`).join('');
-  const svg = `${svgOpen(W, H, '指数分布の密度。s分待った後の残りの部分だけを切り出して高さを伸ばすと、最初の曲線と同じ形に重なる')}
-    <text x="${x0}" y="18" font-size="13.2" font-weight="700" fill="${INK}">最初から：待ち時間の分布</text>
+    tickXs.map(t => `<text x="${f1(px(t))}" y="${b.y0 + b.h + 15}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${(t + from) * 20}</text>`).join('');
+  const svg = `${svgOpen(W, H, '平均20分の指数分布の密度。30分待った後の残りの部分だけを切り出して高さを伸ばすと、最初の曲線と同じ形に重なる')}
+    <text x="${x0}" y="18" font-size="13.2" font-weight="700" fill="${INK}">最初から：次の電話までの待ち時間（分）</text>
     ${axisX(top, 0)}
     <polygon points="${tailArea}" fill="${AMBER}" fill-opacity="0.35" />
     <polyline points="${curve(f, top, 0, X)}" fill="none" stroke="${INDIGO}" stroke-width="2" />
     <line x1="${f1(px(s))}" y1="${top.y0}" x2="${f1(px(s))}" y2="${top.y0 + top.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="${f1(px(s) + 6)}" y="${top.y0 + 14}" font-size="12.4" fill="#b45309">${s} 分待った後に残る部分</text>
+    <text x="${f1(px(s) + 6)}" y="${top.y0 + 14}" font-size="12.4" fill="#b45309">${s * 20} 分待った後に残る部分</text>
     <text x="${x0}" y="178" font-size="13.2" font-weight="700" fill="${INK}">残りを切り出し、高さを ${Math.exp(lam * s).toFixed(2)} 倍に伸ばす</text>
     ${axisX(bot, 0)}
     <polyline points="${curve(f, bot, 0, X)}" fill="none" stroke="${INDIGO}" stroke-width="4.5" stroke-opacity="0.35" />
@@ -4186,7 +4186,7 @@ function memorylessExp(): string {
     <text x="${x1}" y="${bot.y0 + 14}" text-anchor="end" font-size="12.4" fill="${INDIGO}">太い青：最初の曲線</text>
     <text x="${x1}" y="${bot.y0 + 30}" text-anchor="end" font-size="12.4" fill="#b45309">橙：切り出した残り</text>
   </svg>`;
-  const cap = `上は指数分布（λ=1）の密度で、橙の部分が ${s} 分待った後に残る領域です。これを横軸の左端に寄せ、面積が1に戻るよう高さを e^${s} ≈ ${Math.exp(lam * s).toFixed(2)} 倍に伸ばしたのが下の橙の線で、太い青線の最初の曲線とぴったり重なります。待った時間は、この先の待ち時間の分布に影響しないことが、形として見えます。`;
+  const cap = `上は窓口の待ち時間（平均20分）の密度で、橙は ${s * 20} 分待った後に残る部分（面積 ${Math.exp(-lam * s).toFixed(2)}）です。これを左端に寄せ、面積が1になるよう高さを ${Math.exp(lam * s).toFixed(2)} 倍に伸ばすと、下のように最初の曲線とぴったり重なります。`;
   return fig(svg, cap);
 }
 
