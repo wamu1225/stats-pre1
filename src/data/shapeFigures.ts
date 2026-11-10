@@ -4103,6 +4103,29 @@ function correspondenceMap(): string {
   return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表します。原点は全体の平均的な好みです。数値は上の表（240人の架空データ）を特異値分解して計算しました。');
 }
 
+// ── 負の二項分布（1.7b）：表が3回出るまでの1つの並び。最後は必ず表、前の4回に表が2回、待ち回数は幾何分布3つの和 ──
+function negbinStrip(): string {
+  const W = 340, H = 186, seq = [0, 1, 0, 1, 1], x0 = 20, step = 62, bw = 50, y0 = 44, bh = 44;
+  const bx = (i: number) => x0 + i * step;
+  const cx = (i: number) => bx(i) + bw / 2;
+  const boxes = seq.map((h, i) => h
+    ? `<rect x="${bx(i)}" y="${y0}" width="${bw}" height="${bh}" rx="6" fill="${INDIGO}" fill-opacity="0.85" /><text x="${cx(i)}" y="${y0 + 28}" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">表</text>`
+    : `<rect x="${bx(i)}" y="${y0}" width="${bw}" height="${bh}" rx="6" fill="none" stroke="${SLATE}" stroke-width="1.4" /><text x="${cx(i)}" y="${y0 + 28}" text-anchor="middle" font-size="16" fill="${SLATE}">裏</text>`).join('');
+  const nums = seq.map((_, i) => `<text x="${cx(i)}" y="${y0 + bh + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${i + 1}回目</text>`).join('');
+  const groups: [number, number, string][] = [[0, 1, 'X₁ = 2'], [2, 3, 'X₂ = 2'], [4, 4, 'X₃ = 1']];
+  const gy = y0 + bh + 24;
+  const braces = groups.map(([a, b, t]) => `<path d="M${bx(a) + 2},${gy} v6 H${bx(b) + bw - 2} v-6" fill="none" stroke="${AMBER}" stroke-width="1.6" /><text x="${f1((bx(a) + bx(b) + bw) / 2)}" y="${gy + 22}" text-anchor="middle" font-size="12.4" fill="#b45309">${t}</text>`).join('');
+  const svg = `${svgOpen(W, H, 'コインで表が3回出るまで投げ、5回目で終わった並び。最後の5回目は必ず表で、前の4回に表が2回ある。待ち回数は2回・2回・1回に分かれる')}
+    <path d="M${bx(0) + 2},34 v-6 H${bx(3) + bw - 2} v6" fill="none" stroke="${INK}" stroke-width="1.2" />
+    <text x="${f1((bx(0) + bx(3) + bw) / 2)}" y="20" text-anchor="middle" font-size="12.4" fill="${INK}">前の4回に表が2回（₄C₂ = 6 通り）</text>
+    <text x="${cx(4)}" y="20" text-anchor="middle" font-size="12.4" fill="${INK}">必ず表</text>
+    ${boxes}${nums}${braces}
+    <text x="${x0}" y="${H - 22}" font-size="12.4" font-weight="700" fill="${INK}">X = X₁ + X₂ + X₃ = 5 回</text>
+    <text x="${x0}" y="${H - 5}" font-size="12.4" fill="${SLATE}">X₁, X₂, X₃ は互いに独立で、どれも幾何分布</text>
+  </svg>`;
+  return fig(svg, 'コインで表が3回出るまで投げ、5回目で終わった並びの1つです。');
+}
+
 // ── 無記憶性（1.7b 幾何分布・1.8 指数分布）：待った後の残りを切り出して伸ばすと、元の形に重なる ──
 function memorylessGeo(): string {
   const W = 340, H = 316, p = 1 / 6, m = 5, K = 12;
@@ -4907,7 +4930,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-sem-path': semPath,
   'f-mv-choose': mvChoose,
   'f-bayes-spam': bayesSpam, 'f-conjugate-coin': betaUpdate, 'f-shrinkage': shrinkage,
-  'f-memoryless-geo': memorylessGeo,
+  'f-memoryless-geo': memorylessGeo, 'f-negbin-strip': negbinStrip,
   'f-memoryless-cont': memorylessExp,
   'f-em': emResponsibility,
   'f-inverse-cdf': inverseCdf, 'f-rejection': rejectionSampling, 'f-bootstrap': bootstrap,
