@@ -431,7 +431,7 @@ function betaShape(): string {
     <text x="${f1(PX(b, 0.5))}" y="${f1(PY(b, 1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">(2, 2)</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x（割合）／点線 (1, 1) ＝ 一様分布</text>
   </svg>`;
-  const cap = `α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。平均は α/(α+β) で、(2, 5) は 0.29、(5, 2) は 0.71、(2, 2) は 0.5 です。(1, 1) は0〜1のどこも同じ高さの一様分布です。`;
+  const cap = `α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。`;
   return fig(svg, cap);
 }
 
@@ -451,7 +451,7 @@ function lognormalShape(): string {
     <text x="${f1(PX(b, 1.25))}" y="${f1(PY(b, 0.82))}" font-size="12.4" font-weight="700" fill="${TEAL}">σ = 0.5</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の線 ＝ 中央値 1／橙の点線 ＝ 平均（σ = 1）</text>
   </svg>`;
-  const cap = `ln X が平均0の正規分布に従うときの X の分布です。0より大きい値だけをとり、右に長い裾を引きます。σ = 1 では、真ん中の値（中央値）は1なのに、平均は裾に引っ張られて ${f2(mean1)} になります。σ が大きいほど裾は長くなります。`;
+  const cap = `ln X が平均0の正規分布に従うときの X の分布です。0より大きい値だけをとり、右に長い裾を引きます。σ が大きいほど裾は長くなります。`;
   return fig(svg, cap);
 }
 
