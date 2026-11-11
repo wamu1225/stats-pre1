@@ -920,7 +920,6 @@ function transformStrips(): string {
 function covMatrix(): string {
   const W = 344, H = 300;
   const sub = (s: string) => `<tspan baseline-shift="sub" font-size="12.4">${s}</tspan>`;
-  const sup = (s: string) => `<tspan baseline-shift="super" font-size="12.4">${s}</tspan>`;
   const V = '#e0e7ff', C = '#fef3c7';
   const cell = (x: number, y: number, w: number, h: number, fill: string, lines: string[], col: string, fs = 12.4) =>
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${SLATE}" stroke-width="1" />` +
@@ -932,10 +931,10 @@ function covMatrix(): string {
     <text x="${gx + cw * 1.5}" y="${gy - 8}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">列 Y</text>
     <text x="${gx - 8}" y="${gy + ch / 2 + 4.5}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INK}">行 X</text>
     <text x="${gx - 8}" y="${gy + ch * 1.5 + 4.5}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INK}">行 Y</text>
-    ${cell(gx, gy, cw, ch, V, ['X の分散', `σ${sub('X')}${sup('2')}`], INDIGO)}
+    ${cell(gx, gy, cw, ch, V, ['X の分散', `σ${sub('X')}²`], INDIGO)}
     ${cell(gx + cw, gy, cw, ch, C, ['X と Y の共分散', `ρσ${sub('X')}σ${sub('Y')}`], AMBER)}
     ${cell(gx, gy + ch, cw, ch, C, ['Y と X の共分散', `ρσ${sub('X')}σ${sub('Y')}`], AMBER)}
-    ${cell(gx + cw, gy + ch, cw, ch, V, ['Y の分散', `σ${sub('Y')}${sup('2')}`], INDIGO)}
+    ${cell(gx + cw, gy + ch, cw, ch, V, ['Y の分散', `σ${sub('Y')}²`], INDIGO)}
     <text x="${W / 2}" y="${gy + ch * 2 + 20}" text-anchor="middle" font-size="12" fill="${SLATE}">行と列の交わるマスに、その2つの組み合わせの値を書く</text>`;
   // 下：図の2例（分散1なので共分散＝ρ）
   const ey = 214, ew = 52, eh = 30;
@@ -947,7 +946,7 @@ function covMatrix(): string {
     ${top}
     ${ex(40, '左の図（相関0）', '0')}${ex(200, '右の図（相関0.7）', '0.7')}
   </svg>`;
-  const cap = '藍のマス（左上と右下）が分散、橙のマス（右上と左下）が共分散です。最初の散布図の2つは分散がどちらも1なので、共分散は ρ×1×1 で相関係数そのものになります。';
+  const cap = '藍のマス（左上と右下）が分散、橙のマス（右上と左下）が共分散です。最初の散布図の2つは平均がどちらも0、分散がどちらも1なので、共分散は ρ×1×1 で相関係数そのものになります。';
   return fig(svg, cap);
 }
 
@@ -1053,7 +1052,7 @@ function mahalanobis(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の点線の円＝ふつうの距離が P・Q と同じ</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝マハラノビス距離 1・2・3　かっこ内＝その点の値</text>
   </svg>`;
-  const cap = `P と Q は同じ円の上にあり、ふつうの距離はどちらも ${f2(eu)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。円ではなく、点の散らばりに沿った楕円で測るのがマハラノビス距離です。`;
+  const cap = `相関0.7の散らばりで、P と Q は同じ円の上にあり、ふつうの距離はどちらも ${f2(eu)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。`;
   return fig(svg, cap);
 }
 
@@ -1076,7 +1075,9 @@ function linearUV(): string {
   const ellR = (() => { const o: string[] = []; for (let k = 0; k <= 72; k++) { const t = (2 * Math.PI * k) / 72; o.push(`${f1(PX(R, 2 * Math.sqrt(vu) * Math.cos(t)))},${f1(yy(R, 2 * Math.sqrt(vv) * Math.sin(t)))}`); } return o.join(' '); })();
   // 1点を追いかける
   const k = xy.findIndex(([x, y]) => x > 1.1 && x < 1.8 && y > 0.4 && y < 1.2);
-  const [px, py] = xy[k], [pu, pv] = uv[k];
+  // 表示は小数1桁。読者が足し引きして確かめられるよう、丸めた座標から U・V を作る
+  const r1 = (v: number) => Math.round(v * 10) / 10;
+  const px = r1(xy[k][0]), py = r1(xy[k][1]), pu = px + py, pv = px - py;
   const svg = `${svgOpen(W, H, '相関0.7の点を1つずつ U=X+Y、V=X−Y に移すと、右上がりの楕円が横長の楕円になる。楕円は楕円のままで、U と V の相関は0')}
     <text x="${L.x + L.w / 2}" y="${L.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(X, Y)：相関 0.7</text>
     <text x="${R.x + R.w / 2}" y="${R.y - 24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">(U, V) ＝ (X＋Y, X−Y)</text>
@@ -1096,7 +1097,7 @@ function linearUV(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝2σ の等高線（両方とも同じ目盛り）</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右：U の分散 ${f1(vu)}、V の分散 ${f1(vv)}、相関 0</text>
   </svg>`;
-  const cap = `左の点を1つずつ U = X + Y、V = X − Y に移すと右になります。楕円は楕円のまま（多変量正規分布のまま）で、楕円の向きに沿った U と V では相関が0になります。`;
+  const cap = `左の点を1つずつ U = X + Y、V = X − Y に移すと右になります。`;
   return fig(svg, cap);
 }
 
