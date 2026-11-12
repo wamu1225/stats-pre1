@@ -911,7 +911,7 @@ function transformStrips(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">4色の帯は、どれも面積（確率）0.25</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
   </svg>`;
-  const cap = `X の値を4つの範囲に分け、それぞれの範囲の値を2乗した先へ移しました。X がその範囲に入る確率（帯の面積）は0.25のままなので、狭い範囲に移った帯は高く、広い範囲に移った帯は低くなります。`;
+  const cap = `左の同じ色の帯が、2乗した後に移る先です。`;
   return fig(svg, cap);
 }
 
@@ -1216,7 +1216,7 @@ function expSum(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">線分の上では、どの点も密度は e^(−u) で同じ</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">λ = 1 の場合</text>
   </svg>`;
-  const cap = `和が u になる組は線分の上に並び、u が大きいほど線分が長くなります。線分の長さ u と1点の密度 e^(−u) を掛けた u e^(−u) が和の密度です。`;
+  const cap = `和が u になる組は線分の上に並び、u が大きいほど線分が長くなります。`;
   return fig(svg, cap);
 }
 
@@ -1243,7 +1243,7 @@ function shearArea(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">x = v、y = u − v で移す</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">面積：${f2(area(sq))} → ${f2(area(img))}（倍率 ${f1(area(img) / area(sq))}）</text>
   </svg>`;
-  const cap = `正方形は傾いた平行四辺形に変わりますが、面積は同じです。面積の倍率が1なので、密度を補正する必要がなく、ヤコビアン |J| = 1 です。`;
+  const cap = `正方形は傾いた平行四辺形に変わりますが、面積は同じです。`;
   return fig(svg, cap);
 }
 
