@@ -170,7 +170,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(e,52))}" y="${P(H(e,Fe(40))-12)}" font-size="12.4" fill="${O}">20分より長く待つ確率</text>
     <text x="${P(V(e,52))}" y="${P(H(e,Fe(40))+4)}" font-size="12.4" font-weight="700" fill="${O}">＝ 塗った面積 ${F(t)}</text>
     <text x="${e.x+e.w/2}" y="222" text-anchor="middle" font-size="12.4" fill="${M}">横軸 t（次の電話までの待ち時間・分）／高さ ＝ 密度</text>
-  </svg>`,`1時間に平均3件の電話が来る窓口で、次の電話までの待ち時間の分布です。すぐ来ることがいちばん多く、長く待つほど起こりにくくなります。平均は20分ですが、20分より長く待つことも約${Math.round(t*100)}%あります。`)}var Le=e=>t=>Pe*_e(e)(Pe*t);function Re(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:150,yMax:.055},t=[{k:1,c:O,lx:6,ly:.046,t:`1件目（指数分布）`},{k:2,c:k,lx:22,ly:.024,t:`2件目`},{k:3,c:A,lx:62,ly:.0165,t:`3件目`}];return K(`${q(340,226,`ガンマ分布：1件目・2件目・3件目の電話が来るまでの待ち時間。件数が増えるほど山が右へ移り、低く広がる。平均は20分・40分・60分`)}
+  </svg>`,`1時間に平均3件の電話が来る窓口で、次の電話までの待ち時間の分布です。密度は0分で最も高く、待つほど下がります。`)}var Le=e=>t=>Pe*_e(e)(Pe*t);function Re(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:150,yMax:.055},t=[{k:1,c:O,lx:6,ly:.046,t:`1件目（指数分布）`},{k:2,c:k,lx:22,ly:.024,t:`2件目`},{k:3,c:A,lx:62,ly:.0165,t:`3件目`}];return K(`${q(340,226,`ガンマ分布：1件目・2件目・3件目の電話が来るまでの待ち時間。件数が増えるほど山が右へ移り、低く広がる。平均は20分・40分・60分`)}
     ${U(e,[0,30,60,90,120,150])}
     ${t.map(({k:t,c:n})=>W(e,Le(t),n,.01,150,2.2)).join(``)}
     ${t.map(({k:t,c:n})=>`<line x1="${P(V(e,20*t))}" y1="${P(H(e,Le(t)(20*t)))}" x2="${P(V(e,20*t))}" y2="${e.y+e.h}" stroke="${n}" stroke-width="1.2" stroke-dasharray="3 3" />`).join(``)}
@@ -184,7 +184,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(e,.83))}" y="${P(H(e,2.55))}" font-size="12.4" font-weight="700" fill="#b45309">(5, 2)</text>
     <text x="${P(V(e,.5))}" y="${P(H(e,1.62))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${A}">(2, 2)</text>
     <text x="${e.x+e.w/2}" y="222" text-anchor="middle" font-size="12.4" fill="${M}">横軸 x（割合）／点線 (1, 1) ＝ 一様分布</text>
-  </svg>`,`α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。平均は α/(α+β) で、(2, 5) は 0.29、(5, 2) は 0.71、(2, 2) は 0.5 です。(1, 1) は0〜1のどこも同じ高さの一様分布です。`)}function Be(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:5,yMax:.95},t=Math.exp(.5);return K(`${q(340,226,`対数正規分布：0より大きい値だけをとり、右に長い裾を引く。σ=1 では中央値1、平均1.65で、平均が中央値より右にある`)}
+  </svg>`,`α が β より大きいと山は右寄り、小さいと左寄りになり、等しいと真ん中で左右対称になります。`)}function Be(){let e={x:14,y:34,w:316,h:150,xMin:0,xMax:5,yMax:.95},t=Math.exp(.5);return K(`${q(340,226,`対数正規分布：0より大きい値だけをとり、右に長い裾を引く。σ=1 では中央値1、平均1.65で、平均が中央値より右にある`)}
     ${U(e,[0,1,2,3,4,5])}
     ${W(e,ye(.5),A,.01,5,1.8,`5 3`)}
     ${W(e,ye(1),O,.01,5,2.2)}
@@ -194,7 +194,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(e,2.3))}" y="${P(H(e,.22))}" font-size="12.4" font-weight="700" fill="${O}">σ = 1</text>
     <text x="${P(V(e,1.25))}" y="${P(H(e,.82))}" font-size="12.4" font-weight="700" fill="${A}">σ = 0.5</text>
     <text x="${e.x+e.w/2}" y="222" text-anchor="middle" font-size="12.4" fill="${M}">灰の線 ＝ 中央値 1／橙の点線 ＝ 平均（σ = 1）</text>
-  </svg>`,`ln X が平均0の正規分布に従うときの X の分布です。0より大きい値だけをとり、右に長い裾を引きます。σ = 1 では、真ん中の値（中央値）は1なのに、平均は裾に引っ張られて ${F(t)} になります。σ が大きいほど裾は長くなります。`)}function Ve(){let e={x:14,y:34,w:316,h:150,xMin:-6,xMax:6,yMax:.42},t=2*(1-B(3)),n=1-2/Math.PI*Math.atan(3);return K(`${q(340,226,`コーシー分布と標準正規分布：コーシー分布は山が低く裾が重い。3より外に出る確率は正規分布0.27%、コーシー分布20.5%`)}
+  </svg>`,`ln X が平均0の正規分布に従うときの X の分布です。0より大きい値だけをとり、右に長い裾を引きます。σ が大きいほど裾は長くなります。`)}function Ve(){let e={x:14,y:34,w:316,h:150,xMin:-6,xMax:6,yMax:.42},t=2*(1-B(3)),n=1-2/Math.PI*Math.atan(3);return K(`${q(340,226,`コーシー分布と標準正規分布：コーシー分布は山が低く裾が重い。3より外に出る確率は正規分布0.27%、コーシー分布20.5%`)}
     ${U(e,[-6,-3,0,3,6])}
     ${G(e,be,-6,-3,j,.25)}${G(e,be,3,6,j,.25)}
     ${W(e,e=>z(e),O,-6,6,2.2)}${W(e,be,j,-6,6,2.2)}
@@ -215,7 +215,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <line x1="${P(V(e,170-1.96*6))}" y1="${e.y}" x2="${P(V(e,170-1.96*6))}" y2="${e.y+e.h}" stroke="${j}" stroke-width="1.2" stroke-dasharray="3 2" />
     <line x1="${P(V(e,181.76))}" y1="${e.y}" x2="${P(V(e,181.76))}" y2="${e.y+e.h}" stroke="${j}" stroke-width="1.2" stroke-dasharray="3 2" />
     <text x="${e.x+e.w/2}" y="246" text-anchor="middle" font-size="12.4" fill="${M}">身長（cm）。平均 170・標準偏差 6</text>
-  </svg>`,`本文の身長の例（平均 170cm・標準偏差 6cm）を描いたものです。濃い順に、平均から ±1σ（164〜176cm）に ${I(i(1))}、±2σ（158〜182cm）までに ${I(i(2))}、±3σ（152〜188cm）までに ${I(i(3))} が入ります。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`)}function Ue(){let e=z(0,0,4)*1.08,t={x:14,y:40,w:316,h:92,xMin:146,xMax:194,yMax:e},n={x:14,y:198,w:316,h:92,xMin:146,xMax:194,yMax:e},r=[150,160,170,180,190],i=[{m:164,c:A},{m:170,c:O},{m:176,c:k}],a=[{s:4,c:A,lx:158.5,ly:.088,t:`σ = 4`},{s:6,c:O,lx:177.5,ly:.058,t:`σ = 6`},{s:9,c:k,lx:185,ly:.03,t:`σ = 9`}],o=e=>e===k?`#b45309`:e;return K(`${q(344,330,`上は標準偏差6のまま平均を164・170・176と変えた正規分布で、形は同じまま左右に動く。下は平均170のまま標準偏差を4・6・9と変えたもので、大きいほど低く横に広がる`)}
+  </svg>`,`本文の身長の例（平均 170cm・標準偏差 6cm）で、色の濃い順に ±1σ・±2σ・±3σ の範囲です。赤の点線は ±1.96σ で、この内側がちょうど 95% です。どの正規分布も (X − μ)/σ で標準正規分布にそろうので、この割合は平均や標準偏差の値によらず同じです。`)}function Ue(){let e=z(0,0,4)*1.08,t={x:14,y:40,w:316,h:92,xMin:146,xMax:194,yMax:e},n={x:14,y:198,w:316,h:92,xMin:146,xMax:194,yMax:e},r=[150,160,170,180,190],i=[{m:164,c:A},{m:170,c:O},{m:176,c:k}],a=[{s:4,c:A,lx:158.5,ly:.088,t:`σ = 4`},{s:6,c:O,lx:177.5,ly:.058,t:`σ = 6`},{s:9,c:k,lx:185,ly:.03,t:`σ = 9`}],o=e=>e===k?`#b45309`:e;return K(`${q(344,330,`上は標準偏差6のまま平均を164・170・176と変えた正規分布で、形は同じまま左右に動く。下は平均170のまま標準偏差を4・6・9と変えたもので、大きいほど低く横に広がる`)}
     <text x="${t.x}" y="${t.y-22}" font-size="13.2" font-weight="700" fill="${N}">平均を変える（標準偏差は 6）</text>
     ${i.map(({m:e,c:n})=>W(t,t=>z(t,e,6),n)).join(``)}
     ${i.map(({m:e,c:n})=>`<text x="${P(V(t,e))}" y="${P(H(t,z(e,e,6))-5)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${o(n)}">${e}</text>`).join(``)}
@@ -225,7 +225,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${a.map(({c:e,lx:t,ly:r,t:i})=>`<text x="${P(V(n,t))}" y="${P(H(n,r))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${o(e)}">${i}</text>`).join(``)}
     ${U(n,r)}
     <text x="${344/2}" y="326" text-anchor="middle" font-size="12.4" fill="${M}">横軸 身長 cm</text>
-  </svg>`,`上の3本は標準偏差を6cmに固定し、平均だけを164・170・176cmと変えたものです。山の形はまったく同じで、平均の位置へ平行に動きます。下の3本は平均を170cmに固定し、標準偏差を4・6・9cmと変えたものです。標準偏差が大きいほど横に広がり、面積は1のままなので山は低くなります。σ = 4 の山の高さは σ = 9 の${L(9/4)}倍です。`)}function We(){let e=10/6,t=1-B(e),n={x:14,y:40,w:316,h:120,xMin:152,xMax:188,yMax:z(170,170,6)*1.08},r=e=>z(e,170,6),i=n.y+n.h;return K(`${q(344,236,`身長が平均170cm・標準偏差6cmの正規分布で、180cm以上の部分に色を付けた図。下に標準化した Z の目盛りを並べてある`)}
+  </svg>`,`上の3本は標準偏差を6cmに固定し、平均だけを164・170・176cmと変えたものです。下の3本は平均を170cmに固定し、標準偏差を4・6・9cmと変えたものです。面積は1のままなので、σ = 4 の山の高さは σ = 9 の${L(9/4)}倍です。`)}function We(){let e=10/6,t=1-B(e),n={x:14,y:40,w:316,h:120,xMin:152,xMax:188,yMax:z(170,170,6)*1.08},r=e=>z(e,170,6),i=n.y+n.h;return K(`${q(344,236,`身長が平均170cm・標準偏差6cmの正規分布で、180cm以上の部分に色を付けた図。下に標準化した Z の目盛りを並べてある`)}
     ${G(n,r,180,n.xMax,j,.45)}
     ${W(n,r,O)}
     <line x1="${P(V(n,180))}" y1="${n.y-4}" x2="${P(V(n,180))}" y2="${i}" stroke="${j}" stroke-width="1.4" stroke-dasharray="4 3" />
@@ -261,7 +261,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="222" y="26" font-size="12.4" fill="${j}">SD 18点の山（誤り）</text>
     ${U(t,[-40,-20,0,20,40,60,80,100,120,140,160])}
     <text x="${344/2}" y="246" text-anchor="middle" font-size="12.4" fill="${M}">横軸 点数</text>
-  </svg>`,`数学（緑・標準偏差10点）と英語（灰・8点）を足した合計（藍）は、中心が115点、標準偏差は約${P(e)}点です。点差（橙）は中心が5点に動くだけで、幅は合計とまったく同じです。どちらも元の2科目より広がっています。破線は標準偏差どうしを足した18点の山で、実際の合計より明らかに広すぎます。足しても引いても分散は 100 + 64 = 164 で、山の形は正規分布のままです。`)}function qe(){let e={x:14,y:40,w:316,h:168,xMin:29.5,xMax:70.5,yMax:.088},t=J(30,70),n=t.map(e=>me(100,.5,e)),r=H(e,z(55,50,5)),i=t.filter(e=>e>=45&&e<=55).reduce((e,t)=>e+me(100,.5,t),0),a={x:22,y:44,w:92,h:66},o=e=>`<rect x="${e-11}" y="${a.y+20}" width="22" height="${a.h-34}" fill="${M}" fill-opacity="0.6" />`;return K(`${q(344,262,`コインを100回投げたときの表の枚数の確率。0と1の2本の棒しかない1回分の分布から、平均50・標準偏差5の釣鐘形になる`)}
+  </svg>`,`数学（緑・標準偏差10点）と英語（灰・8点）を足した合計（藍）は、中心が115点、標準偏差は約${P(e)}点です。点差（橙）は中心が5点に動くだけで、幅は合計とまったく同じです。どちらも元の2科目より広がっています。破線は標準偏差どうしを足した18点の山で、実際の合計より明らかに広すぎます。`)}function qe(){let e={x:14,y:40,w:316,h:168,xMin:29.5,xMax:70.5,yMax:.088},t=J(30,70),n=t.map(e=>me(100,.5,e)),r=H(e,z(55,50,5)),i=t.filter(e=>e>=45&&e<=55).reduce((e,t)=>e+me(100,.5,t),0),a={x:22,y:44,w:92,h:66},o=e=>`<rect x="${e-11}" y="${a.y+20}" width="22" height="${a.h-34}" fill="${M}" fill-opacity="0.6" />`;return K(`${q(344,262,`コインを100回投げたときの表の枚数の確率。0と1の2本の棒しかない1回分の分布から、平均50・標準偏差5の釣鐘形になる`)}
     ${U(e,[30,40,50,60,70])}
     ${xe(e,t,n,O,.25)}
     ${W(e,e=>z(e,50,5),j,29.5,70.5,2)}
@@ -360,22 +360,22 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${(e.x+e.w+t.x)/2}" y="${e.y+e.h/2+4}" text-anchor="middle" font-size="18" fill="${M}">→</text>
     <text x="${344/2}" y="214" text-anchor="middle" font-size="12.4" fill="${M}">4色の帯は、どれも面積（確率）0.25</text>
     <text x="${344/2}" y="231" text-anchor="middle" font-size="12.4" fill="${M}">右の曲線 ＝ f(y) ＝ 1/(2√y)</text>
-  </svg>`,`X の値を4つの範囲に分け、それぞれの範囲の値を2乗した先へ移しました。X がその範囲に入る確率（帯の面積）は0.25のままなので、狭い範囲に移った帯は高く、広い範囲に移った帯は低くなります。`)}function lt(){let e=e=>`<tspan baseline-shift="sub" font-size="12.4">${e}</tspan>`,t=e=>`<tspan baseline-shift="super" font-size="12.4">${e}</tspan>`,n=`#e0e7ff`,r=`#fef3c7`,i=(e,t,n,r,i,a,o,s=12.4)=>`<rect x="${e}" y="${t}" width="${n}" height="${r}" fill="${i}" stroke="${M}" stroke-width="1" />`+a.map((i,c)=>`<text x="${e+n/2}" y="${P(t+r/2+(c-(a.length-1)/2)*17+4.5)}" text-anchor="middle" font-size="${s}" font-weight="700" fill="${o}">${i}</text>`).join(``),a=`
+  </svg>`,`X の値を4つの範囲に分け、それぞれの範囲の値を2乗した先へ移しました。X がその範囲に入る確率（帯の面積）は0.25のままなので、狭い範囲に移った帯は高く、広い範囲に移った帯は低くなります。`)}function lt(){let e=e=>`<tspan baseline-shift="sub" font-size="12.4">${e}</tspan>`,t=`#e0e7ff`,n=`#fef3c7`,r=(e,t,n,r,i,a,o,s=12.4)=>`<rect x="${e}" y="${t}" width="${n}" height="${r}" fill="${i}" stroke="${M}" stroke-width="1" />`+a.map((i,c)=>`<text x="${e+n/2}" y="${P(t+r/2+(c-(a.length-1)/2)*17+4.5)}" text-anchor="middle" font-size="${s}" font-weight="700" fill="${o}">${i}</text>`).join(``),i=`
     <text x="129" y="28" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">列 X</text>
     <text x="259" y="28" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">列 Y</text>
     <text x="56" y="68.5" text-anchor="end" font-size="12.4" font-weight="700" fill="${N}">行 X</text>
     <text x="56" y="124.5" text-anchor="end" font-size="12.4" font-weight="700" fill="${N}">行 Y</text>
-    ${i(64,36,130,56,n,[`X の分散`,`σ${e(`X`)}${t(`2`)}`],O)}
-    ${i(194,36,130,56,r,[`X と Y の共分散`,`ρσ${e(`X`)}σ${e(`Y`)}`],k)}
-    ${i(64,92,130,56,r,[`Y と X の共分散`,`ρσ${e(`X`)}σ${e(`Y`)}`],k)}
-    ${i(194,92,130,56,n,[`Y の分散`,`σ${e(`Y`)}${t(`2`)}`],O)}
-    <text x="${344/2}" y="168" text-anchor="middle" font-size="12" fill="${M}">行と列の交わるマスに、その2つの組み合わせの値を書く</text>`,o=(e,t,a)=>`
-    <text x="${e+52}" y="204" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">${t}</text>
-    ${i(e,214,52,30,n,[`1`],O,13)}${i(e+52,214,52,30,r,[a],k,13)}
-    ${i(e,244,52,30,r,[a],k,13)}${i(e+52,244,52,30,n,[`1`],O,13)}`;return K(`${q(344,300,`分散共分散行列の並べ方。行と列にXとYを割り当て、対角に分散、右上と左下に共分散を置く。下に相関0と相関0.7の例`)}
-    ${a}
-    ${o(40,`左の図（相関0）`,`0`)}${o(200,`右の図（相関0.7）`,`0.7`)}
-  </svg>`,`藍のマス（左上と右下）が分散、橙のマス（右上と左下）が共分散です。最初の散布図の2つは分散がどちらも1なので、共分散は ρ×1×1 で相関係数そのものになります。`)}function ut(){let e=.5,t={x:36,y:30,w:296,h:186,xMin:152,xMax:188,yMin:41,yMax:89},n=e=>t.x+(e-t.xMin)/(t.xMax-t.xMin)*t.w,r=e=>t.y+t.h-(e-t.yMin)/(t.yMax-t.yMin)*t.h,i=t=>{let i=[];for(let a=0;a<=72;a++){let o=2*Math.PI*a/72,s=t*Math.sqrt(1+e)*Math.cos(o),c=t*Math.sqrt(1-e)*Math.sin(o);i.push(`${P(n(170+6*(s-c)/Math.SQRT2))},${P(r(65+8*(s+c)/Math.SQRT2))}`)}return`<polygon points="${i.join(` `)}" fill="none" stroke="#cbd5e1" stroke-width="1.4" />`},a=t=>65+8/6*e*(t-170),o=8*Math.sqrt(1-e*e),s=(e,i)=>{let s=a(e),c=5/z(s,s,o),l=[];for(let t=0;t<=80;t++){let i=s-2.5*o+5*o*t/80;l.push(`${P(n(e+c*z(i,s,o)))},${P(r(i))}`)}return`<line x1="${P(n(e))}" y1="${t.y}" x2="${P(n(e))}" y2="${t.y+t.h}" stroke="${i}" stroke-width="1.2" stroke-dasharray="4 3" />
+    ${r(64,36,130,56,t,[`X の分散`,`σ${e(`X`)}²`],O)}
+    ${r(194,36,130,56,n,[`X と Y の共分散`,`ρσ${e(`X`)}σ${e(`Y`)}`],k)}
+    ${r(64,92,130,56,n,[`Y と X の共分散`,`ρσ${e(`X`)}σ${e(`Y`)}`],k)}
+    ${r(194,92,130,56,t,[`Y の分散`,`σ${e(`Y`)}²`],O)}
+    <text x="${344/2}" y="168" text-anchor="middle" font-size="12" fill="${M}">行と列の交わるマスに、その2つの組み合わせの値を書く</text>`,a=(e,i,a)=>`
+    <text x="${e+52}" y="204" text-anchor="middle" font-size="12.4" font-weight="700" fill="${N}">${i}</text>
+    ${r(e,214,52,30,t,[`1`],O,13)}${r(e+52,214,52,30,n,[a],k,13)}
+    ${r(e,244,52,30,n,[a],k,13)}${r(e+52,244,52,30,t,[`1`],O,13)}`;return K(`${q(344,300,`分散共分散行列の並べ方。行と列にXとYを割り当て、対角に分散、右上と左下に共分散を置く。下に相関0と相関0.7の例`)}
+    ${i}
+    ${a(40,`左の図（相関0）`,`0`)}${a(200,`右の図（相関0.7）`,`0.7`)}
+  </svg>`,`藍のマス（左上と右下）が分散、橙のマス（右上と左下）が共分散です。最初の散布図の2つは平均がどちらも0、分散がどちらも1なので、共分散は ρ×1×1 で相関係数そのものになります。`)}function ut(){let e=.5,t={x:36,y:30,w:296,h:186,xMin:152,xMax:188,yMin:41,yMax:89},n=e=>t.x+(e-t.xMin)/(t.xMax-t.xMin)*t.w,r=e=>t.y+t.h-(e-t.yMin)/(t.yMax-t.yMin)*t.h,i=t=>{let i=[];for(let a=0;a<=72;a++){let o=2*Math.PI*a/72,s=t*Math.sqrt(1+e)*Math.cos(o),c=t*Math.sqrt(1-e)*Math.sin(o);i.push(`${P(n(170+6*(s-c)/Math.SQRT2))},${P(r(65+8*(s+c)/Math.SQRT2))}`)}return`<polygon points="${i.join(` `)}" fill="none" stroke="#cbd5e1" stroke-width="1.4" />`},a=t=>65+8/6*e*(t-170),o=8*Math.sqrt(1-e*e),s=(e,i)=>{let s=a(e),c=5/z(s,s,o),l=[];for(let t=0;t<=80;t++){let i=s-2.5*o+5*o*t/80;l.push(`${P(n(e+c*z(i,s,o)))},${P(r(i))}`)}return`<line x1="${P(n(e))}" y1="${t.y}" x2="${P(n(e))}" y2="${t.y+t.h}" stroke="${i}" stroke-width="1.2" stroke-dasharray="4 3" />
       <polyline points="${l.join(` `)}" fill="none" stroke="${i}" stroke-width="2" />
       <circle cx="${P(n(e))}" cy="${P(r(s))}" r="3.4" fill="${i}" />`};return K(`${q(344,262,`身長と体重の2変量正規分布。身長を決めると体重は正規分布になり、その中心は右上がりの直線の上にある`)}
     <rect x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" fill="none" stroke="#e2e8f0" />
@@ -408,9 +408,9 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(t,0))}" y="${t.y-6}" text-anchor="middle" font-size="12.4" fill="${M}">Y</text>
     <text x="${344/2}" y="268" text-anchor="middle" font-size="12.4" fill="${M}">灰の点線の円＝ふつうの距離が P・Q と同じ</text>
     <text x="${344/2}" y="285" text-anchor="middle" font-size="12.4" fill="${M}">藍の楕円＝マハラノビス距離 1・2・3　かっこ内＝その点の値</text>
-  </svg>`,`P と Q は同じ円の上にあり、ふつうの距離はどちらも ${F(s)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。円ではなく、点の散らばりに沿った楕円で測るのがマハラノビス距離です。`)}function pt(){let e=.7,t=4.5,n={x:14,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},r={x:186,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},i=(e,n)=>e.y+e.h/2-n/t*(e.h/2),a=et($e(8)),o=Array.from({length:200},()=>{let t=a(),n=a();return[t,e*t+Math.sqrt(1-e*e)*n]}),s=o.map(([e,t])=>[e+t,e-t]),c=e=>Math.abs(e[0])<t&&Math.abs(e[1])<t,l=e=>`<rect x="${e.x}" y="${e.y}" width="${e.w}" height="${e.h}" fill="none" stroke="#e2e8f0" />
+  </svg>`,`相関0.7の散らばりで、P と Q は同じ円の上にあり、ふつうの距離はどちらも ${F(s)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。`)}function pt(){let e=.7,t=4.5,n={x:14,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},r={x:186,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},i=(e,n)=>e.y+e.h/2-n/t*(e.h/2),a=et($e(8)),o=Array.from({length:200},()=>{let t=a(),n=a();return[t,e*t+Math.sqrt(1-e*e)*n]}),s=o.map(([e,t])=>[e+t,e-t]),c=e=>Math.abs(e[0])<t&&Math.abs(e[1])<t,l=e=>`<rect x="${e.x}" y="${e.y}" width="${e.w}" height="${e.h}" fill="none" stroke="#e2e8f0" />
     <line x1="${e.x}" y1="${P(i(e,0))}" x2="${e.x+e.w}" y2="${P(i(e,0))}" stroke="#e2e8f0" />
-    <line x1="${P(V(e,0))}" y1="${e.y}" x2="${P(V(e,0))}" y2="${e.y+e.h}" stroke="#e2e8f0" />`,u=(()=>{let t=[];for(let r=0;r<=72;r++){let a=2*Math.PI*r/72,o=2*Math.sqrt(1+e)*Math.cos(a),s=2*Math.sqrt(1-e)*Math.sin(a);t.push(`${P(V(n,(o-s)/Math.SQRT2))},${P(i(n,(o+s)/Math.SQRT2))}`)}return t.join(` `)})(),d=2+2*e,f=2-2*e,p=(()=>{let e=[];for(let t=0;t<=72;t++){let n=2*Math.PI*t/72;e.push(`${P(V(r,2*Math.sqrt(d)*Math.cos(n)))},${P(i(r,2*Math.sqrt(f)*Math.sin(n)))}`)}return e.join(` `)})(),m=o.findIndex(([e,t])=>e>1.1&&e<1.8&&t>.4&&t<1.2),[h,g]=o[m],[_,ee]=s[m];return K(`${q(344,286,`相関0.7の点を1つずつ U=X+Y、V=X−Y に移すと、右上がりの楕円が横長の楕円になる。楕円は楕円のままで、U と V の相関は0`)}
+    <line x1="${P(V(e,0))}" y1="${e.y}" x2="${P(V(e,0))}" y2="${e.y+e.h}" stroke="#e2e8f0" />`,u=(()=>{let t=[];for(let r=0;r<=72;r++){let a=2*Math.PI*r/72,o=2*Math.sqrt(1+e)*Math.cos(a),s=2*Math.sqrt(1-e)*Math.sin(a);t.push(`${P(V(n,(o-s)/Math.SQRT2))},${P(i(n,(o+s)/Math.SQRT2))}`)}return t.join(` `)})(),d=2+2*e,f=2-2*e,p=(()=>{let e=[];for(let t=0;t<=72;t++){let n=2*Math.PI*t/72;e.push(`${P(V(r,2*Math.sqrt(d)*Math.cos(n)))},${P(i(r,2*Math.sqrt(f)*Math.sin(n)))}`)}return e.join(` `)})(),m=o.findIndex(([e,t])=>e>1.1&&e<1.8&&t>.4&&t<1.2),h=e=>Math.round(e*10)/10,g=h(o[m][0]),_=h(o[m][1]),ee=g+_,te=g-_;return K(`${q(344,286,`相関0.7の点を1つずつ U=X+Y、V=X−Y に移すと、右上がりの楕円が横長の楕円になる。楕円は楕円のままで、U と V の相関は0`)}
     <text x="${n.x+n.w/2}" y="${n.y-24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${N}">(X, Y)：相関 0.7</text>
     <text x="${r.x+r.w/2}" y="${r.y-24}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${N}">(U, V) ＝ (X＋Y, X−Y)</text>
     ${l(n)}${l(r)}
@@ -418,17 +418,17 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${s.filter(c).map(([e,t])=>`<circle cx="${P(V(r,e))}" cy="${P(i(r,t))}" r="1.7" fill="${M}" fill-opacity="0.45" />`).join(``)}
     <polygon points="${u}" fill="none" stroke="${O}" stroke-width="1.6" />
     <polygon points="${p}" fill="none" stroke="${O}" stroke-width="1.6" />
-    <circle cx="${P(V(n,h))}" cy="${P(i(n,g))}" r="4" fill="${j}" />
-    <circle cx="${P(V(r,_))}" cy="${P(i(r,ee))}" r="4" fill="${j}" />
+    <circle cx="${P(V(n,g))}" cy="${P(i(n,_))}" r="4" fill="${j}" />
+    <circle cx="${P(V(r,ee))}" cy="${P(i(r,te))}" r="4" fill="${j}" />
     <text x="${(n.x+n.w+r.x)/2}" y="${n.y+n.h/2+5}" text-anchor="middle" font-size="18" fill="${M}">→</text>
     <text x="${n.x+n.w-2}" y="${P(i(n,0)-4)}" text-anchor="end" font-size="12.4" fill="${M}">X</text>
     <text x="${P(V(n,0)+4)}" y="${n.y+12}" font-size="12.4" fill="${M}">Y</text>
     <text x="${r.x+r.w-2}" y="${P(i(r,0)-4)}" text-anchor="end" font-size="12.4" fill="${M}">U</text>
     <text x="${P(V(r,0)+4)}" y="${r.y+12}" font-size="12.4" fill="${M}">V</text>
-    <text x="${344/2}" y="246" text-anchor="middle" font-size="12.4" fill="${M}">赤い点＝同じ1点（${P(h)}, ${P(g)}）→（${P(_)}, ${P(ee)}）</text>
+    <text x="${344/2}" y="246" text-anchor="middle" font-size="12.4" fill="${M}">赤い点＝同じ1点（${P(g)}, ${P(_)}）→（${P(ee)}, ${P(te)}）</text>
     <text x="${344/2}" y="264" text-anchor="middle" font-size="12.4" fill="${M}">藍の楕円＝2σ の等高線（両方とも同じ目盛り）</text>
     <text x="${344/2}" y="281" text-anchor="middle" font-size="12.4" fill="${M}">右：U の分散 ${P(d)}、V の分散 ${P(f)}、相関 0</text>
-  </svg>`,`左の点を1つずつ U = X + Y、V = X − Y に移すと右になります。楕円は楕円のまま（多変量正規分布のまま）で、楕円の向きに沿った U と V では相関が0になります。`)}function mt(){let e=(e,t,n)=>{let r={x:t,y:40,w:150,h:170,xMin:154,xMax:186,yMin:41,yMax:89},i=e=>r.x+(e-r.xMin)/(r.xMax-r.xMin)*r.w,a=e=>r.y+r.h-(e-r.yMin)/(r.yMax-r.yMin)*r.h,o=t=>65+8/6*e*(t-170),s=8*Math.sqrt(1-e*e),c=3.2/z(0,0,8*Math.sqrt(.75)),l=(e,t)=>{let n=o(e),l=[];for(let t=0;t<=60;t++){let o=n-2.5*s+5*s*t/60;o<r.yMin||o>r.yMax||l.push(`${P(i(e+c*z(o,n,s)))},${P(a(o))}`)}return`<line x1="${P(i(e))}" y1="${r.y}" x2="${P(i(e))}" y2="${r.y+r.h}" stroke="${t}" stroke-width="1" stroke-dasharray="3 3" />
+  </svg>`,`左の点を1つずつ U = X + Y、V = X − Y に移すと右になります。`)}function mt(){let e=(e,t,n)=>{let r={x:t,y:40,w:150,h:170,xMin:154,xMax:186,yMin:41,yMax:89},i=e=>r.x+(e-r.xMin)/(r.xMax-r.xMin)*r.w,a=e=>r.y+r.h-(e-r.yMin)/(r.yMax-r.yMin)*r.h,o=t=>65+8/6*e*(t-170),s=8*Math.sqrt(1-e*e),c=3.2/z(0,0,8*Math.sqrt(.75)),l=(e,t)=>{let n=o(e),l=[];for(let t=0;t<=60;t++){let o=n-2.5*s+5*s*t/60;o<r.yMin||o>r.yMax||l.push(`${P(i(e+c*z(o,n,s)))},${P(a(o))}`)}return`<line x1="${P(i(e))}" y1="${r.y}" x2="${P(i(e))}" y2="${r.y+r.h}" stroke="${t}" stroke-width="1" stroke-dasharray="3 3" />
         <polyline points="${l.join(` `)}" fill="none" stroke="${t}" stroke-width="1.9" />
         <circle cx="${P(i(e))}" cy="${P(a(n))}" r="3" fill="${t}" />`};return`<text x="${r.x+r.w/2}" y="${r.y-22}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${N}">${n}</text>
       <rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" fill="none" stroke="#e2e8f0" />
@@ -1555,20 +1555,20 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${u}${d}${f(r.y0+r.h+15,1,7)}
     <text x="326" y="${r.y0+14}" text-anchor="end" font-size="12.4" fill="${O}">青い枠：最初の分布</text>
     <text x="326" y="${r.y0+30}" text-anchor="end" font-size="12.4" fill="#b45309">橙：切り出した残り</text>
-  </svg>`,`上は、サイコロを振って初めて6が出るまでの回数の分布です。5回目まで外れた場合に残る部分（橙）だけを取り出し、1回目から数え直して高さを ${l.toFixed(2)} 倍に伸ばしたのが下の橙の棒で、青い枠で示した最初の分布にぴったり重なります。何回外れていても、そこから先の待ち方は変わらないことが、形として見えます。`)}function mr(){let e=1.5,t={y0:30,h:96},n={y0:190,h:96},r=e=>34+e/5*292,i=(e,t)=>t.y0+t.h-e/1.05*t.h,a=(e,t,n,a)=>Array.from({length:101},(o,s)=>{let c=n+(a-n)*s/100;return`${P(r(c))},${P(i(e(c),t))}`}).join(` `),o=e=>1*Math.exp(-1*e),s=`${a(o,t,e,5)} ${P(r(5))},${P(t.y0+t.h)} ${P(r(e))},${P(t.y0+t.h)}`,c=t=>o(e+t)*Math.exp(1*e),l=[0,1,2,3,4,5],u=(e,t)=>`<line x1="34" y1="${e.y0+e.h}" x2="326" y2="${e.y0+e.h}" stroke="${M}" />`+l.map(n=>`<text x="${P(r(n))}" y="${e.y0+e.h+15}" text-anchor="middle" font-size="12.4" fill="${M}">${n+t}</text>`).join(``);return K(`${q(340,316,`指数分布の密度。s分待った後の残りの部分だけを切り出して高さを伸ばすと、最初の曲線と同じ形に重なる`)}
-    <text x="34" y="18" font-size="13.2" font-weight="700" fill="${N}">最初から：待ち時間の分布</text>
+  </svg>`,`上は、サイコロを振って初めて6が出るまでの回数の分布です。5回目まで外れた場合に残る部分（橙）だけを取り出し、1回目から数え直して高さを ${l.toFixed(2)} 倍に伸ばしたのが下の橙の棒で、青い枠で示した最初の分布にぴったり重なります。何回外れていても、そこから先の待ち方は変わらないことが、形として見えます。`)}function mr(){let e=1.5,t={y0:30,h:96},n={y0:190,h:96},r=e=>34+e/5*292,i=(e,t)=>t.y0+t.h-e/1.05*t.h,a=(e,t,n,a)=>Array.from({length:101},(o,s)=>{let c=n+(a-n)*s/100;return`${P(r(c))},${P(i(e(c),t))}`}).join(` `),o=e=>1*Math.exp(-1*e),s=`${a(o,t,e,5)} ${P(r(5))},${P(t.y0+t.h)} ${P(r(e))},${P(t.y0+t.h)}`,c=t=>o(e+t)*Math.exp(1*e),l=[0,1,2,3,4,5],u=(e,t)=>`<line x1="34" y1="${e.y0+e.h}" x2="326" y2="${e.y0+e.h}" stroke="${M}" />`+l.map(n=>`<text x="${P(r(n))}" y="${e.y0+e.h+15}" text-anchor="middle" font-size="12.4" fill="${M}">${(n+t)*20}</text>`).join(``);return K(`${q(340,316,`平均20分の指数分布の密度。30分待った後の残りの部分だけを切り出して高さを伸ばすと、最初の曲線と同じ形に重なる`)}
+    <text x="34" y="18" font-size="13.2" font-weight="700" fill="${N}">最初から：次の電話までの待ち時間（分）</text>
     ${u(t,0)}
     <polygon points="${s}" fill="${k}" fill-opacity="0.35" />
     <polyline points="${a(o,t,0,5)}" fill="none" stroke="${O}" stroke-width="2" />
     <line x1="${P(r(e))}" y1="${t.y0}" x2="${P(r(e))}" y2="${t.y0+t.h}" stroke="${k}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="${P(r(e)+6)}" y="${t.y0+14}" font-size="12.4" fill="#b45309">${e} 分待った後に残る部分</text>
+    <text x="${P(r(e)+6)}" y="${t.y0+14}" font-size="12.4" fill="#b45309">${e*20} 分待った後に残る部分</text>
     <text x="34" y="178" font-size="13.2" font-weight="700" fill="${N}">残りを切り出し、高さを ${Math.exp(1*e).toFixed(2)} 倍に伸ばす</text>
     ${u(n,0)}
     <polyline points="${a(o,n,0,5)}" fill="none" stroke="${O}" stroke-width="4.5" stroke-opacity="0.35" />
     <polyline points="${a(c,n,0,5)}" fill="none" stroke="${k}" stroke-width="1.8" />
     <text x="326" y="${n.y0+14}" text-anchor="end" font-size="12.4" fill="${O}">太い青：最初の曲線</text>
     <text x="326" y="${n.y0+30}" text-anchor="end" font-size="12.4" fill="#b45309">橙：切り出した残り</text>
-  </svg>`,`上は指数分布（λ=1）の密度で、橙の部分が ${e} 分待った後に残る領域です。これを横軸の左端に寄せ、面積が1に戻るよう高さを e^${e} ≈ ${Math.exp(1*e).toFixed(2)} 倍に伸ばしたのが下の橙の線で、太い青線の最初の曲線とぴったり重なります。待った時間は、この先の待ち時間の分布に影響しないことが、形として見えます。`)}function hr(){let e=e=>24+(e-124)/72*302,t=(e,t)=>Math.exp(-((e-t)**2)/200),n=e=>164-e*124,r=r=>Array.from({length:73},(i,a)=>{let o=124+a;return`${P(e(o))},${P(n(t(o,r)))}`}).join(` `),i=t(155,150),a=t(155,170),o=i/(i+a);return K(`${q(340,236,`女性の山（平均150）と男性の山（平均170）を同じ軸に描き、身長155cmでの2つの高さの比から、女性である確率0.73を求める`)}
+  </svg>`,`上は窓口の待ち時間（平均20分）の密度で、橙は ${e*20} 分待った後に残る部分（面積 ${Math.exp(-1*e).toFixed(2)}）です。これを左端に寄せ、面積が1になるよう高さを ${Math.exp(1*e).toFixed(2)} 倍に伸ばすと、下のように最初の曲線とぴったり重なります。`)}function hr(){let e=e=>24+(e-124)/72*302,t=(e,t)=>Math.exp(-((e-t)**2)/200),n=e=>164-e*124,r=r=>Array.from({length:73},(i,a)=>{let o=124+a;return`${P(e(o))},${P(n(t(o,r)))}`}).join(` `),i=t(155,150),a=t(155,170),o=i/(i+a);return K(`${q(340,236,`女性の山（平均150）と男性の山（平均170）を同じ軸に描き、身長155cmでの2つの高さの比から、女性である確率0.73を求める`)}
     <line x1="24" y1="164" x2="326" y2="164" stroke="${M}" />
     ${[130,150,170,190].map(t=>`<text x="${P(e(t))}" y="179" text-anchor="middle" font-size="12.4" fill="${M}">${t}</text>`).join(``)}
     <text x="326" y="195" text-anchor="end" font-size="12.4" fill="${M}">身長（cm）</text>
@@ -2636,7 +2636,7 @@ $$\\begin{aligned} &P(X_1=x_1, \\ldots, X_k=x_k) \\\\ &= \\frac{n!}{x_1!\\,x_2!\
 式は、ポアソン分布から次のように作れます。
 
 1. 待ち時間が $t$ より長いのは、長さ $t$ の時間に電話が1件も来ないときです
-2. 単位時間あたりの平均件数を $\\lambda$ とすると、長さ $t$ の時間の件数は平均 $\\lambda t$ のポアソン分布に従います
+2. 単位時間あたりの平均件数を $\\lambda$ とし、どこから測っても、長さ $t$ の時間の件数は平均 $\\lambda t$ のポアソン分布に従うとします
 3. 平均 $m$ のポアソン分布で0件の確率は $e^{-m}$ なので、$P(X > t) = e^{-\\lambda t}$ です
 
 1からこれを引いた $F(t) = 1 - e^{-\\lambda t}$ が累積分布関数で、それを $t$ で微分すると確率密度関数になります。
@@ -2751,11 +2751,11 @@ $$\\begin{aligned} E[X] &= \\frac{\\alpha}{\\alpha+\\beta} \\\\ \\text{Var}(X) &
 
 所得や株価のように、0より大きく、一部がとても大きな値になる量があります。こうした量は、対数 $\\ln X$（$e$ を底とする自然対数。$\\ln X = a$ は $X = e^a$ と同じ）をとると正規分布に近い形になることがよくあります。正規分布は、平均を中心に左右対称な釣鐘形の分布で、[正規分布の性質](/stats-pre1/1.10-normal-dist/)で詳しく学びます。平均 $\\mu$、分散 $\\sigma^2$ の正規分布を $N(\\mu, \\sigma^2)$ と書きます。$\\ln X$ が $N(\\mu, \\sigma^2)$ に従うときの $X$ の分布が**対数正規分布** $\\text{LogN}(\\mu, \\sigma^2)$ です。$\\mu$ と $\\sigma^2$ は、$X$ ではなく $\\ln X$ の平均と分散です。
 
-対数をとると正規分布になる理由は、掛け算にあります。株価が毎日「前の日の何倍か」で動くとすると、$n$ 日後の株価 $X_n$ は、最初の株価 $X_0$ に毎日の倍率 $r_1, r_2, \\ldots$ を掛けたものです。対数をとると、掛け算は足し算に変わります。
+対数をとると正規分布になる理由は、掛け算にあります。株価が毎日「前の日の何倍か」で動き、その倍率が日ごとに独立だとすると、$n$ 日後の株価 $X_n$ は、最初の株価 $X_0$ に毎日の倍率 $r_1, r_2, \\ldots$ を掛けたものです。対数をとると、掛け算は足し算に変わります。
 
 $$\\ln X_n = \\ln X_0 + \\ln r_1 + \\cdots + \\ln r_n$$
 
-独立な量をたくさん足したものは正規分布に近づきます（中心極限定理。[大数の法則と中心極限定理](/stats-pre1/1.11-lln-clt/)で学びます）。なので $\\ln X_n$ は正規分布に近く、$X_n$ は対数正規分布に近くなります。
+独立な量をたくさん足したものは正規分布に近づきます（中心極限定理。[大数の法則と中心極限定理](/stats-pre1/1.11-lln-clt/)で学びます）。そのため $\\ln X_n$ は正規分布に近く、$X_n$ は対数正規分布に近くなります。
 
 [[f-lognormal]]
 
@@ -2789,7 +2789,7 @@ $x$ が大きいところでは、$|x|\\, f(x) = \\dfrac{|x|}{\\pi(1+x^2)}$ は�
 
 そのため、コーシー分布の真ん中を推定するときは、平均ではなく中央値を使います。
 
-コーシー分布は、自由度1の $t$ 分布（[標本分布](/stats-pre1/1.12-sampling/)で学びます）と同じ分布です。また、標準正規分布に従う独立な2つの変数の比 $Z_1 / Z_2$ も、コーシー分布に従います。`,keyFormulas:[{label:`ベータ分布 PDF`,formula:`f(x) = \\dfrac{x^{\\alpha-1}(1-x)^{\\beta-1}}{B(\\alpha,\\beta)}, \\quad 0<x<1`},{label:`ベータ分布の期待値`,formula:`E[X] = \\dfrac{\\alpha}{\\alpha+\\beta}`},{label:`対数正規分布の期待値`,formula:`E[X] = e^{\\mu + \\sigma^2/2}`},{label:`コーシー分布 PDF`,formula:`f(x) = \\dfrac{1}{\\pi(1+x^2)}`}],quiz:[{id:`con1-25`,question:`$\\text{Beta}(3, 7)$ に従う確率変数の期待値はいくらか？`,options:[`0.3`,`0.43`,`0.5`,`0.7`],correctAnswer:0,explanation:`ベータ分布の期待値は $\\alpha/(\\alpha+\\beta)$ なので、$3/(3+7) = 0.3$ です。$3/7 \\approx 0.43$ は分母を $\\beta$ だけにした誤りです。`},{id:`con1-26`,question:`ベータ関数 $B(2, 3)$ の値はいくらか？`,options:[`$1/6$`,`6`,`$1/12$`,`$1/24$`],correctAnswer:2,explanation:`$B(\\alpha, \\beta) = \\Gamma(\\alpha)\\Gamma(\\beta)/\\Gamma(\\alpha+\\beta)$ を使います。$\\Gamma(2) = 1$、$\\Gamma(3) = 2$、$\\Gamma(5) = 24$ なので、$B(2, 3) = 1 \\times 2/24 = 1/12$ です。`},{id:`con1-27`,question:`ベータ分布 $\\text{Beta}(\\alpha, \\beta)$ で、$\\beta$ を変えずに $\\alpha$ を大きくすると、分布の山はどうなるか？`,options:[`0に近い側へ寄る`,`1に近い側へ寄る`,`位置は変わらず、幅だけが広がる`,`0から1の全体で平らになる`],correctAnswer:1,explanation:`密度の分子 $x^{\\alpha-1}(1-x)^{\\beta-1}$ で、$\\alpha$ が大きいほど $x$ の大きい側が持ち上がります。期待値 $\\alpha/(\\alpha+\\beta)$ も大きくなり、山は1に近い側へ寄ります。`},{id:`con1-12`,question:`ベータ分布 $\\text{Beta}(1, 1)$（$\\alpha=\\beta=1$）はどの分布と一致するか？`,options:[`コーシー分布`,`指数分布`,`標準正規分布`,`$[0, 1]$ 上の一様分布`],correctAnswer:3,explanation:`$\\alpha=\\beta=1$ のとき $f(x) = 1/(B(1,1)) = 1$（$0<x<1$）となり、$[0,1]$ 上の一様分布になります。ベータ分布は一様分布を含む広いファミリーで、比率・割合データのモデルに使われます。`},{id:`con1-4`,question:`対数正規分布に従う確率変数 $X$ の特徴として正しいものはどれか？`,options:[`左右対称な分布をする`,`負の値をとることがある`,`$\\ln X$ が正規分布に従う`,`期待値と分散が等しい`],correctAnswer:2,explanation:`対数正規分布の定義は「$\\ln X \\sim N(\\mu, \\sigma^2)$」です。$X$ 自体は必ず正の値をとり、右裾が重い（正の歪度）形になります。株価・所得・企業規模など「掛け算で成長する量」のモデルによく使われます。`},{id:`con1-28`,question:`$\\ln X$ が $N(0, 1)$（平均0、分散1の正規分布）に従うとき、$X$ の中央値と期待値の組み合わせとして正しいものはどれか？`,options:[`中央値1、期待値約1.65`,`中央値約1.65、期待値1`,`中央値も期待値も1`,`中央値0、期待値1`],correctAnswer:0,explanation:`$\\ln X$ の中央値は0なので、$X$ の中央値は $e^0 = 1$ です。期待値は $e^{\\mu + \\sigma^2/2} = e^{0.5} \\approx 1.65$ です。右に長い裾が平均を引っ張るので、期待値は中央値より大きくなります。`},{id:`con1-29`,question:`株価のように「前の日の何倍か」で動く量が、対数正規分布に近くなる理由として最も適切なものはどれか？`,options:[`値が必ず0から1の間に入るから`,`対数をとると倍率の掛け算が足し算になり、中心極限定理で正規分布に近づくから`,`毎日の倍率がすべて等しいから`,`値の期待値が存在しないから`],correctAnswer:1,explanation:`$n$ 日後の値は、最初の値に毎日の倍率を掛けたものです。対数をとると $\\ln X_n = \\ln X_0 + \\ln r_1 + \\cdots + \\ln r_n$ と足し算になり、中心極限定理により $\\ln X_n$ は正規分布に近づきます。そのため $X_n$ は対数正規分布に近くなります。`},{id:`con1-15`,question:`対数正規分布 $X \\sim \\text{LogN}(\\mu, \\sigma^2)$ の期待値はいくらか？`,options:[`$\\mu$`,`$e^\\mu$`,`$e^{\\mu + \\sigma^2/2}$`,`$e^{\\mu - \\sigma^2/2}$`],correctAnswer:2,explanation:`本文の式のとおり $E[X] = e^{\\mu + \\sigma^2/2}$ です。$\\mu = 0$、$\\sigma = 1$ なら $e^{0.5} \\approx 1.65$ でした。$e^{\\mu}$ は中央値（$\\ln X$ の真ん中 $\\mu$ を戻した値）で、右に長い裾が平均を引っ張るぶん、期待値はそれより $e^{\\sigma^2/2}$ 倍大きくなります。$\\mu$ は $X$ ではなく $\\ln X$ の平均です。`},{id:`con1-8`,question:`コーシー分布の特徴として正しいものはどれか？`,options:[`期待値が0で分散が1`,`正規分布より裾が軽い`,`期待値・分散が定義されない（発散する）`,`$t$ 分布の自由度無限大の極限`],correctAnswer:2,explanation:`本文のとおり、密度が $1/x^2$ くらいの速さでしか小さくならず、期待値を計算する積分が無限大になるので、期待値も分散もありません。裾は正規分布よりずっと重く、極端な値がよく出ます。本文の最後にあるとおり、コーシー分布は自由度1の $t$ 分布と同じです。`},{id:`con1-30`,question:`標準コーシー分布に従う独立な $n$ 個の値の標本平均は、どの分布に従うか？`,options:[`$n$ が大きいと $N(0, 1/n)$ に近づく`,`$n$ が大きいと0に収束する`,`自由度 $n$ の $t$ 分布`,`$n$ に関係なく、元と同じ標準コーシー分布`],correctAnswer:3,explanation:`コーシー分布には期待値が無いので、大数の法則も中心極限定理も成り立ちません。$n$ 個の平均は、$n$ をいくら増やしても元と同じコーシー分布に従います。真ん中を推定するときは、平均ではなく中央値を使います。`}]},{id:`1.10-normal-dist`,updatedAt:`2026-10-14`,title:`正規分布の性質`,chapter:4,description:`平均と標準偏差で決まる形、標準化と確率の求め方、和と1次変換をしても正規分布のままである性質、それを示すモーメント母関数（MGF）を学びます。`,content:`💡 **このモジュールで学ぶこと**
+コーシー分布は、自由度1の $t$ 分布（[標本分布](/stats-pre1/1.12-sampling/)で学びます）と同じ分布です。また、標準正規分布に従う独立な2つの変数の比 $Z_1 / Z_2$ も、コーシー分布に従います。`,keyFormulas:[{label:`ベータ分布 PDF`,formula:`f(x) = \\dfrac{x^{\\alpha-1}(1-x)^{\\beta-1}}{B(\\alpha,\\beta)}, \\quad 0<x<1`},{label:`ベータ分布の期待値`,formula:`E[X] = \\dfrac{\\alpha}{\\alpha+\\beta}`},{label:`対数正規分布の期待値`,formula:`E[X] = e^{\\mu + \\sigma^2/2}`},{label:`コーシー分布 PDF`,formula:`f(x) = \\dfrac{1}{\\pi(1+x^2)}`}],quiz:[{id:`con1-25`,question:`$\\text{Beta}(3, 7)$ に従う確率変数の期待値はいくらか？`,options:[`0.3`,`0.43`,`0.5`,`0.7`],correctAnswer:0,explanation:`ベータ分布の期待値は $\\alpha/(\\alpha+\\beta)$ なので、$3/(3+7) = 0.3$ です。$3/7 \\approx 0.43$ は分母を $\\beta$ だけにした誤りです。`},{id:`con1-26`,question:`ベータ関数 $B(2, 3)$ の値はいくらか？`,options:[`$1/6$`,`6`,`$1/12$`,`$1/24$`],correctAnswer:2,explanation:`$B(\\alpha, \\beta) = \\Gamma(\\alpha)\\Gamma(\\beta)/\\Gamma(\\alpha+\\beta)$ を使います。$\\Gamma(2) = 1$、$\\Gamma(3) = 2$、$\\Gamma(5) = 24$ なので、$B(2, 3) = 1 \\times 2/24 = 1/12$ です。`},{id:`con1-27`,question:`ベータ分布 $\\text{Beta}(\\alpha, \\beta)$ で、$\\beta$ を変えずに $\\alpha$ を大きくすると、分布の山はどうなるか？`,options:[`0に近い側へ寄る`,`1に近い側へ寄る`,`位置は変わらず、幅だけが広がる`,`0から1の全体で平らになる`],correctAnswer:1,explanation:`密度の分子 $x^{\\alpha-1}(1-x)^{\\beta-1}$ で、$\\alpha$ が大きいほど $x$ の大きい側が持ち上がります。期待値 $\\alpha/(\\alpha+\\beta)$ も大きくなり、山は1に近い側へ寄ります。`},{id:`con1-12`,question:`ベータ分布 $\\text{Beta}(1, 1)$（$\\alpha=\\beta=1$）はどの分布と一致するか？`,options:[`コーシー分布`,`指数分布`,`標準正規分布`,`一様分布`],correctAnswer:3,explanation:`$\\alpha=\\beta=1$ のとき $f(x) = 1/(B(1,1)) = 1$（$0<x<1$）となり、$[0,1]$ 上の一様分布になります。ベータ分布は一様分布を含む広いファミリーで、比率・割合データのモデルに使われます。`},{id:`con1-4`,question:`対数正規分布に従う確率変数 $X$ の特徴として正しいものはどれか？`,options:[`左右対称な分布をする`,`負の値をとることがある`,`$\\ln X$ が正規分布に従う`,`期待値と分散が等しい`],correctAnswer:2,explanation:`対数正規分布の定義は「$\\ln X \\sim N(\\mu, \\sigma^2)$」です。$X$ 自体は必ず正の値をとり、右裾が重い（正の歪度）形になります。株価・所得・企業規模など「掛け算で成長する量」のモデルによく使われます。`},{id:`con1-28`,question:`$\\ln X$ が $N(0, 1)$（平均0、分散1の正規分布）に従うとき、$X$ の中央値と期待値の組み合わせとして正しいものはどれか？`,options:[`中央値1、期待値約1.65`,`中央値約1.65、期待値1`,`中央値も期待値も1`,`中央値0、期待値1`],correctAnswer:0,explanation:`$\\ln X$ の中央値は0なので、$X$ の中央値は $e^0 = 1$ です。期待値は $e^{\\mu + \\sigma^2/2} = e^{0.5} \\approx 1.65$ です。右に長い裾が平均を引っ張るので、期待値は中央値より大きくなります。`},{id:`con1-29`,question:`株価のように「前の日の何倍か」で動く量が、対数正規分布に近くなる理由として最も適切なものはどれか？`,options:[`値が必ず0から1の間に入るから`,`対数をとると倍率の掛け算が足し算になり、中心極限定理で正規分布に近づくから`,`毎日の倍率がすべて等しいから`,`値の期待値が存在しないから`],correctAnswer:1,explanation:`$n$ 日後の値は、最初の値に毎日の倍率を掛けたものです。対数をとると $\\ln X_n = \\ln X_0 + \\ln r_1 + \\cdots + \\ln r_n$ と足し算になり、中心極限定理により $\\ln X_n$ は正規分布に近づきます。そのため $X_n$ は対数正規分布に近くなります。`},{id:`con1-15`,question:`対数正規分布 $X \\sim \\text{LogN}(\\mu, \\sigma^2)$ の期待値はいくらか？`,options:[`$\\mu$`,`$e^\\mu$`,`$e^{\\mu + \\sigma^2/2}$`,`$e^{\\mu - \\sigma^2/2}$`],correctAnswer:2,explanation:`本文の式のとおり $E[X] = e^{\\mu + \\sigma^2/2}$ です。$\\mu = 0$、$\\sigma = 1$ なら $e^{0.5} \\approx 1.65$ でした。$e^{\\mu}$ は中央値（$\\ln X$ の真ん中 $\\mu$ を戻した値）で、右に長い裾が平均を引っ張るぶん、期待値はそれより $e^{\\sigma^2/2}$ 倍大きくなります。$\\mu$ は $X$ ではなく $\\ln X$ の平均です。`},{id:`con1-8`,question:`コーシー分布の特徴として正しいものはどれか？`,options:[`期待値が0で分散が1`,`正規分布より裾が軽い`,`期待値・分散が定義されない（発散する）`,`$t$ 分布の自由度無限大の極限`],correctAnswer:2,explanation:`本文のとおり、密度が $1/x^2$ くらいの速さでしか小さくならず、期待値を計算する積分が無限大になるので、期待値も分散もありません。裾は正規分布よりずっと重く、極端な値がよく出ます。本文の最後にあるとおり、コーシー分布は自由度1の $t$ 分布と同じです。`},{id:`con1-30`,question:`標準コーシー分布に従う独立な $n$ 個の値の標本平均は、どの分布に従うか？`,options:[`$n$ が大きいと $N(0, 1/n)$ に近づく`,`$n$ が大きいと0に収束する`,`自由度 $n$ の $t$ 分布`,`$n$ に関係なく、元と同じ標準コーシー分布`],correctAnswer:3,explanation:`コーシー分布には期待値が無いので、大数の法則も中心極限定理も成り立ちません。$n$ 個の平均は、$n$ をいくら増やしても元と同じコーシー分布に従います。真ん中を推定するときは、平均ではなく中央値を使います。`}]},{id:`1.10-normal-dist`,updatedAt:`2026-11-12`,title:`正規分布の性質`,chapter:4,description:`平均と標準偏差で決まる形、標準化と確率の求め方、和と1次変換をしても正規分布のままである性質、それを示すモーメント母関数（MGF）を学びます。`,content:`💡 **このモジュールで学ぶこと**
 
 身長や測定の誤差のように、平均のあたりに値が多く集まり、平均から離れるほど少なくなる「鐘の形」の分布は、統計学のあらゆる場面で登場します。なぜ多くのデータが正規分布に近い形になるのか、そして正規分布をどう数式で扱うのかを学びます。
 
@@ -2813,7 +2813,7 @@ $\\mu$（ミュー）は**平均**（分布の中心）、$\\sigma^2$（シグ�
 
 [[f-normal-params]]
 
-多くのデータがこの形に近くなる理由は、**中心極限定理**（次のモジュールで学びます）で説明できます。独立な小さい要因がたくさん足し合わさってできる量は、正規分布に近い形になるからです。
+多くのデータがこの形に近くなる理由は、**中心極限定理**（[大数の法則と中心極限定理](/stats-pre1/1.11-lln-clt/)で学びます）で説明できます。独立な小さい要因がたくさん足し合わさってできる量は、正規分布に近い形になるからです。
 
 $X$ から $Z = (X-\\mu)/\\sigma$ という変換をすると、$Z$ は平均0・分散1の**標準正規分布** $N(0,1)$ に従います（**標準化**）。確率を求めるときはこの変換で標準正規分布表に帰着させるのが基本操作です。
 
@@ -2845,17 +2845,17 @@ $$aX + b \\sim N(a\\mu + b,\\; a^2\\sigma^2)$$
 
 [[f-normal-affine]]
 
-前の節の標準化 $Z = (X - \\mu)/\\sigma$ も、この1次変換の1つです。
+上の標準化 $Z = (X - \\mu)/\\sigma$ も、この1次変換の1つです。
 
 **② 2つを足す（再生性）**
 
 数学の点数が $N(60, 100)$（標準偏差10点）、英語の点数が $N(55, 64)$（標準偏差8点）で、2つが独立だとします。合計点の平均は $60 + 55 = 115$ 点、分散は $100 + 64 = 164$ で、標準偏差は $\\sqrt{164} \\approx 12.8$ 点です。
 
-標準偏差どうしを足した18点にはなりません。18点になるのは、数学で高く出た人が英語でも必ず同じだけ高く出る、完全に連動する場合だけです。独立なら、ずれの一部が打ち消し合うので18点より小さくなります。
+標準偏差どうしを足した18点にはなりません。18点になるのは、英語のずれが数学のずれに必ず同じ向きで比例する（相関係数が1の）場合だけです。独立なら、ずれの一部が打ち消し合うので18点より小さくなります。
 
 $$X + Y \\sim N(\\mu_1 + \\mu_2,\\; \\sigma_1^2 + \\sigma_2^2)$$
 
-同じ種類の分布に従うものを足しても同じ種類の分布になる性質を**再生性**と呼びます。合計点も正規分布なので、例えば合計140.6点以上（平均より標準偏差2つ分上）の割合は約2.3%と、標準正規分布の表から求められます。
+同じ種類の分布に従う独立なものを足しても同じ種類の分布になる性質を**再生性**と呼びます。合計点も正規分布なので、例えば合計140.6点以上（平均より標準偏差2つ分上）の割合は約2.3%と、標準正規分布の表から求められます。
 
 **③ 差をとる**
 
@@ -2895,7 +2895,7 @@ $$\\begin{aligned} M_Z(t) &= \\exp\\!\\left(60t + \\frac{100t^2}{2}\\right) \\\\
 
 🎯 **押さえどころ**：正規分布のMGFの形 $\\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)$ は、正規分布を見分ける目印になります。「このMGFはどの分布か」という識別は、MGFが分布を一意に決めるという性質の典型的な使い方です。
 
-`,keyFormulas:[{label:`正規分布 PDF`,formula:`f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\!\\left(-\\frac{(x-\\mu)^2}{2\\sigma^2}\\right)`},{label:`平均から 1.96 標準偏差の範囲に入る確率`,formula:`\\begin{aligned} &P(\\mu-1.96\\sigma \\le X \\le \\mu+1.96\\sigma) \\\\ &= 0.95 \\end{aligned}`},{label:`MGF（正規分布）`,formula:`M_X(t) = \\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)`}],quiz:[{id:`q1a-1`,question:`身長が $N(170, 6^2)$ に従うとき、180cm以上の人の割合に最も近いものはどれか？（標準正規分布表より $P(Z \\ge 1.67) = 0.0475$）`,options:[`約1%`,`約5%`,`約16%`,`約32%`],correctAnswer:1,explanation:`$Z = (180 - 170)/6 \\approx 1.67$ と標準化すると、$P(X \\ge 180) = P(Z \\ge 1.67) \\approx 0.048$ で約5%です。約16%は $Z \\ge 1$（176cm以上）の割合、約32%は $\\pm 1\\sigma$ の外側（164cm未満と176cm超）を合わせた割合です。`},{id:`q1a-2`,question:`数学の点数 $X \\sim N(60, 100)$ と英語の点数 $Y \\sim N(55, 64)$ が独立のとき、点差 $X - Y$ が従う分布はどれか？`,options:[`$N(5, 36)$`,`$N(5, 164)$`,`$N(115, 164)$`,`$N(5, 4)$`],correctAnswer:1,explanation:`平均は引き算で $60 - 55 = 5$、分散は引かずに足して $100 + 64 = 164$ です。$-Y$ の分散は $(-1)^2 \\times 64 = 64$ なので、引き算でもばらつきは増えます。$N(5, 36)$ は分散を引いた誤り、$N(5, 4)$ は標準偏差を引いた誤り、$N(115, 164)$ は合計点の分布です。`},{id:`q1a-3`,question:`モーメント母関数が $\\exp(\\mu t + \\frac{1}{2}\\sigma^2 t^2)$ で表される分布は？`,options:[`二項分布`,`ポアソン分布`,`指数分布`,`正規分布`],correctAnswer:3,explanation:`正規分布 $N(\\mu, \\sigma^2)$ のMGFは $M_X(t) = \\exp(\\mu t + \\sigma^2 t^2/2)$ です。MGFの形が分布を一意に特定するため、この式を見たら正規分布と識別できます。`},{id:`q1a-4`,question:`$X \\sim N(50, 100)$ のとき、$Y = 2X + 10$ が従う分布はどれか？`,options:[`$N(110, 400)$`,`$N(110, 200)$`,`$N(100, 400)$`,`$N(110, 210)$`],correctAnswer:0,explanation:`平均は $2 \\times 50 + 10 = 110$、分散は $2^2 \\times 100 = 400$ です。足した10は分布を動かすだけで、ばらつきは変えません。$N(110, 200)$ は分散に2をそのまま掛けた誤り、$N(100, 400)$ は平均に10を足し忘れた誤り、$N(110, 210)$ は分散にも10を足した誤りです。`},{id:`q1a-5`,question:`標準正規分布 $N(0,1)$ において $P(-1.96 \\leq Z \\leq 1.96) \\approx$ いくらか？`,options:[`約 $0.683$`,`約 $0.950$`,`約 $0.997$`,`約 $0.500$`],correctAnswer:1,explanation:`$P(-1.96 \\leq Z \\leq 1.96) \\approx 0.950$ です。1.96 は上側の確率が2.5%になる点（上側2.5%点）で、両側の外側を合わせると5%になります。0.954 は $\\pm 2$ の範囲の確率です。$\\pm 1$ は68.3%、$\\pm 2.58$ は99%に対応します。`},{id:`q1a-6`,question:`$X \\sim N(50, 100)$（平均50、分散100）のとき、$P(30 \\leq X \\leq 70)$ はおよそいくらか？`,options:[`約50%`,`約68%`,`約95%`,`約99.7%`],correctAnswer:2,explanation:`$\\sigma=\\sqrt{100}=10$ なので $\\pm 2\\sigma$ の範囲は $50 \\pm 20 = [30, 70]$ です。68-95-99.7ルールより $\\pm 2\\sigma$ には約95.4%が含まれます。`},{id:`q1a-7`,question:`正規分布の再生性として正しいものはどれか？`,options:[`$n$ 乗した変数も正規分布に従う`,`標本平均は必ず正規分布に従う`,`平均と分散を変えても形が変わらない`,`独立な正規分布に従う変数の和も正規分布に従う`],correctAnswer:3,explanation:`$X \\sim N(\\mu_1, \\sigma_1^2)$、$Y \\sim N(\\mu_2, \\sigma_2^2)$ が独立ならば $X+Y \\sim N(\\mu_1+\\mu_2, \\sigma_1^2+\\sigma_2^2)$ となります（再生性）。MGFを使って $M_{X+Y}(t)=M_X(t)M_Y(t)$ で証明できます。`},{id:`q1a-8`,question:`独立な $X \\sim N(60, 100)$ と $Y \\sim N(55, 64)$ の合計 $X + Y$ の標準偏差はおよそいくらか？`,options:[`18`,`164`,`約 12.8`,`約 6.0`],correctAnswer:2,explanation:`独立なら分散が足されて $100 + 64 = 164$、標準偏差は $\\sqrt{164} \\approx 12.8$ です。18 は標準偏差 10 と 8 をそのまま足した誤りで、2つが完全に連動するときにしか成り立ちません。164 は分散のままです。`},{id:`q1a-9`,question:`正規分布 $N(\\mu, \\sigma^2)$ を標準化した $Z = (X-\\mu)/\\sigma$ はどの分布に従うか？`,options:[`$N(0, \\sigma^2)$`,`$N(0, 1)$（標準正規分布）`,`$t$ 分布`,`$N(\\mu, \\sigma^2)$`],correctAnswer:1,explanation:`$Z = (X-\\mu)/\\sigma$ は平均0・分散1の標準正規分布 $N(0,1)$ に従います。この変換を「標準化」と呼び、正規分布表を使うための基本操作です。`},{id:`q1a-10`,question:`確率変数 $X$ のモーメント母関数が $M_X(t) = \\exp(3t + 2t^2)$ のとき、$X$ が従う分布はどれか？`,options:[`$N(3, 2)$`,`$N(2, 3)$`,`$N(3, 4)$`,`$N(3, 16)$`],correctAnswer:2,explanation:`正規分布のMGFは $\\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)$ です。$\\mu = 3$、$\\frac{\\sigma^2}{2} = 2$ より $\\sigma^2 = 4$ なので $N(3, 4)$ です。$t^2$ の係数をそのまま分散と読むと $N(3, 2)$ と誤ります。`}]},{id:`1.9-multivariate`,updatedAt:`2026-10-17`,title:`多変量正規分布：相関をもつ正規分布と条件付き分布`,chapter:4,description:`相関をもつ2つ以上の量をまとめて扱う多変量正規分布を学びます。一方が分かったときのもう一方の分布、合計や差のばらつき、無相関と独立の関係、マハラノビス距離を、図と計算例で。`,content:`💡 **このモジュールで学ぶこと**
+`,keyFormulas:[{label:`正規分布 PDF`,formula:`f(x) = \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp\\!\\left(-\\frac{(x-\\mu)^2}{2\\sigma^2}\\right)`},{label:`平均から 1.96 標準偏差の範囲に入る確率`,formula:`\\begin{aligned} &P(\\mu-1.96\\sigma \\le X \\le \\mu+1.96\\sigma) \\\\ &= 0.95 \\end{aligned}`},{label:`MGF（正規分布）`,formula:`M_X(t) = \\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)`}],quiz:[{id:`q1a-1`,question:`身長が $N(170, 6^2)$ に従うとき、180cm以上の人の割合に最も近いものはどれか？（標準正規分布表より $P(Z \\ge 1.67) = 0.0475$）`,options:[`約1%`,`約5%`,`約16%`,`約32%`],correctAnswer:1,explanation:`$Z = (180 - 170)/6 \\approx 1.67$ と標準化すると、$P(X \\ge 180) = P(Z \\ge 1.67) \\approx 0.048$ で約5%です。約16%は $Z \\ge 1$（176cm以上）の割合、約32%は $\\pm 1\\sigma$ の外側（164cm未満と176cm超）を合わせた割合です。`},{id:`q1a-2`,question:`数学の点数 $X \\sim N(60, 100)$ と英語の点数 $Y \\sim N(55, 64)$ が独立のとき、点差 $X - Y$ が従う分布はどれか？`,options:[`$N(5, 36)$`,`$N(5, 164)$`,`$N(115, 164)$`,`$N(5, 4)$`],correctAnswer:1,explanation:`平均は引き算で $60 - 55 = 5$、分散は引かずに足して $100 + 64 = 164$ です。$-Y$ の分散は $(-1)^2 \\times 64 = 64$ なので、引き算でもばらつきは増えます。$N(5, 36)$ は分散を引いた誤り、$N(5, 4)$ は標準偏差を引いた誤り、$N(115, 164)$ は合計点の分布です。`},{id:`q1a-3`,question:`モーメント母関数が $\\exp(\\mu t + \\frac{1}{2}\\sigma^2 t^2)$ で表される分布は？`,options:[`二項分布`,`ポアソン分布`,`指数分布`,`正規分布`],correctAnswer:3,explanation:`正規分布 $N(\\mu, \\sigma^2)$ のMGFは $M_X(t) = \\exp(\\mu t + \\sigma^2 t^2/2)$ です。MGFの形が分布を一意に特定するため、この式を見たら正規分布と識別できます。`},{id:`q1a-4`,question:`$X \\sim N(50, 100)$ のとき、$Y = 2X + 10$ が従う分布はどれか？`,options:[`$N(110, 400)$`,`$N(110, 200)$`,`$N(100, 400)$`,`$N(110, 210)$`],correctAnswer:0,explanation:`平均は $2 \\times 50 + 10 = 110$、分散は $2^2 \\times 100 = 400$ です。足した10は分布を動かすだけで、ばらつきは変えません。$N(110, 200)$ は分散に2をそのまま掛けた誤り、$N(100, 400)$ は平均に10を足し忘れた誤り、$N(110, 210)$ は分散にも10を足した誤りです。`},{id:`q1a-5`,question:`標準正規分布 $N(0,1)$ において $P(-1.96 \\leq Z \\leq 1.96) \\approx$ いくらか？`,options:[`約 $0.683$`,`約 $0.950$`,`約 $0.997$`,`約 $0.500$`],correctAnswer:1,explanation:`$P(-1.96 \\leq Z \\leq 1.96) \\approx 0.950$ です。1.96 は上側の確率が2.5%になる点（上側2.5%点）で、両側の外側を合わせると5%になります。0.954 は $\\pm 2$ の範囲の確率です。$\\pm 1$ は68.3%、$\\pm 2.58$ は99%に対応します。`},{id:`q1a-6`,question:`$X \\sim N(50, 100)$（平均50、分散100）のとき、$P(30 \\leq X \\leq 70)$ はおよそいくらか？`,options:[`約50%`,`約68%`,`約95%`,`約99.7%`],correctAnswer:2,explanation:`$\\sigma=\\sqrt{100}=10$ なので $\\pm 2\\sigma$ の範囲は $50 \\pm 20 = [30, 70]$ です。68-95-99.7ルールより $\\pm 2\\sigma$ には約95.4%が含まれます。`},{id:`q1a-7`,question:`正規分布の再生性として正しいものはどれか？`,options:[`$n$ 乗した変数も正規分布に従う`,`標本平均は必ず正規分布に従う`,`平均と分散を変えても形が変わらない`,`独立な正規分布に従う変数の和も正規分布に従う`],correctAnswer:3,explanation:`$X \\sim N(\\mu_1, \\sigma_1^2)$、$Y \\sim N(\\mu_2, \\sigma_2^2)$ が独立ならば $X+Y \\sim N(\\mu_1+\\mu_2, \\sigma_1^2+\\sigma_2^2)$ となります（再生性）。MGFを使って $M_{X+Y}(t)=M_X(t)M_Y(t)$ で証明できます。`},{id:`q1a-8`,question:`独立な $X \\sim N(60, 100)$ と $Y \\sim N(55, 64)$ の合計 $X + Y$ の標準偏差はおよそいくらか？`,options:[`18`,`164`,`約 12.8`,`約 6.0`],correctAnswer:2,explanation:`独立なら分散が足されて $100 + 64 = 164$、標準偏差は $\\sqrt{164} \\approx 12.8$ です。18 は標準偏差 10 と 8 をそのまま足した誤りで、2つが完全に連動するときにしか成り立ちません。164 は分散のままです。`},{id:`q1a-9`,question:`正規分布 $N(\\mu, \\sigma^2)$ を標準化した $Z = (X-\\mu)/\\sigma$ はどの分布に従うか？`,options:[`$N(0, \\sigma^2)$`,`$N(0, 1)$（標準正規分布）`,`$t$ 分布`,`$N(\\mu, \\sigma^2)$`],correctAnswer:1,explanation:`$Z = (X-\\mu)/\\sigma$ は平均0・分散1の標準正規分布 $N(0,1)$ に従います。この変換を「標準化」と呼び、正規分布表を使うための基本操作です。`},{id:`q1a-10`,question:`確率変数 $X$ のモーメント母関数が $M_X(t) = \\exp(3t + 2t^2)$ のとき、$X$ が従う分布はどれか？`,options:[`$N(3, 2)$`,`$N(2, 3)$`,`$N(3, 4)$`,`$N(3, 16)$`],correctAnswer:2,explanation:`正規分布のMGFは $\\exp\\!\\left(\\mu t + \\frac{\\sigma^2 t^2}{2}\\right)$ です。$\\mu = 3$、$\\frac{\\sigma^2}{2} = 2$ より $\\sigma^2 = 4$ なので $N(3, 4)$ です。$t^2$ の係数をそのまま分散と読むと $N(3, 2)$ と誤ります。`}]},{id:`1.9-multivariate`,updatedAt:`2026-11-11`,title:`多変量正規分布：相関をもつ正規分布と条件付き分布`,chapter:4,description:`相関をもつ2つ以上の量をまとめて扱う多変量正規分布を学びます。一方が分かったときのもう一方の分布、合計や差のばらつき、無相関と独立の関係、マハラノビス距離を、図と計算例で。`,content:`💡 **このモジュールで学ぶこと**
 
 身長と体重のように、相関をもつ2つ以上の量をまとめて扱う**多変量正規分布**を学びます。読み終えると、次のことができるようになります。
 
@@ -2910,7 +2910,7 @@ $$\\begin{aligned} M_Z(t) &= \\exp\\!\\left(60t + \\frac{100t^2}{2}\\right) \\\\
 
 #### 散らばりは楕円になる
 
-身長が高い人ほど体重も重い傾向があります。2つの量を組で表した分布が**多変量正規分布**（2つなら2変量正規分布）で、点は楕円の形に散らばります。
+身長が高い人ほど体重も重い傾向があります。こうした量の組を表す代表的な分布が**多変量正規分布**（2つなら2変量正規分布）で、点は楕円の形に散らばります。
 
 [[f-bivariate]]
 
@@ -2928,7 +2928,7 @@ $$\\begin{aligned} M_Z(t) &= \\exp\\!\\left(60t + \\frac{100t^2}{2}\\right) \\\\
 
 $$\\Sigma = \\begin{pmatrix} \\sigma_X^2 & \\rho\\sigma_X\\sigma_Y \\\\ \\rho\\sigma_X\\sigma_Y & \\sigma_Y^2 \\end{pmatrix}$$
 
-右上と左下は「$X$ と $Y$」「$Y$ と $X$」で組み合わせの順が違うだけなので、必ず同じ値です。最初の散布図の2つは、平均がどちらも0、分散がどちらも1で、相関だけが違います。
+右上と左下は「$X$ と $Y$」「$Y$ と $X$」で組み合わせの順が違うだけなので、必ず同じ値です。
 
 平均を並べた $\\boldsymbol{\\mu}$（平均ベクトル）と合わせて $N_2(\\boldsymbol{\\mu}, \\Sigma)$ と書きます。変数が $p$ 個なら $\\Sigma$ は $p$ 行 $p$ 列になり、並べ方は同じです（$N_p(\\boldsymbol{\\mu}, \\Sigma)$）。
 
@@ -2984,7 +2984,7 @@ $$\\begin{aligned} E[Y \\mid X = x] &= \\mu_Y + \\rho\\,\\frac{\\sigma_Y}{\\sigm
 
 1. 移した後も楕円で、多変量正規分布のまま
 2. 合計 $U$ は大きく散らばり、差 $V$ は小さく散らばる
-3. $U$ と $V$ の相関は0になる
+3. $U$ と $V$ の相関は0になる（$X$ と $Y$ の分散が等しいため）
 
 #### 合計と差の分散
 
