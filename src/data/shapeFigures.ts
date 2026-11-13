@@ -1268,7 +1268,7 @@ function maxCdf(): string {
     ${axes(b, [0, 0.2, 0.4, 0.6, 0.8, 1])}
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 x／縦軸＝最大値が x 以下になる確率 x^n</text>
   </svg>`;
-  const cap = `最大値が0.8以下になる確率は、1個 ${f2(0.8)}、5個 ${f2(0.8 ** 5)}、20個 ${(0.8 ** 20).toFixed(3)}。個数が増えるほど最大値は1に寄ります。`;
+  const cap = `個数が増えるほど曲線は右下に下がり、最大値は1に寄ります。`;
   return fig(svg, cap);
 }
 
@@ -1288,7 +1288,7 @@ function returnLevel(): string {
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝その年の最大水位（m）</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">ガンベル分布（位置 3m・尺度 0.5m）の例</text>
   </svg>`;
-  const cap = `塗った部分は、その年の最大水位が境目を超える確率で、橙が10%、赤が1%です。毎年1%の確率で超える水位 ${f1(x100)}m を「100年に1度の水位」と呼びます。`;
+  const cap = `塗った部分は、その年の最大水位が境目を超える確率で、橙が10%、赤が1%です。`;
   return fig(svg, cap);
 }
 
@@ -1369,13 +1369,13 @@ function minParts(): string {
     ${[0, 0.5, 1].map((v) => `<text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>
       <line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#eef2f7" />`).join('')}
     ${curve(b, one, INDIGO, 0, 1500, 2.2)}${curve(b, ten, ROSE, 0, 1500, 2.2)}
-    ${[{ t: 100, c: ROSE }, { t: 1000, c: INDIGO }].map(({ t, c }) => `<line x1="${f1(PX(b, t))}" y1="${b.y}" x2="${f1(PX(b, t))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.1" stroke-dasharray="4 3" />`).join('')}
+    ${[{ t: 100, c: ROSE, g: ten }, { t: 1000, c: INDIGO, g: one }].map(({ t, c, g }) => `<line x1="${f1(PX(b, t))}" y1="${f1(PY(b, g(t)))}" x2="${f1(PX(b, t))}" y2="${b.y + b.h}" stroke="${c}" stroke-width="1.1" stroke-dasharray="4 3" />`).join('')}
     ${axes(b, [0, 500, 1000, 1500])}
     <text x="${f1(PX(b, 560))}" y="${f1(PY(b, 0.72))}" font-size="12.4" font-weight="700" fill="${INDIGO}">1個（平均1000時間）</text>
     <text x="${f1(PX(b, 240))}" y="${f1(PY(b, 0.3))}" font-size="12.4" font-weight="700" fill="${ROSE}">10個とも（平均100時間）</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 時間／縦軸＝まだ1個も壊れていない確率</text>
   </svg>`;
-  const cap = `1個なら1000時間後も ${pct(one(1000))} が動いていますが、10個が全部動き続ける確率は300時間で ${pct(ten(300))} まで下がります。最初の故障は、平均100時間でやって来ます。`;
+  const cap = `1個なら1000時間後も ${pct(one(1000))} が動いていますが、10個が全部動き続ける確率は300時間で ${pct(ten(300))} まで下がります。`;
   return fig(svg, cap);
 }
 
