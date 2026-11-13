@@ -87,6 +87,34 @@ const fig = (svg: string, cap: string) => `<figure class="venn-figure">${svg}<fi
 const svgOpen = (W: number, H: number, label: string) => `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}" class="venn-svg">`;
 const range = (a: number, z: number) => Array.from({ length: z - a + 1 }, (_, i) => a + i);
 
+// ---- 図の共通部品（2026-11-13 追加。新しい図はここから組み立てる。型の見本は _pipeline/exemplars/figures.md） ----
+// plane：縦軸に負の値や任意の範囲をとれる座標。X・Y で画面の位置に直し、line で関数の曲線を描く。
+type Plane = { x0: number; y0: number; w: number; h: number; xMin: number; xMax: number; yMin: number; yMax: number };
+function plane(pl: Plane) {
+  const X = (x: number) => pl.x0 + ((x - pl.xMin) / (pl.xMax - pl.xMin)) * pl.w;
+  const Y = (y: number) => pl.y0 + pl.h - ((Math.max(pl.yMin, Math.min(pl.yMax, y)) - pl.yMin) / (pl.yMax - pl.yMin)) * pl.h;
+  const line = (fn: (x: number) => number, color: string, width = 2, a = pl.xMin, z = pl.xMax, dash = '') => {
+    const pts: string[] = [];
+    for (let i = 0; i <= 120; i++) { const x = a + ((z - a) * i) / 120, y = fn(x); if (isFinite(y)) pts.push(`${f1(X(x))},${f1(Y(y))}`); }
+    return `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${width}"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  };
+  // 横軸の線と目盛り。hi に渡した値だけ色を変える（頂上や真の値の位置を示すとき）
+  const xAxis = (ticks: number[], hi?: number, hiColor = ROSE) => `<line x1="${pl.x0}" y1="${pl.y0 + pl.h}" x2="${pl.x0 + pl.w}" y2="${pl.y0 + pl.h}" stroke="${SLATE}" />
+    ${ticks.map((v) => `<text x="${f1(X(v))}" y="${pl.y0 + pl.h + 15}" text-anchor="middle" font-size="12" fill="${v === hi ? hiColor : SLATE}">${v}</text>`).join('')}`;
+  // 縦軸の目盛り（左に数字、grid が true なら薄い横線）
+  const yTicks = (ticks: number[], grid = true) => ticks.map((v) => `<text x="${pl.x0 - 6}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v < 0 ? '−' + -v : v}</text>${grid ? `<line x1="${pl.x0}" y1="${f1(Y(v))}" x2="${pl.x0 + pl.w}" y2="${f1(Y(v))}" stroke="${SLATE}" stroke-opacity="0.18" />` : ''}`).join('');
+  return { X, Y, line, xAxis, yTicks };
+}
+// halo：線や塗りの上に置いても読める文字（白い縁取り）。曲線の近くに置くラベルはこれを使う
+const halo = (x: number, y: number, s: string, color: string, o: { anchor?: 'start' | 'middle' | 'end'; bold?: boolean; size?: number } = {}) =>
+  `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${o.anchor || 'start'}" font-size="${o.size || 12.4}"${o.bold ? ' font-weight="700"' : ''} fill="${color}" stroke="#fff" stroke-width="3" paint-order="stroke">${s}</text>`;
+// footLines：図の下の説明行（横軸・縦軸の意味など）。幅に収まらない行は自動で字を詰めず、止める（切れたまま公開しない）
+function footLines(W: number, H: number, lines: { s: string; color?: string }[]) {
+  const wOf = (s: string) => [...s].reduce((a, c) => a + (/[　-ヿ㐀-鿿！-｠]/.test(c) ? 12.4 : 12.4 * 0.56), 0);
+  for (const l of lines) if (wOf(l.s) > W - 4) throw new Error(`図の下の説明行が幅 ${W} に収まらない：「${l.s}」＝2行に分けるか短くする`);
+  return lines.map((l, i) => `<text x="${W / 2}" y="${H - 6 - (lines.length - 1 - i) * 16}" text-anchor="middle" font-size="12.4" fill="${l.color || SLATE}">${l.s}</text>`).join('');
+}
+
 // ============ 1.4 節1：PMF（サイコロ） ============
 function pmfDice(): string {
   const W = 340, H = 190;
@@ -3337,24 +3365,20 @@ function hypergeo(): string {
 // ============ 1.22 節1：1回分の対数尤度を 7:3 で平均すると山になる ============
 function logLikMix(): string {
   const W = 350, H = 232, p0 = 0.7, BROWN = '#b45309';
-  const x0 = 40, y0 = 22, w = 296, h = 150;
-  const X = (p: number) => x0 + ((p - 0.05) / 0.9) * w, VM = 2.4, Y = (v: number) => y0 + (Math.min(VM, -v) / VM) * h;
-  const path = (fn: (p: number) => number) => Array.from({ length: 91 }, (_, i) => { const p = 0.05 + (0.9 * i) / 90; return `${i ? 'L' : 'M'}${f1(X(p))},${f1(Y(fn(p)))}`; }).join('');
+  const pl = plane({ x0: 40, y0: 22, w: 296, h: 150, xMin: 0.05, xMax: 0.95, yMin: -2.4, yMax: 0 });
   const mix = (p: number) => p0 * Math.log(p) + (1 - p0) * Math.log(1 - p);
   const info = 1 / (p0 * (1 - p0));
   const svg = `${svgOpen(W, H, `コイン1回分の対数尤度。表のときの曲線は右上がり、裏のときは右下がりで、どちらも山になりません。7対3で平均すると 0.7 を頂上とする山になる`)}
-    ${[0, -1, -2].map((v) => `<text x="${x0 - 6}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v === 0 ? '0' : '−' + -v}</text><line x1="${x0}" y1="${f1(Y(v))}" x2="${x0 + w}" y2="${f1(Y(v))}" stroke="${SLATE}" stroke-opacity="0.18" />`).join('')}
-    <line x1="${f1(X(p0))}" y1="${f1(Y(mix(p0)))}" x2="${f1(X(p0))}" y2="${f1(Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <path d="${path(Math.log)}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
-    <path d="${path((p) => Math.log(1 - p))}" fill="none" stroke="${TEAL}" stroke-width="1.6" />
-    <path d="${path(mix)}" fill="none" stroke="${AMBER}" stroke-width="3" />
-    <text x="${f1(X(0.3))}" y="${f1(Y(-1.93))}" font-size="12.4" fill="${INDIGO}">表のとき log p</text>
-    <text x="${f1(X(0.85))}" y="${f1(Y(-2.27))}" text-anchor="end" font-size="12.4" fill="${TEAL}">裏のとき log(1−p)</text>
-    <text x="${f1(X(0.47))}" y="${f1(Y(-1.58))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${BROWN}">0.7×表 ＋ 0.3×裏（太線）</text>
-    ${[0.1, 0.3, 0.5, 0.7, 0.9].map((t) => `<text x="${f1(X(t))}" y="${y0 + h + 15}" text-anchor="middle" font-size="12" fill="${t === p0 ? ROSE : SLATE}">${t}</text>`).join('')}
-    <line x1="${x0}" y1="${y0 + h}" x2="${x0 + w}" y2="${y0 + h}" stroke="${SLATE}" />
-    <text x="${x0 + w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補、縦軸＝1回分の対数尤度</text>
-    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${ROSE}">仮に真の確率が 0.7 なら</text>
+    ${pl.yTicks([0, -1, -2])}
+    <line x1="${f1(pl.X(p0))}" y1="${f1(pl.Y(mix(p0)))}" x2="${f1(pl.X(p0))}" y2="${f1(pl.Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    ${pl.line(Math.log, INDIGO, 1.6)}
+    ${pl.line((p) => Math.log(1 - p), TEAL, 1.6)}
+    ${pl.line(mix, AMBER, 3)}
+    ${halo(pl.X(0.3), pl.Y(-1.93), '表のとき log p', INDIGO)}
+    ${halo(pl.X(0.85), pl.Y(-2.27), '裏のとき log(1−p)', TEAL, { anchor: 'end' })}
+    ${halo(pl.X(0.47), pl.Y(-1.58), '0.7×表 ＋ 0.3×裏（太線）', BROWN, { anchor: 'middle', bold: true })}
+    ${pl.xAxis([0.1, 0.3, 0.5, 0.7, 0.9], p0)}
+    ${footLines(W, H, [{ s: '横軸＝p の候補、縦軸＝1回分の対数尤度' }, { s: '仮に真の確率が 0.7 なら', color: ROSE }])}
   </svg>`;
   const cap = `真の確率が仮に ${p0} なら、コインは表を7割、裏を3割出します。その割合で2本の曲線を平均した太線は ${p0} を頂上とする山になり、頂上での曲がり具合が I(${p0}) = ${f2(info)} です。`;
   return fig(svg, cap);
