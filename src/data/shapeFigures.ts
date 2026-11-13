@@ -3342,7 +3342,7 @@ function logLikMix(): string {
   const path = (fn: (p: number) => number) => Array.from({ length: 91 }, (_, i) => { const p = 0.05 + (0.9 * i) / 90; return `${i ? 'L' : 'M'}${f1(X(p))},${f1(Y(fn(p)))}`; }).join('');
   const mix = (p: number) => p0 * Math.log(p) + (1 - p0) * Math.log(1 - p);
   const info = 1 / (p0 * (1 - p0));
-  const svg = `${svgOpen(W, H, `コイン1回分の対数尤度。表のときの曲線は右上がり、裏のときは右下がりで、どちらも山にならない。7対3で平均すると 0.7 を頂上とする山になる`)}
+  const svg = `${svgOpen(W, H, `コイン1回分の対数尤度。表のときの曲線は右上がり、裏のときは右下がりで、どちらも山になりません。7対3で平均すると 0.7 を頂上とする山になる`)}
     ${[0, -1, -2].map((v) => `<text x="${x0 - 6}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v === 0 ? '0' : '−' + -v}</text><line x1="${x0}" y1="${f1(Y(v))}" x2="${x0 + w}" y2="${f1(Y(v))}" stroke="${SLATE}" stroke-opacity="0.18" />`).join('')}
     <line x1="${f1(X(p0))}" y1="${f1(Y(mix(p0)))}" x2="${f1(X(p0))}" y2="${f1(Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <path d="${path(Math.log)}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
@@ -3376,7 +3376,7 @@ function mleSampling(): string {
       <text x="${b.x + 2}" y="${top + 12}" font-size="12.4" fill="${SLATE}">標準誤差 ${se.toFixed(3)}</text>
       ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])}`;
   };
-  const svg = `${svgOpen(W, H, '真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回ではずれが残り曲線が1の外へはみ出す。100回ではほぼ重なる')}
+  const svg = `${svgOpen(W, H, '真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回ではずれが残り曲線が1の外へはみ出します。100回ではほぼ重なります')}
     ${panel(10, 26, 3.2, '10回：ずれが残り、曲線は1の外へはみ出す')}
     ${panel(100, 156, 10, '100回：棒と曲線がほぼ重なる')}
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
@@ -3392,7 +3392,7 @@ function sqrtNScale(): string {
   const L: Box = { x: 12, y: 46, w: 152, h: 112, xMin: -0.45, xMax: 0.45, yMax: 29 };
   const R: Box = { x: 186, y: 46, w: 152, h: 112, xMin: -1.6, xMax: 1.6, yMax: 1 };
   const sd = (n: number) => Math.sqrt(v / n);
-  const svg = `${svgOpen(W, H, '推定値と真の値の差の分布は、nが10、100、1000と増えると1点に潰れる。ルートn倍すると、nによらず同じ正規分布になる')}
+  const svg = `${svgOpen(W, H, '推定値と真の値の差の分布は、nが10、100、1000と増えると1点に潰れます。ルートn倍すると、nによらず同じ正規分布になる')}
     <text x="${L.x + L.w / 2}" y="14" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">推定値 − 真の値</text>
     <text x="${L.x + L.w / 2}" y="31" text-anchor="middle" font-size="12.4" fill="${SLATE}">n が増えると潰れる</text>
     ${curve(L, (x) => normPdf(x, 0, sd(10)), INDIGO, -0.45, 0.45, 2)}
@@ -3425,7 +3425,7 @@ function logitInterval(): string {
     <line x1="${f1(X(a))}" y1="${yt + 10}" x2="${f1(X(Math.min(z, 1)))}" y2="${yt + 10}" stroke="${col}" stroke-width="6" />
     ${z > 1 ? `<line x1="${f1(X(1))}" y1="${yt + 10}" x2="${f1(X(z))}" y2="${yt + 10}" stroke="${ROSE}" stroke-width="6" />` : ''}
     <circle cx="${f1(X(ph))}" cy="${yt + 10}" r="4.5" fill="#fff" stroke="${INK}" stroke-width="1.6" />`;
-  const svg = `${svgOpen(W, H, '95%区間の比較。10回中9回では、そのまま作った区間は1を超えるが、対数オッズで作って確率に戻した区間は1より下に収まる。100回中70回では2つの区間はほぼ同じ')}
+  const svg = `${svgOpen(W, H, '95%区間の比較。10回中9回では、そのまま作った区間は1を超えるが、対数オッズで作って確率に戻した区間は1より下に収まります。100回中70回では2つの区間はほぼ同じ')}
     <line x1="${f1(X(1))}" y1="6" x2="${f1(X(1))}" y2="168" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="20" y="14" font-size="12.4" font-weight="700" fill="${INK}">10回中9回</text>
     ${row(32, 'そのまま', plain(10, 0.9), 0.9, INDIGO)}
