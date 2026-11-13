@@ -110,7 +110,7 @@ const halo = (x: number, y: number, s: string, color: string, o: { anchor?: 'sta
   `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${o.anchor || 'start'}" font-size="${o.size || 12.4}"${o.bold ? ' font-weight="700"' : ''} fill="${color}" stroke="#fff" stroke-width="3" paint-order="stroke">${s}</text>`;
 // footLines：図の下の説明行（横軸・縦軸の意味など）。幅に収まらない行は自動で字を詰めず、止める（切れたまま公開しない）
 function footLines(W: number, H: number, lines: { s: string; color?: string }[]) {
-  const wOf = (s: string) => [...s].reduce((a, c) => a + (/[　-ヿ㐀-鿿！-｠]/.test(c) ? 12.4 : 12.4 * 0.56), 0);
+  const wOf = (s: string) => [...s].reduce((a, c) => a + (/[\u3000-ヿ㐀-鿿！-｠]/.test(c) ? 12.4 : 12.4 * 0.56), 0);
   for (const l of lines) if (wOf(l.s) > W - 4) throw new Error(`図の下の説明行が幅 ${W} に収まらない：「${l.s}」＝2行に分けるか短くする`);
   return lines.map((l, i) => `<text x="${W / 2}" y="${H - 6 - (lines.length - 1 - i) * 16}" text-anchor="middle" font-size="12.4" fill="${l.color || SLATE}">${l.s}</text>`).join('');
 }
