@@ -407,7 +407,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${t.x+t.w+6}" y="${P(n(0)+4)}" font-size="12.4" fill="${M}">X</text>
     <text x="${P(V(t,0))}" y="${t.y-6}" text-anchor="middle" font-size="12.4" fill="${M}">Y</text>
     <text x="${344/2}" y="268" text-anchor="middle" font-size="12.4" fill="${M}">灰の点線の円＝ふつうの距離が P・Q と同じ</text>
-    <text x="${344/2}" y="285" text-anchor="middle" font-size="12.4" fill="${M}">藍の楕円＝マハラノビス距離 1・2・3　かっこ内＝その点の値</text>
+    <text x="${344/2}" y="285" text-anchor="middle" font-size="12.4" fill="${M}">藍の楕円＝マハラノビス距離 1・2・3（かっこ内は点の値）</text>
   </svg>`,`相関0.7の散らばりで、P と Q は同じ円の上にあり、ふつうの距離はどちらも ${F(s)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。`)}function pt(){let e=.7,t=4.5,n={x:14,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},r={x:186,y:44,w:150,h:150,xMin:-t,xMax:t,yMax:1},i=(e,n)=>e.y+e.h/2-n/t*(e.h/2),a=et($e(8)),o=Array.from({length:200},()=>{let t=a(),n=a();return[t,e*t+Math.sqrt(1-e*e)*n]}),s=o.map(([e,t])=>[e+t,e-t]),c=e=>Math.abs(e[0])<t&&Math.abs(e[1])<t,l=e=>`<rect x="${e.x}" y="${e.y}" width="${e.w}" height="${e.h}" fill="none" stroke="#e2e8f0" />
     <line x1="${e.x}" y1="${P(i(e,0))}" x2="${e.x+e.w}" y2="${P(i(e,0))}" stroke="#e2e8f0" />
     <line x1="${P(V(e,0))}" y1="${e.y}" x2="${P(V(e,0))}" y2="${e.y+e.h}" stroke="#e2e8f0" />`,u=(()=>{let t=[];for(let r=0;r<=72;r++){let a=2*Math.PI*r/72,o=2*Math.sqrt(1+e)*Math.cos(a),s=2*Math.sqrt(1-e)*Math.sin(a);t.push(`${P(V(n,(o-s)/Math.SQRT2))},${P(i(n,(o+s)/Math.SQRT2))}`)}return t.join(` `)})(),d=2+2*e,f=2-2*e,p=(()=>{let e=[];for(let t=0;t<=72;t++){let n=2*Math.PI*t/72;e.push(`${P(V(r,2*Math.sqrt(d)*Math.cos(n)))},${P(i(r,2*Math.sqrt(f)*Math.sin(n)))}`)}return e.join(` `)})(),m=o.findIndex(([e,t])=>e>1.1&&e<1.8&&t>.4&&t<1.2),h=e=>Math.round(e*10)/10,g=h(o[m][0]),_=h(o[m][1]),ee=g+_,te=g-_;return K(`${q(344,286,`相関0.7の点を1つずつ U=X+Y、V=X−Y に移すと、右上がりの楕円が横長の楕円になる。楕円は楕円のままで、U と V の相関は0`)}
@@ -1055,7 +1055,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(e,.7)+4)}" y="${e.y+10}" font-size="12.4" fill="${j}">p̂ = 0.7</text>
     <text x="${P(V(e,.3))}" y="${P(H(e,.62))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${O}">10回中7回</text>
     <text x="${P(V(e,.655))}" y="${P(H(e,.95))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
-    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${M}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
+    <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${M}">横軸＝p の候補、縦軸＝尤度（最大を1にそろえた）</text>
   </svg>`,`10回中7回表なら、山の頂上の p = 0.7 が最尤推定値です。同じ7割でも100回中70回なら、頂上は同じ位置のまま山が鋭くなり、p の候補を狭く絞り込めます。`)}function bn(){let e=[{t:`母集団（母数 θ は未知）`,e:`表の確率 p`,c:M},{t:`標本 X₁, …, Xₙ`,e:`10回投げた結果`,c:A},{t:`推定量 θ̂ ＝ データの関数`,e:`表の割合 X̄`,c:O},{t:`推定値（1つの数）`,e:`0.7`,c:j}];return K(`${q(344,250,`母集団から標本をとり、推定量という関数に入れて、推定値という1つの数を得る流れ。右はコインの例`)}
     <text x="112" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">一般</text>
     <text x="278" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${M}">コインの例</text>
