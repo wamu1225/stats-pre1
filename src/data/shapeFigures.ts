@@ -1050,7 +1050,7 @@ function mahalanobis(): string {
     <text x="${b.x + b.w + 6}" y="${f1(py(0) + 4)}" font-size="12.4" fill="${SLATE}">X</text>
     <text x="${f1(PX(b, 0))}" y="${b.y - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">Y</text>
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">灰の点線の円＝ふつうの距離が P・Q と同じ</text>
-    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝マハラノビス距離 1・2・3　かっこ内＝その点の値</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">藍の楕円＝マハラノビス距離 1・2・3（かっこ内は点の値）</text>
   </svg>`;
   const cap = `相関0.7の散らばりで、P と Q は同じ円の上にあり、ふつうの距離はどちらも ${f2(eu)} です。しかし P のまわりには点が多く、Q のまわりにはほとんどありません。`;
   return fig(svg, cap);
@@ -2615,7 +2615,7 @@ function likelihood(): string {
     <text x="${f1(PX(b, 0.7) + 4)}" y="${b.y + 10}" font-size="12.4" fill="${ROSE}">p̂ = 0.7</text>
     <text x="${f1(PX(b, 0.3))}" y="${f1(PY(b, 0.62))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
     <text x="${f1(PX(b, 0.655))}" y="${f1(PY(b, 0.95))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝表の確率 p の候補／縦軸＝尤度（最大を1にそろえた）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補、縦軸＝尤度（最大を1にそろえた）</text>
   </svg>`;
   const cap = `10回中7回表なら、山の頂上の p = 0.7 が最尤推定値です。同じ7割でも100回中70回なら、頂上は同じ位置のまま山が鋭くなり、p の候補を狭く絞り込めます。`;
   return fig(svg, cap);
