@@ -3344,7 +3344,7 @@ function logLikMix(): string {
   const info = 1 / (p0 * (1 - p0));
   const svg = `${svgOpen(W, H, `コイン1回分の対数尤度。表のときの曲線は右上がり、裏のときは右下がりで、どちらも山にならない。7対3で平均すると 0.7 を頂上とする山になる`)}
     ${[0, -1, -2].map((v) => `<text x="${x0 - 6}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v === 0 ? '0' : '−' + -v}</text><line x1="${x0}" y1="${f1(Y(v))}" x2="${x0 + w}" y2="${f1(Y(v))}" stroke="${SLATE}" stroke-opacity="0.18" />`).join('')}
-    <line x1="${f1(X(p0))}" y1="${y0}" x2="${f1(X(p0))}" y2="${f1(Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <line x1="${f1(X(p0))}" y1="${f1(Y(mix(p0)))}" x2="${f1(X(p0))}" y2="${f1(Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
     <path d="${path(Math.log)}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
     <path d="${path((p) => Math.log(1 - p))}" fill="none" stroke="${TEAL}" stroke-width="1.6" />
     <path d="${path(mix)}" fill="none" stroke="${AMBER}" stroke-width="3" />
@@ -3354,9 +3354,9 @@ function logLikMix(): string {
     ${[0.1, 0.3, 0.5, 0.7, 0.9].map((t) => `<text x="${f1(X(t))}" y="${y0 + h + 15}" text-anchor="middle" font-size="12" fill="${t === p0 ? ROSE : SLATE}">${t}</text>`).join('')}
     <line x1="${x0}" y1="${y0 + h}" x2="${x0 + w}" y2="${y0 + h}" stroke="${SLATE}" />
     <text x="${x0 + w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補、縦軸＝1回分の対数尤度</text>
-    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${ROSE}">真の確率が 0.7 のコイン</text>
+    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${ROSE}">仮に真の確率が 0.7 なら</text>
   </svg>`;
-  const cap = `真の確率が ${p0} のコインは、表を7割、裏を3割出します。その割合で2本の曲線を平均した太線は ${p0} を頂上とする山になり、頂上での曲がり具合が I(${p0}) = ${f2(info)} です。`;
+  const cap = `真の確率が仮に ${p0} なら、コインは表を7割、裏を3割出します。その割合で2本の曲線を平均した太線は ${p0} を頂上とする山になり、頂上での曲がり具合が I(${p0}) = ${f2(info)} です。`;
   return fig(svg, cap);
 }
 
@@ -3368,7 +3368,7 @@ function mleSampling(): string {
     const se = Math.sqrt((p0 * (1 - p0)) / n);
     const fn = (x: number) => normPdf(x, p0, se);
     const bw = Math.max(1.6, ((PX(b, 1 / n) - PX(b, 0)) * 0.8));
-    const ks = range(Math.ceil(0.3 * n), n);
+    const ks = range(Math.ceil(0.34 * n), n);
     const rects = ks.map((k) => { const d = binom(n, p0, k) * n, y = PY(b, d); return `<rect x="${f1(PX(b, k / n) - bw / 2)}" y="${f1(y)}" width="${f1(bw)}" height="${f1(b.y + b.h - y)}" fill="${INDIGO}" fill-opacity="0.45" />`; }).join('');
     return `<text x="${b.x}" y="${top - 8}" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
       ${rects}${area(b, fn, 1, 1.1, ROSE, 0.55)}${curve(b, fn, AMBER, 0.3, 1.1, 2.2)}
@@ -3382,7 +3382,7 @@ function mleSampling(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}"><tspan fill="${INDIGO}">棒</tspan>＝正確な分布、<tspan fill="#b45309">曲線</tspan>＝正規分布での近似</text>
   </svg>`;
-  const cap = `真の確率が ${p0} のコインで同じ実験をくり返したときの、推定値の出方です。回数が増えると、散らばりは狭くなり、形は正規分布に近づきます。`;
+  const cap = `真の確率が ${p0} のコインで同じ実験をくり返したときの、推定値の出方です（コインは二項分布で正確に計算できます）。回数が増えると、散らばりは狭くなり、形は正規分布に近づきます。`;
   return fig(svg, cap);
 }
 
@@ -3467,7 +3467,7 @@ function deltaSlope(): string {
     ${[0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => `<text x="${f1(X(t))}" y="${y0 + h + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
     <text x="${x0 + 8}" y="${y0 + 12}" font-size="12.4" fill="${SLATE}">縦軸＝対数オッズ</text>
     <text x="${x0 + w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
-    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${INK}">横の揺れを仮にどちらも ±${d} とすると</text>
+    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${INK}">横の揺れ（標準誤差）を仮に ±${d} とすると</text>
   </svg>`;
   const cap = `曲線を、その点での接線（点線）で置き換えて考えます。横の揺れが同じでも、接線の傾きが大きい所ほど縦の揺れは大きくなります。`;
   return fig(svg, cap);
@@ -3478,7 +3478,7 @@ function logLikCurvature(): string {
   const b: Box = { x: 30, y: 24, w: 304, h: 144, xMin: 0.4, xMax: 0.95, yMax: 6 };
   const ph = 0.7;
   // 最大値を 0 にそろえた対数尤度 l(p) - l(p̂)。縦軸は上端が 0・下に伸びる値を 6 + l で描く
-  const rel = (n: number) => (p: number) => Math.max(0, 6 + n * (ph * Math.log(p / ph) + (1 - ph) * Math.log((1 - p) / (1 - ph))));
+  const rel = (n: number) => (p: number) => { const v = 6 + n * (ph * Math.log(p / ph) + (1 - ph) * Math.log((1 - p) / (1 - ph))); return v < 0 ? NaN : v; };
   const svg = `${svgOpen(W, H, '対数尤度の曲がり具合：同じ 7 割でも、100回のデータの山は10回のデータの山より鋭く、曲率が10倍になる')}
     ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9])}
     ${curve(b, rel(10), INDIGO, 0.4, 0.95, 2.4)}
@@ -3490,7 +3490,7 @@ function logLikCurvature(): string {
     <text x="${b.x + b.w / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を 0 とし、下は −6 で打ち切り）</text>
   </svg>`;
-  const cap = `同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。頂上での曲がり具合は、回数に比例して 10 倍になります。`;
+  const cap = `同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。山の鋭さは、回数に比例して 10 倍になります。`;
   return fig(svg, cap);
 }
 
