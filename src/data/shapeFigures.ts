@@ -3334,25 +3334,163 @@ function hypergeo(): string {
 }
 
 // ============ 1.22：対数尤度の曲がり具合（フィッシャー情報量） ============
+// ============ 1.22 節1：1回分の対数尤度を 7:3 で平均すると山になる ============
+function logLikMix(): string {
+  const W = 350, H = 232, p0 = 0.7, BROWN = '#b45309';
+  const x0 = 40, y0 = 22, w = 296, h = 150;
+  const X = (p: number) => x0 + ((p - 0.05) / 0.9) * w, VM = 2.4, Y = (v: number) => y0 + (Math.min(VM, -v) / VM) * h;
+  const path = (fn: (p: number) => number) => Array.from({ length: 91 }, (_, i) => { const p = 0.05 + (0.9 * i) / 90; return `${i ? 'L' : 'M'}${f1(X(p))},${f1(Y(fn(p)))}`; }).join('');
+  const mix = (p: number) => p0 * Math.log(p) + (1 - p0) * Math.log(1 - p);
+  const info = 1 / (p0 * (1 - p0));
+  const svg = `${svgOpen(W, H, `コイン1回分の対数尤度。表のときの曲線は右上がり、裏のときは右下がりで、どちらも山にならない。7対3で平均すると 0.7 を頂上とする山になる`)}
+    ${[0, -1, -2].map((v) => `<text x="${x0 - 6}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v === 0 ? '0' : '−' + -v}</text><line x1="${x0}" y1="${f1(Y(v))}" x2="${x0 + w}" y2="${f1(Y(v))}" stroke="${SLATE}" stroke-opacity="0.18" />`).join('')}
+    <line x1="${f1(X(p0))}" y1="${y0}" x2="${f1(X(p0))}" y2="${f1(Y(-1.2))}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <path d="${path(Math.log)}" fill="none" stroke="${INDIGO}" stroke-width="1.6" />
+    <path d="${path((p) => Math.log(1 - p))}" fill="none" stroke="${TEAL}" stroke-width="1.6" />
+    <path d="${path(mix)}" fill="none" stroke="${AMBER}" stroke-width="3" />
+    <text x="${f1(X(0.3))}" y="${f1(Y(-1.93))}" font-size="12.4" fill="${INDIGO}">表のとき log p</text>
+    <text x="${f1(X(0.85))}" y="${f1(Y(-2.27))}" text-anchor="end" font-size="12.4" fill="${TEAL}">裏のとき log(1−p)</text>
+    <text x="${f1(X(0.47))}" y="${f1(Y(-1.58))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${BROWN}">0.7×表 ＋ 0.3×裏（太線）</text>
+    ${[0.1, 0.3, 0.5, 0.7, 0.9].map((t) => `<text x="${f1(X(t))}" y="${y0 + h + 15}" text-anchor="middle" font-size="12" fill="${t === p0 ? ROSE : SLATE}">${t}</text>`).join('')}
+    <line x1="${x0}" y1="${y0 + h}" x2="${x0 + w}" y2="${y0 + h}" stroke="${SLATE}" />
+    <text x="${x0 + w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補、縦軸＝1回分の対数尤度</text>
+    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${ROSE}">真の確率が 0.7 のコイン</text>
+  </svg>`;
+  const cap = `真の確率が ${p0} のコインは、表を7割、裏を3割出します。その割合で2本の曲線を平均した太線は ${p0} を頂上とする山になり、頂上での曲がり具合が I(${p0}) = ${f2(info)} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.22 節2：推定値の散らばり（正確な分布と正規近似） ============
+function mleSampling(): string {
+  const W = 350, H = 296, p0 = 0.7;
+  const panel = (n: number, top: number, yMax: number, title: string) => {
+    const b: Box = { x: 14, y: top, w: 322, h: 84, xMin: 0.3, xMax: 1.1, yMax };
+    const se = Math.sqrt((p0 * (1 - p0)) / n);
+    const fn = (x: number) => normPdf(x, p0, se);
+    const bw = Math.max(1.6, ((PX(b, 1 / n) - PX(b, 0)) * 0.8));
+    const ks = range(Math.ceil(0.3 * n), n);
+    const rects = ks.map((k) => { const d = binom(n, p0, k) * n, y = PY(b, d); return `<rect x="${f1(PX(b, k / n) - bw / 2)}" y="${f1(y)}" width="${f1(bw)}" height="${f1(b.y + b.h - y)}" fill="${INDIGO}" fill-opacity="0.45" />`; }).join('');
+    return `<text x="${b.x}" y="${top - 8}" font-size="12.4" font-weight="700" fill="${INK}">${title}</text>
+      ${rects}${area(b, fn, 1, 1.1, ROSE, 0.55)}${curve(b, fn, AMBER, 0.3, 1.1, 2.2)}
+      <line x1="${f1(PX(b, 1))}" y1="${top}" x2="${f1(PX(b, 1))}" y2="${top + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+      <text x="${b.x + 2}" y="${top + 12}" font-size="12.4" fill="${SLATE}">標準誤差 ${se.toFixed(3)}</text>
+      ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])}`;
+  };
+  const svg = `${svgOpen(W, H, '真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回ではずれが残り曲線が1の外へはみ出す。100回ではほぼ重なる')}
+    ${panel(10, 26, 3.2, '10回：ずれが残り、曲線は1の外へはみ出す')}
+    ${panel(100, 156, 10, '100回：棒と曲線がほぼ重なる')}
+    <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}"><tspan fill="${INDIGO}">棒</tspan>＝正確な分布、<tspan fill="#b45309">曲線</tspan>＝正規分布での近似</text>
+  </svg>`;
+  const cap = `真の確率が ${p0} のコインで同じ実験をくり返したときの、推定値の出方です。回数が増えると、散らばりは狭くなり、形は正規分布に近づきます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.22 節2：√n を掛ける理由 ============
+function sqrtNScale(): string {
+  const W = 350, H = 206, v = 0.21;
+  const L: Box = { x: 12, y: 46, w: 152, h: 112, xMin: -0.45, xMax: 0.45, yMax: 29 };
+  const R: Box = { x: 186, y: 46, w: 152, h: 112, xMin: -1.6, xMax: 1.6, yMax: 1 };
+  const sd = (n: number) => Math.sqrt(v / n);
+  const svg = `${svgOpen(W, H, '推定値と真の値の差の分布は、nが10、100、1000と増えると1点に潰れる。ルートn倍すると、nによらず同じ正規分布になる')}
+    <text x="${L.x + L.w / 2}" y="14" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">推定値 − 真の値</text>
+    <text x="${L.x + L.w / 2}" y="31" text-anchor="middle" font-size="12.4" fill="${SLATE}">n が増えると潰れる</text>
+    ${curve(L, (x) => normPdf(x, 0, sd(10)), INDIGO, -0.45, 0.45, 2)}
+    ${curve(L, (x) => normPdf(x, 0, sd(100)), AMBER, -0.45, 0.45, 2)}
+    ${curve(L, (x) => normPdf(x, 0, sd(1000)), ROSE, -0.2, 0.2, 2)}
+    <text x="${f1(PX(L, 0.04))}" y="${L.y + 12}" font-size="12.4" fill="${ROSE}">n＝1000</text>
+    <text x="${f1(PX(L, 0.08))}" y="${f1(PY(L, 7.5))}" font-size="12.4" fill="#b45309">100</text>
+    <text x="${f1(PX(L, 0.2))}" y="${f1(PY(L, 3.2))}" font-size="12.4" fill="${INDIGO}">10</text>
+    ${axes(L, [-0.4, 0, 0.4])}
+    <text x="${R.x + R.w / 2}" y="14" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">√n ×（推定値 − 真の値）</text>
+    <text x="${R.x + R.w / 2}" y="31" text-anchor="middle" font-size="12.4" fill="${SLATE}">n が大きければ同じ形</text>
+    ${area(R, (x) => normPdf(x, 0, Math.sqrt(v)), -1.6, 1.6, TEAL, 0.15)}
+    ${curve(R, (x) => normPdf(x, 0, Math.sqrt(v)), TEAL, -1.6, 1.6, 2.4)}
+    ${axes(R, [-1, 0, 1])}
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">コイン（p＝0.7）の例。右は N(0, ${v})、${v}＝1/I(0.7)</text>
+  </svg>`;
+  const cap = `左は n を増やすほど幅が 1/√n に縮みます。√n 倍に引き伸ばすと縮みが打ち消され、右のように n を含まない1つの分布で書けます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.22 節3：そのままの区間と、対数オッズで作って戻した区間 ============
+function logitInterval(): string {
+  const W = 350, H = 196;
+  const X = (p: number) => 20 + ((p - 0.4) / 0.75) * 316;
+  const logit = (p: number) => Math.log(p / (1 - p)), inv = (t: number) => 1 / (1 + Math.exp(-t));
+  const plain = (n: number, ph: number) => { const se = Math.sqrt((ph * (1 - ph)) / n); return [ph - 1.96 * se, ph + 1.96 * se]; };
+  const viaLogit = (n: number, ph: number) => { const se = 1 / Math.sqrt(n * ph * (1 - ph)); return [inv(logit(ph) - 1.96 * se), inv(logit(ph) + 1.96 * se)]; };
+  const row = (yt: number, label: string, [a, z]: number[], ph: number, col: string) => `
+    <text x="20" y="${yt}" font-size="12.4" fill="${col}">${label} ${f2(a)}〜${f2(z)}</text>
+    <line x1="${f1(X(a))}" y1="${yt + 10}" x2="${f1(X(Math.min(z, 1)))}" y2="${yt + 10}" stroke="${col}" stroke-width="6" />
+    ${z > 1 ? `<line x1="${f1(X(1))}" y1="${yt + 10}" x2="${f1(X(z))}" y2="${yt + 10}" stroke="${ROSE}" stroke-width="6" />` : ''}
+    <circle cx="${f1(X(ph))}" cy="${yt + 10}" r="4.5" fill="#fff" stroke="${INK}" stroke-width="1.6" />`;
+  const svg = `${svgOpen(W, H, '95%区間の比較。10回中9回では、そのまま作った区間は1を超えるが、対数オッズで作って確率に戻した区間は1より下に収まる。100回中70回では2つの区間はほぼ同じ')}
+    <line x1="${f1(X(1))}" y1="6" x2="${f1(X(1))}" y2="168" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
+    <text x="20" y="14" font-size="12.4" font-weight="700" fill="${INK}">10回中9回</text>
+    ${row(32, 'そのまま', plain(10, 0.9), 0.9, INDIGO)}
+    ${row(60, '対数オッズで作って戻す', viaLogit(10, 0.9), 0.9, TEAL)}
+    <text x="20" y="98" font-size="12.4" font-weight="700" fill="${INK}">100回中70回</text>
+    ${row(116, 'そのまま', plain(100, 0.7), 0.7, INDIGO)}
+    ${row(144, '対数オッズで作って戻す', viaLogit(100, 0.7), 0.7, TEAL)}
+    <line x1="20" y1="168" x2="336" y2="168" stroke="${SLATE}" />
+    ${[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => `<text x="${f1(X(t))}" y="183" text-anchor="middle" font-size="12" fill="${t === 1 ? ROSE : SLATE}">${t}</text>`).join('')}
+  </svg>`;
+  const cap = `白丸が推定値、帯が95%区間です。対数オッズで作って戻した区間は、推定値の左右で長さが違い、1に近い側が短くなります。100回では、2つの区間はほぼ同じです。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.22 節3：デルタ法（同じ横の揺れが、傾きの分だけ縦に伸びる） ============
+function deltaSlope(): string {
+  const W = 350, H = 282, d = 0.03;
+  const x0 = 52, y0 = 14, w = 284, h = 212, pMin = 0.45, pMax = 1, vMin = -0.3, vMax = 3.6;
+  const X = (p: number) => x0 + ((p - pMin) / (pMax - pMin)) * w, Y = (v: number) => y0 + h - ((v - vMin) / (vMax - vMin)) * h;
+  const g = (p: number) => Math.log(p / (1 - p)), slope = (p: number) => 1 / (p * (1 - p));
+  const path = Array.from({ length: 101 }, (_, i) => { const p = pMin + ((0.972 - pMin) * i) / 100; return `${i ? 'L' : 'M'}${f1(X(p))},${f1(Y(g(p)))}`; }).join('');
+  const one = (p: number, col: string, dark: string, lx: number, ly: number, anchor: string) => {
+    const s = slope(p), dv = s * d, t = 0.075;
+    return `<rect x="${f1(X(p - d))}" y="${f1(Y(g(p)))}" width="${f1(X(p + d) - X(p - d))}" height="${f1(y0 + h - Y(g(p)))}" fill="${col}" fill-opacity="0.16" />
+      <rect x="${x0}" y="${f1(Y(g(p) + dv))}" width="${f1(X(p) - x0)}" height="${f1(Y(g(p) - dv) - Y(g(p) + dv))}" fill="${col}" fill-opacity="0.16" />
+      <line x1="${f1(X(p - t))}" y1="${f1(Y(g(p) - s * t))}" x2="${f1(X(p + t))}" y2="${f1(Y(g(p) + s * t))}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="5 3" />
+      <line x1="${f1(X(p - d))}" y1="${y0 + h}" x2="${f1(X(p + d))}" y2="${y0 + h}" stroke="${col}" stroke-width="6" />
+      <line x1="${x0}" y1="${f1(Y(g(p) - dv))}" x2="${x0}" y2="${f1(Y(g(p) + dv))}" stroke="${col}" stroke-width="6" />
+      <circle cx="${f1(X(p))}" cy="${f1(Y(g(p)))}" r="3.6" fill="${dark}" />
+      <text x="${x0 + 8}" y="${f1(Y(g(p)) + 4)}" font-size="12.4" font-weight="700" fill="${dark}">縦の揺れ ±${f2(dv)}</text>
+      <text x="${f1(X(lx))}" y="${f1(Y(ly))}" text-anchor="${anchor}" font-size="12.4" font-weight="700" fill="${dark}">傾き ${f1(s)}</text>`;
+  };
+  const svg = `${svgOpen(W, H, `対数オッズの曲線と接線。横に同じ ±${d} 揺れても、傾き 4.8 の 0.7 では縦に ±0.14、傾き 11.1 の 0.9 では縦に ±0.33 揺れる`)}
+    ${[0, 1, 2, 3].map((v) => `<text x="${x0 - 8}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
+    ${one(0.7, INDIGO, INDIGO, 0.745, 0.5, 'start')}
+    ${one(0.9, AMBER, '#b45309', 0.885, 2.78, 'end')}
+    <path d="${path}" fill="none" stroke="${INK}" stroke-width="2.2" />
+    <line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0 + h}" stroke="${SLATE}" /><line x1="${x0}" y1="${y0 + h}" x2="${x0 + w}" y2="${y0 + h}" stroke="${SLATE}" />
+    ${[0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => `<text x="${f1(X(t))}" y="${y0 + h + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
+    <text x="${x0 + 8}" y="${y0 + 12}" font-size="12.4" fill="${SLATE}">縦軸＝対数オッズ</text>
+    <text x="${x0 + w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
+    <text x="${x0 + w / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${INK}">横の揺れを仮にどちらも ±${d} とすると</text>
+  </svg>`;
+  const cap = `曲線を、その点での接線（点線）で置き換えて考えます。横の揺れが同じでも、接線の傾きが大きい所ほど縦の揺れは大きくなります。`;
+  return fig(svg, cap);
+}
+
 function logLikCurvature(): string {
   const W = 350, H = 236;
   const b: Box = { x: 30, y: 24, w: 304, h: 144, xMin: 0.4, xMax: 0.95, yMax: 6 };
   const ph = 0.7;
   // 最大値を 0 にそろえた対数尤度 l(p) - l(p̂)。縦軸は上端が 0・下に伸びる値を 6 + l で描く
   const rel = (n: number) => (p: number) => Math.max(0, 6 + n * (ph * Math.log(p / ph) + (1 - ph) * Math.log((1 - p) / (1 - ph))));
-  const curv = (n: number) => n / (ph * (1 - ph));
   const svg = `${svgOpen(W, H, '対数尤度の曲がり具合：同じ 7 割でも、100回のデータの山は10回のデータの山より鋭く、曲率が10倍になる')}
     ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9])}
     ${curve(b, rel(10), INDIGO, 0.4, 0.95, 2.4)}
     ${curve(b, rel(100), AMBER, 0.4, 0.95, 2.4)}
     <line x1="${f1(PX(b, ph))}" y1="${b.y}" x2="${f1(PX(b, ph))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${f1(PX(b, ph) + 5)}" y="${b.y + 12}" font-size="12.4" fill="${ROSE}">頂上 ${ph}</text>
-    <text x="${f1(PX(b, 0.41))}" y="${f1(PY(b, 5.4))}" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
-    <text x="${f1(PX(b, 0.69))}" y="${f1(PY(b, 1.0))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
+    <text x="${f1(PX(b, ph) + 5)}" y="${f1(PY(b, 0.35))}" font-size="12.4" fill="${ROSE}">頂上 ${ph}</text>
+    <text x="${f1(PX(b, 0.41))}" y="${b.y + 3}" font-size="13.2" font-weight="700" fill="${INDIGO}">10回中7回</text>
+    <text x="${f1(PX(b, 0.55))}" y="${f1(PY(b, 2.0))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
     <text x="${b.x + b.w / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を 0 とし、下は −6 で打ち切り）</text>
   </svg>`;
-  const cap = `同じ「表が7割」のデータでも、回数で山の鋭さが変わります。対数尤度は頂上付近で放物線に近く、その<strong>曲がり具合（頂上での曲率）</strong>が、実測データで見た情報量です。ここでは 10回で ${f1(curv(10))}、100回で ${f1(curv(100))} と、観測数に比例して 10 倍になります。山が鋭いほど、頂上から少し p をずらしただけで尤度が急に下がるので、頂上の位置を狭い範囲に絞り込めます。観測1回あたりでは ${f1(curv(1))} で、これが 1 回分のフィッシャー情報量 I(p) = 1/(p(1−p)) にあたります。`;
+  const cap = `同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。頂上での曲がり具合は、回数に比例して 10 倍になります。`;
   return fig(svg, cap);
 }
 
@@ -4919,7 +5057,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-markov-converge': markovConverge, 'f-markov-fail': markovFail, 'f-random-walk': randomWalkPaths,
   'f-km': kaplanMeier, 'f-hazard-shapes': hazardShapes, 'f-cox-ph': coxPH, 'f-fisher-exact': fisherExact, 'f-cond-indep': condIndep,
   'f-montecarlo': monteCarloPi,
-  'f-loglik': logLikCurvature,
+  'f-loglik': logLikCurvature, 'f-loglik-mix': logLikMix, 'f-mle-sampling': mleSampling, 'f-sqrtn': sqrtNScale, 'f-logit-interval': logitInterval, 'f-delta-slope': deltaSlope,
   'f-qq': qqPlot,
   'f-rank-ab': rankSum,
   'f-interaction': interactionPlot,
