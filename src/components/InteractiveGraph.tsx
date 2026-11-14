@@ -290,7 +290,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             </ComposedChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            {type === 't' ? '青: 自由度 ' + df + ' の t 分布。点線: N(0,1)。' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝1（2つの分散が等しいときの中心）。'}
+            {type === 't' ? '青: 自由度 ' + df + ' の t 分布。点線: N(0,1)。' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝比が1（2つの標本分散が等しい）。'}
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             {type === 't'
