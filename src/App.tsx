@@ -809,12 +809,17 @@ function App() {
 
   useEffect(() => {
     if (!activeModuleId) { setScrollProgress(0); setShowBackToTop(false); return; }
+    let lastY = window.scrollY;
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
       setScrollProgress(progress);
-      setShowBackToTop(scrollTop > 500);
+      // 読み進めている間（下へ動かしている間）は本文に重なるので出さない。上へ戻し始めたら出す
+      if (scrollTop <= 500) setShowBackToTop(false);
+      else if (scrollTop < lastY - 4) setShowBackToTop(true);
+      else if (scrollTop > lastY + 4) setShowBackToTop(false);
+      lastY = scrollTop;
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
