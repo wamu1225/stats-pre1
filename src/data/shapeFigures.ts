@@ -2419,7 +2419,8 @@ function medianCdf(): string {
 // ============ 1.19：ネイマン・ピアソンの棄却域（2つの山と尤度比） ============
 function npRegion(): string {
   const W = 340, H = 330, se = 0.2, mu1 = 0.5, k = 1.6449 * se;
-  const b: Box = { x: 14, y: 40, w: 312, h: 100, xMin: -0.6, xMax: 1.1, yMax: 2.1 };
+  // 上段と下段は、横軸の位置と幅を同じにする（ずれると、破線 k が下段の交点を外れる）
+  const b: Box = { x: 40, y: 40, w: 286, h: 100, xMin: -0.6, xMax: 1.1, yMax: 2.1 };
   const f0 = (x: number) => normPdf(x, 0, se), f1d = (x: number) => normPdf(x, mu1, se);
   const pw = 1 - Phi((k - mu1) / se);
   // 下段：尤度比 Λ を対数目盛りで（1/1000 〜 1000）
@@ -2448,7 +2449,7 @@ function npRegion(): string {
     ${axes(b, [-0.5, 0, 0.5, 1])}
     <line x1="${f1(PX(b, k))}" y1="${b.y - 12}" x2="${f1(PX(b, k))}" y2="${lb.y + lb.h}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${f1(PX(b, k) + 4)}" y="${b.y - 2}" font-size="12.4" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">k = ${k.toFixed(3)}</text>
-    <text x="4" y="${lb.y - 16}" font-size="12.4" font-weight="700" fill="${INK}">尤度比 Λ ＝ L(0.5) ／ L(0)（対数目盛り）</text>
+    <text x="4" y="${lb.y - 16}" font-size="12.4" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">尤度比 Λ ＝ L(0.5) ／ L(0)（対数目盛り）</text>
     ${yT.map(([v, t]) => `<line x1="${lb.x}" y1="${f1(LY(v))}" x2="${lb.x + lb.w}" y2="${f1(LY(v))}" stroke="#e2e8f0" />
     <text x="${lb.x - 5}" y="${f1(LY(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
     <line x1="${lb.x}" y1="${f1(LY(Math.log10(c)))}" x2="${lb.x + lb.w}" y2="${f1(LY(Math.log10(c)))}" stroke="${AMBER}" stroke-width="1.6" />
