@@ -1817,11 +1817,11 @@ function orderSplit(): string {
 function medianSpread(): string {
   const W = 344, H = 340, n = 25, r3 = Math.sqrt(3);
   const top: Box = { x: 14, y: 30, w: 316, h: 96, xMin: -2.6, xMax: 2.6, yMax: 0.46 };
-  const bot: Box = { x: 14, y: 196, w: 316, h: 106, xMin: -1.3, xMax: 1.3, yMax: 1.75 };
+  const bot: Box = { x: 14, y: 196, w: 316, h: 106, xMin: -1.3, xMax: 1.3, yMax: 2.1 };
   const fU = 1 / (2 * r3), fN = normPdf(0);
   const sN = 1 / (2 * Math.sqrt(n) * fN), sU = 1 / (2 * Math.sqrt(n) * fU);
   const uni = (b: Box) => `<polyline points="${f1(PX(b, -2.6))},${f1(PY(b, 0))} ${f1(PX(b, -r3))},${f1(PY(b, 0))} ${f1(PX(b, -r3))},${f1(PY(b, fU))} ${f1(PX(b, r3))},${f1(PY(b, fU))} ${f1(PX(b, r3))},${f1(PY(b, 0))} ${f1(PX(b, 2.6))},${f1(PY(b, 0))}" fill="none" stroke="#b45309" stroke-width="2" />`;
-  const svg = `${svgOpen(W, H, '分散が同じ1の正規分布と一様分布。真ん中の密度は正規分布0.40、一様分布0.29。25個の中央値の分布は、正規分布からのほうが細い')}
+  const svg = `${svgOpen(W, H, '分散が同じ1の正規分布と一様分布。真ん中の密度は正規分布0.40、一様分布0.29。25個の中央値の分布は、正規分布からのほうが細い。点線は25個の平均の分布（標準偏差0.20）')}
     <text x="${top.x}" y="${top.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">元の分布（どちらも平均0・分散1）</text>
     ${curve(top, (x) => normPdf(x), INDIGO)}
     ${uni(top)}
@@ -1835,11 +1835,13 @@ function medianSpread(): string {
     <text x="${bot.x}" y="${bot.y - 12}" font-size="12.4" font-weight="700" fill="${INK}">25個の中央値 M の分布</text>
     ${curve(bot, (x) => normPdf(x, 0, sN), INDIGO)}
     ${curve(bot, (x) => normPdf(x, 0, sU), '#b45309')}
+    ${curve(bot, (x) => normPdf(x, 0, 1 / Math.sqrt(n)), SLATE, bot.xMin, bot.xMax, 1.6, '5 4')}
+    <text x="${f1(PX(bot, -1.25))}" y="${f1(PY(bot, 1.85))}" font-size="12.4" fill="${SLATE}">点線＝平均：0.20</text>
     <text x="${f1(PX(bot, 0.3))}" y="${f1(PY(bot, 1.5))}" font-size="12.4" fill="${INDIGO}">正規：標準偏差 ${f2(sN)}</text>
     <text x="${f1(PX(bot, 0.62))}" y="${f1(PY(bot, 0.72))}" font-size="12.4" fill="#b45309">一様：${f2(sU)}</text>
     ${axes(bot, [-1, -0.5, 0, 0.5, 1])}
   </svg>`;
-  const cap = `分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。f(m) が 0.40 と 0.29 なら、25個の中央値の標準偏差は 0.25 と 0.35 です。`;
+  const cap = `分散は同じでも、真ん中の密度 f(m) が高い正規分布のほうが、中央値の分布は細くなります。f(m) が 0.40 と 0.29 なら、25個の中央値の標準偏差は 0.25 と 0.35 で、どちらも平均の 0.20 より大きくなります。`;
   return fig(svg, cap);
 }
 
@@ -2412,7 +2414,7 @@ function medianCdf(): string {
     ${[-0.5, 0, 0.5].map((t) => `<text x="${f1(X(t))}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">x（どちらも平均0・分散1）　縦軸は F(x)</text>
   </svg>`;
-  const cap = `25個のうち真の中央値 m 以下に来る割合は、0.5 のまわりで標準偏差 ${e} ぶれます（橙の帯）。この帯を曲線で横軸に写した幅が中央値のぶれで、真ん中の傾き f(m) が急な正規分布ほど狭くなります。`;
+  const cap = `25個のうち真の中央値 m 以下に来る割合は、0.5 のまわりで標準偏差 ${e} ぶれます（橙の帯）。この帯を曲線で横軸に写した幅が中央値のぶれで、真ん中の傾き f(m) が急なほど（ここでは正規分布）狭くなります。`;
   return fig(svg, cap);
 }
 
