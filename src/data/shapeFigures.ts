@@ -3166,7 +3166,7 @@ function timeSeries(): string {
     <text x="${f1(PX(b, 0) + 4)}" y="${f1(py(y(0)) + 16)}" font-size="12.4" fill="${INK}">1月 ${Math.round(y(0))}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">月次売上（万円）の3年分</text>
   </svg>`;
-  const cap = `本文の数字（1月 ${Math.round(y(0))}万円・7月 ${Math.round(y(6))}万円・翌1月 ${Math.round(y(12))}万円）に合わせて3年分を描いたものです。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。`;
+  const cap = `本文の数字（1月 ${Math.round(y(0))}万円・7月 ${Math.round(y(6))}万円・翌1月 ${Math.round(y(12))}万円）に合わせて3年分を描いたものです（不規則な揺れは省いています）。12か月ごとに山と谷をくり返す波が<strong>季節性</strong>、波の中心が少しずつ上がっていく橙の点線が<strong>トレンド</strong>です。`;
   return fig(svg, cap);
 }
 
@@ -4692,7 +4692,7 @@ function tsDiff(): string {
     ${[0, 20, 40, 59].map((t) => `<text x="${f1(40 + (t / (n - 1)) * 296)}" y="280" text-anchor="middle" font-size="12" fill="${SLATE}">${t + 1}</text>`).join('')}
     <text x="188" y="296" text-anchor="middle" font-size="12" fill="${SLATE}">時点 t（乱数で作った60期）</text>
   </svg>`;
-  const cap = `上は乱数で作ったランダムウォークで、山や谷の位置が試行ごとに変わり、平均が一定になりません。下は同じ系列の差分で、0のまわりを同じ幅で上下します。`;
+  const cap = `上は乱数で作ったランダムウォークで、時間がたつほど出発点から離れやすくなり、ばらつきが一定になりません。下は同じ系列の差分で、0のまわりを同じ幅で上下します。`;
   return fig(svg, cap);
 }
 
