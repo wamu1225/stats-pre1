@@ -4523,7 +4523,7 @@ function semPath(): string {
     <text x="8" y="316" font-size="12.3" fill="${INK}">語彙と読解：0.8 × 0.7 ＝ 0.56</text>
     <text x="8" y="340" font-size="12.3" fill="${SLATE}">各四角の誤差（独自因子）は省略</text>
   </svg>`;
-  const cap = `矢印の数はどれも、変数を標準化したときのパス係数です。こうして求めた相関を、データで測った相関と組ごとに比べます。`;
+  const cap = `こうしてモデルから求めた相関を、データで測った相関と組ごとに比べます。`;
   return fig(svg, cap);
 }
 
