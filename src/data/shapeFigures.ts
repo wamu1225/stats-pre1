@@ -1638,31 +1638,31 @@ function dfThree(): string {
   const mk = 'df3-arrow';
   const rows = [
     { n: '1人目', v: 60, c: INDIGO, t: '60点（差 −10）' },
-    { n: '2人目', v: 80, c: INDIGO, t: '80点（差 +10）' },
-    { n: '3人目', v: 70, c: ROSE, t: '差は 0 しか残らない' },
+    { n: '2人目', v: 74, c: INDIGO, t: '74点（差 +4）' },
+    { n: '3人目', v: 76, c: ROSE, t: '差は +6 に決まる' },
   ];
   const mx = PX(b, 70);
   const body = rows.map((r, i) => {
     const y = 58 + i * 38, x = PX(b, r.v);
-    const arrow = r.v === 70 ? '' : `<line x1="${f1(mx)}" y1="${y}" x2="${f1(x + (r.v < 70 ? 7 : -7))}" y2="${y}" stroke="${r.c}" stroke-width="1.8" marker-end="url(#${mk})" />`;
-    const dot = r.v === 70
+    const arrow = `<line x1="${f1(mx)}" y1="${y}" x2="${f1(x + (r.v < 70 ? 7 : -7))}" y2="${y}" stroke="${r.c}" stroke-width="1.8" marker-end="url(#${i === 2 ? mk + '-r' : mk})" />`;
+    const dot = i === 2
       ? `<circle cx="${f1(x)}" cy="${y}" r="6" fill="#fff" stroke="${r.c}" stroke-width="2.2" />`
       : `<circle cx="${f1(x)}" cy="${y}" r="6" fill="${r.c}" />`;
-    const lx = r.v === 70 ? x + 12 : r.v < 70 ? x - 10 : mx + 6;
+    const lx = r.v < 70 ? x - 10 : mx + 6;
     const anchor = r.v < 70 ? 'end' : 'start';
     return `<text x="4" y="${y + 4}" font-size="12.4" font-weight="700" fill="${r.c}">${r.n}</text>
     ${arrow}${dot}
     <text x="${f1(lx)}" y="${y - 10}" text-anchor="${anchor}" font-size="12.4" fill="${r.c}">${r.t}</text>`;
   }).join('');
-  const svg = `${svgOpen(W, H, '3人の点数の平均が70点のとき、1人目60点と2人目80点が分かると、3人目の平均からの差は0しか残らず70点に決まる')}
-    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INDIGO}" /></marker></defs>
+  const svg = `${svgOpen(W, H, '3人の点数の平均が70点のとき、1人目60点と2人目74点が分かると、差の合計が0になるよう3人目の差は+6に決まり76点になる')}
+    <defs><marker id="${mk}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${INDIGO}" /></marker><marker id="${mk}-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${ROSE}" /></marker></defs>
     <line x1="${f1(mx)}" y1="30" x2="${f1(mx)}" y2="${b.y + b.h}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
     <text x="${f1(mx)}" y="22" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">平均 70</text>
     ${body}
     ${axes(b, [50, 60, 70, 80, 90])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差の合計は必ず0。自由に動けるのは2人分</text>
   </svg>`;
-  const cap = `平均からの差は、足すと必ず0になります。2人分の差（−10 と +10）が決まると、3人目の差は0しか残りません。`;
+  const cap = `平均からの差は、足すと必ず0になります。2人分の差（−10 と +4）が決まると、3人目の差は +6 に決まります。`;
   return fig(svg, cap);
 }
 
