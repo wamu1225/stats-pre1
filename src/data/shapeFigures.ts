@@ -3922,15 +3922,17 @@ function biasVariance(): string {
     <rect x="${L}" y="${T}" width="${PW}" height="${PH}" fill="none" stroke="${SLATE}" stroke-width="1" />
     ${yt.map((v) => `<line x1="${L}" y1="${f1(py(v))}" x2="${L + PW}" y2="${f1(py(v))}" stroke="${SLATE}" stroke-opacity="0.2" /><text x="${L - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.3" fill="${SLATE}">${v}</text>`).join('')}
     ${rows.map((r) => `<text x="${f1(px(r.d))}" y="${T + PH + 16}" text-anchor="middle" font-size="12.3" fill="${SLATE}">${r.d}</text>`).join('')}
+    <text x="${L}" y="${T - 8}" font-size="12.3" fill="${SLATE}">2乗誤差</text>
+    <line x1="${L}" y1="${f1(py(sig * sig))}" x2="${L + PW}" y2="${f1(py(sig * sig))}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="2 3" />
     ${path('train', SLATE, 1.8, '5 4')}${path('bias2', AMBER, 2.2)}${path('vr', INDIGO, 2.2)}${path('test', ROSE, 3)}
     <circle cx="${f1(px(best.d))}" cy="${f1(py(best.test))}" r="5" fill="#ffffff" stroke="${ROSE}" stroke-width="2" />
     <text x="${f1(px(best.d))}" y="${f1(py(best.test) - 10)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">最小：${best.d} 次</text>
     <text x="${L + PW / 2}" y="${T + PH + 34}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝当てはめる多項式の次数（右ほど複雑）</text>
-    <line x1="14" y1="${H - 50}" x2="38" y2="${H - 50}" stroke="${ROSE}" stroke-width="3" /><text x="44" y="${H - 46}" font-size="12.4" fill="${INK}">将来データの誤差（3つの和）</text>
+    <line x1="14" y1="${H - 50}" x2="38" y2="${H - 50}" stroke="${ROSE}" stroke-width="3" /><text x="44" y="${H - 46}" font-size="12.4" fill="${INK}">将来データの誤差（バイアス²＋バリアンス＋ノイズ）</text>
     <line x1="14" y1="${H - 34}" x2="38" y2="${H - 34}" stroke="${AMBER}" stroke-width="2.2" /><text x="44" y="${H - 30}" font-size="12.4" fill="${INK}">バイアス²</text>
     <line x1="112" y1="${H - 34}" x2="136" y2="${H - 34}" stroke="${INDIGO}" stroke-width="2.2" /><text x="142" y="${H - 30}" font-size="12.4" fill="${INK}">バリアンス</text>
     <line x1="210" y1="${H - 34}" x2="234" y2="${H - 34}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 30}" font-size="12.4" fill="${INK}">手元データの誤差</text>
-    <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">データ ${n} 点・ノイズの分散 ${f2(sig * sig)}・${R} 回の取り直しの平均</text>
+    <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">点線＝ノイズの分散 ${f2(sig * sig)}。データ ${n} 点・${R} 回の平均</text>
   </svg>`;
   const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアス²は ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
   return fig(svg, cap);
