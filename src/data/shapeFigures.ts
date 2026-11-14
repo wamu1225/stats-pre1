@@ -2399,7 +2399,7 @@ function medianCdf(): string {
   const dn = e / normPdf(0), du = e * 2 * r3;
   const drop = (d: number, col: string, dy: number) => [-d, d].map((x) => `<line x1="${f1(X(x))}" y1="${f1(Y(x > 0 ? 0.5 + e : 0.5 - e))}" x2="${f1(X(x))}" y2="${b.y + b.h + dy}" stroke="${col}" stroke-width="1.2" stroke-dasharray="3 3" />`).join('')
     + `<line x1="${f1(X(-d))}" y1="${b.y + b.h + dy}" x2="${f1(X(d))}" y2="${b.y + b.h + dy}" stroke="${col}" stroke-width="5" />`;
-  const svg = `${svgOpen(W, H, `累積分布関数の真ん中を拡大。縦の0.4から0.6の帯（25個のうち中央値以下に来る割合のぶれ）が、正規分布では横の ±${f2(dn)}、一様分布では ±${f2(du)} に写る`)}
+  const svg = `${svgOpen(W, H, `累積分布関数の真ん中を拡大。縦の0.4から0.6の帯（25個のうち m 以下に来る割合のぶれ）が、正規分布では横の ±${f2(dn)}、一様分布では ±${f2(du)} に写る`)}
     <text x="4" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">正規（傾き 0.40）→ 中央値のぶれ ±${f2(dn)}</text>
     <text x="4" y="31" font-size="12.4" font-weight="700" fill="${BROWN}">一様（傾き 0.29）→ 中央値のぶれ ±${f2(du)}</text>
     <rect x="${b.x}" y="${f1(Y(0.5 + e))}" width="${b.w}" height="${f1(Y(0.5 - e) - Y(0.5 + e))}" fill="${AMBER}" fill-opacity="0.15" />
@@ -2412,7 +2412,7 @@ function medianCdf(): string {
     ${[-0.5, 0, 0.5].map((t) => `<text x="${f1(X(t))}" y="${b.y + b.h + 16}" text-anchor="middle" font-size="12" fill="${SLATE}">${t}</text>`).join('')}
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">x（どちらも平均0・分散1）　縦軸は F(x)</text>
   </svg>`;
-  const cap = `25個のうち中央値以下に来る割合は、0.5 のまわりで標準偏差 ${e} ぶれます（橙の帯）。この帯を曲線で横軸に写した幅が中央値のぶれで、真ん中の傾き f(m) が急な正規分布ほど狭くなります。`;
+  const cap = `25個のうち真の中央値 m 以下に来る割合は、0.5 のまわりで標準偏差 ${e} ぶれます（橙の帯）。この帯を曲線で横軸に写した幅が中央値のぶれで、真ん中の傾き f(m) が急な正規分布ほど狭くなります。`;
   return fig(svg, cap);
 }
 
@@ -3926,13 +3926,13 @@ function biasVariance(): string {
     <circle cx="${f1(px(best.d))}" cy="${f1(py(best.test))}" r="5" fill="#ffffff" stroke="${ROSE}" stroke-width="2" />
     <text x="${f1(px(best.d))}" y="${f1(py(best.test) - 10)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">最小：${best.d} 次</text>
     <text x="${L + PW / 2}" y="${T + PH + 34}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝当てはめる多項式の次数（右ほど複雑）</text>
-    <line x1="14" y1="${H - 36}" x2="38" y2="${H - 36}" stroke="${ROSE}" stroke-width="3" /><text x="44" y="${H - 32}" font-size="12.4" fill="${INK}">将来データの誤差（3つの和）</text>
-    <line x1="14" y1="${H - 20}" x2="38" y2="${H - 20}" stroke="${AMBER}" stroke-width="2.2" /><text x="44" y="${H - 16}" font-size="12.4" fill="${INK}">バイアス²</text>
-    <line x1="112" y1="${H - 20}" x2="136" y2="${H - 20}" stroke="${INDIGO}" stroke-width="2.2" /><text x="142" y="${H - 16}" font-size="12.4" fill="${INK}">バリアンス</text>
-    <line x1="210" y1="${H - 20}" x2="234" y2="${H - 20}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 16}" font-size="12.4" fill="${INK}">手元データの誤差</text>
-    <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">データ ${n} 点・ノイズ sd ${sig}・${R} 回の取り直しの平均</text>
+    <line x1="14" y1="${H - 50}" x2="38" y2="${H - 50}" stroke="${ROSE}" stroke-width="3" /><text x="44" y="${H - 46}" font-size="12.4" fill="${INK}">将来データの誤差（3つの和）</text>
+    <line x1="14" y1="${H - 34}" x2="38" y2="${H - 34}" stroke="${AMBER}" stroke-width="2.2" /><text x="44" y="${H - 30}" font-size="12.4" fill="${INK}">バイアス²</text>
+    <line x1="112" y1="${H - 34}" x2="136" y2="${H - 34}" stroke="${INDIGO}" stroke-width="2.2" /><text x="142" y="${H - 30}" font-size="12.4" fill="${INK}">バリアンス</text>
+    <line x1="210" y1="${H - 34}" x2="234" y2="${H - 34}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 30}" font-size="12.4" fill="${INK}">手元データの誤差</text>
+    <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">データ ${n} 点・ノイズの分散 ${f2(sig * sig)}・${R} 回の取り直しの平均</text>
   </svg>`;
-  const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアスは ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
+  const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアス²は ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
   return fig(svg, cap);
 }
 
