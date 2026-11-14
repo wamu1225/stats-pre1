@@ -1464,7 +1464,7 @@ function meanNarrow(): string {
     ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5, 3])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝n 個の平均の値</text>
   </svg>`;
-  const cap = `灰色が元の指数分布。平均の標準偏差は 1/√n で、n = 64 では 0.125 です。`;
+  const cap = `灰色が元の指数分布。元の分布は σ = 1 なので、平均の標準偏差は 1/√n で、n = 64 では 0.125 です。`;
   return fig(svg, cap);
 }
 
