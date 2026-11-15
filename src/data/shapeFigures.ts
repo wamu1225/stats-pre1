@@ -2736,7 +2736,7 @@ function likelihoodTrouble(): string {
     ${peaks.map((p) => `<circle cx="${f1(PX(R, p))}" cy="${f1(PY(R, lc(p)))}" r="3.6" fill="${lc(p) > 0.999 ? ROSE : AMBER}" />`).join('')}
     ${axes(R, [-4, 0, 4])}
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">緑の点＝観測値　縦軸＝尤度（最大を1にそろえた）</text>
-    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右はコーシー分布の位置 θ の尤度</text>
+    <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右は裾の重いコーシー分布の位置 θ の尤度</text>
   </svg>`;
   const lo = peaks.find((p) => lc(p) < 0.999), hi = peaks.find((p) => lc(p) > 0.999);
   const cap = `左は最大値 ${mx} で跳ぶ尤度で、傾きが0になる点がありません。右は頂上 θ ≈ ${f1(hi ?? 0)} のほかに、θ ≈ ${f1(lo ?? 0)} にも山があります。`;
