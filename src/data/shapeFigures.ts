@@ -2771,7 +2771,7 @@ function mmVsMle(): string {
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／縦軸＝密度</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">U(0, 1) から10個とった場合</text>
   </svg>`;
-  const cap = `同じ10個のデータでも、2X̄ は標準偏差 ${f2(sdMM)} で広く散らばり、最大値は1の少し手前（平均 ${f2(mML)}）に鋭く集まります。真の値からのずれの大きさ（二乗誤差の平方根）は、最尤 ${f2(rmseML)}、モーメント ${f2(sdMM)} です。`;
+  const cap = `同じ10個のデータでも、2X̄ は平均は1でも広く散らばり、最大値は1の少し手前（平均 ${f2(mML)}）に偏りますが鋭く集まります。真の値からのずれの大きさ（二乗誤差の平方根）は、最尤 ${f2(rmseML)}、モーメント ${f2(sdMM)} です。`;
   return fig(svg, cap);
 }
 
