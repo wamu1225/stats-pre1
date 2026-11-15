@@ -2797,7 +2797,7 @@ function darts(): string {
       <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${c.s}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, 'ダーツのたとえ：偏りの有無とばらつきの大小の4通り')}${body}</svg>`;
-  const cap = `赤い点が真の値、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい推定量です。不偏でばらつきも小さい左上が有効です。`;
+  const cap = `赤い点が真の値（上の段は十字の下）、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい推定量です。不偏でばらつきも小さい左上が有効です。`;
   return fig(svg, cap);
 }
 
@@ -2817,7 +2817,7 @@ function varianceEstimators(): string {
     ${curve(b, fS, INDIGO, 0.001, 3.5, 2.2)}${curve(b, fH, AMBER, 0.001, 3.5, 2.2)}
     ${[{ m: mS, c: INDIGO }, { m: mH, c: AMBER }].map(({ m, c }) => `<line x1="${f1(PX(b, m))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, m))}" y2="${f1(PY(b, 0) + 8)}" stroke="${c}" stroke-width="3" />`).join('')}
     ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5, 3])}
-    <text x="2" y="14" font-size="12.4" font-weight="700" fill="#b45309">n で割る（平均 ${f2(mH)}）</text>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="#b45309">σ<tspan dx="-6.5" dy="-7" font-size="11">^</tspan><tspan dx="0.5" dy="7">²：n で割る（平均 ${f2(mH)}）</tspan></text>
     <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">S²：n−1 で割る（平均 1）</text>
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／軸の下の短い線＝分布の平均</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">正規分布から5個とった場合</text>
