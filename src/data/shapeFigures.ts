@@ -2658,7 +2658,7 @@ function estimatorFlow(): string {
   const rows = [
     { t: '母集団（母数 θ は未知）', e: '表の確率 p', c: SLATE },
     { t: '標本 X₁, …, Xₙ', e: '10回投げた結果', c: TEAL },
-    { t: '推定量 θ̂ ＝ データの関数', e: '表の割合 X̄', c: INDIGO },
+    { t: '推定量 θ<tspan dx="-6.5" dy="-7" font-size="11">^</tspan><tspan dx="0.5" dy="7"> ＝ データの関数</tspan>', e: '表の割合 X̄', c: INDIGO },
     { t: '推定値（1つの数）', e: '0.7', c: ROSE },
   ];
   const bx = 12, bw = 200, bh = 36, gap = 20, y0 = 28;
