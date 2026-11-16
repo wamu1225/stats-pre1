@@ -1869,7 +1869,7 @@ function varRatioCi(): string {
     ${axes(nl, [0, 1, 2, 3, 4, 5, 6, 7])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">黒丸＝標本分散の比 2.5² / 1.5² ＝ 2.78</text>
   </svg>`;
-  const cap = `標本分散の比 2.78 を、上の図の 2.10 で割ると下端 1.32、0.48 で割ると上端 5.84 です。区間は 2.78 の左右で長さが違い、比が1の点線を含みません。`;
+  const cap = `標本分散の比 2.78 を上の図の2つの点で割ると、下の区間の両端になります。`;
   return fig(svg, cap);
 }
 
