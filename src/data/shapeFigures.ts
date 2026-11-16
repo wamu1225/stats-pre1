@@ -1962,7 +1962,7 @@ function ciCoverage(): string {
     ${axes(b, [166, 168, 170, 172, 174, 176])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 身長（cm）／点 ＝ その回の x̄、横線 ＝ x̄ ± 2.35</text>
   </svg>`;
-  const cap = `μ ＝ 171、σ ＝ 6 として、25人を測り区間を作ることをコンピュータで20回くり返しました。区間は標本ごとに左右に揺れ、20本中${miss}本が μ を外しています（赤）。`;
+  const cap = `仮に μ ＝ 171、σ ＝ 6 として、25人を測り区間を作ることをコンピュータで20回くり返しました。区間は標本ごとに左右に揺れ、20本中${miss}本が μ を外しています（赤）。`;
   return fig(svg, cap);
 }
 
@@ -1982,9 +1982,9 @@ function ciChi2(): string {
     <text x="${f1(PX(b, 9))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
     <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9s²/σ²（自由度9のカイ二乗分布）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
   </svg>`;
-  const cap = `ボルト10本の 9s²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。山の頂上は7で左に寄っているので、2つの端は頂上から等しい距離になりません。`;
+  const cap = `ボルト10本の 9S²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。山の頂上は7で左に寄っているので、2つの端は頂上から等しい距離になりません。`;
   return fig(svg, cap);
 }
 
