@@ -1869,7 +1869,7 @@ function varRatioCi(): string {
     ${axes(nl, [0, 1, 2, 3, 4, 5, 6, 7])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">黒丸＝標本分散の比 2.5² / 1.5² ＝ 2.78</text>
   </svg>`;
-  const cap = `標本分散の比 2.78 を上の図の2つの点で割ると、下の区間の両端になります。`;
+  const cap = `2.78 を上側の点 2.10 で割ると下端、下側の点 0.48 で割ると上端になります（上と下が入れ替わる）。`;
   return fig(svg, cap);
 }
 
@@ -2109,7 +2109,7 @@ function oneSided(): string {
     <text x="${f1(PX(s, 2.75))}" y="${f1(PY(s, 0.1))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">5%</text>
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ (X̄ − μ) ÷ 標準誤差</text>
   </svg>`;
-  const cap = `片側の限界は、外れる5%を片方の裾にまとめます。端が1.96から1.645に下がるので、「最低でもこれ以上」と言える値が、両側の区間の下端より内側に来ます。`;
+  const cap = `x̄ が右の5%に出たときだけ、下側限界が μ を超えて外れます。端が1.96から1.645に下がるので、「最低でもこれ以上」と言える値が、両側の区間の下端より内側に来ます。`;
   return fig(svg, cap);
 }
 
