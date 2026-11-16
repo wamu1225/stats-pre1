@@ -1945,6 +1945,28 @@ function ciZ(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.16：同じ右2.5%を残す点が、t(9) では 1.96 より外の 2.262 になる ============
+function ciT(): string {
+  const W = 344, H = 236, k = 9, zc = 1.96, tc = 2.262;
+  // 全体を描くと2つの曲線が重なるので、右の裾（1.2〜4）だけを拡大する
+  const b: Box = { x: 14, y: 34, w: 316, h: 146, xMin: 1.2, xMax: 4, yMax: 0.2 };
+  const ft = tPdf(k), fz = (x: number) => normPdf(x);
+  const svg = `${svgOpen(W, H, '標準正規分布と自由度9のt分布の右の裾を拡大。右に2.5%を残す点は、正規分布では1.96、t分布では2.262')}
+    ${area(b, fz, zc, 4, SLATE, 0.45)}${area(b, ft, tc, 4, ROSE, 0.35)}
+    ${curve(b, fz, SLATE, 1.2, 4, 1.8, '4 3')}${curve(b, ft, INDIGO, 1.2, 4, 2.2)}
+    <line x1="${f1(PX(b, zc))}" y1="${b.y + 6}" x2="${f1(PX(b, zc))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <line x1="${f1(PX(b, tc))}" y1="${b.y + 30}" x2="${f1(PX(b, tc))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, zc) - 4)}" y="${b.y + 12}" text-anchor="end" font-size="12.4" font-weight="700" fill="${SLATE}">1.96</text>
+    <text x="${f1(PX(b, tc) + 4)}" y="${b.y + 40}" font-size="12.4" font-weight="700" fill="${ROSE}">2.262</text>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">t(9)：右に2.5%（赤）</text>
+    <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="${SLATE}">N(0, 1)（点線）：右に2.5%（灰）</text>
+    ${axes(b, [1.5, 2, 2.5, 3, 3.5, 4])}
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">右の裾だけを拡大（左の裾も同じ形）</text>
+  </svg>`;
+  const cap = `t(9) は裾が厚いので、右に同じ2.5%を残すには、正規分布の1.96より外の2.262まで進む必要があります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.16：信頼区間の被覆（コンピュータで20回くり返した模擬） ============
 function ciCoverage(): string {
   const W = 340, H = 244, mu = 171, se = 1.2, m = 1.96 * se, n = 20;
@@ -5073,7 +5095,7 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
