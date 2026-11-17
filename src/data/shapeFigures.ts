@@ -3848,6 +3848,116 @@ function ldaBoundary(): string {
   return fig(svg, cap);
 }
 
+
+// ============ 1.23 節4：K分割交差検証（10点・5分割）。行＝回、列＝塊。各回の検証の塊を色で ============
+function cvGrid(): string {
+  const W = 340, H = 232, K = 5, n = 10;
+  const x0 = 70, y0 = 34, cw = 52, ch = 26, gap = 4;
+  const rows = Array.from({ length: K }, (_, r) => {
+    const cells = Array.from({ length: K }, (_, c) => {
+      const val = c === r;
+      const x = x0 + c * cw, y = y0 + r * (ch + gap);
+      const dots = [0, 1].map((j) => `<circle cx="${f1(x + 16 + j * 18)}" cy="${f1(y + ch / 2)}" r="4" fill="${val ? '#ffffff' : INDIGO}" />`).join('');
+      return `<rect x="${x + 2}" y="${y}" width="${cw - 4}" height="${ch}" rx="4" fill="${val ? ROSE : INDIGO}" fill-opacity="${val ? 0.9 : 0.16}" stroke="${val ? ROSE : INDIGO}" stroke-width="1" />${dots}`;
+    }).join('');
+    return `<text x="${x0 - 8}" y="${f1(y0 + r * (ch + gap) + ch / 2 + 4)}" text-anchor="end" font-size="12.4" fill="${INK}">${r + 1}回目</text>${cells}`;
+  }).join('');
+  const heads = Array.from({ length: K }, (_, c) => `<text x="${x0 + c * cw + cw / 2}" y="${y0 - 10}" text-anchor="middle" font-size="12" fill="${SLATE}">塊${c + 1}</text>`).join('');
+  const yb = y0 + K * (ch + gap) + 14;
+  const svg = `${svgOpen(W, H, `${n}点を${K}つの塊に分け、${K}回のそれぞれで1つの塊を検証に、残りを学習に使う。どの点もちょうど1回だけ検証に使われる`)}
+    ${heads}${rows}
+    <rect x="70" y="${yb}" width="18" height="12" rx="3" fill="${ROSE}" fill-opacity="0.9" /><text x="94" y="${yb + 11}" font-size="12.4" fill="${INK}">検証に使う塊（2点）</text>
+    <rect x="70" y="${yb + 20}" width="18" height="12" rx="3" fill="${INDIGO}" fill-opacity="0.16" stroke="${INDIGO}" /><text x="94" y="${yb + 31}" font-size="12.4" fill="${INK}">学習に使う塊（残り8点）</text>
+  </svg>`;
+  const cap = `${n}点を${K}つの塊（2点ずつ）に分けた例です。赤い塊は対角線に並び、どの点もちょうど1回だけ検証に使われます。${K}回の検証誤差を平均したものが予測誤差の推定値です。塊を1点ずつにすると、列が ${n} 本になり LOOCV になります。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.1b 節1：てこ比とクックの距離。端の点は直線を引っ張り、中央の外れ値は引っ張らない ============
+function cookLeverage(): string {
+  const W = 340, H = 300;
+  const base: number[][] = [[1, 2.4], [2, 3.1], [3, 3.3], [4, 4.1], [5, 4.4], [6, 5.2], [7, 5.4], [8, 6.1]];
+  const A = [14, 4.0], B = [4.5, 7.6];
+  const pts = [...base, A, B];
+  const fit = (ps: number[][]) => {
+    const n = ps.length, mx = ps.reduce((s, p) => s + p[0], 0) / n, my = ps.reduce((s, p) => s + p[1], 0) / n;
+    const sxx = ps.reduce((s, p) => s + (p[0] - mx) ** 2, 0), sxy = ps.reduce((s, p) => s + (p[0] - mx) * (p[1] - my), 0);
+    const b1 = sxy / sxx; return { b0: my - b1 * mx, b1, mx, sxx, n };
+  };
+  const all = fit(pts), p = 2;
+  const res = pts.map((q) => q[1] - (all.b0 + all.b1 * q[0]));
+  const s2 = res.reduce((s, e) => s + e * e, 0) / (all.n - p);
+  const lev = (x: number) => 1 / all.n + (x - all.mx) ** 2 / all.sxx;
+  const cook = (i: number) => { const h = lev(pts[i][0]); return (res[i] ** 2 / (p * s2)) * (h / (1 - h) ** 2); };
+  const iA = pts.length - 2, iB = pts.length - 1;
+  const hA = lev(A[0]), hB = lev(B[0]), dA = cook(iA), dB = cook(iB);
+  const noA = fit(pts.filter((_, i) => i !== iA)), noB = fit(pts.filter((_, i) => i !== iB));
+  const pl = plane({ x0: 36, y0: 20, w: 290, h: 190, xMin: 0, xMax: 15, yMin: 0, yMax: 9 });
+  const ln = (m: { b0: number; b1: number }, color: string, dash = '', w = 2.2) => pl.line((x) => m.b0 + m.b1 * x, color, w, 0, 15, dash);
+  const dot = (q: number[], color: string, r = 3.4) => `<circle cx="${f1(pl.X(q[0]))}" cy="${f1(pl.Y(q[1]))}" r="${r}" fill="${color}" />`;
+  const svg = `${svgOpen(W, H, `右端の点Aはてこ比 ${f2(hA)} で直線を引っ張り、クックの距離は ${f2(dA)}。中央の点Bは残差が大きいがてこ比 ${f2(hB)} で、クックの距離は ${f2(dB)}`)}
+    ${pl.yTicks([0, 3, 6, 9])}${pl.xAxis([0, 5, 10, 15])}
+    ${pl.line((x) => noA.b0 + noA.b1 * x, SLATE, 1.8, 0, Math.min(15, (8.8 - noA.b0) / noA.b1), '5 4')}${ln(all, ROSE)}
+    ${base.map((q) => dot(q, INDIGO)).join('')}
+    ${dot(A, AMBER, 5.5)}${dot(B, TEAL, 5.5)}
+    ${halo(pl.X(A[0]) - 4, pl.Y(A[1]) + 22, `A：てこ比 ${f2(hA)}`, '#b45309', { anchor: 'end', bold: true })}
+    ${halo(pl.X(A[0]) - 4, pl.Y(A[1]) + 38, `クック ${f2(dA)}`, '#b45309', { anchor: 'end' })}
+    ${halo(pl.X(B[0]) + 10, pl.Y(B[1]) - 2, `B：てこ比 ${f2(hB)}`, TEAL, { bold: true })}
+    ${halo(pl.X(B[0]) + 10, pl.Y(B[1]) + 14, `クック ${f2(dB)}`, TEAL)}
+    <line x1="14" y1="252" x2="40" y2="252" stroke="${ROSE}" stroke-width="2.2" /><text x="46" y="256" font-size="12.4" fill="${INK}">全10点の回帰直線</text>
+    <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="46" y="276" font-size="12.4" fill="${INK}">A を除いた回帰直線</text>
+    <text x="14" y="294" font-size="12.3" fill="${SLATE}">横軸＝説明変数 x、縦軸＝目的変数 y</text>
+  </svg>`;
+  const cap = `A は説明変数の端にあり（てこ比 ${f2(hA)}、平均 ${f2(p / all.n)} の約${(hA / (p / all.n)).toFixed(1)}倍）、A を除くと傾きが ${f2(all.b1)} から ${f2(noA.b1)} に変わります。クックの距離は ${f2(dA)} で、1 を超えます。B は残差が大きくても中央にあり（てこ比 ${f2(hB)}）、除いても傾きは ${f2(noB.b1)} とほぼ変わらず、クックの距離は ${f2(dB)} です。`;
+  return fig(svg, cap);
+}
+
+// ============ 2.3 節5：QDA。群ごとに楕円の向きと大きさが違うと、境界が曲がる ============
+function qdaBoundary(): string {
+  const W = 350, H = 300;
+  const m1 = [-1.1, 0.6], m2 = [1.2, -0.5];
+  const S1 = [[0.5, 0.4], [0.4, 0.5]], S2 = [[2.5, -0.75], [-0.75, 2.5]];
+  const inv = (S: number[][]) => { const d = S[0][0] * S[1][1] - S[0][1] * S[1][0]; return { I: [[S[1][1] / d, -S[0][1] / d], [-S[1][0] / d, S[0][0] / d]], d }; };
+  const q = (S: number[][], m: number[], x: number, y: number) => { const { I } = inv(S); const a = x - m[0], b = y - m[1]; return I[0][0] * a * a + 2 * I[0][1] * a * b + I[1][1] * b * b; };
+  const g = (x: number, y: number) => q(S1, m1, x, y) + Math.log(inv(S1).d) - q(S2, m2, x, y) - Math.log(inv(S2).d);
+  const Sp = [[(S1[0][0] + S2[0][0]) / 2, (S1[0][1] + S2[0][1]) / 2], [(S1[1][0] + S2[1][0]) / 2, (S1[1][1] + S2[1][1]) / 2]];
+  const gl = (x: number, y: number) => q(Sp, m1, x, y) - q(Sp, m2, x, y);
+  const k = 34, cx = 175, cy = 124, xr = [-4.9, 4.9], yr = [-3.2, 3.2];
+  const sx = (x: number) => cx + x * k, sy = (y: number) => cy - y * k;
+  // 0 になる所を細かい格子で拾って線分にする（マーチングスクエアの簡易版）
+  const contour = (fn: (x: number, y: number) => number, color: string, dash: string) => {
+    const N = 90, segs: string[] = [];
+    const dx = (xr[1] - xr[0]) / N, dy = (yr[1] - yr[0]) / N;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const x = xr[0] + i * dx, y = yr[0] + j * dy;
+      const c = [[x, y], [x + dx, y], [x + dx, y + dy], [x, y + dy]], v = c.map((p) => fn(p[0], p[1]));
+      const cut: number[][] = [];
+      for (let e = 0; e < 4; e++) { const a = e, b = (e + 1) % 4; if ((v[a] > 0) !== (v[b] > 0)) { const t = v[a] / (v[a] - v[b]); cut.push([c[a][0] + t * (c[b][0] - c[a][0]), c[a][1] + t * (c[b][1] - c[a][1])]); } }
+      if (cut.length === 2) segs.push(`M${f1(sx(cut[0][0]))},${f1(sy(cut[0][1]))}L${f1(sx(cut[1][0]))},${f1(sy(cut[1][1]))}`);
+    }
+    return `<path d="${segs.join('')}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  };
+  const ell = (S: number[][], m: number[], color: string) => {
+    const tr = S[0][0] + S[1][1], det = S[0][0] * S[1][1] - S[0][1] ** 2, l1 = tr / 2 + Math.sqrt(tr * tr / 4 - det), l2 = tr / 2 - Math.sqrt(tr * tr / 4 - det);
+    const ang = Math.abs(S[0][1]) < 1e-9 ? 0 : (Math.atan2(l1 - S[0][0], S[0][1]) * 180) / Math.PI, r = 1.8;
+    return `<ellipse cx="${f1(sx(m[0]))}" cy="${f1(sy(m[1]))}" rx="${f1(r * Math.sqrt(l1) * k)}" ry="${f1(r * Math.sqrt(l2) * k)}" transform="rotate(${f1(-ang)} ${f1(sx(m[0]))} ${f1(sy(m[1]))})" fill="${color}" fill-opacity="0.12" stroke="${color}" stroke-width="1.6" />`;
+  };
+  const svg = `${svgOpen(W, H, '2次判別分析の境界：群1は右上がりの細い楕円、群2は大きく丸い楕円。群ごとの分散共分散行列で距離を測ると、境界は群1の楕円を包むように曲がる。共通の行列を使う LDA の境界は直線')}
+    <rect x="8" y="14" width="334" height="220" fill="none" stroke="${SLATE}" stroke-width="1" />
+    <clipPath id="qda-clip"><rect x="8" y="14" width="334" height="220" /></clipPath>
+    <g clip-path="url(#qda-clip)">${ell(S1, m1, INDIGO)}${ell(S2, m2, AMBER)}${(() => { const c0 = gl(0, 0), ax = gl(1, 0) - c0, ay = gl(0, 1) - c0, yy = (x: number) => -(c0 + ax * x) / ay; return `<line x1="${f1(sx(-5))}" y1="${f1(sy(yy(-5)))}" x2="${f1(sx(5))}" y2="${f1(sy(yy(5)))}" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" />`; })()}${contour(g, ROSE, '')}</g>
+    <circle cx="${f1(sx(m1[0]))}" cy="${f1(sy(m1[1]))}" r="4.5" fill="#ffffff" stroke="${INDIGO}" stroke-width="2" />
+    <circle cx="${f1(sx(m2[0]))}" cy="${f1(sy(m2[1]))}" r="4.5" fill="#ffffff" stroke="${AMBER}" stroke-width="2" />
+    <text x="14" y="30" font-size="13" font-weight="700" fill="${INDIGO}">群 1（相関 0.8・分散 0.5）</text>
+    <text x="336" y="226" text-anchor="end" font-size="13" font-weight="700" fill="#b45309">群 2（相関 −0.3・分散 2.5）</text>
+    <line x1="14" y1="252" x2="40" y2="252" stroke="${ROSE}" stroke-width="2.2" /><text x="46" y="256" font-size="12.4" fill="${INK}">QDA の境界（群ごとの Σ で距離を測る）</text>
+    <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" /><text x="46" y="276" font-size="12.4" fill="${INK}">LDA の境界（2群に共通の Σ）</text>
+    <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝各群の点の大半が入る範囲</text>
+  </svg>`;
+  const cap = '群1は小さく細く右上がり、群2は大きく丸く広がっています。QDA は群ごとの分散共分散行列でマハラノビス距離を測り、log|Σ_k| を足して比べます。群2は広がりが大きいので、群1の楕円から少し離れた所はもう群2のほうが近くなり、境界（赤）は群1を囲む楕円になります。2群に共通の行列を使う LDA の境界（灰の破線）は直線のままで、群1の左上の外側まで群1に入れてしまいます。';
+  return fig(svg, cap);
+}
+
 // ============ 2.3：閾値1つが混同行列の1組になり、閾値を動かすと ROC 曲線を描く ============
 function rocCurve(): string {
   const W = 340, H = 372, dp = 2.5, th = 1.25, nP = 200, nN = 800;
@@ -4559,7 +4669,7 @@ function mvChoose(): string {
     { g: 'ある', q: '質的（グループ）', a: ['判別分析・数量化 II 類', 'ロジスティック回帰'] },
     { g: 'ない', q: '変数を少数にまとめる', a: ['主成分分析・因子分析'] },
     { g: 'ない', q: '個体をグループに分ける', a: ['クラスター分析'] },
-    { g: 'ない', q: '距離や分割表を平面に描く', a: ['多次元尺度法', '対応分析（III 類）'] },
+    { g: 'ない', q: '距離や分割表を図にする', a: ['多次元尺度法', '対応分析（III 類）'] },
     { g: 'ない', q: '2組の変数の関連を測る', a: ['正準相関分析'] },
     { g: 'ない', q: '仮説のモデルを確かめる', a: ['共分散構造分析'] },
   ];
@@ -5061,7 +5171,7 @@ function totalVariance(): string {
   return fig(svg, cap);
 }
 
-export const SHAPE_FIGS: Record<string, () => string> = {
+const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-pmf': pmfDice,
   'f-pdf': pdfHeight,
   'f-density-over-1': densityOver1,
@@ -5117,6 +5227,9 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
   'f-lda': ldaBoundary,
+  'f-qda': qdaBoundary,
+  'f-cook': cookLeverage,
+  'f-cv-grid': cvGrid,
   'f-roc': rocCurve,
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic, 'f-dsep-practice': dsepPractice, 'f-simpson': simpsonFig,
@@ -5131,3 +5244,16 @@ export const SHAPE_FIGS: Record<string, () => string> = {
   'f-em': emResponsibility,
   'f-inverse-cdf': inverseCdf, 'f-rejection': rejectionSampling, 'f-bootstrap': bootstrap,
 };
+
+// 390px の画面（図の描画幅 約316px）で、どの文字も実効 11px 以上にする（O-3-47・11-17 監督）。
+// 図ごとに viewBox の幅から必要な font-size を出し、それより小さい指定だけを引き上げる。重なりは svg-overlap-guard が見張る
+const MIN_EFFECTIVE_PX = 11.05, DRAW_WIDTH = 316;
+function enforceMinFont(svg: string): string {
+  const vb = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/);
+  if (!vb) return svg;
+  const need = (MIN_EFFECTIVE_PX * +vb[1]) / DRAW_WIDTH;
+  return svg.replace(/font-size="([\d.]+)"/g, (m, v) => (+v < need ? `font-size="${need.toFixed(1)}"` : m));
+}
+export const SHAPE_FIGS: Record<string, () => string> = Object.fromEntries(
+  Object.entries(SHAPE_FIGS_RAW).map(([k, fn]) => [k, () => enforceMinFont(fn())]),
+);

@@ -295,7 +295,7 @@ const homeJsonLd = JSON.stringify({
   '@type': 'WebSite',
   'name': '統計検定 準1級 学習リファレンス',
   'url': `${BASE_URL}/`,
-  'description': '確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式で解説する統計検定準1級対策サイト。',
+  'description': '確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説する統計検定準1級対策サイト。',
   'inLanguage': 'ja'
 });
 rootIndexHtml = rootIndexHtml.replace('</head>', `<script type="application/ld+json">${homeJsonLd}</script>\n  </head>`);
@@ -365,13 +365,13 @@ for (let i = 0; i < modules.length; i++) {
 
   let modHtml = subDirTemplateHtml
     .replace('<title>統計検定 準1級 学習リファレンス</title>', `<title>${pageTitle}</title>`)
-    .replace('<meta name="description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式で解説。" />', `<meta name="description" content="${mod.description}" />`)
+    .replace('<meta name="description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説。" />', `<meta name="description" content="${mod.description}" />`)
     .replace('<meta property="og:title" content="統計検定 準1級 学習リファレンス" />', `<meta property="og:title" content="${pageTitle}" />`)
-    .replace('<meta property="og:description" content="確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式で解説する準1級対策サイト。" />', `<meta property="og:description" content="${mod.description}" />`)
+    .replace('<meta property="og:description" content="確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説する準1級対策サイト。" />', `<meta property="og:description" content="${mod.description}" />`)
     .replace('<meta property="og:url" content="https://study-apps.com/stats-pre1/" />', `<meta property="og:url" content="${pageUrl}" />`)
     .replace('<link rel="canonical" href="https://study-apps.com/stats-pre1/" />', `<link rel="canonical" href="${pageUrl}" />`)
     .replace('<meta name="twitter:title" content="統計検定 準1級 学習リファレンス" />', `<meta name="twitter:title" content="${pageTitle}" />`)
-    .replace('<meta name="twitter:description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式でわかりやすく解説。" />', `<meta name="twitter:description" content="${mod.description}" />`);
+    .replace('<meta name="twitter:description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説。" />', `<meta name="twitter:description" content="${mod.description}" />`);
 
   modHtml = modHtml.replace('<div id="root"></div>', `<div id="root">${seoContentHtml}</div>`);
 
@@ -562,13 +562,13 @@ for (const [page, config] of Object.entries(staticPageContents)) {
 
   let pageHtml = subDirTemplateHtml
     .replace('<title>統計検定 準1級 学習リファレンス</title>', `<title>${pageTitle}</title>`)
-    .replace('<meta name="description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式で解説。" />', `<meta name="description" content="${config.description}" />`)
+    .replace('<meta name="description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説。" />', `<meta name="description" content="${config.description}" />`)
     .replace('<meta property="og:title" content="統計検定 準1級 学習リファレンス" />', `<meta property="og:title" content="${pageTitle}" />`)
-    .replace('<meta property="og:description" content="確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式で解説する準1級対策サイト。" />', `<meta property="og:description" content="${config.description}" />`)
+    .replace('<meta property="og:description" content="確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説する準1級対策サイト。" />', `<meta property="og:description" content="${config.description}" />`)
     .replace('<meta property="og:url" content="https://study-apps.com/stats-pre1/" />', `<meta property="og:url" content="${pageUrl}" />`)
     .replace('<link rel="canonical" href="https://study-apps.com/stats-pre1/" />', `<link rel="canonical" href="${pageUrl}" />`)
     .replace('<meta name="twitter:title" content="統計検定 準1級 学習リファレンス" />', `<meta name="twitter:title" content="${pageTitle}" />`)
-    .replace('<meta name="twitter:description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計をインタラクティブな図と数式でわかりやすく解説。" />', `<meta name="twitter:description" content="${config.description}" />`);
+    .replace('<meta name="twitter:description" content="統計検定準1級の合格を目指す学習リファレンス。確率分布・推測統計・多変量解析・ベイズ統計を、160枚の図と数式で解説。" />', `<meta name="twitter:description" content="${config.description}" />`);
 
   pageHtml = pageHtml.replace('<div id="root"></div>', `<div id="root">${config.bodyHtml}</div>`);
 
