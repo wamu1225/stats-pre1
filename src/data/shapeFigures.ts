@@ -2484,7 +2484,7 @@ function npRegion(): string {
     ${[-0.5, 0, 0.5, 1].map((x) => `<text x="${f1(LX(x))}" y="${lb.y + lb.h + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${x}</text>`).join('')}
     <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸はどちらも標本平均 x̄</text>
   </svg>`;
-  const cap = `上段の赤は μ = 0 のときに棄却してしまう確率（α = 0.05）、緑は μ = 0.5 のときに棄却できる確率（検出力）です。下段の尤度比は x̄ が大きいほど大きくなるので、「Λ が ${c.toFixed(2)} を超える」と「x̄ が ${k.toFixed(3)} を超える」は同じ棄却域を指します。`;
+  const cap = `上段の赤は μ = 0 のときに棄却してしまう確率（α = 0.05）、緑は μ = 0.5 のときに棄却できる確率（検出力）です。下段の「Λ が ${c.toFixed(2)} を超える」と「x̄ が ${k.toFixed(3)} を超える」は同じ棄却域を指します。`;
   return fig(svg, cap);
 }
 
@@ -2545,15 +2545,15 @@ function threeTests(): string {
     ${[p0, ph].map((p) => `<line x1="${f1(X(p))}" y1="${f1(Y(ll(p)))}" x2="${f1(X(p))}" y2="${yAx}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 3" />
     <circle cx="${f1(X(p))}" cy="${f1(Y(ll(p)))}" r="3.6" fill="${INK}" />`).join('')}
     <text x="${f1(X(ph) + 6)}" y="${f1(Y(-31.45))}" font-size="12.4" font-weight="700" fill="${ROSE}">尤度比：高さの差</text>
-    <text x="${f1(X(ph) + 6)}" y="${f1(Y(-31.45) + 16)}" font-size="12.4" fill="${ROSE}">${f2(ll(ph) - ll(p0))}（2倍で ${f2(LR)}）</text>
+    <text x="${f1(X(ph) + 6)}" y="${f1(Y(-31.45) + 16)}" font-size="12.4" fill="${ROSE}">${f2(ll(ph) - ll(p0))}（→ ${f2(LR)}）</text>
     <text x="${f1(X(ph) + 6)}" y="${yAx - 24}" font-size="12.4" font-weight="700" fill="${AMBER}">ワルド：横の距離</text>
     <text x="${f1(X(ph) + 6)}" y="${yAx - 8}" font-size="12.4" fill="${AMBER}">${f2(ph - p0)}（→ ${f2(Wd)}）</text>
-    <text x="${f1(X(0.51))}" y="${f1(Y(-36.0))}" font-size="12.4" font-weight="700" fill="${TEAL}">スコア：傾き</text>
-    <text x="${f1(X(0.51))}" y="${f1(Y(-36.0) + 16)}" font-size="12.4" fill="${TEAL}">${U}（→ ${f2(S)}）</text>
+    <text x="${f1(X(0.39))}" y="${f1(Y(-32.6))}" font-size="12.4" font-weight="700" fill="${TEAL}">スコア：傾き</text>
+    <text x="${f1(X(0.39))}" y="${f1(Y(-32.6) + 16)}" font-size="12.4" fill="${TEAL}">${U}（→ ${f2(S)}）</text>
     <line x1="${bx.x}" y1="${yAx}" x2="${bx.x + bx.w}" y2="${yAx}" stroke="${SLATE}" />
     ${[0.4, 0.5, 0.6, 0.7, 0.8].map((p) => `<text x="${f1(X(p))}" y="${yAx + 16}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${p}</text>`).join('')}
     <text x="${f1(X(p0))}" y="${yAx + 34}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">p₀</text>
-    <text x="${f1(X(ph))}" y="${yAx + 34}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">推定値</text>
+    <text x="${f1(X(ph))}" y="${yAx + 34}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">p̂ = 0.64</text>
     <text x="${bx.x + bx.w}" y="${yAx + 34}" text-anchor="end" font-size="12.4" fill="${SLATE}">表の確率 p</text>
     <text x="4" y="13" font-size="12.4" fill="${SLATE}">対数尤度 ℓ(p)</text>
   </svg>`;
