@@ -2213,7 +2213,7 @@ function powerDesign(): string {
     ${area(b, f0, c, 8, ROSE, 0.55)}${area(b, f0, -4, -c, ROSE, 0.55)}
     ${curve(b, f0, INDIGO)}${curve(b, f1d, TEAL)}
     <line x1="${f1(PX(b, c))}" y1="${b.y - 4}" x2="${f1(PX(b, c))}" y2="${base}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${f1(PX(b, c) + 4)}" y="${b.y + 6}" font-size="12.4" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">境界 ${f2(c)}</text>
+    <text x="${f1(PX(b, c) - 4)}" y="${b.y + 6}" text-anchor="end" font-size="12.4" fill="${INK}" stroke="#fff" stroke-width="4" paint-order="stroke">境界 ${f2(c)}</text>
     <text x="${f1(PX(b, -2.4))}" y="${b.y + 30}" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">差 0</text>
     <text x="${f1(PX(b, 5.6))}" y="${b.y + 30}" text-anchor="start" font-size="12.4" font-weight="700" fill="${TEAL}">差 3.5</text>
     <text x="${f1(PX(b, c - 0.45))}" y="${base - 5}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">β</text>
