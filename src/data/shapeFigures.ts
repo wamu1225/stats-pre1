@@ -2488,6 +2488,33 @@ function npRegion(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.19：3つの棄却域の検出力を μ ごとに（一様最強力検定の有無） ============
+function umpPower(): string {
+  const W = 340, H = 242, se = 0.2, k1 = 1.6449 * se, k2 = 1.96 * se;
+  const b: Box = { x: 40, y: 24, w: 282, h: 180, xMin: -1, xMax: 1, yMax: 1 };
+  const right = (m: number) => 1 - Phi((k1 - m) / se);
+  const left = (m: number) => Phi((-k1 - m) / se);
+  const both = (m: number) => 1 - Phi((k2 - m) / se) + Phi((-k2 - m) / se);
+  const grid = [0.05, 0.5, 0.8, 1].map((v) => `<line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#e2e8f0" />
+    <text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('');
+  const lab = (y: number, t: string, c: string) => `<text x="${f1(PX(b, 0))}" y="${f1(PY(b, y))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${t}</text>`;
+  const svg = `${svgOpen(W, H, '25個・分散1で水準5%の3つの棄却域の検出力を、本当の平均が-1から1までで描いた図。平均が正の側では右側の棄却域、負の側では左側の棄却域がいちばん上で、両側の棄却域はどちらの側でも2番目。平均0ではどれも0.05')}
+    ${grid}
+    <line x1="${f1(PX(b, 0.5))}" y1="${b.y}" x2="${f1(PX(b, 0.5))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="3 3" />
+    ${curve(b, left, INDIGO, -1, 1, 2.2)}${curve(b, both, AMBER, -1, 1, 2.2)}${curve(b, right, TEAL, -1, 1, 2.2)}
+    ${lab(0.95, '右側', TEAL)}${lab(0.85, '両側', AMBER)}${lab(0.75, '左側', INDIGO)}
+    <circle cx="${f1(PX(b, 0.5))}" cy="${f1(PY(b, right(0.5)))}" r="4" fill="${TEAL}" />
+    <text x="${f1(PX(b, 0.5) - 7)}" y="${f1(PY(b, right(0.5)) + 4)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${TEAL}" stroke="#fff" stroke-width="4" paint-order="stroke">${f2(right(0.5))}</text>
+    <circle cx="${f1(PX(b, 0.5))}" cy="${f1(PY(b, both(0.5)))}" r="4" fill="${AMBER}" />
+    <text x="${f1(PX(b, 0.5) + 7)}" y="${f1(PY(b, both(0.5)) + 4)}" text-anchor="start" font-size="12.4" font-weight="700" fill="${AMBER}" stroke="#fff" stroke-width="4" paint-order="stroke">${f2(both(0.5))}</text>
+    ${axes(b, [-1, -0.5, 0, 0.5, 1])}
+    <text x="${b.x - 34}" y="${b.y - 10}" font-size="12.4" fill="${SLATE}">検出力（棄却する確率）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">本当の平均 μ</text>
+  </svg>`;
+  const cap = `右側・両側・左側は第1節の表の3つの棄却域です。μ = 0 ではどの線も 0.05 で、これは第1種の過誤の確率です。μ = 0.5 の2つの点が表の値で、左側の棄却域はここでほぼ0です。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.19：尤度比・ワルド・スコアを対数尤度の曲線で見る ============
 function threeTests(): string {
   const W = 340, H = 300, n = 50, x = 32, p0 = 0.5, ph = x / n;
@@ -5205,7 +5232,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
   'f-pvalue': pValue,
