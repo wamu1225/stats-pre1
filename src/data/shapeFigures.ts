@@ -1559,6 +1559,27 @@ function chi2Tail(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.20：適合度検定（サイコロ60回、χ²(5) の上で 3.4 と境目 11.07） ============
+function gofDice(): string {
+  const W = 344, H = 230, k = 5, obs = 3.4, crit = 11.07;
+  const b: Box = { x: 14, y: 34, w: 316, h: 150, xMin: 0, xMax: 16, yMax: 0.17 };
+  const f = chi2Pdf(k);
+  const p = simpsonInt(f, obs, 60);
+  const svg = `${svgOpen(W, H, '自由度5のカイ二乗分布。観測値3.4は山の真ん中にあり、右の面積は約64%。棄却の境目11.07より右は5%')}
+    ${area(b, f, obs, 16, INDIGO, 0.12)}${area(b, f, crit, 16, ROSE, 0.5)}${curve(b, f, INDIGO, 0.01, 16, 2.2)}
+    <line x1="${f1(PX(b, obs))}" y1="${b.y}" x2="${f1(PX(b, obs))}" y2="${b.y + b.h}" stroke="${INDIGO}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, obs) + 4)}" y="${b.y - 12}" font-size="12.4" font-weight="700" fill="${INDIGO}">観測 3.4</text>
+    <text x="${f1(PX(b, obs) + 4)}" y="${b.y + 3}" font-size="12.4" fill="${INDIGO}">右の面積 ${pct(p)}（P値）</text>
+    <line x1="${f1(PX(b, crit))}" y1="${b.y + 60}" x2="${f1(PX(b, crit))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(PX(b, crit))}" y="${b.y + 54}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">境目 11.07</text>
+    <text x="${f1(PX(b, 13.2))}" y="${f1(PY(b, 0.03))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">右の5%で棄却</text>
+    ${axes(b, [0, 2, 4, 6, 8, 10, 12, 14, 16])}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">χ²(5)：公正なサイコロで60回投げたときの χ² の分布</text>
+  </svg>`;
+  const cap = `公正なサイコロでも、χ² はこの山のどこかに出ます。観測した 3.4 は山の真ん中あたりで、これ以上のずれは公正でも約${Math.round(p * 100)}%の確率で起こります。`;
+  return fig(svg, cap);
+}
+
 function tTail(): string {
   const W = 344, H = 236, k = 9, obs = 5 / (6 / Math.sqrt(10));
   // 全体を描くと2つの曲線が重なって差が見えないので、右の裾（1.5〜4.5）だけを拡大する
@@ -5231,7 +5252,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-mean-narrow': meanNarrow,
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
-  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest,
+  'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
