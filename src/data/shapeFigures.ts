@@ -1576,7 +1576,7 @@ function gofDice(): string {
     ${axes(b, [0, 2, 4, 6, 8, 10, 12, 14, 16])}
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">χ²(5)：公正なサイコロで60回投げたときの χ² の分布</text>
   </svg>`;
-  const cap = `公正なサイコロでも、χ² はこの山のどこかに出ます。観測した 3.4 は山の真ん中あたりで、これ以上のずれは公正でも約${Math.round(p * 100)}%の確率で起こります。`;
+  const cap = `公正なサイコロでも、χ² はこの山のどこかに出ます。観測した 3.4 は山の頂上付近で、これ以上のずれは公正でも約${Math.round(p * 100)}%の確率で起こります。`;
   return fig(svg, cap);
 }
 
