@@ -2710,7 +2710,7 @@ function interactionPlot(): string {
     <line x1="200" y1="${H - 12}" x2="222" y2="${H - 12}" stroke="${N}" stroke-width="2.4" />
     <text x="228" y="${H - 8}" font-size="12.8" font-weight="700" fill="${N}">煮玉子</text>
   </svg>`;
-  const cap = '縦は各組み合わせ3日分の平均売上（万円）です。左の実際の例では、オフィス街ではチャーシューが10万円高く、住宅街では煮玉子が2万円高くなり、線が交わります。右のように2本が平行なら、トッピングの差はどちらの立地でも同じで、交互作用はありません。';
+  const cap = '縦は各組み合わせ3日分の平均売上（万円）です。左の実際の例では、オフィス街ではチャーシューが10万円高く、住宅街では煮玉子が2万円高くなり、線が交わります。右のように2本が平行なら、トッピングの差はどちらの立地でも同じです。';
   return fig(svg, cap);
 }
 
@@ -3042,11 +3042,11 @@ function anovaDots(): string {
   const svg = `${svgOpen(W, H, '3つのトッピングの日ごとの売上：群の平均どうしの離れ方（群間）と、群の中の散らばり（群内）')}
     ${[45, 50, 55, 60].map((v) => `<text x="${b.x - 6}" y="${f1(py(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text><line x1="${b.x}" y1="${f1(py(v))}" x2="${b.x + b.w}" y2="${f1(py(v))}" stroke="#f1f5f9" />`).join('')}
     <line x1="${b.x}" y1="${f1(py(G))}" x2="${b.x + b.w}" y2="${f1(py(G))}" stroke="${SLATE}" stroke-width="1.2" stroke-dasharray="4 3" />
-    <text x="${b.x + 2}" y="${f1(py(G) - 4)}" font-size="12.4" fill="${SLATE}">全体平均 ${f1(G)}</text>
+    <text x="${b.x + b.w - 2}" y="${f1(py(G) - 5)}" text-anchor="end" font-size="12.4" fill="${SLATE}">全体平均 ${f1(G)}</text>
     ${dots}
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">点＝1日の売上（万円）・太線＝そのトッピングの平均</text>
   </svg>`;
-  const cap = `点は1日ごとの売上、太線は各トッピングの平均です。<strong>群間変動</strong>は太線が全体平均（点線）からどれだけ離れているか、<strong>群内変動</strong>は同じ色の点が太線のまわりにどれだけ散らばっているかです。この10日ずつのデータで計算すると、群間平方和 ${f1(ssb)}、群内平方和 ${f1(ssw)}、F = (${f1(ssb)} ÷ ${k - 1}) ÷ (${f1(ssw)} ÷ ${n - k}) ≈ ${f1(F)} です。チャーシューの太線だけが群内の散らばりよりはるかに大きく離れているので、F が大きくなります。`;
+  const cap = `点は1日ごとの売上、太線は各トッピングの平均です。<strong>群間変動</strong>は太線が全体平均（点線）からどれだけ離れているか、<strong>群内変動</strong>は同じ色の点が太線のまわりにどれだけ散らばっているかです。チャーシューの太線が群内の散らばりよりはるかに大きく離れているので、F が大きくなります。`;
   return fig(svg, cap);
 }
 
