@@ -2651,6 +2651,39 @@ function rankSum(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.20b：検定の選び方（はい・いいえの分岐） ============
+function testChoice(): string {
+  const W = 350, H = 300;
+  const qx = 6, qw = 190, ax = 232, aw = 112, bh = 52;
+  const lines = (x: number, y: number, ls: string[], color: string, bold = false) =>
+    ls.map((l, i) => `<text x="${x}" y="${y + i * 16}" text-anchor="middle" font-size="12.4"${bold ? ' font-weight="700"' : ''} fill="${color}">${l}</text>`).join('');
+  const arrowR = (y: number) => `<line x1="${qx + qw}" y1="${y}" x2="${ax - 6}" y2="${y}" stroke="${SLATE}" stroke-width="1.4" />
+    <polygon points="${ax - 8},${y - 4} ${ax - 8},${y + 4} ${ax - 1},${y}" fill="${SLATE}" />
+    <text x="${(qx + qw + ax) / 2}" y="${y - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">はい</text>`;
+  const arrowD = (y1: number, y2: number) => `<line x1="${qx + qw / 2}" y1="${y1}" x2="${qx + qw / 2}" y2="${y2 - 6}" stroke="${SLATE}" stroke-width="1.4" />
+    <polygon points="${qx + qw / 2 - 4},${y2 - 8} ${qx + qw / 2 + 4},${y2 - 8} ${qx + qw / 2},${y2 - 1}" fill="${SLATE}" />
+    <text x="${qx + qw / 2 + 8}" y="${(y1 + y2) / 2 + 4}" font-size="12.4" fill="${SLATE}">いいえ（測った値）</text>`;
+  const box = (x: number, y: number, w: number, color: string, ls: string[], bold = false) =>
+    `<rect x="${x}" y="${y}" width="${w}" height="${bh}" rx="6" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1.3" />
+    ${lines(x + w / 2, y + bh / 2 - (ls.length - 1) * 8 + 4, ls, color === SLATE ? INK : color, bold)}`;
+  const y1 = 8, y2 = 98, y3 = 188;
+  const svg = `${svgOpen(W, H, '検定の選び方。数えたデータなら比率や度数の検定、測った値で外れ値や裾の重さがあれば順位の検定、なければ正規分布を仮定する検定。どれも n がとても小さければ正確検定')}
+    ${box(qx, y1, qw, SLATE, ['数えたデータか', '（何人中何人・件数・度数の表）'])}${arrowR(y1 + bh / 2)}
+    ${box(ax, y1, aw, TEAL, ['比率・適合度・', '分割表の検定'], true)}
+    ${arrowD(y1 + bh, y2)}
+    ${box(qx, y2, qw, SLATE, ['外れ値が出やすい・裾が重い・', '順位しか無い'])}${arrowR(y2 + bh / 2)}
+    ${box(ax, y2, aw, '#b45309', ['順位の検定', '（表の右の列）'], true)}
+    <line x1="${qx + qw / 2}" y1="${y2 + bh}" x2="${qx + qw / 2}" y2="${y3 - 6}" stroke="${SLATE}" stroke-width="1.4" />
+    <polygon points="${qx + qw / 2 - 4},${y3 - 8} ${qx + qw / 2 + 4},${y3 - 8} ${qx + qw / 2},${y3 - 1}" fill="${SLATE}" />
+    <text x="${qx + qw / 2 + 8}" y="${(y2 + bh + y3) / 2 + 4}" font-size="12.4" fill="${SLATE}">いいえ</text>
+    ${box(qx, y3, qw, INDIGO, ['正規分布を仮定する検定', '（表の左の列：t 検定・分散分析）'], true)}
+    <line x1="${qx}" y1="${y3 + bh + 18}" x2="${W - 6}" y2="${y3 + bh + 18}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="4 3" />
+    ${lines(W / 2, y3 + bh + 38, ['どの道でも n がとても小さく近似が心配なら、', '確率を直接足す・分け方を数える正確検定'], ROSE)}
+  </svg>`;
+  const cap = `上から順に問いに答えていくと、使う検定が決まります。「表」は第2節の表で、群の数と対応の有無でどの行を使うかが決まります。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.21：交互作用プロット（トッピング×立地の2×2） ============
 function interactionPlot(): string {
   const W = 350, H = 236;
@@ -5269,6 +5302,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-loglik': logLikCurvature, 'f-loglik-mix': logLikMix, 'f-mle-sampling': mleSampling, 'f-sqrtn': sqrtNScale, 'f-logit-interval': logitInterval, 'f-delta-slope': deltaSlope,
   'f-qq': qqPlot,
   'f-rank-ab': rankSum,
+  'f-test-choice': testChoice,
   'f-interaction': interactionPlot,
   'f-factor-path': factorPath,
   'f-factor-rotation': factorRotation,
