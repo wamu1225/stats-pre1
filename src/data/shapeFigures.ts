@@ -2678,7 +2678,7 @@ function testChoice(): string {
     <text x="${qx + qw / 2 + 8}" y="${(y2 + bh + y3) / 2 + 4}" font-size="12.4" fill="${SLATE}">いいえ</text>
     ${box(qx, y3, qw, INDIGO, ['正規分布を仮定する検定', '（表の左の列：t 検定・分散分析）'], true)}
     <line x1="${qx}" y1="${y3 + bh + 18}" x2="${W - 6}" y2="${y3 + bh + 18}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="4 3" />
-    ${lines(W / 2, y3 + bh + 38, ['どの道でも n がとても小さく近似が心配なら、', '確率を直接足す・分け方を数える正確検定'], ROSE)}
+    ${lines(W / 2, y3 + bh + 38, ['どの道でも n がとても小さく近似が心配なら、', '二項分布などで直接足す・分け方を数える正確検定'], ROSE)}
   </svg>`;
   const cap = `上から順に問いに答えていくと、使う検定が決まります。「表」は第2節の表で、群の数と対応の有無でどの行を使うかが決まります。`;
   return fig(svg, cap);
@@ -3650,7 +3650,7 @@ function qqPlot(): string {
   const xs0 = [18, 132, 246];
   const panels: [number[], string, string, string, string][] = [
     [std(normalSample), INDIGO, '正規分布', '直線上に並ぶ', ''],
-    [std(skewSample), '#b45309', '右に裾が長い', '弓なりで', '右上が上へそる'],
+    [std(skewSample), '#b45309', '右に裾が長い', '左下は浮き、', '右上は上へそる'],
     [std(heavySample), TEAL, '両裾が重い', '左下は下、', '右上は上へ離れる'],
   ];
   const body = panels.map(([ys, color, title, d1, d2], k) => {
