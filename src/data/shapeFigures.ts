@@ -2667,11 +2667,11 @@ function testChoice(): string {
     `<rect x="${x}" y="${y}" width="${w}" height="${bh}" rx="6" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1.3" />
     ${lines(x + w / 2, y + bh / 2 - (ls.length - 1) * 8 + 4, ls, color === SLATE ? INK : color, bold)}`;
   const y1 = 8, y2 = 98, y3 = 188;
-  const svg = `${svgOpen(W, H, '検定の選び方。数えたデータなら比率や度数の検定、測った値で外れ値や裾の重さがあれば順位の検定、なければ正規分布を仮定する検定。どれも n がとても小さければ正確検定')}
+  const svg = `${svgOpen(W, H, '検定の選び方。数えたデータなら比率や度数の検定、測った値で外れ値や長い裾・重い裾があれば順位の検定、なければ正規分布を仮定する検定。どれも n がとても小さければ正確検定')}
     ${box(qx, y1, qw, SLATE, ['数えたデータか', '（何人中何人・件数・度数の表）'])}${arrowR(y1 + bh / 2)}
     ${box(ax, y1, aw, TEAL, ['比率・適合度・', '分割表の検定'], true)}
     ${arrowD(y1 + bh, y2)}
-    ${box(qx, y2, qw, SLATE, ['外れ値が出やすい・裾が重い・', '順位しか無い'])}${arrowR(y2 + bh / 2)}
+    ${box(qx, y2, qw, SLATE, ['外れ値が出やすい・裾が', '長い／重い・順位しか無い'])}${arrowR(y2 + bh / 2)}
     ${box(ax, y2, aw, '#b45309', ['順位の検定', '（表の右の列）'], true)}
     <line x1="${qx + qw / 2}" y1="${y2 + bh}" x2="${qx + qw / 2}" y2="${y3 - 6}" stroke="${SLATE}" stroke-width="1.4" />
     <polygon points="${qx + qw / 2 - 4},${y3 - 8} ${qx + qw / 2 + 4},${y3 - 8} ${qx + qw / 2},${y3 - 1}" fill="${SLATE}" />
