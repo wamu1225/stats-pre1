@@ -3506,8 +3506,8 @@ function mleSampling(): string {
       <text x="${b.x + 2}" y="${top + 12}" font-size="12.4" fill="${SLATE}">標準誤差 ${se.toFixed(3)}</text>
       ${axes(b, [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])}`;
   };
-  const svg = `${svgOpen(W, H, '真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回ではずれが残り曲線が1の外へはみ出します。100回ではほぼ重なります')}
-    ${panel(10, 26, 3.2, '10回：ずれが残り、曲線は1の外へはみ出す')}
+  const svg = `${svgOpen(W, H, '真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回では棒と曲線が合わず曲線が1の外へはみ出します。100回ではほぼ重なります')}
+    ${panel(10, 26, 3.2, '10回：棒と曲線が合わず、1の外へはみ出す')}
     ${panel(100, 156, 10, '100回：棒と曲線がほぼ重なる')}
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（表の割合）</text>
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}"><tspan fill="${INDIGO}">棒</tspan>＝正確な分布、<tspan fill="#b45309">曲線</tspan>＝正規分布での近似</text>
@@ -3566,7 +3566,7 @@ function logitInterval(): string {
     <line x1="20" y1="168" x2="336" y2="168" stroke="${SLATE}" />
     ${[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => `<text x="${f1(X(t))}" y="183" text-anchor="middle" font-size="12" fill="${t === 1 ? ROSE : SLATE}">${t}</text>`).join('')}
   </svg>`;
-  const cap = `白丸が推定値、帯が95%区間です。対数オッズで作って戻した区間は、推定値の左右で長さが違い、1に近い側が短くなります。100回では、2つの区間はほぼ同じです。`;
+  const cap = `白丸が推定値、帯が95%区間です。対数オッズで作って戻した区間は、推定値の左右で長さが違い、1に近い側が短くなります。100回中70回は回数が多く1からも遠いので、2つの区間はほぼ同じです。`;
   return fig(svg, cap);
 }
 
@@ -3620,7 +3620,7 @@ function logLikCurvature(): string {
     <text x="${b.x + b.w / 2}" y="${H - 20}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝p の候補</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を 0 とし、下は −6 で打ち切り）</text>
   </svg>`;
-  const cap = `同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。山の鋭さは、回数に比例して 10 倍になります。`;
+  const cap = `同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。鋭さ（曲がり具合）は回数に比例して10倍、山の幅は約1/3になります。`;
   return fig(svg, cap);
 }
 
