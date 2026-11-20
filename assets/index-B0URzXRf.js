@@ -1382,8 +1382,8 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
       ${l}${G(a,s,1,1.1,j,.55)}${W(a,s,k,.3,1.1,2.2)}
       <line x1="${P(V(a,1))}" y1="${n}" x2="${P(V(a,1))}" y2="${n+a.h}" stroke="${j}" stroke-width="1.2" stroke-dasharray="4 3" />
       <text x="${a.x+2}" y="${n+12}" font-size="12.4" fill="${M}">標準誤差 ${o.toFixed(3)}</text>
-      ${U(a,[.4,.5,.6,.7,.8,.9,1])}`};return K(`${q(350,296,`真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回ではずれが残り曲線が1の外へはみ出します。100回ではほぼ重なります`)}
-    ${t(10,26,3.2,`10回：ずれが残り、曲線は1の外へはみ出す`)}
+      ${U(a,[.4,.5,.6,.7,.8,.9,1])}`};return K(`${q(350,296,`真の確率0.7のコインで、推定値の出方を二項分布の棒と正規分布の曲線で比べる。10回では棒と曲線が合わず曲線が1の外へはみ出します。100回ではほぼ重なります`)}
+    ${t(10,26,3.2,`10回：棒と曲線が合わず、1の外へはみ出す`)}
     ${t(100,156,10,`100回：棒と曲線がほぼ重なる`)}
     <text x="${350/2}" y="274" text-anchor="middle" font-size="12.4" fill="${M}">横軸＝推定値（表の割合）</text>
     <text x="${350/2}" y="290" text-anchor="middle" font-size="12.4" fill="${M}"><tspan fill="${O}">棒</tspan>＝正確な分布、<tspan fill="#b45309">曲線</tspan>＝正規分布での近似</text>
@@ -1417,7 +1417,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     ${a(144,`対数オッズで作って戻す`,i(100,.7),.7,A)}
     <line x1="20" y1="168" x2="336" y2="168" stroke="${M}" />
     ${[.4,.5,.6,.7,.8,.9,1].map(t=>`<text x="${P(e(t))}" y="183" text-anchor="middle" font-size="12" fill="${t===1?j:M}">${t}</text>`).join(``)}
-  </svg>`,`白丸が推定値、帯が95%区間です。対数オッズで作って戻した区間は、推定値の左右で長さが違い、1に近い側が短くなります。100回では、2つの区間はほぼ同じです。`)}function rr(){let e=.03,t=.45,n=-.3,r=e=>52+(e-t)/(1-t)*284,i=e=>226-(e-n)/(3.6-n)*212,a=e=>Math.log(e/(1-e)),o=e=>1/(e*(1-e)),s=Array.from({length:101},(e,n)=>{let o=t+(.972-t)*n/100;return`${n?`L`:`M`}${P(r(o))},${P(i(a(o)))}`}).join(``),c=(t,n,s,c,l,u)=>{let d=o(t),f=d*e,p=.075;return`<rect x="${P(r(t-e))}" y="${P(i(a(t)))}" width="${P(r(t+e)-r(t-e))}" height="${P(226-i(a(t)))}" fill="${n}" fill-opacity="0.16" />
+  </svg>`,`白丸が推定値、帯が95%区間です。対数オッズで作って戻した区間は、推定値の左右で長さが違い、1に近い側が短くなります。100回中70回は回数が多く1からも遠いので、2つの区間はほぼ同じです。`)}function rr(){let e=.03,t=.45,n=-.3,r=e=>52+(e-t)/(1-t)*284,i=e=>226-(e-n)/(3.6-n)*212,a=e=>Math.log(e/(1-e)),o=e=>1/(e*(1-e)),s=Array.from({length:101},(e,n)=>{let o=t+(.972-t)*n/100;return`${n?`L`:`M`}${P(r(o))},${P(i(a(o)))}`}).join(``),c=(t,n,s,c,l,u)=>{let d=o(t),f=d*e,p=.075;return`<rect x="${P(r(t-e))}" y="${P(i(a(t)))}" width="${P(r(t+e)-r(t-e))}" height="${P(226-i(a(t)))}" fill="${n}" fill-opacity="0.16" />
       <rect x="52" y="${P(i(a(t)+f))}" width="${P(r(t)-52)}" height="${P(i(a(t)-f)-i(a(t)+f))}" fill="${n}" fill-opacity="0.16" />
       <line x1="${P(r(t-p))}" y1="${P(i(a(t)-d*p))}" x2="${P(r(t+p))}" y2="${P(i(a(t)+d*p))}" stroke="${N}" stroke-width="1.2" stroke-dasharray="5 3" />
       <line x1="${P(r(t-e))}" y1="226" x2="${P(r(t+e))}" y2="226" stroke="${n}" stroke-width="6" />
@@ -1444,7 +1444,7 @@ import{a as e}from"./rolldown-runtime-COnpUsM8.js";import{i as t,n,r,t as i}from
     <text x="${P(V(e,.55))}" y="${P(H(e,2))}" text-anchor="end" font-size="13.2" font-weight="700" fill="#b45309">100回中70回</text>
     <text x="${e.x+e.w/2}" y="216" text-anchor="middle" font-size="12.4" fill="${M}">横軸＝p の候補</text>
     <text x="${e.x+e.w/2}" y="231" text-anchor="middle" font-size="12.4" fill="${M}">縦軸＝対数尤度（頂上を 0 とし、下は −6 で打ち切り）</text>
-  </svg>`,`同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。山の鋭さは、回数に比例して 10 倍になります。`)}function ar(){let e=rt(nt(7)),t=Array.from({length:30},()=>e()).sort((e,t)=>e-t),n=e=>(e+.5)/30,r=(e,t)=>{let n=-40,r=40;for(let i=0;i<80;i++){let i=(n+r)/2;e(i)<t?n=i:r=i}return(n+r)/2},i=Array.from({length:30},(e,t)=>-Math.log(1-n(t))),a=e=>.5+(e/(Math.sqrt(3)*(1+e*e/3))+Math.atan(e/Math.sqrt(3)))/Math.PI,o=Array.from({length:30},(e,t)=>r(a,n(t))),s=Array.from({length:30},(e,t)=>r(B,n(t))),c=e=>{let t=e.reduce((e,t)=>e+t,0)/e.length,n=Math.sqrt(e.reduce((e,n)=>e+(n-t)**2,0)/(e.length-1));return e.map(e=>(e-t)/n)},l=3.4,u=[18,132,246],d=[[c(t),O,`正規分布`,`直線上に並ぶ`,``],[c(i),`#b45309`,`右に裾が長い`,`左下は浮き、`,`右上は上へそる`],[c(o),A,`両裾が重い`,`左下は下、`,`右上は上へ離れる`]].map(([e,t,n,r,i],a)=>{let o=u[a],c=e=>o+(e+l)/(2*l)*96,d=e=>130-(e+l)/(2*l)*96,f=e.map((e,n)=>`<circle cx="${P(c(s[n]))}" cy="${P(d(Math.max(-l,Math.min(l,e))))}" r="2.6" fill="${t}" fill-opacity="0.85" />`).join(``),p=[-2,0,2].map(e=>`<text x="${P(c(e))}" y="144" text-anchor="middle" font-size="12" fill="${M}">${e}</text>`).join(``);return`<rect x="${o}" y="34" width="96" height="96" fill="none" stroke="${M}" stroke-width="1" />
+  </svg>`,`同じ「表が7割」でも、回数で山の鋭さが変わります。山が鋭いほど、頂上から少しずれた候補はすぐに尤もらしくなくなり、p を狭く絞り込めます。鋭さ（曲がり具合）は回数に比例して10倍、山の幅は約1/3になります。`)}function ar(){let e=rt(nt(7)),t=Array.from({length:30},()=>e()).sort((e,t)=>e-t),n=e=>(e+.5)/30,r=(e,t)=>{let n=-40,r=40;for(let i=0;i<80;i++){let i=(n+r)/2;e(i)<t?n=i:r=i}return(n+r)/2},i=Array.from({length:30},(e,t)=>-Math.log(1-n(t))),a=e=>.5+(e/(Math.sqrt(3)*(1+e*e/3))+Math.atan(e/Math.sqrt(3)))/Math.PI,o=Array.from({length:30},(e,t)=>r(a,n(t))),s=Array.from({length:30},(e,t)=>r(B,n(t))),c=e=>{let t=e.reduce((e,t)=>e+t,0)/e.length,n=Math.sqrt(e.reduce((e,n)=>e+(n-t)**2,0)/(e.length-1));return e.map(e=>(e-t)/n)},l=3.4,u=[18,132,246],d=[[c(t),O,`正規分布`,`直線上に並ぶ`,``],[c(i),`#b45309`,`右に裾が長い`,`左下は浮き、`,`右上は上へそる`],[c(o),A,`両裾が重い`,`左下は下、`,`右上は上へ離れる`]].map(([e,t,n,r,i],a)=>{let o=u[a],c=e=>o+(e+l)/(2*l)*96,d=e=>130-(e+l)/(2*l)*96,f=e.map((e,n)=>`<circle cx="${P(c(s[n]))}" cy="${P(d(Math.max(-l,Math.min(l,e))))}" r="2.6" fill="${t}" fill-opacity="0.85" />`).join(``),p=[-2,0,2].map(e=>`<text x="${P(c(e))}" y="144" text-anchor="middle" font-size="12" fill="${M}">${e}</text>`).join(``);return`<rect x="${o}" y="34" width="96" height="96" fill="none" stroke="${M}" stroke-width="1" />
     <line x1="${P(c(-l))}" y1="${P(d(-l))}" x2="${P(c(l))}" y2="${P(d(l))}" stroke="${M}" stroke-width="1.1" stroke-dasharray="4 3" />
     ${f}${p}
     <text x="${o+96/2}" y="24" text-anchor="middle" font-size="12.8" font-weight="700" fill="${t}">${n}</text>
@@ -4381,11 +4381,11 @@ $$\\begin{aligned} \\bar{x} - z_{\\alpha}\\,\\frac{\\sigma}{\\sqrt{n}} &= 500 - 
 
 #### これから投げる1回で、山はどれだけ鋭くなるか
 
-コイン1回の対数尤度は、表（$X=1$）なら $\\log p$、裏（$X=0$）なら $\\log(1-p)$ です。投げる前はどちらが出るか分からないので、出やすさで重みを付けて平均します（期待値）。
+コイン1回の対数尤度は、表（$X=1$）なら $\\log p$、裏（$X=0$）なら $\\log(1-p)$ です。山の鋭さはデータごとに変わるので、真の $p$ だけで決まるよう、投げる前の1回を、出やすさで重みを付けて平均します（期待値）。
 
 [[f-loglik-mix]]
 
-この平均した山の鋭さが**フィッシャー情報量**（Fisher Information）です。$f$ は1回分の確率、$\\theta$ は母数です。
+この平均した山の鋭さが**フィッシャー情報量**です。$f$ は1回分の確率、$\\theta$ は母数です。
 
 $$\\begin{aligned} I(\\theta) &= -E\\!\\left[\\frac{\\partial^2 \\log f(X;\\theta)}{\\partial \\theta^2}\\right] \\\\ &= E\\!\\left[\\left(\\frac{\\partial \\log f(X;\\theta)}{\\partial \\theta}\\right)^2\\right] \\end{aligned}$$
 
@@ -4395,13 +4395,13 @@ $$\\begin{aligned} I(\\theta) &= -E\\!\\left[\\frac{\\partial^2 \\log f(X;\\thet
 
 $$\\begin{aligned} \\log f &= X\\log p + (1-X)\\log(1-p) \\\\ \\frac{\\partial^2 \\log f}{\\partial p^2} &= -\\frac{X}{p^2} - \\frac{1-X}{(1-p)^2} \\end{aligned}$$
 
-真の値での平均 $E[X] = p$ を入れてマイナスを付けます。
+真の値と候補を同じ $p$ とおき、$E[X] = p$ を入れてマイナスを付けます。
 
 $$I(p) = \\frac{1}{p} + \\frac{1}{1-p} = \\frac{1}{p(1-p)}$$
 
 $p = 0.7$ なら $1/0.21 = 4.76$ です。
 
-独立な $n$ 回分の情報量は $n I(\\theta)$ です（加法性）。最初の図の山の鋭さは、10回で47.6、100回で476です。
+独立な $n$ 回分の情報量は $n I(\\theta)$ です（加法性）。最初の図の山の鋭さは、10回で47.6、100回で476です。この数が推定値のずれを決めます（次の節）。
 
 ---
 
@@ -4411,11 +4411,11 @@ $p = 0.7$ なら $1/0.21 = 4.76$ です。
 
 [[f-mle-sampling]]
 
-多くのモデルでは、データが多いとき、最尤推定量（MLE）$\\hat{\\theta}_n$ の散らばりは、真の値 $\\theta$ を中心とする正規分布で近似できます。
+尤度が $\\theta$ についてなめらかな多くのモデルでは、データが多いとき、最尤推定量（MLE）$\\hat{\\theta}_n$ の散らばりは、真の値 $\\theta$ を中心とする正規分布で近似できます（**漸近正規性**）。
 
 $$\\hat{\\theta}_n \\approx N\\!\\left(\\theta,\\, \\frac{1}{nI(\\theta)}\\right), \\qquad \\text{標準誤差} = \\frac{1}{\\sqrt{nI(\\theta)}}$$
 
-分散が情報量の逆数なので、山が鋭いほど推定値のばらつきは小さくなります。コインの例で、未知の $p$ に推定値0.70を入れて計算します。
+分散が情報量の逆数なので、山が鋭いほど推定値のばらつきは小さくなります。コインの例で計算します。$p$ は未知なので推定値0.70で代用します（代用してよい理由は下の📖）。
 
 | | 10回中7回 | 100回中70回 |
 |---|---|---|
@@ -4425,6 +4425,8 @@ $$\\hat{\\theta}_n \\approx N\\!\\left(\\theta,\\, \\frac{1}{nI(\\theta)}\\right
 
 標準誤差 $1/\\sqrt{n/(p(1-p))} = \\sqrt{p(1-p)/n}$ は、[母比率の区間](/stats-pre1/1.16-ci/)の式と同じです。あの公式は、この一般則の1つの例でした。
 
+近似の分散 $1/(nI(\\theta))$ は、クラーメル・ラオの下限と同じ値です。データが多ければ、最尤推定量のばらつきは下限とほぼ同じになります（**漸近有効**）。最尤法が広く使われる理由です。
+
 #### 試験で使う書き方
 
 $n$ を増やすと分散 $1/(nI(\\theta))$ は0に近づき、分布は1点に潰れます。そこで、ずれを $\\sqrt{n}$ 倍に引き伸ばして書きます。
@@ -4433,13 +4435,11 @@ $n$ を増やすと分散 $1/(nI(\\theta))$ は0に近づき、分布は1点に�
 
 $$\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N\\!\\left(0,\\, \\frac{1}{I(\\theta)}\\right)$$
 
-近似の分散 $1/(nI(\\theta))$ は、クラーメル・ラオの下限と同じ値です。データが多ければ、最尤推定量のばらつきは下限に届きます（**漸近有効**）。最尤法が広く使われる理由です。
-
 📖 **連続写像定理とスルツキーの補題：推定値を入れてよい理由**
 
 上の表では、未知の $p$ に推定値を入れました。それでよい理由が、次の2つの定理です。
 
-**連続写像定理**：$Z_n$ が $Z$ に分布収束するとき、連続な関数 $g$ について $g(Z_n)$ は $g(Z)$ に分布収束します。確率収束・概収束でも同じ形で成り立ちます。
+**連続写像定理**：$Z_n$ が $Z$ に分布（または確率）収束するとき、連続な関数 $g$ について $g(Z_n)$ も同じ意味で $g(Z)$ に収束します。
 
 **スルツキーの補題**：$Z_n$ が $Z$ に分布収束し、$Y_n$ が定数 $c$ に確率収束するとき、次の3つが成り立ちます。
 
@@ -4449,7 +4449,7 @@ $$\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N\\!\\left(0,\\, \\frac
 
 コインでは、$\\hat{p}$ が $p$ に確率収束するので、$\\sqrt{\\hat{p}(1-\\hat{p})}$ は定数 $\\sqrt{p(1-p)}$ に確率収束します（連続写像定理）。
 
-$\\sqrt{n}(\\hat{p}-p)$ は $N(0, p(1-p))$ に分布収束するので、$\\sqrt{n}(\\hat{p}-p)/\\sqrt{\\hat{p}(1-\\hat{p})}$ は $N(0,1)$ に近づきます（スルツキーの補題）。$\\hat{p} \\pm 1.96 \\times$ 標準誤差が使えるのはこのためです。標本標準偏差 $s_n$ で割った $\\sqrt{n}(\\bar{X}_n-\\mu)/s_n$ も、同じ理由で $N(0,1)$ に近づきます。
+$\\sqrt{n}(\\hat{p}-p)$ は $N(0, p(1-p))$ に分布収束するので、$\\sqrt{n}(\\hat{p}-p)/\\sqrt{\\hat{p}(1-\\hat{p})}$ は $N(0,1)$ に近づきます（スルツキーの補題）。$\\hat{p} \\pm 1.96 \\times$ 標準誤差が使えるのはこのためです。
 
 🎯 **つまずきやすい点**：$Z_n$ と $Y_n$ がどちらも分布収束するだけでは、和や積の極限は決まりません。スルツキーの補題が使えるのは、$Y_n$ が定数に収束するときだけです。
 
@@ -4486,11 +4486,9 @@ $$\\sqrt{\\frac{p(1-p)}{n}} \\times \\frac{1}{p(1-p)} = \\frac{1}{\\sqrt{np(1-p)
 | 95%区間（対数オッズ） | 0.13〜4.26 | 0.42〜1.28 |
 | 確率に戻した区間 | 0.53〜0.99 | 0.60〜0.78 |
 
-10回では、どちらの区間もまだ粗い近似です。
+デルタ法は、2群のオッズの比（オッズ比）や相関係数など、推定値を変換した量に広く使います。
 
-デルタ法は、オッズ比や相関係数など、推定値を変換した量に広く使います。対数オッズの標準誤差は、後の章のワルド検定やロジスティック回帰で使います。
-
-**母数が複数のとき**：$\\hat{\\boldsymbol{\\theta}}$ の漸近分散共分散行列 $\\Sigma$ は $1/(nI)$ の行列版で、$n$ 回分の情報行列の逆行列です。$\\mathbf{g}(\\hat{\\boldsymbol{\\theta}})$ では $J \\Sigma J^\\top$ になります。$J$ は $g'$ の行列版で、$(i,j)$ 成分が $\\partial g_i/\\partial \\theta_j$ のヤコビアン行列です。`,keyFormulas:[{label:`フィッシャー情報量`,formula:`I(\\theta) = -E\\!\\left[\\dfrac{\\partial^2 \\log f}{\\partial \\theta^2}\\right]`},{label:`MLE の漸近正規性`,formula:`\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N\\!\\left(0,\\, \\dfrac{1}{I(\\theta)}\\right)`},{label:`デルタ法（1変数）`,formula:`\\begin{aligned} &\\sqrt{n}(g(\\hat{\\theta})-g(\\theta)) \\\\ &\\xrightarrow{d} N(0,\\,[g'(\\theta)]^2/I(\\theta)) \\end{aligned}`},{label:`n 回分の情報量（加法性）`,formula:`n \\cdot I(\\theta)`}],quiz:[{id:`asy1-2`,question:`MLE $\\hat{\\theta}_n$ の漸近分布 $\\hat{\\theta}_n \\approx N(\\theta, 1/(nI(\\theta)))$ から言えることはどれか？`,options:[`$n$ がいくつでも、MLE の分布は左右対称な形になる`,`$n$ が10程度の小標本でも、この近似は正確に成り立つ`,`$n$ が増えるほど分散が増え、推定が難しくなる`,`$n$ が増えるほど分散が $n$ に反比例して減り、精度が上がる`],correctAnswer:3,explanation:`漸近分散 $1/(nI(\\theta))$ は $n$ に反比例するため、サンプルが増えるほど精度が上がります（標準誤差 $\\propto 1/\\sqrt{n}$）。この近似はデータが多いときのものです。10回のコインでは、推定値の分布は左右対称にならず、正規分布からずれます。`},{id:`asy1-7`,question:`$N(\\mu, \\sigma^2)$（$\\sigma^2$ は既知）で、観測1個あたりの $\\mu$ についての情報量 $I(\\mu)$ はいくらか？`,options:[`$1/\\sigma^2$`,`$n/\\sigma^2$`,`$\\sigma/n$`,`$\\sigma^2$`],correctAnswer:0,explanation:`$\\log f(x;\\mu) = -\\frac{(x-\\mu)^2}{2\\sigma^2} + \\text{const}$、$\\frac{\\partial \\log f}{\\partial \\mu} = \\frac{x-\\mu}{\\sigma^2}$、$I(\\mu) = E[(x-\\mu)^2/\\sigma^4] = \\sigma^2/\\sigma^4 = 1/\\sigma^2$。これより漸近分散は $1/(nI(\\mu)) = \\sigma^2/n$、標準誤差 $= \\sigma/\\sqrt{n}$（標本平均の標準誤差の公式と一致）。`},{id:`asy1-9`,question:`デルタ法で $g(\\hat{p}) = \\log(\\hat{p}/(1-\\hat{p}))$（対数オッズ）の漸近分散を求める。$\\hat{p}$ の漸近分散が $p(1-p)/n$ のとき、対数オッズの漸近分散はどれか？`,options:[`$np(1-p)$`,`$p(1-p)/n$`,`$1/(np(1-p))$`,`$1/(n(1-p)^2)$`],correctAnswer:2,explanation:`$g'(p) = 1/(p(1-p))$ より、デルタ法で漸近分散 $= [g'(p)]^2 \\cdot \\text{Var}(\\hat{p}) = \\frac{1}{p^2(1-p)^2} \\cdot \\frac{p(1-p)}{n} = \\frac{1}{np(1-p)}$。対数オッズ変換はロジスティック回帰で頻繁に使われます。`},{id:`asy1-11`,question:`フィッシャー情報量の加法性とは何か？`,options:[`2つのモデルの対数尤度の差が、データの個数に比例すること`,`最尤推定量の偏りが、データの個数に反比例して小さくなること`,`2つの異なる母数の情報量を足すと、分散の下限になること`,`独立な $n$ 個の観測値の情報量が、1個のときの $n$ 倍になること`],correctAnswer:3,explanation:`$n$ 個の独立な観測値 $X_1,\\ldots,X_n$ が同一分布に従うとき、フィッシャー情報量は $I_n(\\theta) = n \\cdot I(\\theta)$ と $n$ 倍になります（加法性）。これにより MLE の漸近分散が $1/(nI(\\theta))$（$n$ に反比例）になることが直接示せます。`},{id:`asy1-12`,question:`MLE が「漸近有効」であるとはどういう意味か？`,options:[`大標本でクラーメル・ラオ下限を達成する`,`標本の大きさによらず常に不偏推定量である`,`ほかの推定量より少ない計算で求められる`,`有限の標本で分散が最小の不偏推定量である`],correctAnswer:0,explanation:`漸近有効とは「$n \\to \\infty$ の極限でクラーメル・ラオ下限 $1/(nI(\\theta))$ に等しい分散を持つ」ことです。有限 $n$ では不偏でないこともあり、必ずしも分散が最小ではありませんが、大標本では「理論的に最善の精度」を達成します。`},{id:`asy1-13`,question:`多変量のデルタ法で、$\\mathbf{g}(\\hat{\\boldsymbol{\\theta}})$ の漸近分散共分散行列はどれか（$J$ の $(i,j)$ 成分は $\\partial g_i/\\partial \\theta_j$）？`,options:[`$J^\\top \\Sigma J$`,`$J \\Sigma J^\\top$`,`$\\Sigma^{-1}$`,`$J \\Sigma J$`],correctAnswer:1,explanation:`デルタ法の多変量版では、漸近分散共分散行列は $J \\Sigma J^\\top$ です。ここで $J$ はヤコビアン行列（$\\partial g_i/\\partial \\theta_j$ の偏微分からなる行列）、$\\Sigma$ は $\\hat{\\boldsymbol{\\theta}}$ の漸近分散共分散行列です。`},{id:`asy1-14`,question:`フィッシャー情報量を「対数尤度の2階微分」で表した $I(\\theta) = -E[\\partial^2 \\log f / \\partial \\theta^2]$ の先頭にマイナスが付く理由は？`,options:[`期待値をとると、どんな関数でも符号が逆になるから`,`確率は1以下なので、対数尤度が常に負の値になるから`,`対数尤度の山の頂上では、2階微分が負（上に凸）だから`,`偏微分は、ほかの変数を止めるぶん常に負になるから`],correctAnswer:2,explanation:`対数尤度関数の最大点（MLE の位置）では「山のピーク」になるため、2階微分（曲率）は負になります（上に凸の山形）。この「上に凸の度合い」（負の曲率）にマイナスをつけて正にしたものがフィッシャー情報量です。曲率が大きい（急な山）ほど $I(\\theta)$ が大きく、$\\theta$ を精密に特定できます。`},{id:`asy1-15`,question:`表が出る確率 $p$ のコインで、1回あたりのフィッシャー情報量 $I(p)$ はどれか？`,options:[`$p$`,`$p(1-p)$`,`$n/(p(1-p))$`,`$1/(p(1-p))$`],correctAnswer:3,explanation:`ベルヌーイ分布で $I(p) = 1/(p(1-p))$ です。$n$ 回の観測では $nI(p) = n/(p(1-p))$、MLE の漸近分散は $1/(nI(p)) = p(1-p)/n$ となります。これは $\\hat{p}$ の分散 $p(1-p)/n$ と一致し、MLE が漸近有効であることの確認になります。`},{id:`asy1-16`,question:`コイン1回のフィッシャー情報量 $I(p) = 1/\\{p(1-p)\\}$ が最も小さくなるのは、$p$ がいくつのときか？`,options:[`$p = 0.1$ のとき`,`$p = 0.5$ のとき`,`$p = 0.9$ のとき`,`$p$ によらず一定`],correctAnswer:1,explanation:`分母の $p(1-p)$ は $p = 0.5$ で最大の $0.25$ になるので、$I(0.5) = 4$ が最小です。$p = 0.1$ や $0.9$ では $1/0.09 = 11.1$ と大きくなります。表と裏が半々のコインは結果のばらつきが最も大きく、1回から分かることが最も少なくなります。`},{id:`asy1-17`,question:`推定値 $\\hat{\\theta}$ の標準誤差が $0.05$ で、変換 $g$ の傾きが $g'(\\hat{\\theta}) = 3$ です。デルタ法による $g(\\hat{\\theta})$ の標準誤差はどれか？`,options:[`$0.017$`,`$0.05$`,`$0.15$`,`$0.45$`],correctAnswer:2,explanation:`標準誤差は傾きの絶対値倍になるので、$0.05 \\times 3 = 0.15$ です。傾きの2乗（9倍）が掛かるのは分散のほうです。$0.45$ は標準誤差に9を掛けた誤り、$0.017$ は3で割った誤りです。`}]},{id:`1.18-inference`,updatedAt:`2026-10-21`,title:`P値の解釈・検定の誤り・検出力`,chapter:7,description:`P値を面積として計算し、2種類の誤りと検出力を2つの山で見て、必要な人数を逆算します。`,content:`💡 **このモジュールで学ぶこと**
+2群のオッズ比のように**母数が2つ以上**なら、$\\hat{\\boldsymbol{\\theta}}$ の漸近分散共分散行列 $\\Sigma$ は情報量を並べた行列 $nI$ の逆行列 $(nI)^{-1}$ です。$\\mathbf{g}(\\hat{\\boldsymbol{\\theta}})$ では $J \\Sigma J^\\top$ になります。$J$ は $g'$ の行列版で、$(i,j)$ 成分が $\\partial g_i/\\partial \\theta_j$ のヤコビアン行列です。$g$ が1つの値なら $J$ は横ベクトルで、$J\\Sigma J^\\top$ は1変数の「$g'^2 \\times$ 分散」と同じ形です。`,keyFormulas:[{label:`フィッシャー情報量`,formula:`I(\\theta) = -E\\!\\left[\\dfrac{\\partial^2 \\log f}{\\partial \\theta^2}\\right]`},{label:`MLE の漸近正規性`,formula:`\\sqrt{n}(\\hat{\\theta}_n - \\theta) \\xrightarrow{d} N\\!\\left(0,\\, \\dfrac{1}{I(\\theta)}\\right)`},{label:`デルタ法（1変数）`,formula:`\\begin{aligned} &\\sqrt{n}(g(\\hat{\\theta})-g(\\theta)) \\\\ &\\xrightarrow{d} N(0,\\,[g'(\\theta)]^2/I(\\theta)) \\end{aligned}`},{label:`n 回分の情報量（加法性）`,formula:`n \\cdot I(\\theta)`}],quiz:[{id:`asy1-2`,question:`MLE $\\hat{\\theta}_n$ の漸近分布 $\\hat{\\theta}_n \\approx N(\\theta, 1/(nI(\\theta)))$ から言えることはどれか？`,options:[`$n$ がいくつでも、MLE の分布は左右対称な形になる`,`$n$ が10程度の小標本でも、この近似は正確に成り立つ`,`$n$ が増えるほど分散が増え、推定が難しくなる`,`$n$ が増えるほど分散が $n$ に反比例して減り、精度が上がる`],correctAnswer:3,explanation:`漸近分散 $1/(nI(\\theta))$ は $n$ に反比例するため、サンプルが増えるほど精度が上がります（標準誤差 $\\propto 1/\\sqrt{n}$）。この近似はデータが多いときのものです。10回のコインでは、推定値の分布は左右対称にならず、正規分布からずれます。`},{id:`asy1-7`,question:`$N(\\mu, \\sigma^2)$（$\\sigma^2$ は既知）で、観測1個あたりの $\\mu$ についての情報量 $I(\\mu)$ はいくらか？`,options:[`$1/\\sigma^2$`,`$n/\\sigma^2$`,`$\\sigma/n$`,`$\\sigma^2$`],correctAnswer:0,explanation:`$\\log f(x;\\mu) = -\\frac{(x-\\mu)^2}{2\\sigma^2} + \\text{const}$、$\\frac{\\partial \\log f}{\\partial \\mu} = \\frac{x-\\mu}{\\sigma^2}$、$I(\\mu) = E[(x-\\mu)^2/\\sigma^4] = \\sigma^2/\\sigma^4 = 1/\\sigma^2$。これより漸近分散は $1/(nI(\\mu)) = \\sigma^2/n$、標準誤差 $= \\sigma/\\sqrt{n}$（標本平均の標準誤差の公式と一致）。`},{id:`asy1-9`,question:`デルタ法で $g(\\hat{p}) = \\log(\\hat{p}/(1-\\hat{p}))$（対数オッズ）の漸近分散を求める。$\\hat{p}$ の漸近分散が $p(1-p)/n$ のとき、対数オッズの漸近分散はどれか？`,options:[`$np(1-p)$`,`$p(1-p)/n$`,`$1/(np(1-p))$`,`$1/(n(1-p)^2)$`],correctAnswer:2,explanation:`$g'(p) = 1/(p(1-p))$ より、デルタ法で漸近分散 $= [g'(p)]^2 \\cdot \\text{Var}(\\hat{p}) = \\frac{1}{p^2(1-p)^2} \\cdot \\frac{p(1-p)}{n} = \\frac{1}{np(1-p)}$。本文の対数オッズの区間の表で使った式です。`},{id:`asy1-11`,question:`フィッシャー情報量の加法性とは何か？`,options:[`2つのモデルの対数尤度の差が、データの個数に比例すること`,`最尤推定量の偏りが、データの個数に反比例して小さくなること`,`2つの異なる母数の情報量を足すと、分散の下限になること`,`独立な $n$ 個の観測値の情報量が、1個のときの $n$ 倍になること`],correctAnswer:3,explanation:`$n$ 個の独立な観測値 $X_1,\\ldots,X_n$ が同一分布に従うとき、フィッシャー情報量は $I_n(\\theta) = n \\cdot I(\\theta)$ と $n$ 倍になります（加法性）。これにより MLE の漸近分散が $1/(nI(\\theta))$（$n$ に反比例）になることが直接示せます。`},{id:`asy1-12`,question:`MLE が「漸近有効」であるとはどういう意味か？`,options:[`大標本でクラーメル・ラオ下限を達成する`,`標本の大きさによらず常に不偏推定量である`,`ほかの推定量より少ない計算で求められる`,`有限の標本でも、分散が必ず下限に一致する`],correctAnswer:0,explanation:`漸近有効とは、$n$ が大きいとき分散がクラーメル・ラオの下限 $1/(nI(\\theta))$ とほぼ同じになること、正確には $\\sqrt{n}(\\hat{\\theta}_n-\\theta)$ の漸近分散が $1/I(\\theta)$ に等しいことです。有限 $n$ では不偏でないこともあり、必ずしも分散が最小ではありませんが、大標本では「理論的に最善の精度」を達成します。`},{id:`asy1-13`,question:`多変量のデルタ法で、$\\mathbf{g}(\\hat{\\boldsymbol{\\theta}})$ の漸近分散共分散行列はどれか（$J$ の $(i,j)$ 成分は $\\partial g_i/\\partial \\theta_j$）？`,options:[`$J^\\top \\Sigma J$`,`$J \\Sigma J^\\top$`,`$\\Sigma^{-1}$`,`$J \\Sigma J$`],correctAnswer:1,explanation:`デルタ法の多変量版では、漸近分散共分散行列は $J \\Sigma J^\\top$ です。ここで $J$ はヤコビアン行列（$\\partial g_i/\\partial \\theta_j$ の偏微分からなる行列）、$\\Sigma$ は $\\hat{\\boldsymbol{\\theta}}$ の漸近分散共分散行列です。`},{id:`asy1-14`,question:`フィッシャー情報量を「対数尤度の2階微分」で表した $I(\\theta) = -E[\\partial^2 \\log f / \\partial \\theta^2]$ の先頭にマイナスが付く理由は？`,options:[`期待値をとると、どんな関数でも符号が逆になるから`,`確率は1以下なので、対数尤度が常に負の値になるから`,`対数尤度の山の頂上では、2階微分が負（上に凸）だから`,`偏微分は、ほかの変数を止めるぶん常に負になるから`],correctAnswer:2,explanation:`値の符号ではなく、曲がり具合の符号の話です。1回分の対数尤度を出やすさで平均した山（本文の太線）は真の値で頂上になり、頂上では2階微分（曲率）が負になります（上に凸の山形）。この「上に凸の度合い」（負の曲率）にマイナスをつけて正にしたものがフィッシャー情報量です。曲率が大きい（急な山）ほど $I(\\theta)$ が大きく、$\\theta$ を精密に特定できます。`},{id:`asy1-15`,question:`表が出る確率 $p$ のコインで、1回あたりのフィッシャー情報量 $I(p)$ はどれか？`,options:[`$p$`,`$p(1-p)$`,`$n/(p(1-p))$`,`$1/(p(1-p))$`],correctAnswer:3,explanation:`ベルヌーイ分布で $I(p) = 1/(p(1-p))$ です。$n$ 回の観測では $nI(p) = n/(p(1-p))$、MLE の漸近分散は $1/(nI(p)) = p(1-p)/n$ となります。これは $\\hat{p}$ の分散 $p(1-p)/n$ と一致し、MLE が漸近有効であることの確認になります。`},{id:`asy1-16`,question:`コイン1回のフィッシャー情報量 $I(p) = 1/\\{p(1-p)\\}$ が最も小さくなるのは、$p$ がいくつのときか？`,options:[`$p = 0.1$ のとき`,`$p = 0.5$ のとき`,`$p = 0.9$ のとき`,`$p$ によらず一定`],correctAnswer:1,explanation:`分母の $p(1-p)$ は $p = 0.5$ で最大の $0.25$ になるので、$I(0.5) = 4$ が最小です。$p = 0.1$ や $0.9$ では $1/0.09 = 11.1$ と大きくなります。表と裏が半々のコインは結果のばらつきが最も大きく、1回から分かることが最も少なくなります。`},{id:`asy1-17`,question:`推定値 $\\hat{\\theta}$ の標準誤差が $0.05$ で、変換 $g$ の傾きが $g'(\\hat{\\theta}) = 3$ です。デルタ法による $g(\\hat{\\theta})$ の標準誤差はどれか？`,options:[`$0.017$`,`$0.05$`,`$0.15$`,`$0.45$`],correctAnswer:2,explanation:`標準誤差は傾きの絶対値倍になるので、$0.05 \\times 3 = 0.15$ です。傾きの2乗（9倍）が掛かるのは分散のほうです。$0.45$ は標準誤差に9を掛けた誤り、$0.017$ は3で割った誤りです。`}]},{id:`1.18-inference`,updatedAt:`2026-10-21`,title:`P値の解釈・検定の誤り・検出力`,chapter:7,description:`P値を面積として計算し、2種類の誤りと検出力を2つの山で見て、必要な人数を逆算します。`,content:`💡 **このモジュールで学ぶこと**
 
 新薬を50人ずつに試したところ、血圧の下がり方の差が 3.5 mmHg で、P値は 0.03 でした。この数字から言えることと言えないことを分けられるようになるのが、このモジュールの目標です。読み終えると、次の3つができるようになります。
 
