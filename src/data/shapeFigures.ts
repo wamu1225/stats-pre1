@@ -3992,9 +3992,9 @@ function aicOptimism(): string {
     ${poly(tr, SLATE, 1.8, '5 4')}${poly(nw, ROSE, 2.4)}
     ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(nw[k]))}" r="3" fill="${ROSE}" />`).join('')}
     ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(adj[k - 1]))}" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" />`).join('')}
-    <line x1="${f1(pl.X(k6) + 10)}" y1="${f1(pl.Y(tr[k6]))}" x2="${f1(pl.X(k6) + 10)}" y2="${f1(pl.Y(nw[k6]))}" stroke="${INK}" stroke-width="1.4" />
-    ${halo(pl.X(k6) + 15, (pl.Y(tr[k6]) + pl.Y(nw[k6])) / 2 + 4, `差 ${(tr[k6] - nw[k6]).toFixed(1)}（k＝${k6}）`, INK, { bold: true })}
-    ${halo(pl.X(best) + 2, pl.Y(nw[best]) + 26, `最大：k＝${best}`, ROSE, { bold: true })}
+    <line x1="${f1(pl.X(k6))}" y1="${f1(pl.Y(tr[k6]))}" x2="${f1(pl.X(k6))}" y2="${f1(pl.Y(nw[k6]))}" stroke="${INK}" stroke-width="1.4" />
+    ${halo(pl.X(k6) + 6, (pl.Y(tr[k6]) + pl.Y(nw[k6])) / 2 + 4, `差 ${(tr[k6] - nw[k6]).toFixed(1)}（k＝${k6}）`, INK, { bold: true })}
+    ${halo(pl.X(best), pl.Y(nw[best]) - 12, `最大：k＝${best}`, ROSE, { anchor: 'middle', bold: true })}
     <line x1="14" y1="236" x2="40" y2="236" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="46" y="240" font-size="12.4" fill="${INK}">手元のデータでの最大対数尤度</text>
     <line x1="14" y1="256" x2="40" y2="256" stroke="${ROSE}" stroke-width="2.4" /><text x="46" y="260" font-size="12.4" fill="${INK}">同じ推定値で新しいデータを測った値</text>
     <circle cx="27" cy="275" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" /><text x="46" y="280" font-size="12.4" fill="${INK}">手元の値 − k（AIC を −2 で割った値）</text>
