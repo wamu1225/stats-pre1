@@ -3954,6 +3954,55 @@ function cvGrid(): string {
   return fig(svg, cap);
 }
 
+
+// ============ 1.23 節2：手元の対数尤度の甘さは平均で k。k を引くと新しいデータでの値に重なる ============
+function aicOptimism(): string {
+  const W = 340, H = 316, n = 30, R = 1000, K = 8;
+  const rnd = gaussFrom(mulberry32(1123));
+  const xs = Array.from({ length: n }, (_, i) => -1 + (2 * i) / (n - 1));
+  const mu = xs.map((x) => 1 + x + 1.5 * x * x);
+  const ll = (y: number[], f: number[]) => -(n / 2) * Math.log(2 * Math.PI) - y.reduce((s, v, i) => s + (v - f[i]) ** 2, 0) / 2;
+  const fitK = (k: number, y: number[]) => {
+    const A = Array.from({ length: k }, (_, i) => Array.from({ length: k }, (_, j) => xs.reduce((s, x) => s + x ** (i + j), 0)));
+    const M = A.map((r, i) => [...r, xs.reduce((s, x, t) => s + y[t] * x ** i, 0)]);
+    for (let c = 0; c < k; c++) {
+      let p = c;
+      for (let r = c + 1; r < k; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r;
+      [M[c], M[p]] = [M[p], M[c]];
+      for (let r = c + 1; r < k; r++) { const q = M[r][c] / M[c][c]; for (let j = c; j <= k; j++) M[r][j] -= q * M[c][j]; }
+    }
+    const w = Array(k).fill(0);
+    for (let r = k - 1; r >= 0; r--) { let s = M[r][k]; for (let j = r + 1; j < k; j++) s -= M[r][j] * w[j]; w[r] = s / M[r][r]; }
+    return xs.map((x) => w.reduce((s, c, i) => s + c * x ** i, 0));
+  };
+  // 同じ式から手元のデータと新しいデータを R 回ずつ取り、係数 k 個の多項式を手元だけで当てはめる（誤差の標準偏差1は既知）
+  const tr = Array(K + 1).fill(0), nw = Array(K + 1).fill(0);
+  for (let r = 0; r < R; r++) {
+    const y = mu.map((m) => m + rnd()), y2 = mu.map((m) => m + rnd());
+    for (let k = 1; k <= K; k++) { const f = fitK(k, y); tr[k] += ll(y, f) / R; nw[k] += ll(y2, f) / R; }
+  }
+  const ks = range(1, K);
+  const pl = plane({ x0: 46, y0: 22, w: 276, h: 170, xMin: 0.6, xMax: 8.4, yMin: -54, yMax: -37 });
+  const poly = (v: number[], color: string, w: number, dash = '') => `<polyline points="${ks.map((k) => `${f1(pl.X(k))},${f1(pl.Y(v[k]))}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${w}"${dash ? ` stroke-dasharray="${dash}"` : ''} />`;
+  const adj = ks.map((k) => tr[k] - k);
+  const best = ks.reduce((a, b) => (nw[b] > nw[a] ? b : a));
+  const k6 = 6;
+  const svg = `${svgOpen(W, H, `手元のデータの対数尤度は係数を増やすほど上がるが、新しいデータでの対数尤度は ${best} 個で最大。2本の差はほぼ k で、手元の値から k を引くと新しいデータでの値に重なる`)}
+    ${pl.yTicks([-50, -45, -40])}${pl.xAxis(ks, best)}
+    ${poly(tr, SLATE, 1.8, '5 4')}${poly(nw, ROSE, 2.4)}
+    ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(nw[k]))}" r="3" fill="${ROSE}" />`).join('')}
+    ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(adj[k - 1]))}" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" />`).join('')}
+    <line x1="${f1(pl.X(k6) + 10)}" y1="${f1(pl.Y(tr[k6]))}" x2="${f1(pl.X(k6) + 10)}" y2="${f1(pl.Y(nw[k6]))}" stroke="${INK}" stroke-width="1.4" />
+    ${halo(pl.X(k6) + 15, (pl.Y(tr[k6]) + pl.Y(nw[k6])) / 2 + 4, `差 ${(tr[k6] - nw[k6]).toFixed(1)}（k＝${k6}）`, INK, { bold: true })}
+    ${halo(pl.X(best) + 2, pl.Y(nw[best]) + 26, `最大：k＝${best}`, ROSE, { bold: true })}
+    <line x1="14" y1="236" x2="40" y2="236" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="46" y="240" font-size="12.4" fill="${INK}">手元のデータでの最大対数尤度</text>
+    <line x1="14" y1="256" x2="40" y2="256" stroke="${ROSE}" stroke-width="2.4" /><text x="46" y="260" font-size="12.4" fill="${INK}">同じ推定値で新しいデータを測った値</text>
+    <circle cx="27" cy="275" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" /><text x="46" y="280" font-size="12.4" fill="${INK}">手元の値 − k（AIC を −2 で割った値）</text>
+    ${footLines(W, H, [{ s: '横軸＝多項式の係数の数 k（次数＋1）' }])}
+  </svg>`;
+  const cap = `真の式 y＝1＋x＋1.5x²（係数3個）に誤差を足した ${n} 点を ${R} 回取り直し、係数 k 個の多項式を当てはめた平均です。手元のデータでの値（灰）は k とともに上がり続けますが、新しいデータでの値（赤）は k＝${best} で最大になります。2本の差はどの k でもほぼ k なので、k を引いた青い丸は赤に重なり、同じ k＝${best} を選びます。`;
+  return fig(svg, cap);
+}
 // ============ 2.1b 節1：てこ比とクックの距離。端の点は直線を引っ張り、中央の外れ値は引っ張らない ============
 function cookLeverage(): string {
   const W = 340, H = 300;
@@ -5312,6 +5361,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-qda': qdaBoundary,
   'f-cook': cookLeverage,
   'f-cv-grid': cvGrid,
+  'f-aic-optimism': aicOptimism,
   'f-roc': rocCurve,
   'f-biasvar': biasVariance,
   'f-dag-basic': dagBasic, 'f-dsep-practice': dsepPractice, 'f-simpson': simpsonFig,
