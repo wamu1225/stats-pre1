@@ -3023,7 +3023,7 @@ function partialCoef(): string {
     ${P.line((x) => a[1] + b * x, AMBER, 2.2, 9, 33)}
     ${pts.map((d) => d.w ? `<circle cx="${f1(P.X(d.t))}" cy="${f1(P.Y(d.y))}" r="3.6" fill="#fff" stroke="${AMBER}" stroke-width="1.8" />` : `<circle cx="${f1(P.X(d.t))}" cy="${f1(P.Y(d.y))}" r="3.4" fill="${INDIGO}" />`).join('')}
     ${halo(P.X(9), P.Y(a[1] + b * 16.5) - 8, `週末　傾き ${f2(b)}`, '#b45309', { bold: true })}
-    ${halo(P.X(17), P.Y(a[0] + b * 17) + 22, `平日　傾き ${f2(b)}`, INDIGO, { bold: true })}
+    ${halo(P.X(17), P.Y(a[0] + b * 17) + 22, `平日　共通の傾き ${f2(b)}`, INDIGO, { bold: true })}
     ${halo(P.X(33), P.Y(aAll + bAll * 33) - 10, `気温だけ　傾き ${f2(bAll)}`, INK, { anchor: 'end', bold: true })}
     ${footLines(W, H, [{ s: '横軸 ＝ 気温（℃）　イベントの無い20日' }])}
   </svg>`;
