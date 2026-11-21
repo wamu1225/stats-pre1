@@ -3988,7 +3988,7 @@ function aicOptimism(): string {
   const best = ks.reduce((a, b) => (nw[b] > nw[a] ? b : a));
   const k6 = 6;
   const svg = `${svgOpen(W, H, `手元のデータの対数尤度は係数を増やすほど上がるが、新しいデータでの対数尤度は ${best} 個で最大。2本の差はほぼ k で、手元の値から k を引くと新しいデータでの値に重なる`)}
-    ${pl.yTicks([-50, -45, -40])}${pl.xAxis(ks, best)}
+    ${pl.yTicks([-50, -45, -40])}${pl.xAxis(ks, best)}<text x="8" y="14" font-size="12.4" fill="${SLATE}">対数尤度</text>
     ${poly(tr, SLATE, 1.8, '5 4')}${poly(nw, ROSE, 2.4)}
     ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(nw[k]))}" r="3" fill="${ROSE}" />`).join('')}
     ${ks.map((k) => `<circle cx="${f1(pl.X(k))}" cy="${f1(pl.Y(adj[k - 1]))}" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" />`).join('')}
@@ -4000,7 +4000,7 @@ function aicOptimism(): string {
     <circle cx="27" cy="275" r="5.5" fill="none" stroke="${INDIGO}" stroke-width="1.8" /><text x="46" y="280" font-size="12.4" fill="${INK}">手元の値 − k（AIC を −2 で割った値）</text>
     ${footLines(W, H, [{ s: '横軸＝多項式の係数の数 k（次数＋1）' }])}
   </svg>`;
-  const cap = `真の式 y＝1＋x＋1.5x²（係数3個）に誤差を足した ${n} 点を ${R} 回取り直し、係数 k 個の多項式を当てはめた平均です。手元のデータでの値（灰）は k とともに上がり続けますが、新しいデータでの値（赤）は k＝${best} で最大になります。2本の差はどの k でもほぼ k なので、k を引いた青い丸は赤に重なり、同じ k＝${best} を選びます。`;
+  const cap = `候補に真のモデルを含むよう、真の式 y＝1＋x＋1.5x²（係数3個）に誤差を足した ${n} 点を ${R} 回取り直し、係数 k 個の多項式を当てはめた平均です。手元のデータでの値（灰）は k とともに上がり続けますが、新しいデータでの値（赤）は k＝${best} で最大になります。2本の差はどの k でもほぼ k なので、k を引いた青い丸は赤に重なり、同じ k＝${best} を選びます。`;
   return fig(svg, cap);
 }
 // ============ 2.1b 節1：てこ比とクックの距離。端の点は直線を引っ張り、中央の外れ値は引っ張らない ============
@@ -4198,7 +4198,7 @@ function biasVariance(): string {
     <line x1="210" y1="${H - 34}" x2="234" y2="${H - 34}" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="240" y="${H - 30}" font-size="12.4" fill="${INK}">手元データの誤差</text>
     <text x="14" y="${H - 3}" font-size="12.3" fill="${SLATE}">点線＝ノイズの分散 ${f2(sig * sig)}。データ ${n} 点・${R} 回の平均</text>
   </svg>`;
-  const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアス²は ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。情報量規準や Cp は、この差を補正して選ぶ道具です。`;
+  const cap = `真の曲線（波形）から ${n} 点のデータを ${R} 回取り直し、次数を変えて多項式を当てはめた結果です。次数が低いと、曲線が真の形を捉えられず（<strong>バイアス</strong>が大きい）、どのデータを使っても同じようにずれます。次数を上げるとバイアス²は ${f2(rows[0].bias2)} から ${f2(rows[D - 1].bias2)} へ下がりますが、データごとに曲線が揺れる量（<strong>バリアンス</strong>）が ${f2(rows[0].vr)} から ${f2(rows[D - 1].vr)} へ増えます。将来データの誤差はこの2つとノイズの合計なので、${best.d} 次で最小（${f2(best.test)}）になります。灰の破線の手元データの誤差は次数とともに減り続けるため、これだけで次数を選ぶと複雑すぎるモデルを選んでしまいます。AIC などの情報量規準は、この差を補正して選ぶ道具です。`;
   return fig(svg, cap);
 }
 
