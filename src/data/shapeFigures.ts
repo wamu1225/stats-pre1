@@ -2990,6 +2990,45 @@ function estimatorClasses(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.1 節1：偏回帰係数（週末をそろえた傾きと、気温だけの傾き） ============
+function partialCoefData() {
+  const g = gaussFrom(mulberry32(20261147));
+  const wd = [10, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27];
+  const we = [20, 23, 25, 26, 28, 30, 31, 32];
+  const pts = [...wd.map((t) => ({ t, w: 0 })), ...we.map((t) => ({ t, w: 1 }))].map((d) => ({ ...d, y: 15 + 0.3 * d.t + 3.5 * d.w + 0.6 * g() }));
+  const mean = (a: number[]) => a.reduce((s, v) => s + v, 0) / a.length;
+  const slope = (xs: number[], ys: number[]) => { const mx = mean(xs), my = mean(ys); return xs.reduce((s, x, i) => s + (x - mx) * (ys[i] - my), 0) / xs.reduce((s, x) => s + (x - mx) ** 2, 0); };
+  // 気温だけの単回帰
+  const bAll = slope(pts.map((d) => d.t), pts.map((d) => d.y));
+  const aAll = mean(pts.map((d) => d.y)) - bAll * mean(pts.map((d) => d.t));
+  // 週末を入れた重回帰：傾きは平日・週末それぞれの中での傾きをまとめたもの
+  const grp = [0, 1].map((w) => pts.filter((d) => d.w === w));
+  let sxy = 0, sxx = 0;
+  for (const G of grp) { const mx = mean(G.map((d) => d.t)), my = mean(G.map((d) => d.y)); for (const d of G) { sxy += (d.t - mx) * (d.y - my); sxx += (d.t - mx) ** 2; } }
+  const b = sxy / sxx;
+  const a = grp.map((G) => mean(G.map((d) => d.y)) - b * mean(G.map((d) => d.t)));
+  return { pts, bAll, aAll, b, a };
+}
+function partialCoef(): string {
+  const { pts, bAll, aAll, b, a } = partialCoefData();
+  const W = 350, H = 270;
+  const P = plane({ x0: 34, y0: 30, w: 304, h: 186, xMin: 8, xMax: 34, yMin: 16, yMax: 30 });
+  const svg = `${svgOpen(W, H, '暑い日に週末が多いと、気温だけの直線は急になる。週末かどうかをそろえると平日と週末の2本の直線は同じ傾きになる')}
+    ${P.yTicks([18, 22, 26, 30])}${P.xAxis([10, 15, 20, 25, 30])}
+    <text x="4" y="18" font-size="12.4" fill="${SLATE}">売上（万円）</text>
+    ${P.line((x) => aAll + bAll * x, SLATE, 2, 9, 33, '5 4')}
+    ${P.line((x) => a[0] + b * x, INDIGO, 2.2, 9, 33)}
+    ${P.line((x) => a[1] + b * x, AMBER, 2.2, 9, 33)}
+    ${pts.map((d) => d.w ? `<circle cx="${f1(P.X(d.t))}" cy="${f1(P.Y(d.y))}" r="3.6" fill="#fff" stroke="${AMBER}" stroke-width="1.8" />` : `<circle cx="${f1(P.X(d.t))}" cy="${f1(P.Y(d.y))}" r="3.4" fill="${INDIGO}" />`).join('')}
+    ${halo(P.X(9), P.Y(a[1] + b * 16.5) - 8, `週末　傾き ${f2(b)}`, '#b45309', { bold: true })}
+    ${halo(P.X(17), P.Y(a[0] + b * 17) + 22, `平日　傾き ${f2(b)}`, INDIGO, { bold: true })}
+    ${halo(P.X(33), P.Y(aAll + bAll * 33) - 10, `気温だけ　傾き ${f2(bAll)}`, INK, { anchor: 'end', bold: true })}
+    ${footLines(W, H, [{ s: '横軸 ＝ 気温（℃）　イベントの無い20日' }])}
+  </svg>`;
+  const cap = `白丸の週末は暑い日に偏っています。気温だけで直線を引くと（灰の破線）、週末の上乗せまで気温のせいになり、傾きは ${f2(bAll)} です。週末かどうかを式に入れると、平日の中・週末の中で比べた傾き ${f2(b)} が残ります。これが偏回帰係数です。`;
+  return fig(svg, cap);
+}
+
 // ============ 1.18：P値＝帰無分布の裾の面積 ============
 function pValue(): string {
   const W = 350, H = 220;
@@ -5337,7 +5376,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
-  'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses,
+  'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
