@@ -862,26 +862,28 @@ function overfit(): string {
     const b: Box = { x: 26, y: 34 + i * 148, w: 310, h: 96, xMin: -1, xMax: 1, yMax: 1 };
     const yMin = -2.6, yMax = 1.2;
     const py = (y: number) => b.y + b.h - ((Math.max(yMin, Math.min(yMax, y)) - yMin) / (yMax - yMin)) * b.h;
-    const pts: string[] = [];
-    for (let k = 0; k <= 200; k++) {
-      const x = -1 + (2 * k) / 200;
-      pts.push(`${f1(PX(b, x))},${f1(py(polyAt(r.coef, x)))}`);
+    // 枠の外へ出る所は線を切る（枠の端に沿って描くと、平らになったように見えるため）
+    const segs: string[][] = [[]];
+    for (let k = 0; k <= 400; k++) {
+      const x = -1 + (2 * k) / 400, y = polyAt(r.coef, x);
+      if (y < yMin || y > yMax) { if (segs[segs.length - 1].length) segs.push([]); continue; }
+      segs[segs.length - 1].push(`${f1(PX(b, x))},${f1(py(y))}`);
     }
     const col = r.te > r.tr * 2.5 ? ROSE : INDIGO;
     return `<text x="${b.x}" y="${b.y - 18}" font-size="13.2" font-weight="700" fill="${INK}">${r.name}</text>
       <text x="${b.x}" y="${b.y - 4}" font-size="12.4" fill="${SLATE}">学習データの誤差 ${f2(r.tr)}　テストの誤差 <tspan font-weight="700" fill="${col}">${f2(r.te)}</tspan></text>
       <rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" fill="none" stroke="#e2e8f0" />
-      <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="2" />
+      ${segs.filter((g) => g.length > 1).map((g) => `<polyline points="${g.join(' ')}" fill="none" stroke="${col}" stroke-width="2" />`).join('')}
       ${xs.map((x, k) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(ys[k]))}" r="3.4" fill="${INK}" />`).join('')}
       ${tx.map((x, k) => `<circle cx="${f1(PX(b, x))}" cy="${f1(py(ty[k]))}" r="3.4" fill="#fff" stroke="${AMBER}" stroke-width="1.6" />`).join('')}`;
   };
   const svg = `${svgOpen(W, H, '同じ10点に直線・2次式・9次式を当てはめると、9次式は学習データを完全に通るがテストデータで大きく外れる')}
     ${rows.map(panel).join('')}
-    <circle cx="40" cy="${H - 14}" r="3.4" fill="${INK}" /><text x="48" y="${H - 10}" font-size="12.4" fill="${INK}">学習データ（当てはめに使う10点）</text>
+    <circle cx="40" cy="${H - 14}" r="3.4" fill="${INK}" /><text x="48" y="${H - 10}" font-size="12.4" fill="${INK}">学習データ（当てはめに使う）</text>
     <circle cx="232" cy="${H - 14}" r="3.4" fill="#fff" stroke="${AMBER}" stroke-width="1.6" /><text x="240" y="${H - 10}" font-size="12.4" fill="${INK}">テスト用の10点</text>
   </svg>`;
   const [r1, r2, r9] = rows;
-  const cap = `真の関係が2次式のデータ（黒の10点）に、3通りの式を最小二乗法で当てはめました。誤差は各点のずれの二乗平均の平方根です。直線は曲がりを表せず、学習データでも ${f2(r1.tr)} ずれます。2次式は学習 ${f2(r2.tr)}、テスト ${f2(r2.te)} と、どちらも小さく収まります。9次式は10点すべてを通るので学習データの誤差は ${f2(r9.tr)} ですが、点と点の間で大きく波打ち、同じ仕組みで作った別の10点（白丸）では誤差が ${f2(r9.te)} と、2次式の約 ${Math.round(r9.te / r2.te)} 倍になります。手元のデータへの当てはまりだけでモデルを選ぶと、この9次式を選んでしまいます。`;
+  const cap = `真の関係が2次式のデータ（黒の10点）に、3通りの式を最小二乗法で当てはめました。誤差は各点のずれの二乗平均の平方根です。直線は曲がりを表せず、学習データでも ${f2(r1.tr)} ずれます。2次式は学習 ${f2(r2.tr)}、テスト ${f2(r2.te)} と、どちらも小さく収まります。9次式は10点すべてを通るので学習データの誤差は ${f2(r9.tr)} ですが、点と点の間や両端で大きく波打ち（枠の外へ出る所は線を切っています）、同じ仕組みで作った別の10点（白丸）では誤差が ${f2(r9.te)} と、2次式の約 ${Math.round(r9.te / r2.te)} 倍になります。手元のデータへの当てはまりだけでモデルを選ぶと、この9次式を選んでしまいます。`;
   return fig(svg, cap);
 }
 
