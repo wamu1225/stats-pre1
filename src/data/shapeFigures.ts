@@ -4083,6 +4083,31 @@ function cookLeverage(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.1b 節1：残差プロットの3つの形。模様なし／曲がる／右へ広がる ============
+function residPatterns(): string {
+  const W = 340, H = 330, g = gaussFrom(mulberry32(20261122));
+  const xs = Array.from({ length: 36 }, (_, i) => 1 + (9 * i) / 35);
+  const rows = [
+    { t: '① 模様なし：前提どおり', c: TEAL, e: (x: number) => 1.1 * g() + 0 * x },
+    { t: '② 曲がる：式の形が合っていない', c: AMBER, e: (x: number) => 0.27 * (x - 5.5) ** 2 - 1.8 + 0.5 * g() },
+    { t: '③ 右へ広がる：分散がそろっていない', c: ROSE, e: (x: number) => 0.24 * x * g() },
+  ];
+  const panel = (r: typeof rows[number], i: number) => {
+    const bx = { x0: 36, y0: 30 + i * 96, w: 290, h: 62 }, pl = { ...bx, ...plane({ ...bx, xMin: 0, xMax: 10.5, yMin: -5, yMax: 5 }) };
+    return `<text x="14" y="${22 + i * 96}" font-size="12.6" font-weight="700" fill="${r.c === AMBER ? '#b45309' : r.c}">${r.t}</text>
+      <rect x="${pl.x0}" y="${pl.y0}" width="${pl.w}" height="${pl.h}" fill="none" stroke="#e2e8f0" />
+      <line x1="${pl.x0}" y1="${f1(pl.Y(0))}" x2="${pl.x0 + pl.w}" y2="${f1(pl.Y(0))}" stroke="${SLATE}" stroke-dasharray="4 3" />
+      <text x="${pl.x0 - 6}" y="${f1(pl.Y(0) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">0</text>
+      ${xs.map((x) => { const y = r.e(x); if (y < -5 || y > 5) throw new Error(`f-resid：点が枠の外（${y}）＝種か係数を変える`); return `<circle cx="${f1(pl.X(x))}" cy="${f1(pl.Y(y))}" r="3" fill="${r.c}" fill-opacity="0.8" />`; }).join('')}`;
+  };
+  const svg = `${svgOpen(W, H, '残差プロットの3つの形。1つ目は0の上下に模様なく散らばる。2つ目は両端で上、中央で下に曲がって並ぶ。3つ目は右へ行くほど上下に広がる')}
+    ${rows.map(panel).join('')}
+    ${footLines(W, H, [{ s: '横軸＝予測値（右ほど大きい）、縦軸＝残差' }])}
+  </svg>`;
+  const cap = '②は直線では表せない曲がりが残差に残った形で、2乗の項を足すなど式の形を見直します。③は予測値が大きいほどズレも大きい形で、次の節の Box-Cox 変換や、第3節の重み付き最小二乗法で扱います。';
+  return fig(svg, cap);
+}
+
 // ============ 2.3 節5：QDA。群ごとに楕円の向きと大きさが違うと、境界が曲がる ============
 function qdaBoundary(): string {
   const W = 350, H = 300;
@@ -5401,6 +5426,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-lda': ldaBoundary,
   'f-qda': qdaBoundary,
   'f-cook': cookLeverage,
+  'f-resid': residPatterns,
   'f-cv-grid': cvGrid,
   'f-aic-optimism': aicOptimism,
   'f-roc': rocCurve,
