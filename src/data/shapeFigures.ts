@@ -2284,7 +2284,7 @@ function powerCurve(): string {
 
 // ============ 2.1：重み付き最小二乗法（大きい店ほど振れ幅が大きい） ============
 function wls(): string {
-  const W = 340, H = 250;
+  const W = 340, H = 400;
   const xs = Array.from({ length: 40 }, (_, i) => 10 + Math.round((90 * i) / 39));
   const ys = [7.8, 9.1, 9.4, 10.3, 13.5, 10.8, 10.9, 17, 18.4, 17.9, 20, 13.2, 21.9, 23.4, 20.1, 25.4, 22.6, 29.3, 28.3, 25.3, 30, 29.7, 36.1, 41.3, 37.9, 45.2, 33.3, 34.1, 41.2, 45.1, 45, 56.2, 43, 41.5, 45.3, 41.4, 50.1, 50.3, 59, 47.1];
   const fit = (w: number[]) => {
@@ -2307,9 +2307,23 @@ function wls(): string {
     <text x="${b.x + 4}" y="${b.y + 30}" font-size="12.4" fill="${TEAL}">実線 ＝ 重み付き（傾き ${g[1].toFixed(3)}）</text>
     ${axes(b, [0, 20, 40, 60, 80, 100])}
     <text x="${b.x - 30}" y="${b.y - 6}" font-size="12.4" fill="${SLATE}">売上</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">店の広さ（㎡）　点が大きいほど重みが大きい</text>
+    <text x="${b.x + b.w / 2}" y="246" text-anchor="middle" font-size="12.4" fill="${SLATE}">店の広さ（㎡）　点が大きいほど重みが大きい</text>
+    ${(() => {
+      // 下段：傾きの推定値の分布（誤差が正規なので傾きも正規。標準偏差は式で計算）
+      const n = xs.length, mx = xs.reduce((a, x) => a + x, 0) / n, sxx = xs.reduce((a, x) => a + (x - mx) ** 2, 0);
+      const sO = Math.sqrt(xs.reduce((a, x) => a + (x - mx) ** 2 * (0.08 * x) ** 2, 0)) / sxx;
+      const w = xs.map((x) => 1 / (0.08 * x) ** 2), sw = w.reduce((a, v) => a + v, 0), swx = w.reduce((a, v, i) => a + v * xs[i], 0), swxx = w.reduce((a, v, i) => a + v * xs[i] ** 2, 0);
+      const sW = Math.sqrt(sw / (sw * swxx - swx * swx));
+      const pl = plane({ x0: 36, y0: 290, w: 290, h: 72, xMin: 0.4, xMax: 0.6, yMin: 0, yMax: 21 });
+      return `<text x="14" y="272" font-size="12.6" font-weight="700" fill="${INK}">データを作り直したときの傾きの分布（数字＝標準偏差）</text>
+        ${pl.line((v) => normPdf(v, 0.5, sO), AMBER, 2.2, 0.4, 0.6, '6 4')}${pl.line((v) => normPdf(v, 0.5, sW), TEAL, 2.2)}
+        ${pl.xAxis([0.4, 0.45, 0.5, 0.55, 0.6], 0.5)}
+        ${halo(pl.X(0.48), pl.Y(19), `重み付き　${sW.toFixed(4)}`, TEAL, { anchor: 'end' })}
+        ${halo(pl.X(0.47), pl.Y(10.5), `最小二乗法　${sO.toFixed(4)}`, '#b45309', { anchor: 'end' })}
+        <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝傾きの推定値（真の値 0.5）</text>`;
+    })()}
   </svg>`;
-  const cap = `模擬データです（真の直線は 売上 ＝ 2 ＋ 0.5 × 広さ、誤差の標準偏差は広さの 0.08 倍）。薄い帯は真の直線から標準偏差2つ分の範囲で、右へ行くほど広がります。重み付き最小二乗法は、散らばりの小さい左側の店を重く数えます。`;
+  const cap = `模擬データです（真の直線は 売上 ＝ 2 ＋ 0.5 × 広さ、誤差の標準偏差は広さの 0.08 倍）。薄い帯は真の直線から標準偏差2つ分の範囲で、右へ行くほど広がります。この1回では2本の直線はほぼ重なりますが、下段のとおり、重み付きのほうが傾きの推定値が真の値の近くに集まります。`;
   return fig(svg, cap);
 }
 
@@ -2348,7 +2362,7 @@ function lassoRidge(): string {
   };
   const L = panel(18, 'Lasso：ひし形', INDIGO, diamond), R = panel(184, 'Ridge：円', TEAL, circle);
   const svg = `${svgOpen(W, H, `係数2つの平面。オレンジの点が最小二乗推定量 (2, 0.4)、オレンジの楕円は残差平方和の等高線。Lasso のひし形には角 (${f2(L.p[0])}, 0) で触れ、β₂ がちょうど0になる。Ridge の円には (${f2(R.p[0])}, ${f2(R.p[1])}) で触れ、β₂ は0にならない`)}
-    <text x="${W / 2}" y="34" text-anchor="middle" font-size="12" fill="${AMBER}">● 最小二乗推定量 (β₁, β₂) = (2, 0.4)　◯ 等高線</text>
+    <text x="${W / 2}" y="34" text-anchor="middle" font-size="12" fill="${AMBER}">● 最小二乗推定量 (2, 0.4)　◯ 残差平方和の等高線</text>
     ${L.svg}${R.svg}
     <text x="${W / 2}" y="${H - 2}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 β₁・縦軸 β₂</text>
   </svg>`;
@@ -4079,7 +4093,7 @@ function cookLeverage(): string {
     <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="1.8" stroke-dasharray="5 4" /><text x="46" y="276" font-size="12.4" fill="${INK}">A を除いた回帰直線</text>
     <text x="14" y="294" font-size="12.3" fill="${SLATE}">横軸＝説明変数 x、縦軸＝目的変数 y</text>
   </svg>`;
-  const cap = `A は説明変数の端にあり（てこ比 ${f2(hA)}、平均 ${f2(p / all.n)} の約${(hA / (p / all.n)).toFixed(1)}倍）、A を除くと傾きが ${f2(all.b1)} から ${f2(noA.b1)} に変わります。クックの距離は ${f2(dA)} で、1 を超えます。B は残差が大きくても中央にあり（てこ比 ${f2(hB)}）、除いても傾きは ${f2(noB.b1)} とほぼ変わらず、クックの距離は ${f2(dB)} です。`;
+  const cap = `A は説明変数の端にあり（てこ比 ${f2(hA)}、平均 ${f2(p / all.n)} の約${(hA / (p / all.n)).toFixed(1)}倍）、A を除くと傾きが ${f2(all.b1)} から ${f2(noA.b1)} に変わります。クックの距離 ${f2(dA)} は 1 を超えるので、まず入力の誤りを疑い、除く前と後の結果を並べて示します。B は残差が大きくても中央にあり（てこ比 ${f2(hB)}）、除いても傾きは ${f2(noB.b1)} とほぼ変わらず、クックの距離は ${f2(dB)} です。`;
   return fig(svg, cap);
 }
 
@@ -4104,7 +4118,7 @@ function residPatterns(): string {
     ${rows.map(panel).join('')}
     ${footLines(W, H, [{ s: '横軸＝予測値（右ほど大きい）、縦軸＝残差' }])}
   </svg>`;
-  const cap = '②は直線では表せない曲がりが残差に残った形で、2乗の項を足すなど式の形を見直します。③は予測値が大きいほどズレも大きい形で、次の節の Box-Cox 変換や、第3節の重み付き最小二乗法で扱います。';
+  const cap = '②は直線では表せない曲がりが残差に残った形で、2乗の項を足すなど式の形を見直します。③は予測値が大きいほどズレも大きい形で、y の尺度を変える Box-Cox 変換か、y はそのままで点に重みを付ける重み付き最小二乗法（第3節）で扱います。';
   return fig(svg, cap);
 }
 
