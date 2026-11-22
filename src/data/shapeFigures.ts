@@ -2315,7 +2315,7 @@ function wls(): string {
       const w = xs.map((x) => 1 / (0.08 * x) ** 2), sw = w.reduce((a, v) => a + v, 0), swx = w.reduce((a, v, i) => a + v * xs[i], 0), swxx = w.reduce((a, v, i) => a + v * xs[i] ** 2, 0);
       const sW = Math.sqrt(sw / (sw * swxx - swx * swx));
       const pl = plane({ x0: 36, y0: 290, w: 290, h: 72, xMin: 0.4, xMax: 0.6, yMin: 0, yMax: 21 });
-      return `<text x="14" y="272" font-size="12.6" font-weight="700" fill="${INK}">データを作り直したときの傾きの分布（数字＝標準偏差）</text>
+      return `<text x="14" y="272" font-size="12.6" font-weight="700" fill="${INK}">作り直したときの傾きの分布（数字＝標準偏差）</text>
         ${pl.line((v) => normPdf(v, 0.5, sO), AMBER, 2.2, 0.4, 0.6, '6 4')}${pl.line((v) => normPdf(v, 0.5, sW), TEAL, 2.2)}
         ${pl.xAxis([0.4, 0.45, 0.5, 0.55, 0.6], 0.5)}
         ${halo(pl.X(0.48), pl.Y(19), `重み付き　${sW.toFixed(4)}`, TEAL, { anchor: 'end' })}
