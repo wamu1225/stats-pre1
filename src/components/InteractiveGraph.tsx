@@ -328,13 +328,13 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       return (
         <div style={{ position: 'relative' }}>
           <div className="stat-badge" style={{ position: 'absolute', top: -10, right: 0, zIndex: 10, background: 'var(--primary)', color: 'white' }}>
-            第1主成分の寄与率: {(contribution * 100).toFixed(0)}%
+            赤線の向きの分散: {(1 + rho).toFixed(2)}
           </div>
           <ResponsiveContainer width="100%" height={260}>
             <ComposedChart margin={{ top: 24, right: 16, left: 0, bottom: 18 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="x" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} label={{ value: '変数1（標準化）', position: 'insideBottom', offset: -12, fontSize: 11 }} />
-              <YAxis type="number" dataKey="y" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} width={28} label={{ value: '変数2', angle: -90, position: 'insideLeft', offset: 8, fontSize: 11 }} />
+              <XAxis type="number" dataKey="x" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} label={{ value: '数学（標準化）', position: 'insideBottom', offset: -12, fontSize: 11 }} />
+              <YAxis type="number" dataKey="y" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} tick={{ fontSize: 11 }} width={28} label={{ value: '理科', angle: -90, position: 'insideLeft', offset: 2, fontSize: 11 }} />
               <Scatter data={points} dataKey="y" fill="var(--primary)" fillOpacity={0.55} isAnimationActive={false} />
               <Line data={axis} dataKey="y" stroke="#ef4444" strokeWidth={2.5} dot={false} isAnimationActive={false} />
               <Line data={axis2} dataKey="y" stroke="#64748b" strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
@@ -344,7 +344,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             固有値 λ₁ = 1 + {rho.toFixed(2)} = {(1 + rho).toFixed(2)}、λ₂ = 1 − {rho.toFixed(2)} = {(1 - rho).toFixed(2)}
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: 2 }}>
-            赤線: 第1主成分、灰色の破線: 第2主成分。相関を強めるとデータが赤線上に集中し、寄与率 (1+r)/2 が上がります。
+            赤線: 第1主成分、灰色の破線: 第2主成分。相関を強めるとデータが赤線上に集中します。
           </div>
         </div>
       );

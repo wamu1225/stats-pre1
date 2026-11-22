@@ -4122,6 +4122,70 @@ function residPatterns(): string {
   return fig(svg, cap);
 }
 
+// ============ 2.2 節2・3：4科目の相関行列（数理 0.7・国英 0.6・文理の組 0.3）の固有値と負荷量 ============
+// 対称な形なので固有値は閉じた形で出る：和の向き (1,1,0,0)・(0,0,1,1) の2次元では [[1+a, 2c],[2c, 1+b]]、
+// 差の向き (1,−1,0,0)・(0,0,1,−1) では 1−a・1−b
+function pca4(): { lam: number[]; load: { mr: number[]; ke: number[] } } {
+  const a = 0.7, b = 0.6, c = 0.3;
+  const p = 1 + a, q = 1 + b, s = 2 * c, mid = (p + q) / 2, rad = Math.sqrt(((p - q) / 2) ** 2 + s * s);
+  const l1 = mid + rad, l2 = mid - rad;
+  // 和の2次元での固有ベクトル (u, v)：(p − λ)u + s v = 0
+  const vec = (l: number) => { const u = s, v = l - p, n = Math.hypot(u, v); return [u / n, v / n]; };
+  const [u1, v1] = vec(l1), [u2, v2] = vec(l2);
+  const sg = u2 > 0 ? -1 : 1; // 第2主成分は理系が負になる向きにそろえる
+  return {
+    lam: [l1, l2, 1 - b, 1 - a].sort((x, y) => y - x),
+    load: { mr: [Math.sqrt(l1) * u1 / Math.SQRT2, sg * Math.sqrt(l2) * u2 / Math.SQRT2], ke: [Math.sqrt(l1) * v1 / Math.SQRT2, sg * Math.sqrt(l2) * v2 / Math.SQRT2] },
+  };
+}
+
+function pcaScree(): string {
+  const W = 340, H = 268, { lam } = pca4(), tot = lam.reduce((x, y) => x + y, 0);
+  const bx = { x0: 40, y0: 44, w: 286, h: 150, xMin: 0.5, xMax: 4.5, yMin: 0, yMax: 2.5 }, pl = { ...bx, ...plane(bx) };
+  let cum = 0;
+  const bw = 40;
+  const barsSvg = lam.map((l, i) => {
+    cum += l / tot;
+    const x = pl.X(i + 1), keep = l >= 1, col = keep ? INDIGO : '#94a3b8';
+    return `<rect x="${f1(x - bw / 2)}" y="${f1(pl.Y(l))}" width="${bw}" height="${f1(pl.Y(0) - pl.Y(l))}" fill="${col}" fill-opacity="0.8" />
+      <text x="${f1(x)}" y="${f1(pl.Y(l) - 6)}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${keep ? INDIGO : SLATE}">${f2(l)}</text>
+      <text x="${f1(x)}" y="${pl.y0 + pl.h + 16}" text-anchor="middle" font-size="12.4" fill="${INK}">第${i + 1}</text>
+      <text x="${f1(x)}" y="${pl.y0 + pl.h + 33}" text-anchor="middle" font-size="12" fill="${SLATE}">${pct(l / tot, 1)}</text>
+      <text x="${f1(x)}" y="${pl.y0 + pl.h + 49}" text-anchor="middle" font-size="12" fill="${keep ? TEAL : SLATE}"${keep ? ' font-weight="700"' : ''}>${pct(cum, 1)}</text>`;
+  }).join('');
+  const svg = `${svgOpen(W, H, `4科目の主成分の固有値は大きい順に ${lam.map(f2).join('、')}。固有値1の線を超えるのは第1と第2で、そこまでの累積寄与率は ${pct((lam[0] + lam[1]) / tot, 0)}`)}
+    <text x="14" y="18" font-size="12.4" fill="${SLATE}">固有値</text>
+    ${pl.yTicks([0, 1, 2], false)}
+    <line x1="${pl.x0}" y1="${pl.y0 + pl.h}" x2="${pl.x0 + pl.w}" y2="${pl.y0 + pl.h}" stroke="${SLATE}" />
+    ${barsSvg}
+    <line x1="${pl.x0}" y1="${f1(pl.Y(1))}" x2="${pl.x0 + pl.w}" y2="${f1(pl.Y(1))}" stroke="${ROSE}" stroke-width="1.6" stroke-dasharray="5 4" />
+    ${halo(pl.x0 + pl.w, pl.Y(1) - 6, 'カイザー基準（固有値 1）', ROSE, { anchor: 'end' })}
+    <text x="8" y="${pl.y0 + pl.h + 33}" font-size="12" fill="${SLATE}">寄与</text>
+    <text x="8" y="${pl.y0 + pl.h + 49}" font-size="12" fill="${SLATE}">累積</text>
+  </svg>`;
+  const cap = `固有値の和は ${num(tot)} です。固有値が1を超える第1と第2（濃い棒）を残し、灰色の棒は捨てます。2つの累積寄与率は ${pct((lam[0] + lam[1]) / tot, 1)} です。`;
+  return fig(svg, cap);
+}
+
+function pcaLoading(): string {
+  const W = 340, H = 300, { load } = pca4();
+  const bx = { x0: 44, y0: 24, w: 270, h: 220, xMin: -0.2, xMax: 1, yMin: -0.8, yMax: 0.8 }, pl = { ...bx, ...plane(bx) };
+  const arrow = (pt: number[], col: string) => `<line x1="${f1(pl.X(0))}" y1="${f1(pl.Y(0))}" x2="${f1(pl.X(pt[0]))}" y2="${f1(pl.Y(pt[1]))}" stroke="${col}" stroke-width="2.4" />
+    <circle cx="${f1(pl.X(pt[0]))}" cy="${f1(pl.Y(pt[1]))}" r="5" fill="${col}" />`;
+  const { mr, ke } = load, sg2 = (x: number) => (x < 0 ? '−' + f2(-x) : f2(x));
+  const svg = `${svgOpen(W, H, `主成分負荷量。数学と理科は第1主成分 ${f2(mr[0])}・第2主成分 ${f2(mr[1])}、国語と英語は第1主成分 ${f2(ke[0])}・第2主成分 ${f2(ke[1])}`)}
+    ${pl.yTicks([-0.8, -0.4, 0, 0.4, 0.8])}
+    ${pl.xAxis([0, 0.5, 1])}
+    <line x1="${f1(pl.X(0))}" y1="${pl.y0}" x2="${f1(pl.X(0))}" y2="${pl.y0 + pl.h}" stroke="${SLATE}" stroke-opacity="0.5" />
+    ${arrow(mr, INDIGO)}${arrow(ke, AMBER)}
+    ${halo(Math.min(W - 4, pl.X(mr[0]) + 34), pl.Y(mr[1]) + 24, `数学・理科（${f2(mr[0])}, ${sg2(mr[1])}）`, INDIGO, { anchor: 'end', bold: true })}
+    ${halo(Math.min(W - 4, pl.X(ke[0]) + 34), pl.Y(ke[1]) - 14, `国語・英語（${f2(ke[0])}, ${sg2(ke[1])}）`, '#b45309', { anchor: 'end', bold: true })}
+    ${footLines(W, H, [{ s: '横軸＝第1主成分との相関、縦軸＝第2主成分との相関' }])}
+  </svg>`;
+  const cap = `例の相関が対称なので、2科目ずつ同じ点に重なります。横軸がすべて正なので、第1主成分は「総合的な学力」です。縦軸は理系2科目が負、文系2科目が正なので、第2主成分は「文系寄りか理系寄りか」を表します。`;
+  return fig(svg, cap);
+}
+
 // ============ 2.3 節5：QDA。群ごとに楕円の向きと大きさが違うと、境界が曲がる ============
 function qdaBoundary(): string {
   const W = 350, H = 300;
@@ -5441,6 +5505,8 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-qda': qdaBoundary,
   'f-cook': cookLeverage,
   'f-resid': residPatterns,
+  'f-pca-scree': pcaScree,
+  'f-pca-loading': pcaLoading,
   'f-cv-grid': cvGrid,
   'f-aic-optimism': aicOptimism,
   'f-roc': rocCurve,
