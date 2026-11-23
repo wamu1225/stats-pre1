@@ -32,7 +32,7 @@ const sections: { title: string; lead: string; head: [string, string]; rows: Row
       ['母分散が分かっているときの標本平均（標準化したもの）', '標準正規分布（z）', '1.12-sampling'],
       ['母分散が分からないときの標本平均（標準化したもの）', 't 分布', '1.12-sampling'],
       ['標本分散、適合度・独立性の検定の統計量', 'χ² 分布', '1.12-sampling'],
-      ['2つの標本分散の比、分散分析の統計量', 'F 分布', '1.12-sampling'],
+      ['2つの標本分散の比、分散分析の統計量', 'F 分布', '1.12b-f-noncentral'],
     ],
   },
   {
@@ -44,6 +44,7 @@ const sections: { title: string; lead: string; head: [string, string]; rows: Row
       ['独立な2群の平均の差', '2標本 t 検定', '1.20-testing-applied'],
       ['対応のある2群の差（同じ対象の前後など）', '対応のある t 検定', '1.20-testing-applied'],
       ['3群以上の平均の差', '分散分析（ANOVA）', '1.21-anova'],
+      ['2つの要因の効果と、組み合わせで効果が変わるか', '二元配置分散分析', '1.21c-two-way-anova'],
       ['正規分布を仮定できない2群の比較', 'ウィルコクソン順位和検定', '1.20b-nonparametric'],
       ['正規分布を仮定できない3群以上の比較', 'クラスカル・ウォリス検定', '1.20b-nonparametric'],
       ['2つの量的変数に相関があるか', '母相関係数の検定', '1.20-testing-applied'],
@@ -58,7 +59,8 @@ const sections: { title: string; lead: string; head: [string, string]; rows: Row
     head: ['知りたい範囲', '使う方法'],
     rows: [
       ['母平均・母比率・母分散', '1標本の信頼区間', '1.16-ci'],
-      ['2群の平均の差・比率の差・分散の比', '2標本の信頼区間', '1.17-ci-advanced'],
+      ['2群の平均の差（独立・対応あり）', '2標本の平均の差の信頼区間', '1.17-ci-advanced'],
+      ['2群の比率の差・分散の比、「最低でも」を言う片側の限界', '比率の差・分散の比の信頼区間、片側信頼限界', '1.17b-ci-ratio-onesided'],
     ],
   },
   {
@@ -86,7 +88,7 @@ const sections: { title: string; lead: string; head: [string, string]; rows: Row
     rows: [
       ['「イベントが起きるまでの時間」で、途中で観察が終わった人がいる', 'カプラン・マイヤー法、Cox 比例ハザードモデル', '3.5-survival'],
       ['時間の順に並んだデータの予測', 'ARIMA モデル', '3.2-timeseries'],
-      ['一部の値が欠けているデータでの推定', 'EM アルゴリズム', '3.6-simulation'],
+      ['一部の値が欠けているデータでの推定', 'EM アルゴリズム', '3.6b-missing-em'],
       ['観察データから、原因の効果（因果効果）を求めたい', '因果グラフ（DAG）・バックドア基準', '3.7-causal'],
     ],
   },
