@@ -3731,8 +3731,8 @@ function qqPlot(): string {
 }
 
 // ============ 2.4：因子分析のパス図（因子 → 観測変数）と PCA の向きの対比 ============
-function factorPath(): string {
-  const W = 350, H = 300;
+function factorPath(withPca = false): string {
+  const W = 350, H = withPca ? 300 : 150;
   const lam = [0.8, 0.7, 0.6];
   const names = ['人前で話せる', '友人が多い', 'パーティー好き'];
   const ys = [50, 90, 130];
@@ -3764,21 +3764,23 @@ function factorPath(): string {
     <text x="${20 + rw / 2}" y="${pys[i] + 4.5}" text-anchor="middle" font-size="12.3" fill="${INK}">${nm}</text>
     ${arrow(20 + rw + 1, pys[i], pcx - 38, pcy + (pys[i] - pcy) * 0.35, SLATE)}`).join('');
 
-  const svg = `${svgOpen(W, H, '因子分析のパス図：潜在因子から各観測変数へ矢印が出て、各変数には独自因子が付く。主成分分析は向きが逆で、観測変数から主成分を作る')}
+  const svg = `${svgOpen(W, H, withPca ? '上は因子分析のパス図で、因子から各観測変数へ矢印が出て、各変数には独自因子が付く。下は主成分分析で、向きが逆で観測変数から主成分を作り、独自因子が無い' : '因子分析のパス図：潜在因子から各観測変数へ矢印が出て、各変数には独自因子が付く')}
     <defs><marker id="pa-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${SLATE}" /></marker></defs>
     <text x="10" y="16" font-size="13" font-weight="700" fill="${INK}">因子分析：因子が変数を生む</text>
     <ellipse cx="${fcx}" cy="${fcy}" rx="38" ry="26" fill="#eef2ff" stroke="${INDIGO}" stroke-width="1.8" />
     <text x="${fcx}" y="${fcy - 2}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INDIGO}">外向性</text>
     <text x="${fcx}" y="${fcy + 12}" text-anchor="middle" font-size="12.3" fill="${INDIGO}">（因子 F）</text>
     ${rows}
-    <text x="10" y="${py0 - 30}" font-size="13" font-weight="700" fill="${INK}">主成分分析：変数から軸を作る</text>
+    ${withPca ? `<text x="10" y="${py0 - 30}" font-size="13" font-weight="700" fill="${INK}">主成分分析：変数から軸を作る</text>
     ${pcaRows}
     <ellipse cx="${pcx}" cy="${pcy}" rx="38" ry="26" fill="#f1f5f9" stroke="${SLATE}" stroke-width="1.8" />
-    <text x="${pcx}" y="${pcy + 4.5}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INK}">主成分 Z</text>
+    <text x="${pcx}" y="${pcy + 4.5}" text-anchor="middle" font-size="12.3" font-weight="700" fill="${INK}">主成分 Z</text>` : ''}
   </svg>`;
   const comm = lam.map((l) => f2(l * l));
   const uniq = lam.map((l) => f2(1 - l * l));
-  const cap = `上は因子分析のパス図です。矢印の上の数が因子負荷量 λ で、「外向性が高いほど、その行動をとりやすい」強さを表します。各変数を標準化すると、λ の2乗が因子で説明できる割合（共通性）で、${comm.join('・')} になります。残りの ${uniq.join('・')} は、その変数だけに固有の独自因子 u の分です。下の主成分分析は矢印の向きが逆で、観測変数を合成して主成分を作ります。因子分析は「原因（因子）から結果（変数）」、主成分分析は「結果（変数）から要約（主成分）」の向きです。`;
+  const cap = withPca
+    ? `下の主成分分析は矢印が逆向きで、3つの質問を合成して主成分を作ります。上の因子分析にある独自因子 u の丸がありません。因子分析は「原因（因子）から結果（変数）」、主成分分析は「結果（変数）から要約（主成分）」の向きです。`
+    : `矢印の上の数が因子負荷量 λ で、「外向性が高いほど、その行動をとりやすい」強さを表します。各変数を標準化すると、λ の2乗が因子で説明できる割合（共通性）で、${comm.join('・')} になります。残りの ${uniq.join('・')} は、その変数だけに固有の独自因子 u の分です。`;
   return fig(svg, cap);
 }
 
@@ -3802,7 +3804,7 @@ function factorRotation(): string {
   }).join('');
   const ticks = [-0.5, 0.5].map((v) => `<line x1="${X(-0.04)}" y1="${f1(Y(v))}" x2="${X(0.04)}" y2="${f1(Y(v))}" stroke="${SLATE}" /><text x="${X(-0.06)}" y="${f1(Y(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')
     + [0.5, 1].map((u) => `<line x1="${f1(X(u))}" y1="${Y(-0.04)}" x2="${f1(X(u))}" y2="${Y(0.04)}" stroke="${SLATE}" /><text x="${f1(X(u))}" y="${oy - 11}" text-anchor="middle" font-size="12" fill="${SLATE}">${u}</text>`).join('');
-  const svg = `${svgOpen(W, H, `因子負荷量を点で描いた図。初期解の軸では6項目とも横軸に0.4から0.7で負荷し、縦軸の符号で2組に分かれる。軸を40度回すと、1から3は回転後の外向性の軸に、4から6は誠実性の軸に乗る。原点からの距離の2乗が共通性で、回転しても変わらない`)}
+  const svg = `${svgOpen(W, H, `因子負荷量を点で描いた図。初期解の軸では6項目とも横軸に0.3から0.7で負荷し、縦軸の符号で2組に分かれる。軸を40度回すと、1から3は回転後の外向性の軸に、4から6は誠実性の軸に乗る。原点からの距離の2乗が共通性で、回転しても変わらない`)}
     <line x1="${X(-0.25)}" y1="${oy}" x2="${X(1.4)}" y2="${oy}" stroke="${SLATE}" stroke-width="1.4" />
     <line x1="${ox}" y1="${Y(-0.72)}" x2="${ox}" y2="${Y(0.82)}" stroke="${SLATE}" stroke-width="1.4" />
     <text x="${X(1.4)}" y="${oy + 16}" text-anchor="end" font-size="12" fill="${SLATE}">初期解 F1</text>
@@ -5497,7 +5499,8 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-rank-ab': rankSum,
   'f-test-choice': testChoice,
   'f-interaction': interactionPlot,
-  'f-factor-path': factorPath,
+  'f-factor-path': () => factorPath(false),
+  'f-factor-vs-pca': () => factorPath(true),
   'f-factor-rotation': factorRotation,
   'f-strata-cluster': strataVsCluster,
   'f-mds': mdsMap,
