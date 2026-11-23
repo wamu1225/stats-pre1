@@ -4005,7 +4005,7 @@ function cvGrid(): string {
     <rect x="70" y="${yb}" width="18" height="12" rx="3" fill="${ROSE}" fill-opacity="0.9" /><text x="94" y="${yb + 11}" font-size="12.4" fill="${INK}">検証に使う塊（2点）</text>
     <rect x="70" y="${yb + 20}" width="18" height="12" rx="3" fill="${INDIGO}" fill-opacity="0.16" stroke="${INDIGO}" /><text x="94" y="${yb + 31}" font-size="12.4" fill="${INK}">学習に使う塊（残り8点）</text>
   </svg>`;
-  const cap = `${n}点を${K}つの塊（2点ずつ）に分けた例です。赤い塊は対角線に並び、どの点もちょうど1回だけ検証に使われます。${K}回の検証誤差を平均したものが予測誤差の推定値です。塊を1点ずつにすると、列が ${n} 本になり LOOCV になります。`;
+  const cap = `${n}点を${K}つの塊（2点ずつ）に分けた例です。赤い塊は対角線に並び、どの点もちょうど1回だけ検証に使われます。${K}回の検証誤差を平均したものが予測誤差の推定値です。塊を1点ずつにすると、列が ${n} 本になり LOOCV（学習 ${n} 回）になります。`;
   return fig(svg, cap);
 }
 
