@@ -380,9 +380,9 @@ function continuityCorrection(): string {
     <text x="${f1(PX(b, cut) - 4)}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">→ ${f2(noCc)}</text>
     <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 22}" font-size="12.4" font-weight="700" fill="${TEAL}">20.5 で切る</text>
     <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 8}" font-size="12.4" font-weight="700" fill="${TEAL}">→ ${f2(withCc)}</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">青の棒 ＝ 20件以下（合計 ${f2(exact)}）／橙 ＝ 正規分布</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">濃い棒 ＝ 20件以下（合計 ${f2(exact)}）／灰の棒 ＝ 21件以上／橙 ＝ 正規分布</text>
   </svg>`;
-  const cap = `平均16件のポアソン分布（棒）に、平均16・標準偏差4の正規分布（橙の曲線）を重ねました。20件以下の確率（青の棒の合計 ${f2(exact)}）を曲線の下の面積で近似するとき、20 で切ると20件の棒の右半分が入らず ${f2(noCc)} と小さく出ます。20.5 で切れば棒が丸ごと入り、${f2(withCc)} とほぼ一致します。`;
+  const cap = `平均16件のポアソン分布（棒）に、平均16・標準偏差4の正規分布（橙の曲線）を重ねました。20件以下の確率（濃い棒の合計 ${f2(exact)}）を曲線の下の面積で近似するとき、20 で切ると20件の棒の右半分が入らず ${f2(noCc)} と小さく出ます。20.5 で切れば棒が丸ごと入り、${f2(withCc)} とほぼ一致します。`;
   return fig(svg, cap);
 }
 
@@ -1529,7 +1529,7 @@ function noncentralT(): string {
     ${axes(b, [-4, -2, 0, 2, 4, 6, 8])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝T の値（自由度9）</text>
   </svg>`;
-  const cap = `δ = 0 が普通の t 分布です。2.262 を超える確率は、δ = 0 で ${pct(over(0), 1)}、δ = 2 で ${pct(over(2), 0)}、δ = 3 で ${pct(over(3), 0)} です。`;
+  const cap = `δ = 0 が普通の t 分布です。2.262 を超える確率は、δ = 0 で ${pct(over(0), 1)}（右側だけ。左右合わせると5%）、δ = 2 で ${pct(over(2), 0)}、δ = 3 で ${pct(over(3), 0)} です。`;
   return fig(svg, cap);
 }
 
@@ -2125,7 +2125,7 @@ function oneSided(): string {
     ${area(t, f, -1.96, 1.96, INDIGO, 0.2)}${area(t, f, -3.6, -1.96, ROSE, 0.5)}${area(t, f, 1.96, 3.6, ROSE, 0.5)}${curve(t, f, INDIGO, -3.6, 3.6, 2)}${base(t)}
     ${cut(t, -1.96, '−1.96')}${cut(t, 1.96, '1.96')}
     <text x="${f1(PX(t, 0))}" y="${f1(PY(t, 0.12))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">95%</text>
-    <text x="4" y="${s.y - 14}" font-size="12.4" font-weight="700" fill="${INK}">片側の限界：右だけに 5%</text>
+    <text x="4" y="${s.y - 14}" font-size="12.4" font-weight="700" fill="${INK}">下側限界：x̄ が右の5%に出たら外れる</text>
     ${area(s, f, -3.6, 1.645, INDIGO, 0.2)}${area(s, f, 1.645, 3.6, ROSE, 0.5)}${curve(s, f, INDIGO, -3.6, 3.6, 2)}${base(s)}
     ${cut(s, 1.645, '1.645')}
     <text x="${f1(PX(s, -0.3))}" y="${f1(PY(s, 0.12))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">95%</text>
