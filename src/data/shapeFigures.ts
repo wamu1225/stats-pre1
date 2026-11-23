@@ -3980,7 +3980,7 @@ function ldaBoundary(): string {
     <text x="46" y="276" font-size="12.4" fill="${INK}">2 つの平均の中点で垂直に切る境界</text>
     <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝各群の点の大半が入る範囲</text>
   </svg>`;
-  const cap = `2群は同じ向きの楕円に広がっています（相関 ${rho}）。平均の中点で垂直に切る灰の破線では、楕円の長い向きに伸びた裾が相手側にはみ出します。LDA の境界（赤）は楕円の形に合わせて約 ${Math.abs(ang(w) - ang(d))} 度傾き、裾を分けます。`;
+  const cap = `2群は同じ向きの楕円に広がっています（相関 ${rho}）。平均の中点で垂直に切る灰の破線では、楕円の長い向きに伸びた裾が相手側にはみ出します。LDA の境界（赤）は楕円の形に合わせて灰の破線から約 ${Math.abs(ang(w) - ang(d))} 度回り、裾を分けます。`;
   return fig(svg, cap);
 }
 
@@ -4223,12 +4223,12 @@ function qdaBoundary(): string {
     <circle cx="${f1(sx(m1[0]))}" cy="${f1(sy(m1[1]))}" r="4.5" fill="#ffffff" stroke="${INDIGO}" stroke-width="2" />
     <circle cx="${f1(sx(m2[0]))}" cy="${f1(sy(m2[1]))}" r="4.5" fill="#ffffff" stroke="${AMBER}" stroke-width="2" />
     <text x="14" y="30" font-size="13" font-weight="700" fill="${INDIGO}">群 1（相関 0.8・分散 0.5）</text>
-    <text x="336" y="226" text-anchor="end" font-size="13" font-weight="700" fill="#b45309">群 2（相関 −0.3・分散 2.5）</text>
+    <text x="336" y="226" text-anchor="end" font-size="13" font-weight="700" fill="#b45309" stroke="#fff" stroke-width="3" paint-order="stroke">群 2（相関 −0.3・分散 2.5）</text>
     <line x1="14" y1="252" x2="40" y2="252" stroke="${ROSE}" stroke-width="2.2" /><text x="46" y="256" font-size="12.4" fill="${INK}">QDA の境界（群ごとの Σ で距離を測る）</text>
     <line x1="14" y1="272" x2="40" y2="272" stroke="${SLATE}" stroke-width="2.2" stroke-dasharray="5 4" /><text x="46" y="276" font-size="12.4" fill="${INK}">LDA の境界（2群に共通の Σ）</text>
     <text x="14" y="293" font-size="12.3" fill="${SLATE}">輪＝各群の平均／楕円＝各群の点の大半が入る範囲</text>
   </svg>`;
-  const cap = '群1は小さく細く右上がり、群2は大きく丸く広がっています。QDA は群ごとの分散共分散行列でマハラノビス距離を測り、log|Σ_k| を足して比べます。群2は広がりが大きいので、群1の楕円から少し離れた所はもう群2のほうが近くなり、境界（赤）は群1を囲む楕円になります。2群に共通の行列を使う LDA の境界（灰の破線）は直線のままで、群1の左上の外側まで群1に入れてしまいます。';
+  const cap = '群1は小さく細く右上がり、群2は大きく丸く広がっています。QDA は群ごとの分散共分散行列でマハラノビス距離を測り、log|Σₖ| を足して比べます。群2は広がりが大きいので、群1の楕円から少し離れた所はもう群2のほうが近くなり、境界（赤）は群1を囲む楕円になります。2群に共通の行列を使う LDA の境界（灰の破線）は直線のままで、群1の左上の外側まで群1に入れてしまいます。';
   return fig(svg, cap);
 }
 
@@ -4269,7 +4269,7 @@ function rocCurve(): string {
     <line x1="${RX(0)}" y1="${RY(0)}" x2="${RX(1)}" y2="${RY(1)}" stroke="${SLATE}" stroke-dasharray="4 3" />
     <path d="${roc}" fill="none" stroke="${INDIGO}" stroke-width="2.2" />
     <circle cx="${f1(RX(fpr))}" cy="${f1(RY(tpr))}" r="5" fill="${INK}" />
-    <text x="${f1(RX(fpr) + 8)}" y="${f1(RY(tpr) + 16)}" font-size="12" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">上の閾値 (${f2(fp / nN)}, ${f2(tp / nP)})</text>
+    <text x="${f1(RX(fpr) + 8)}" y="${f1(RY(tpr) + 16)}" font-size="12" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">第3節の閾値 (${f2(fp / nN)}, ${f2(tp / nP)})</text>
     <text x="${f1(RX(0.97))}" y="${f1(RY(0.08))}" text-anchor="end" font-size="12" fill="${SLATE}">破線＝対角線（AUC 0.5）</text>
     ${[0, 0.5, 1].map((v) => `<text x="${f1(RX(v))}" y="${r.y + r.s + 14}" text-anchor="middle" font-size="12" fill="${SLATE}">${v}</text><text x="${r.x - 4}" y="${f1(RY(v) + 4)}" text-anchor="end" font-size="12" fill="${SLATE}">${v}</text>`).join('')}
     <text x="${r.x + r.s / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">横軸 偽陽性率</text>
