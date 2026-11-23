@@ -380,7 +380,7 @@ function continuityCorrection(): string {
     <text x="${f1(PX(b, cut) - 4)}" y="${b.y - 8}" text-anchor="end" font-size="12.4" fill="${ROSE}">→ ${f2(noCc)}</text>
     <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 22}" font-size="12.4" font-weight="700" fill="${TEAL}">20.5 で切る</text>
     <text x="${f1(PX(b, cut + 0.5) + 4)}" y="${b.y - 8}" font-size="12.4" font-weight="700" fill="${TEAL}">→ ${f2(withCc)}</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">濃い棒 ＝ 20件以下（合計 ${f2(exact)}）／灰の棒 ＝ 21件以上／橙 ＝ 正規分布</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">濃い棒 ＝ 20件以下（${f2(exact)}）／灰 ＝ 21件以上</text>
   </svg>`;
   const cap = `平均16件のポアソン分布（棒）に、平均16・標準偏差4の正規分布（橙の曲線）を重ねました。20件以下の確率（濃い棒の合計 ${f2(exact)}）を曲線の下の面積で近似するとき、20 で切ると20件の棒の右半分が入らず ${f2(noCc)} と小さく出ます。20.5 で切れば棒が丸ごと入り、${f2(withCc)} とほぼ一致します。`;
   return fig(svg, cap);
