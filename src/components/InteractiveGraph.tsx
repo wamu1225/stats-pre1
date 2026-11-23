@@ -106,7 +106,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const [degree, setDegree] = useState(1);
   const [corr, setCorr] = useState(0.9);
   const [pcaCorr, setPcaCorr] = useState(0.8);
-  const [ldaCorr, setLdaCorr] = useState(0);
+  const [ldaCorr, setLdaCorr] = useState(0.8);
   const [mcmcN, setMcmcN] = useState(50);
   const basePairs = useMemo(() => standardNormalPairs(60, 42), []);
   const mcmcSamples = useMemo(() => runMetropolis(1500, 123), []);
@@ -236,7 +236,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       });
       const group1 = ldaBasePairs.g1.map(({ z1, z2 }) => transform(z1, z2, -sep));
       const group2 = ldaBasePairs.g2.map(({ z1, z2 }) => transform(z1, z2, sep));
-      const span = 3.2;
+      const span = 5;
       const bLen = Math.sqrt(rho * rho + 1);
       const boundary = [
         { x: -span * (rho / bLen), y: -span * (1 / bLen) },
@@ -361,14 +361,15 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
               <YAxis type="number" dataKey="y" domain={[-3, 3]} ticks={[-3, -2, -1, 0, 1, 2, 3]} allowDataOverflow tick={{ fontSize: 11 }} width={28} />
               <Scatter data={group1} dataKey="y" fill="#3b82f6" fillOpacity={0.6} isAnimationActive={false} />
               <Scatter data={group2} dataKey="y" fill="#f59e0b" fillOpacity={0.6} isAnimationActive={false} />
-              <Line data={boundary} dataKey="y" stroke="#1e293b" strokeWidth={2.5} strokeDasharray="6 3" dot={false} isAnimationActive={false} />
+              <Line data={[{ x: 0, y: -3 }, { x: 0, y: 3 }]} dataKey="y" stroke="#64748b" strokeWidth={2} strokeDasharray="5 4" dot={false} isAnimationActive={false} />
+              <Line data={boundary} dataKey="y" stroke="#be123c" strokeWidth={2.5} dot={false} isAnimationActive={false} />
             </ComposedChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', fontSize: '0.72rem', color: '#94a3b8', marginTop: 2 }}>
-            破線: LDA の境界。相関が強いほど大きく傾き、縦の線（中点で垂直に切る境界）より誤りがはっきり減ります。
+            赤: LDA の境界、灰の破線: 中点で垂直に切る境界。相関が強いほど赤が大きく傾き、誤りがはっきり減ります。
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary, #64748b)', marginTop: 2 }}>
-            誤って振り分けた点（{group1.length + group2.length}点中）：LDA の境界 {errLda}点／縦の線 {errMid}点
+            誤って振り分けた点（{group1.length + group2.length}点中）：LDA の境界 {errLda}点／灰の破線 {errMid}点
           </div>
         </div>
       );
