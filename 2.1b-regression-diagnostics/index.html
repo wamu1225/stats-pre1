@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-DIiqm46O.js"></script>
+    <script type="module" crossorigin src="../assets/index-BEY4SMXR.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -114,7 +114,7 @@
     <text x="170" y="324" text-anchor="middle" font-size="12.4" fill="#64748b">横軸＝予測値（右ほど大きい）、縦軸＝残差</text>
   </svg><figcaption class="venn-caption">②は直線では表せない曲がりが残差に残った形で、2乗の項を足すなど式の形を見直します。③は予測値が大きいほどズレも大きい形で、y の尺度を変える Box-Cox 変換か、y はそのままで点に重みを付ける重み付き最小二乗法（第3節）で扱います。</figcaption></figure>
 <p class="content-p">t 検定や信頼区間の前提である残差の正規性は、<strong>正規Q-Qプロット</strong>（正規性の確認とノンパラメトリック検定）で確かめます。</p>
-<p class="content-p">誤差の分布を仮定しにくいときは、係数の標準誤差を<strong>ブートストラップ法</strong>（手元のデータから復元抽出で作り直した標本で何度も推定し直す方法。シミュレーション手法と欠測値で扱います）で求めることもできます。</p>
+<p class="content-p">誤差の分布を仮定しにくいときは、係数の標準誤差を<strong>ブートストラップ法</strong>（手元のデータから復元抽出で作り直した標本で何度も推定し直す方法。シミュレーション手法：モンテカルロ法・乱数生成・ブートストラップ法で扱います）で求めることもできます。</p>
 <hr class="content-hr">
 <h3 class="content-h3">2. 問題への対処：Box-Cox 変換と正則化回帰</h3>
 <h4 class="content-h4">Box-Cox 変換：残差の形を整える</h4>

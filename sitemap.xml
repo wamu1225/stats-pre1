@@ -50,7 +50,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.7-poisson/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.7c-poisson-normal/</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -104,7 +110,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.12-sampling/</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.12b-f-noncentral/</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -134,7 +146,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.17-ci-advanced/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.17b-ci-ratio-onesided/</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -170,7 +188,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.21-anova/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.21c-two-way-anova/</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -290,7 +314,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/3.6-simulation/</loc>
-    <lastmod>2026-11-05</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/3.6b-missing-em/</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

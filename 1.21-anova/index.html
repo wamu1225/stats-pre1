@@ -4,17 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>分散分析 (ANOVA) | 統計検定 準1級 学習リファレンス</title>
-    <meta name="description" content="3つ以上の群の平均を1回で比べる分散分析を、分散分析表・二元配置の交互作用・テューキー法の数値例で学びます。" />
-    <meta property="og:title" content="分散分析 (ANOVA) | 統計検定 準1級 学習リファレンス" />
-    <meta property="og:description" content="3つ以上の群の平均を1回で比べる分散分析を、分散分析表・二元配置の交互作用・テューキー法の数値例で学びます。" />
+    <title>分散分析：一元配置の F 検定と多重比較 | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="3つ以上の群の平均を1回で比べる一元配置分散分析を、トッピングと売上の例で、分散分析表の F 検定から、テューキー法などの多重比較まで学びます。" />
+    <meta property="og:title" content="分散分析：一元配置の F 検定と多重比較 | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="3つ以上の群の平均を1回で比べる一元配置分散分析を、トッピングと売上の例で、分散分析表の F 検定から、テューキー法などの多重比較まで学びます。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://study-apps.com/stats-pre1/1.21-anova/" />
     <link rel="canonical" href="https://study-apps.com/stats-pre1/1.21-anova/" />
     <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="分散分析 (ANOVA) | 統計検定 準1級 学習リファレンス" />
-    <meta name="twitter:description" content="3つ以上の群の平均を1回で比べる分散分析を、分散分析表・二元配置の交互作用・テューキー法の数値例で学びます。" />
+    <meta name="twitter:title" content="分散分析：一元配置の F 検定と多重比較 | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="3つ以上の群の平均を1回で比べる一元配置分散分析を、トッピングと売上の例で、分散分析表の F 検定から、テューキー法などの多重比較まで学びます。" />
     <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
     <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
     <!-- Google tag (gtag.js) -->
@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-DIiqm46O.js"></script>
+    <script type="module" crossorigin src="../assets/index-BEY4SMXR.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -63,21 +63,21 @@
     <link rel="stylesheet" crossorigin href="../assets/katex-6Z4ESKbG.css">
     <link rel="stylesheet" crossorigin href="../assets/index-CVhRRHzM.css">
   <meta name="robots" content="index, follow" />
-  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第7章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"分散分析 (ANOVA)","item":"https://study-apps.com/stats-pre1/1.21-anova/"}]},{"@context":"https://schema.org","@type":"Article","headline":"分散分析 (ANOVA)","description":"3つ以上の群の平均を1回で比べる分散分析を、分散分析表・二元配置の交互作用・テューキー法の数値例で学びます。","url":"https://study-apps.com/stats-pre1/1.21-anova/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"一元配置分散分析で、群の数が4、全データが20個、群間平方和が60、群内平方和が48だった。 の値はいくつか？","acceptedAnswer":{"@type":"Answer","text":"6.67"}},{"@type":"Question","name":"2つの要因 A・B の組み合わせごとの平均が、A1B1 = 10、A1B2 = 14、A2B1 = 12、A2B2 = 16 だった。正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"交互作用は無い"}},{"@type":"Question","name":"本文の二元配置の例（トッピング×立地）で、交互作用が有意だった。結論の出し方として適切なものはどれか？","acceptedAnswer":{"@type":"Answer","text":"立地ごとに分けて、トッピングの売上を比べる"}}]}]</script>
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第7章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"分散分析：一元配置の F 検定と多重比較","item":"https://study-apps.com/stats-pre1/1.21-anova/"}]},{"@context":"https://schema.org","@type":"Article","headline":"分散分析：一元配置の F 検定と多重比較","description":"3つ以上の群の平均を1回で比べる一元配置分散分析を、トッピングと売上の例で、分散分析表の F 検定から、テューキー法などの多重比較まで学びます。","url":"https://study-apps.com/stats-pre1/1.21-anova/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"一元配置分散分析で、群の数が4、全データが20個、群間平方和が60、群内平方和が48だった。 の値はいくつか？","acceptedAnswer":{"@type":"Answer","text":"6.67"}},{"@type":"Question","name":"テューキー法の幅 HSD が 2.13 で、3群の平均が 59・51・50 だった。「差あり」となる組はいくつか？","acceptedAnswer":{"@type":"Answer","text":"2組"}},{"@type":"Question","name":"分散分析の結果、「差がある」と分かった後に具体的にどこに差があるか調べる手法は？","acceptedAnswer":{"@type":"Answer","text":"多重比較"}}]}]</script>
   </head>
   <body>
     <div id="root"><div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
     <a href="/stats-pre1/1.20b-nonparametric/" style="color:#2563eb;text-decoration:none">← 正規性の確認とノンパラメトリック検定</a>
-    <a href="/stats-pre1/1.21b-experimental-design/" style="color:#2563eb;text-decoration:none">実験計画法：反復・無作為化・ブロック計画 →</a>
+    <a href="/stats-pre1/1.21c-two-way-anova/" style="color:#2563eb;text-decoration:none">二元配置分散分析：主効果と交互作用 →</a>
   </nav>
-  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">分散分析 (ANOVA)</h1>
-  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">3つ以上の群の平均を1回で比べる分散分析を、分散分析表・二元配置の交互作用・テューキー法の数値例で学びます。</p>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">分散分析：一元配置の F 検定と多重比較</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">3つ以上の群の平均を1回で比べる一元配置分散分析を、トッピングと売上の例で、分散分析表の F 検定から、テューキー法などの多重比較まで学びます。</p>
   <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
-<p class="content-p">ラーメン屋で3種類のトッピングを10日ずつ試し、売上に差があるかを調べたいとします。P値の解釈・検定の誤りで見たとおり、2種類ずつ <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 検定を3回繰り返すと、本当は差が無くてもどこかで「差あり」が出る確率は約12%に膨らみます（3回は同じデータを使うので、独立な3回の14%より少し小さい）。3つ以上の群の平均を1回の検定で比べるのが<strong>分散分析</strong>です。読み終えると、次の3つができるようになります。</p>
-<ol><li>全体のばらつきを群間と群内に分け、分散分析表を埋めて <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 検定ができる</li><li>2つの要因を同時に調べ、主効果と交互作用をグラフと分散分析表から読み取れる</li><li>多重比較で、どの群の間に差があるかを調べられる</li></ol>
-<p class="content-p">差を見つけやすくするためのデータの集め方は、実験計画法で扱います。</p>
+<p class="content-p">ラーメン屋で3種類のトッピングを10日ずつ試し、売上に差があるかを調べたいとします。P値の解釈・検定の誤りで見たとおり、2種類ずつ <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 検定を3回繰り返すと、本当は差が無くてもどこかで「差あり」が出る確率は約12%に膨らみます。3つ以上の群の平均を1回の検定で比べるのが<strong>分散分析</strong>です。読み終えると、次の3つができるようになります。</p>
+<ol><li>全体のばらつきを群間と群内に分け、分散分析表を埋めて <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 検定ができる</li><li>テューキー法で、どの群の間に差があるかを調べられる</li><li>ボンフェローニ法・ダネット法を、比べる組に合わせて使い分けられる</li></ol>
+<p class="content-p">2つの要因を同時に調べる方法は二元配置分散分析：主効果と交互作用で、差を見つけやすいデータの集め方は実験計画法で扱います。</p>
 <hr class="content-hr">
 <h3 class="content-h3">1. 仕組み：ばらつきを「群の差」と「誤差」に分解する</h3>
 <p class="content-p"><strong>具体例</strong>：ラーメン屋でトッピング（煮玉子・チャーシュー・メンマ）が売上に与える効果を検証します。各トッピングを10日間試したところ、日ごとの売上（万円）は以下のとおりでした。</p>
@@ -117,41 +117,7 @@
 <p class="content-p">トッピングで差が無ければ、<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> は自由度 (2, 27) の <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 分布に従い、上側5%の点は約3.35です。65.7 はそれよりはるかに大きいので、「3つのトッピングで売上の平均は同じ」という仮説を退けます。表の一部が空欄でも、平方和の足し算と自由度の足し算から残りを埋められます。</p>
 <p class="content-p callout-target"> <strong>分散分析の前提条件</strong>：各グループが<strong>正規分布</strong>に従い、グループ間で<strong>分散が等しい（等分散性）</strong>こと、データどうしが<strong>独立</strong>であること。</p>
 <hr class="content-hr">
-<h3 class="content-h3">2. 二元配置：2つの要因と交互作用</h3>
-<p class="content-p">売上はトッピングだけでなく、店の立地でも変わるかもしれません。トッピング（煮玉子・チャーシュー）と立地（オフィス街・住宅街）の2つの要因を同時に調べるのが<strong>二元配置分散分析</strong>です。第1節のように要因が1つなら<strong>一元配置</strong>と呼びます。</p>
-<p class="content-p">4つの組み合わせを、それぞれ3日ずつ試しました（説明のための模擬の数字）。</p>
-<div class="content-table-wrap"><table class="content-table"><thead><tr><th></th><th>煮玉子</th><th>チャーシュー</th></tr></thead><tbody><tr><td>オフィス街</td><td>48, 50, 52（平均50）</td><td>58, 60, 62（平均60）</td></tr><tr><td>住宅街</td><td>52, 54, 56（平均54）</td><td>50, 52, 54（平均52）</td></tr></tbody></table></div>
-<p class="content-p">要因ごとに平均すると、トッピングは煮玉子52・チャーシュー56、立地はオフィス街55・住宅街53です。ここだけ見ると「チャーシューの方が4万円売れる」と言いたくなりますが、組み合わせごとの平均をグラフにすると話が変わります。</p>
-<figure class="venn-figure"><svg viewBox="0 0 350 236" role="img" aria-label="交互作用プロット：この例では煮玉子とチャーシューの線が交わり、交互作用が無いときは2本が平行になる" class="venn-svg">
-    <rect x="18" y="38" width="140" height="144" fill="none" stroke="#64748b" stroke-width="0.8" />
-      <line x1="44" y1="139.3" x2="132" y2="110.0" stroke="#b45309" stroke-width="2.4" />
-      <circle cx="44" cy="139.3" r="4.5" fill="#b45309" /><circle cx="132" cy="110.0" r="4.5" fill="#b45309" /><line x1="44" y1="66.0" x2="132" y2="124.7" stroke="#4338ca" stroke-width="2.4" />
-      <circle cx="44" cy="66.0" r="4.5" fill="#4338ca" /><circle cx="132" cy="124.7" r="4.5" fill="#4338ca" />
-      <text x="44" y="158.3" text-anchor="middle" font-size="12.4" fill="#b45309">50</text><text x="44" y="56.0" text-anchor="middle" font-size="12.4" fill="#4338ca">60</text><text x="132" y="100.0" text-anchor="middle" font-size="12.4" fill="#b45309">54</text><text x="132" y="143.7" text-anchor="middle" font-size="12.4" fill="#4338ca">52</text>
-      <text x="88" y="30" text-anchor="middle" font-size="12.8" font-weight="700" fill="#1e293b">この例：線が交わる</text>
-      <text x="44" y="200" text-anchor="middle" font-size="12.4" fill="#64748b">オフィス街</text>
-      <text x="132" y="200" text-anchor="middle" font-size="12.4" fill="#64748b">住宅街</text>
-    <rect x="196" y="38" width="140" height="144" fill="none" stroke="#64748b" stroke-width="0.8" />
-      <line x1="222" y1="139.3" x2="310" y2="154.0" stroke="#b45309" stroke-width="2.4" />
-      <circle cx="222" cy="139.3" r="4.5" fill="#b45309" /><circle cx="310" cy="154.0" r="4.5" fill="#b45309" /><line x1="222" y1="66.0" x2="310" y2="80.7" stroke="#4338ca" stroke-width="2.4" />
-      <circle cx="222" cy="66.0" r="4.5" fill="#4338ca" /><circle cx="310" cy="80.7" r="4.5" fill="#4338ca" />
-      
-      <text x="266" y="30" text-anchor="middle" font-size="12.8" font-weight="700" fill="#1e293b">交互作用が無いとき</text>
-      <text x="222" y="200" text-anchor="middle" font-size="12.4" fill="#64748b">オフィス街</text>
-      <text x="310" y="200" text-anchor="middle" font-size="12.4" fill="#64748b">住宅街</text>
-    <line x1="70" y1="224" x2="92" y2="224" stroke="#4338ca" stroke-width="2.4" />
-    <text x="98" y="228" font-size="12.8" font-weight="700" fill="#4338ca">チャーシュー</text>
-    <line x1="200" y1="224" x2="222" y2="224" stroke="#b45309" stroke-width="2.4" />
-    <text x="228" y="228" font-size="12.8" font-weight="700" fill="#b45309">煮玉子</text>
-  </svg><figcaption class="venn-caption">縦は各組み合わせ3日分の平均売上（万円）です。左の実際の例では、オフィス街ではチャーシューが10万円高く、住宅街では煮玉子が2万円高くなり、線が交わります。右のように2本が平行なら、トッピングの差はどちらの立地でも同じです。</figcaption></figure>
-<p class="content-p">オフィス街ではチャーシューが10万円高いのに、住宅街では煮玉子の方が2万円高くなっています。一方の要因の効果が、もう一方の要因（立地）によって変わることを<strong>交互作用</strong>と呼びます。それぞれの要因を単独で平均した効果は<strong>主効果</strong>です。</p>
-<p class="content-p">この交差が日ごとの揺れで出ただけかを確かめるため、二元配置の分散分析表では全体の平方和を4つに分けます。</p>
-<div class="content-table-wrap"><table class="content-table"><thead><tr><th>要因</th><th>平方和</th><th>自由度</th><th><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span></th></tr></thead><tbody><tr><td>トッピング</td><td>48</td><td>1</td><td>12.0</td></tr><tr><td>立地</td><td>12</td><td>1</td><td>3.0</td></tr><tr><td>交互作用</td><td>108</td><td>1</td><td>27.0</td></tr><tr><td>誤差</td><td>32</td><td>8</td><td></td></tr><tr><td>全体</td><td>200</td><td>11</td><td></td></tr></tbody></table></div>
-<ul><li>トッピングの平方和は <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">((</span><span class="mord">52</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">54</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">56</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">54</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">48</span></span></span></span></span>（煮玉子・チャーシュー各6日）。立地も同じ。自由度は要因ごとに 2−1＝1、交互作用はその積で1、誤差は 12−4＝8。誤差は組の中のばらつきで、平均平方 32 ÷ 8 = 4 で各要因の平均平方を割ったものが <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span></li><li>自由度 (1, 8) の <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 分布の上側5%点は 5.32。トッピング（P値 0.008）と交互作用（P値 0.0008）は有意で、立地（P値 0.12）は有意でない</li><li>交互作用の平方和は、組み合わせの平均と「全体平均＋トッピングの効果＋立地の効果」の差を2乗し、各組の日数3を掛けて足したもの。オフィス街のチャーシューなら、予想は 全体平均54＋(56−54)＋(55−54)＝57 万円で、実際の60万円との差3万円が交互作用の分（4組とも差は <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">±</span><span class="mord">3</span></span></span></span></span> なので 9×3×4＝108）</li></ul>
-<p class="content-p">交互作用が有意なときは、主効果だけで結論しません。「チャーシューの方が売れる」はオフィス街でしか成り立たないので、立地ごとに分けてトッピングを比べます。</p>
-<ul><li>交互作用を調べるには、各組み合わせに2回以上のデータ（反復）が要る。誤差は組の中のばらつきなので、1回ずつでは測れず、交互作用と区別できない</li></ul>
-<hr class="content-hr">
-<h3 class="content-h3">3. 多重比較：どこが違うかを調べる</h3>
+<h3 class="content-h3">2. 多重比較：どこが違うかを調べる</h3>
 <p class="content-p">第1節の <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span></span></span></span></span> 検定で分かるのは「3つのトッピングのどこかに差がある」までです。どの組の間に差があるかを調べるのが<strong>多重比較</strong>です。<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 検定を3回繰り返すと誤りが膨らむので、全部の組を同時に比べる<strong>テューキー法</strong>を使い、次の幅（HSD）より平均の差が大きい組を「差あり」とします。</p>
 <p class="content-p"><div class="math-block-container" style="margin:1rem 0"><div class="katex-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:5.48em;vertical-align:-2.49em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.99em;"><span style="top:-4.99em;"><span class="pstrut" style="height:3.671em;"></span><span class="mord"><span class="mord text"><span class="mord">HSD</span></span></span></span><span style="top:-2.2694em;"><span class="pstrut" style="height:3.671em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.49em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.99em;"><span style="top:-4.99em;"><span class="pstrut" style="height:3.671em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">q</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.671em;"><span class="svg-align" style="top:-4.4em;"><span class="pstrut" style="height:4.4em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">各群のデータ数</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">群内の平均平方</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.631em;"><span class="pstrut" style="height:4.4em;"></span><span class="hide-tail" style="min-width:1.02em;height:2.48em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="2.48em" viewBox="0 0 400000 2592" preserveAspectRatio="xMinYMin slice"><path d="M424,2478
 c-1.3,-0.7,-38.5,-172,-111.5,-514c-73,-342,-109.8,-513.3,-110.5,-514
@@ -185,12 +151,12 @@ h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span
   <p style="margin:0;color:#444;font-size:0.92rem">A. 6.67</p>
 </div>
 <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
-  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 2つの要因 A・B の組み合わせごとの平均が、A1B1 = 10、A1B2 = 14、A2B1 = 12、A2B2 = 16 だった。正しいものはどれか？</p>
-  <p style="margin:0;color:#444;font-size:0.92rem">A. 交互作用は無い</p>
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. テューキー法の幅 HSD が 2.13 で、3群の平均が 59・51・50 だった。「差あり」となる組はいくつか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 2組</p>
 </div>
 <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
-  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 本文の二元配置の例（トッピング×立地）で、交互作用が有意だった。結論の出し方として適切なものはどれか？</p>
-  <p style="margin:0;color:#444;font-size:0.92rem">A. 立地ごとに分けて、トッピングの売上を比べる</p>
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 分散分析の結果、「差がある」と分かった後に具体的にどこに差があるか調べる手法は？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 多重比較</p>
 </div>
   <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
 </section><section style="margin-top:28px;padding:16px;background:#f8fafc;border-radius:8px">
@@ -200,13 +166,14 @@ h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span
     <li><a href="/stats-pre1/1.19-testing-adv/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">検定の理論：ネイマン・ピアソンと大標本検定</a></li>
     <li><a href="/stats-pre1/1.20-testing-applied/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">検定の実践：相関・適合度・比率とポアソン</a></li>
     <li><a href="/stats-pre1/1.20b-nonparametric/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">正規性の確認とノンパラメトリック検定</a></li>
+    <li><a href="/stats-pre1/1.21c-two-way-anova/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">二元配置分散分析：主効果と交互作用</a></li>
     <li><a href="/stats-pre1/1.21b-experimental-design/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">実験計画法：反復・無作為化・ブロック計画</a></li>
   </ul>
 </section>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
     <a href="/stats-pre1/1.20b-nonparametric/" style="color:#2563eb;text-decoration:none">← 正規性の確認とノンパラメトリック検定</a>
-    <a href="/stats-pre1/1.21b-experimental-design/" style="color:#2563eb;text-decoration:none">実験計画法：反復・無作為化・ブロック計画 →</a>
+    <a href="/stats-pre1/1.21c-two-way-anova/" style="color:#2563eb;text-decoration:none">二元配置分散分析：主効果と交互作用 →</a>
   </nav>
   <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">
     <a href="/stats-pre1/glossary/" style="color:#6b7280;text-decoration:none">用語集</a>

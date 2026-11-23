@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>欠測値の扱い：削除法・多重代入法・EMアルゴリズム | 統計検定 準1級 学習リファレンス</title>
+    <meta name="description" content="欠測の3つの型と削除法・多重代入法を10人の年収の例で、どの群かというラベルが欠けたときの EM アルゴリズムを男女の身長の例で学びます。" />
+    <meta property="og:title" content="欠測値の扱い：削除法・多重代入法・EMアルゴリズム | 統計検定 準1級 学習リファレンス" />
+    <meta property="og:description" content="欠測の3つの型と削除法・多重代入法を10人の年収の例で、どの群かというラベルが欠けたときの EM アルゴリズムを男女の身長の例で学びます。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://study-apps.com/stats-pre1/3.6b-missing-em/" />
+    <link rel="canonical" href="https://study-apps.com/stats-pre1/3.6b-missing-em/" />
+    <meta property="og:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="欠測値の扱い：削除法・多重代入法・EMアルゴリズム | 統計検定 準1級 学習リファレンス" />
+    <meta name="twitter:description" content="欠測の3つの型と削除法・多重代入法を10人の年収の例で、どの群かというラベルが欠けたときの EM アルゴリズムを男女の身長の例で学びます。" />
+    <meta name="twitter:image" content="https://study-apps.com/stats-pre1/ogp.png" />
+    <meta name="google-site-verification" content="4pum38LAnuH3cknkYbdBLJSixlRlpgGO8-43CWB6kps" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6K27V3P4S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G6K27V3P4S');
+    </script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9102538151148380"
+     crossorigin="anonymous"></script>
+    <script>
+      // Apply theme before React mounts to prevent flash of wrong theme
+      (function () {
+        try {
+          var t = localStorage.getItem('stats-pre1-theme');
+          if (t !== 'dark' && t !== 'light') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.setAttribute('data-theme', t);
+        } catch (e) { /* noop */ }
+      })();
+    </script>
+    <script>
+      // Restore URL after GitHub Pages 404 redirect (?/path/ → /stats-pre1/path/)
+      (function () {
+        var s = window.location.search;
+        if (s[1] === '/') {
+          var decoded = s.slice(1).split('&').map(function (p) { return p.replace(/~and~/g, '&'); });
+          window.history.replaceState(
+            null, null,
+            '/stats-pre1' + decoded[0] +
+            (decoded.slice(1).length ? '?' + decoded.slice(1).join('&') : '') +
+            window.location.hash
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="../assets/index-BEY4SMXR.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
+    <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
+    <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
+    <link rel="modulepreload" crossorigin href="../assets/recharts-BprmY7hJ.js">
+    <link rel="modulepreload" crossorigin href="../assets/katex-kEq3Onh-.js">
+    <link rel="stylesheet" crossorigin href="../assets/katex-6Z4ESKbG.css">
+    <link rel="stylesheet" crossorigin href="../assets/index-CVhRRHzM.css">
+  <meta name="robots" content="index, follow" />
+  <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":2,"name":"第11章","item":"https://study-apps.com/stats-pre1/"},{"@type":"ListItem","position":3,"name":"欠測値の扱い：削除法・多重代入法・EMアルゴリズム","item":"https://study-apps.com/stats-pre1/3.6b-missing-em/"}]},{"@context":"https://schema.org","@type":"Article","headline":"欠測値の扱い：削除法・多重代入法・EMアルゴリズム","description":"欠測の3つの型と削除法・多重代入法を10人の年収の例で、どの群かというラベルが欠けたときの EM アルゴリズムを男女の身長の例で学びます。","url":"https://study-apps.com/stats-pre1/3.6b-missing-em/","inLanguage":"ja","author":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"},"publisher":{"@type":"Organization","name":"study-apps.com","url":"https://study-apps.com"}},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"欠測の型 MCAR の説明として正しいものはどれか？","acceptedAnswer":{"@type":"Answer","text":"欠けるかどうかが、観測値とも欠けた値とも無関係"}},{"@type":"Question","name":"収入が高い人ほど収入を答えない（MNAR）とき、年齢層ごとに平均して合わせても、平均の偏りが残る理由はどれか？","acceptedAnswer":{"@type":"Answer","text":"欠けやすさが、欠けた収入そのもので決まるから"}},{"@type":"Question","name":"男女のラベルが分からない身長データに EM アルゴリズムを使うとき、Eステップで行うことはどれか？","acceptedAnswer":{"@type":"Answer","text":"各人が女性である確率（負担率）を計算する"}}]}]</script>
+  </head>
+  <body>
+    <div id="root"><div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
+  <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
+    <a href="/stats-pre1/3.6-simulation/" style="color:#2563eb;text-decoration:none">← シミュレーション手法：モンテカルロ法・乱数生成・ブートストラップ法</a>
+    <a href="/stats-pre1/3.7-causal/" style="color:#2563eb;text-decoration:none">統計的因果推論：DAG とバックドア基準 →</a>
+  </nav>
+  <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">欠測値の扱い：削除法・多重代入法・EMアルゴリズム</h1>
+  <p style="color:#555;margin-bottom:20px;font-size:1.05rem">欠測の3つの型と削除法・多重代入法を10人の年収の例で、どの群かというラベルが欠けたときの EM アルゴリズムを男女の身長の例で学びます。</p>
+  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
+<p class="content-p">シミュレーション手法：モンテカルロ法・乱数生成・ブートストラップ法では、データがすべてそろっている前提で、標本を作り直して標準誤差を見積もりました。けれども調査では、答えない人がいて値が欠けることがあります。欠けた行を除いて平均を出してよいのでしょうか。どの群かというラベルが欠けているとき、群ごとの平均はどう推定するのでしょうか。読み終えると、次の3つができるようになります。</p>
+<ol><li>欠測の3つの型（MCAR・MAR・MNAR）を見分け、削除法で偏る場合を言える</li><li>観測できている変数で合わせる方法と、多重代入法の考え方を説明できる</li><li>EM アルゴリズムで、負担率と群の平均を計算できる</li></ol>
+<hr class="content-hr">
+<h3 class="content-h3">1. 欠測のメカニズム・削除法・多重代入法</h3>
+<p class="content-p">調査では、答えない人がいるなどして、データの一部が欠けることがあります。欠けた行を除いて、残った行だけで分析する方法を<strong>削除法</strong>（リストワイズ削除、完全ケース分析）と呼びます。偏るかどうかは欠け方で決まり、欠け方は3つに分けられます（Rubin, 1976）。</p>
+<ul><li><strong>MCAR</strong>（Missing Completely At Random）：欠けるかどうかが、どの値とも無関係。例：機器の偶発的な故障</li><li><strong>MAR</strong>（Missing At Random）：観測できている変数（年齢など）で欠けやすさが決まり、その変数をそろえれば欠けた値そのものとは無関係</li><li><strong>MNAR</strong>（Missing Not At Random）：欠けた値そのものが欠けやすさを決める。例：収入が高い人ほど収入を答えない</li></ul>
+<p class="content-p">10人の年収（万円）で比べます。若い5人は 300, 350, 400, 450, 500、高齢の5人は 550, 600, 700, 800, 1000 で、本当の平均は 565 です。3人が答えなかったとき、残り7人の平均と、年齢層ごとの平均を半々で合わせた値は次のとおりです。</p>
+<div class="content-table-wrap"><table class="content-table"><thead><tr><th>欠け方（答えなかった3人）</th><th>残り7人の平均</th><th>年齢層で合わせる</th></tr></thead><tbody><tr><td>MCAR（若400、高600、高800）</td><td>550</td><td>575</td></tr><tr><td>MAR（高齢の 550、600、1000）</td><td>500</td><td>575</td></tr><tr><td>MNAR（上位の 700、800、1000）</td><td>450</td><td>488</td></tr></tbody></table></div>
+<p class="content-p">MCAR では、残り7人の平均と 565 のずれは偶然の範囲です。MAR では残り7人の平均は低く出ますが、年齢という観測できている変数で合わせると戻ります（575 と 565 の差 10 は偶然のずれ）。MNAR では、観測できている変数で合わせても戻りません。欠け方のモデルを別に立てる必要があり、最も扱いにくい型です。</p>
+<p class="content-p">平均以外の分析にも使えるよう、欠けた所に値を入れる方法を<strong>補完法</strong>（代入法）と呼びます。欠けた所すべてに同じ平均値を入れるだけでは、ばらつきを小さく見せてしまいます。<strong>多重代入法</strong>（Multiple Imputation）は、もっともらしい値を何通りも入れた完全なデータを作り、それぞれで分析して結果を合わせます。入れ方による結果の違いが「分からなさ」として標準誤差に加わるので、ばらつきを小さく見せずに済みます。</p>
+<hr class="content-hr">
+<h3 class="content-h3">2. EMアルゴリズム</h3>
+<p class="content-p">欠けているのが値ではなく「どの群か」というラベルの場合もあります。男女が混ざった身長データで、それぞれの性別が分からないとき、男女の平均身長をどう推定するでしょうか。ラベルが分かれば平均が、平均が分かればラベルが推測できるので、2つを交互に更新します。これが <strong>EMアルゴリズム</strong>（Expectation-Maximization Algorithm）です。</p>
+<p class="content-p"><strong>数値例</strong>：男性が <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mopen">(</span><span class="mord">170</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>、女性が <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mopen">(</span><span class="mord">150</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>、割合は半々という値から始めます（平均は男性170・女性150を初期値とし、標準偏差10と割合半々は固定）。</p>
+<figure class="venn-figure"><svg viewBox="0 0 340 236" role="img" aria-label="女性の山（平均150）と男性の山（平均170）を同じ軸に描き、身長155cmでの2つの高さの比から、女性である確率0.73を求める" class="venn-svg">
+    <line x1="24" y1="164" x2="326" y2="164" stroke="#64748b" />
+    <text x="49.2" y="179" text-anchor="middle" font-size="12.4" fill="#64748b">130</text><text x="133.1" y="179" text-anchor="middle" font-size="12.4" fill="#64748b">150</text><text x="216.9" y="179" text-anchor="middle" font-size="12.4" fill="#64748b">170</text><text x="300.8" y="179" text-anchor="middle" font-size="12.4" fill="#64748b">190</text>
+    <text x="326" y="195" text-anchor="end" font-size="12.4" fill="#64748b">身長（cm）</text>
+    <polyline points="24.0,159.8 28.2,158.6 32.4,157.0 36.6,155.2 40.8,153.0 45.0,150.3 49.2,147.2 53.4,143.6 57.6,139.5 61.8,134.8 65.9,129.5 70.1,123.7 74.3,117.5 78.5,110.7 82.7,103.6 86.9,96.3 91.1,88.8 95.3,81.3 99.5,74.0 103.7,66.9 107.9,60.4 112.1,54.6 116.3,49.5 120.5,45.5 124.7,42.5 128.9,40.6 133.1,40.0 137.3,40.6 141.4,42.5 145.6,45.5 149.8,49.5 154.0,54.6 158.2,60.4 162.4,66.9 166.6,74.0 170.8,81.3 175.0,88.8 179.2,96.3 183.4,103.6 187.6,110.7 191.8,117.5 196.0,123.7 200.2,129.5 204.4,134.8 208.6,139.5 212.8,143.6 216.9,147.2 221.1,150.3 225.3,153.0 229.5,155.2 233.7,157.0 237.9,158.6 242.1,159.8 246.3,160.8 250.5,161.5 254.7,162.1 258.9,162.6 263.1,163.0 267.3,163.3 271.5,163.5 275.7,163.6 279.9,163.7 284.1,163.8 288.3,163.9 292.4,163.9 296.6,163.9 300.8,164.0 305.0,164.0 309.2,164.0 313.4,164.0 317.6,164.0 321.8,164.0 326.0,164.0" fill="none" stroke="#be123c" stroke-width="2" />
+    <polyline points="24.0,164.0 28.2,164.0 32.4,164.0 36.6,164.0 40.8,164.0 45.0,164.0 49.2,164.0 53.4,163.9 57.6,163.9 61.8,163.9 65.9,163.8 70.1,163.7 74.3,163.6 78.5,163.5 82.7,163.3 86.9,163.0 91.1,162.6 95.3,162.1 99.5,161.5 103.7,160.8 107.9,159.8 112.1,158.6 116.3,157.0 120.5,155.2 124.7,153.0 128.9,150.3 133.1,147.2 137.3,143.6 141.4,139.5 145.6,134.8 149.8,129.5 154.0,123.7 158.2,117.5 162.4,110.7 166.6,103.6 170.8,96.3 175.0,88.8 179.2,81.3 183.4,74.0 187.6,66.9 191.8,60.4 196.0,54.6 200.2,49.5 204.4,45.5 208.6,42.5 212.8,40.6 216.9,40.0 221.1,40.6 225.3,42.5 229.5,45.5 233.7,49.5 237.9,54.6 242.1,60.4 246.3,66.9 250.5,74.0 254.7,81.3 258.9,88.8 263.1,96.3 267.3,103.6 271.5,110.7 275.7,117.5 279.9,123.7 284.1,129.5 288.3,134.8 292.4,139.5 296.6,143.6 300.8,147.2 305.0,150.3 309.2,153.0 313.4,155.2 317.6,157.0 321.8,158.6 326.0,159.8" fill="none" stroke="#4338ca" stroke-width="2" />
+    <text x="127.1" y="42" text-anchor="end" font-size="13.2" font-weight="700" fill="#be123c">女性（平均150）</text>
+    <text x="222.9" y="42" text-anchor="start" font-size="13.2" font-weight="700" fill="#4338ca">男性（平均170）</text>
+    <line x1="154.0" y1="30" x2="154.0" y2="164" stroke="#d97706" stroke-width="1.6" stroke-dasharray="4 3" />
+    <circle cx="154.0" cy="54.6" r="4.5" fill="#be123c" />
+    <circle cx="154.0" cy="123.7" r="4.5" fill="#4338ca" />
+    <text x="147.0" y="71.6" text-anchor="end" font-size="12.4" font-weight="700" fill="#be123c">0.88</text>
+    <text x="161.0" y="140.7" font-size="12.4" font-weight="700" fill="#4338ca">0.32</text>
+    <text x="154.0" y="195" text-anchor="middle" font-size="12.4" font-weight="700" fill="#b45309">155</text>
+    <text x="170" y="230" text-anchor="middle" font-size="13.2" font-weight="700" fill="#1e293b">女性の確率 ＝ 0.88 ÷ (0.88＋0.32) ＝ 0.73</text>
+  </svg><figcaption class="venn-caption">女性（平均150cm）と男性（平均170cm）の身長が、標準偏差10cmの正規分布に従うと仮に置いた図です。高さは山の頂上を1とした相対的な値ですが、比を取れば同じ確率になります。</figcaption></figure>
+<ul><li><strong>Eステップ</strong>：今の推定値で、各人が女性である確率（<strong>負担率</strong>）を計算します。155cmの人なら、女性の山の高さ <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9869em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9869em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mtight">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mtight">/200</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.88</span></span></span></span></span> と男性の山の高さ <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9869em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9869em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span><span class="mord mtight"><span class="mord mtight">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mtight">/200</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.32</span></span></span></span></span> からベイズの定理で <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.88/</span><span class="mopen">(</span><span class="mord">0.88</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.32</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.73</span></span></span></span></span> です</li><li><strong>Mステップ</strong>：負担率を重みにして、男女の平均を重み付き平均で更新します。155cmの人は、女性側に0.73人ぶん、男性側に0.27人ぶん加わります</li></ul>
+<p class="content-p">式で書くと、観測できた部分を <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8361em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.02875em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0288em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">obs</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>、欠けた部分を <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8361em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.02875em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.0288em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">mis</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> として、Eステップで、ラベルが分かった場合の対数尤度を負担率で重み付けした平均</p>
+<p class="content-p"><div class="math-block-container" style="margin:1rem 0"><div class="katex-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.698em;vertical-align:-1.599em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.099em;"><span style="top:-4.311em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span><span style="top:-2.501em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.599em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.099em;"><span style="top:-4.311em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span><span style="top:-2.501em;"><span class="pstrut" style="height:3.15em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size2">[</span></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.02875em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0288em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">obs</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.02875em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3175em;"><span style="top:-2.55em;margin-left:-0.0288em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">mis</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.02875em;">Y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0288em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord text mtight"><span class="mord mtight">obs</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size2">]</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.599em;"><span></span></span></span></span></span></span></span></span></span></span></span></div></div></p>
+<p class="content-p">を作り、Mステップで <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span></span> を最大にする <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span> を選びます。繰り返すたびに観測できたデータの対数尤度は減らない（増えるか同じ）ことが保証されますが、たどり着くのが対数尤度の一番高い頂上でなく低い頂上（局所最大）の場合があるので、初期値を変えて何度か試します。混合正規分布、欠測のある因子分析の推定に使われます。</p></div>
+  <section style="margin-top:28px">
+  <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:12px;color:#1e3a5f">確認クイズ（抜粋）</h2>
+  <div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q1. 欠測の型 MCAR の説明として正しいものはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 欠けるかどうかが、観測値とも欠けた値とも無関係</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q2. 収入が高い人ほど収入を答えない（MNAR）とき、年齢層ごとに平均して合わせても、平均の偏りが残る理由はどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 欠けやすさが、欠けた収入そのもので決まるから</p>
+</div>
+<div style="margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #2563eb">
+  <p style="margin:0 0 6px;font-weight:600;color:#1e3a5f">Q3. 男女のラベルが分からない身長データに EM アルゴリズムを使うとき、Eステップで行うことはどれか？</p>
+  <p style="margin:0;color:#444;font-size:0.92rem">A. 各人が女性である確率（負担率）を計算する</p>
+</div>
+  <p style="margin-top:12px;font-size:0.9rem;color:#555">全10問のクイズはサイトのインタラクティブ版でお試しください。</p>
+</section><section style="margin-top:28px;padding:16px;background:#f8fafc;border-radius:8px">
+  <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 10px;color:#1e3a5f">第11章の他のモジュール</h2>
+  <ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px">
+    <li><a href="/stats-pre1/3.4-contingency/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">分割表の解析</a></li>
+    <li><a href="/stats-pre1/3.5-survival/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">生存時間解析：カプラン・マイヤーとCox比例ハザード</a></li>
+    <li><a href="/stats-pre1/2.8-sampling/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">標本調査法：有限母集団からの抽出</a></li>
+    <li><a href="/stats-pre1/3.6-simulation/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">シミュレーション手法：モンテカルロ法・乱数生成・ブートストラップ法</a></li>
+    <li><a href="/stats-pre1/3.7-causal/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">統計的因果推論：DAG とバックドア基準</a></li>
+    <li><a href="/stats-pre1/3.7b-causal-advanced/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">フロントドア基準・直接効果と間接効果・操作変数</a></li>
+  </ul>
+</section>
+  <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
+    <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
+    <a href="/stats-pre1/3.6-simulation/" style="color:#2563eb;text-decoration:none">← シミュレーション手法：モンテカルロ法・乱数生成・ブートストラップ法</a>
+    <a href="/stats-pre1/3.7-causal/" style="color:#2563eb;text-decoration:none">統計的因果推論：DAG とバックドア基準 →</a>
+  </nav>
+  <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">
+    <a href="/stats-pre1/glossary/" style="color:#6b7280;text-decoration:none">用語集</a>
+    <a href="/stats-pre1/cheatsheet/" style="color:#6b7280;text-decoration:none">公式集</a>
+    <a href="/stats-pre1/faq/" style="color:#6b7280;text-decoration:none">よくある質問</a>
+    <a href="/stats-pre1/randomquiz/" style="color:#6b7280;text-decoration:none">ランダムクイズ</a>
+    <a href="/stats-pre1/privacy/" style="color:#6b7280;text-decoration:none">プライバシーポリシー</a>
+  </nav>
+  <p style="font-size:0.8rem;color:#888;margin-top:16px;border-top:1px solid #eee;padding-top:12px">※本サイトは個人による学習支援サイトであり、統計質保証推進協会・日本統計学会の公式サイトではありません。</p>
+</article></div>
+  </body>
+</html>
