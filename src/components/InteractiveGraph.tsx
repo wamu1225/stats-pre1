@@ -106,7 +106,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const [degree, setDegree] = useState(1);
   const [corr, setCorr] = useState(0.9);
   const [pcaCorr, setPcaCorr] = useState(0.8);
-  const [ldaCorr, setLdaCorr] = useState(0.7);
+  const [ldaCorr, setLdaCorr] = useState(0.8);
   const [mcmcN, setMcmcN] = useState(50);
   const basePairs = useMemo(() => standardNormalPairs(60, 42), []);
   const mcmcSamples = useMemo(() => runMetropolis(1500, 123), []);
