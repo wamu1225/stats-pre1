@@ -3152,10 +3152,12 @@ function dendrogram(): string {
     ${pts.map(([n], i) => `<text x="${f1(lx(i))}" y="${D.y + D.h + 14}" text-anchor="middle" font-size="13.2" fill="${INK}">${n}</text>`).join('')}
     <text x="${D.x - 4}" y="${f1(dy(0) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">0</text>
     <text x="${D.x - 4}" y="${f1(dy(root.h) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${f1(root.h)}</text>
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝併合したときの距離（群平均法）</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝群どうしの距離（測り方は下の群平均法）</text>
   </svg>`;
   const sm = [...merges].sort((a, b) => a - b);
-  const cap = `左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 ${f2(sm[0])} の2人で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 ${f1(Math.max(root.l!.h, root.r!.h))} 以下でまとまりますが、2つの群どうしは距離 ${f1(root.h)} になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。`;
+  const lowest = (n: Node): Node | undefined => (!n.l ? undefined : n.h === sm[0] ? n : lowest(n.l) ?? lowest(n.r!));
+  const first = (lowest(root)?.ids ?? []).map((i) => pts[i][0]).sort().join(' と ');
+  const cap = `左の6人を、距離の近い組から順に1つずつまとめていった過程が右の樹形図です。最初に結ばれるのは距離 ${f2(sm[0])} の ${first} で、低い位置の横線ほど似ている組です。A・B・C と D・E・F はそれぞれ距離 ${f1(Math.max(root.l!.h, root.r!.h))} 以下でまとまりますが、2つの群どうしは距離 ${f1(root.h)} になってようやく結ばれます。赤い点線の高さで切ると2つのクラスターに分かれます。切る高さを下げるほど、クラスターの数は増えます。`;
   return fig(svg, cap);
 }
 
@@ -3191,7 +3193,7 @@ function linkage(): string {
     <text x="${lx}" y="204" font-size="12.4" font-weight="700" fill="${INK}">ウォード法</text>
     <text x="${lx}" y="220" font-size="12.4" fill="${INK}">平方和の増分 ${f1(ward)}</text>
   </svg>`;
-  const cap = `デンドログラムと同じ6人で、A・B・C の群と D・E・F の群の距離を測ります。赤の実線は最も近い組、青の点線は最も遠い組です。どの組の距離を使うかで ${f2(mn.v)}〜${f2(mx.v)} と変わり、併合の順番や群の形が変わります。ウォード法だけは距離ではなく、まとめたときに群の中の平方和がどれだけ増えるかで比べます。`;
+  const cap = `デンドログラムと同じ6人で、A・B・C の群と D・E・F の群の距離を測ります。赤の実線は最も近い組、青の点線は最も遠い組です。どの組の距離を使うかで ${f2(mn.v)}〜${f2(mx.v)} と変わります。ウォード法だけは距離ではなく、まとめたときに群の中の平方和がどれだけ増えるか（距離の2乗の単位）で比べます。`;
   return fig(svg, cap);
 }
 
@@ -3219,6 +3221,7 @@ function kmeansSteps(): string {
       <rect x="${x0}" y="${top}" width="${pw}" height="${ph}" fill="#fff" stroke="#e2e8f0" />
       ${P.map((p, i) => `<line x1="${f1(X(p[0]))}" y1="${f1(Y(p[1]))}" x2="${f1(X(s.C[s.a[i]][0]))}" y2="${f1(Y(s.C[s.a[i]][1]))}" stroke="${col(s.a[i])}" stroke-opacity="0.45" />`).join('')}
       ${P.map((p, i) => `<circle cx="${f1(X(p[0]))}" cy="${f1(Y(p[1]))}" r="4" fill="${col(s.a[i])}" />`).join('')}
+      ${k === 1 ? P.map((p, i) => (steps[0].a[i] !== s.a[i] ? `<circle cx="${f1(X(p[0]))}" cy="${f1(Y(p[1]))}" r="8.5" fill="none" stroke="${ROSE}" stroke-width="1.8" />` : '')).join('') : ''}
       ${s.C.map((c, g) => `<path d="M${f1(X(c[0]) - 6)},${f1(Y(c[1]) - 6)} L${f1(X(c[0]) + 6)},${f1(Y(c[1]) + 6)} M${f1(X(c[0]) + 6)},${f1(Y(c[1]) - 6)} L${f1(X(c[0]) - 6)},${f1(Y(c[1]) + 6)}" stroke="${g === 0 ? '#b45309' : TEAL}" stroke-width="3" />`).join('')}
       <text x="${x0 + pw / 2}" y="${top + ph + 18}" text-anchor="middle" font-size="12.4" fill="${INK}">平方和 ${f1(s.w)}</text>`;
   };
@@ -3230,7 +3233,7 @@ function kmeansSteps(): string {
     <text x="${W / 2}" y="${H - 8}" text-anchor="middle" font-size="12.4" fill="${SLATE}">× ＝重心・線＝割り当て先・平方和＝線の長さの2乗の合計</text>
   </svg>`;
   const moved = steps[0].a.filter((g, i) => g !== steps[1].a[i]).length;
-  const cap = `8人を k＝2 で分けます。① 重心を左下の2人の位置に置くと、右の4人も近い方の重心に割り当てられ、平方和は ${f1(steps[0].w)} です。② 重心をそれぞれの群の平均へ移して割り当て直すと、${moved}人が群を移り、平方和は ${f1(steps[1].w)} に減ります。③ もう一度移しても割り当てが変わらないので止まり、平方和は ${f1(steps[last].w)} です。`;
+  const cap = `8人を k＝2 で分けます。① 重心を左下の2人の位置に置くと、右の4人も近い方の重心に割り当てられ、平方和は ${f1(steps[0].w)} です。② 重心をそれぞれの群の平均へ移して割り当て直すと、${moved}人（赤い丸）が群を移り、平方和は ${f1(steps[1].w)} に減ります。③ もう一度移しても割り当てが変わらないので止まり、平方和は ${f1(steps[last].w)} です。`;
   return fig(svg, cap);
 }
 
@@ -4976,7 +4979,7 @@ function mvChoose(): string {
     <text x="180" y="29" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">当てたい値（目的変数）があるか</text>
     ${out}
   </svg>`;
-  const cap = `数量化 I〜III 類は、説明変数がカテゴリのときの手法です。`;
+  const cap = `数量化 I・II 類は説明変数がカテゴリのときの手法、III 類はカテゴリの回答を図にする手法です。`;
   return fig(svg, cap);
 }
 
