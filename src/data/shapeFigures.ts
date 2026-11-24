@@ -2424,6 +2424,36 @@ function logitProbit(): string {
   const cap = `左：同じ値の線形予測子を入れると、プロビットの方が急に上がります（確率の差は最大 ${f2(d1)}）。右：ロジットの線形予測子を ${k} 倍にすると、2本はほぼ重なり、差は最大 ${d2.toFixed(3)} です。ロジットの係数がプロビットの約 ${k} 倍になるのはこのためです。`;
   return fig(svg, cap);
 }
+// ============ 2.6：隠れ層なし（＝ロジスティック回帰）と隠れ層1層のネットワーク ============
+function nnLayers(): string {
+  const W = 340, H = 228, r = 12;
+  const ins = [70, 110, 150], hid = [52, 92, 132, 172], outY = 110;
+  const edge = (x1: number, y1: number, x2: number, y2: number) => `<line x1="${x1 + r}" y1="${y1}" x2="${x2 - r}" y2="${y2}" stroke="#94a3b8" stroke-width="1.2" />`;
+  const node = (x: number, y: number, label: string, col: string) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${col}" stroke-width="2" /><text x="${x}" y="${y + 4}" text-anchor="middle" font-size="12" fill="${INK}">${label}</text>`;
+  const inputs = (x: number) => ins.map((y, i) => node(x, y, `x${'₁₂₃'[i]}`, INDIGO)).join('');
+  const lx = 26, lo = 104, rx = 166, rh = 238, ro = 312;
+  const nLeft = ins.length, nRight = ins.length * hid.length + hid.length;
+  const svg = `${svgOpen(W, H, `左は入力3つから出力 p へ直接つながる隠れ層なしのネットワークで、ロジスティック回帰と同じ。重みの線は${nLeft}本。右は間に4つのユニットの隠れ層を置いたもので、重みの線は${nRight}本`)}
+    <text x="${(lx + lo) / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">隠れ層なし</text>
+    <text x="${(lx + lo) / 2}" y="33" text-anchor="middle" font-size="12" fill="${SLATE}">＝ロジスティック回帰</text>
+    <text x="${(rx + ro) / 2}" y="16" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INK}">隠れ層1層</text>
+    <line x1="136" y1="8" x2="136" y2="${H - 8}" stroke="#e2e8f0" />
+    ${ins.map((y) => edge(lx, y, lo, outY)).join('')}
+    ${ins.map((y) => hid.map((h) => edge(rx, y, rh, h)).join('')).join('')}
+    ${hid.map((h) => edge(rh, h, ro, outY)).join('')}
+    ${inputs(lx)}${node(lo, outY, 'p', TEAL)}
+    ${inputs(rx)}${hid.map((h) => node(rh, h, '', AMBER)).join('')}${node(ro, outY, 'p', TEAL)}
+    <text x="${lx}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${SLATE}">入力</text>
+    <text x="${lo}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${SLATE}">出力</text>
+    <text x="${rx}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${SLATE}">入力</text>
+    <text x="${rh}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${AMBER}">隠れ層</text>
+    <text x="${ro}" y="${H - 22}" text-anchor="middle" font-size="12" fill="${SLATE}">出力</text>
+    <text x="${(lx + lo) / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">重み ${nLeft} 個</text>
+    <text x="${(rx + ro) / 2}" y="${H - 4}" text-anchor="middle" font-size="12" fill="${SLATE}">重み ${ins.length}×${hid.length}＋${hid.length}＝${nRight} 個</text>
+  </svg>`;
+  const cap = `線1本が重み1個です（定数項は除く）。右の隠れ層の丸は、それぞれ入力の線形の式を活性化関数に通した値で、出力 p はその4つの値の線形の式をシグモイド関数に通したものです。`;
+  return fig(svg, cap);
+}
 // ============ 1.13：合計3人と分かれば、内訳の確率は λ によらない ============
 function suffPoisson(): string {
   const W = 340, H = 236, lams = [1, 3], cols = [INDIGO, TEAL];
@@ -5484,7 +5514,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-pvalue': pValue,
