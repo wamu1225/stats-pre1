@@ -2419,7 +2419,7 @@ function logitProbit(): string {
   const svg = `${svgOpen(W, H, `左は同じ線形予測子で比べたロジスティック曲線とΦで、Φの方が急に立ち上がり、差は最大 ${f2(d1)}。右はロジスティック曲線の横軸を ${k} 倍に縮めたもので、Φとほぼ重なり差は最大 ${d2.toFixed(3)}`)}
     <text x="${W / 2}" y="34" text-anchor="middle" font-size="12"><tspan fill="${INDIGO}">― ロジット</tspan>　<tspan fill="${TEAL}">‐‐ プロビット Φ</tspan></text>
     ${panel(30, '同じ線形予測子', lg, '線形予測子')}
-    ${panel(196, `ロジットだけ ×${k}`, (z) => lg(k * z), '線形予測子')}
+    ${panel(196, `ロジット側を ×${k}`, (z) => lg(k * z), '線形予測子')}
   </svg>`;
   const cap = `左：同じ値の線形予測子を入れると、プロビットの方が急に上がります（確率の差は最大 ${f2(d1)}）。右：ロジットの線形予測子を ${k} 倍にすると、2本はほぼ重なり、差は最大 ${d2.toFixed(3)} です。ロジットの係数がプロビットの約 ${k} 倍になるのはこのためです。`;
   return fig(svg, cap);
