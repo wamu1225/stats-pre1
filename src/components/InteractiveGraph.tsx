@@ -24,7 +24,7 @@ interface Props {
 
 const typeToTitle: Record<string, string> = {
   normal: '中心極限定理：正規分布への収束',
-  t: 't分布：サンプルサイズと裾の厚さ',
+  t: 't分布：自由度と裾の厚さ',
   chi2: 'χ²分布：自由度による形状の変化',
   f: 'F分布：2つの分散の比較',
   pca: '主成分分析：情報の集約',

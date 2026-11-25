@@ -1962,9 +1962,9 @@ function ciZ(): string {
     <text x="${f1(PX(b, -5.2))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 5.2))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">10人の平均 X̄ の分布（標準誤差 6/√10 ≈ 1.90 mmHg）</text>
-    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">±3.72 ＝ 1.96 × 1.90（1.96 は標準正規分布で中央95%の端）</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">3.72 ＝ 倍率 1.96 × 標準誤差 1.90</text>
   </svg>`;
-  const cap = `中央の95%の外に出るのは、左右2.5%ずつです。`;
+  const cap = `両側の2.5%ずつを除いた、真ん中の95%の範囲です。`;
   return fig(svg, cap);
 }
 
