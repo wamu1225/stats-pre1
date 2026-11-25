@@ -153,9 +153,10 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       }
     } else if (type === 't') {
       // 横軸は数値で持ち、目盛りを -4・-2・0・2・4 に固定する（文字列の x では目盛りが -2.2・-0.4 のように半端になっていた）
+      const q = tUpper025(df);
       for (let i = -80; i <= 80; i++) {
         const x = i / 20;
-        data.push({ x, y: tPDF(x, df), normal: normalPDF(x, 0, 1) });
+        data.push({ x, y: tPDF(x, df), normal: normalPDF(x, 0, 1), tail: Math.abs(x) >= q - 1e-9 ? tPDF(x, df) : null });
       }
     } else if (type === 'chi2') {
       // 自由度が大きいと山が右へ動くので、横軸の右端を期待値＋標準偏差4つ分まで広げる
@@ -282,7 +283,6 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
       const ticks = type === 't' ? [-4, -2, 0, 2, 4] : Array.from({ length: Math.floor(xMax / step) + 1 }, (_, i) => i * step);
       // 自由度1・2では 0 の近くで密度が無限に大きくなるので、縦軸の上限を決めてはみ出した分は切る
       const yTop = type === 't' ? 0.42 : type === 'chi2' ? Math.min(0.5, Math.max(...d.map(p => p.y)) * 1.15) : Math.min(1.6, Math.max(...d.map(p => p.y)) * 1.15);
-      const tailT = type === 't' ? 1 - simpson(x => tPDF(x, df), -2, 2, 400) : 0;
       return (
         <div>
           <ResponsiveContainer width="100%" height={190}>
@@ -290,6 +290,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis type="number" dataKey="x" domain={[type === 't' ? -4 : 0, xMax]} ticks={ticks} interval={0} tick={{ fontSize: 11, fill: '#64748b' }} />
               <YAxis hide domain={[0, yTop]} allowDataOverflow />
+              {type === 't' && <Area type="monotone" dataKey="tail" fill="#be123c" fillOpacity={0.4} stroke="none" connectNulls={false} isAnimationActive={false} />}
               {type === 't' && <Line type="monotone" dataKey="normal" stroke="#94a3b8" strokeDasharray="5 5" dot={false} isAnimationActive={false} />}
               {type === 'chi2' && <ReferenceLine x={df} stroke="#dc2626" strokeDasharray="4 3" />}
               {type === 'f' && <ReferenceLine x={1} stroke="#dc2626" strokeDasharray="4 3" />}
@@ -303,7 +304,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             {type === 't'
-              ? <>上側2.5%点：<b>{tUpper025(df).toFixed(3)}</b>（N(0,1) では 1.960）<br />|T| が 2 を超える確率：{(tailT * 100).toFixed(1)}%（N(0,1) では 4.6%）</>
+              ? <>赤は左右2.5%ずつ。境目（上側2.5%点）：<b>{tUpper025(df).toFixed(3)}</b>（N(0,1) では 1.960）</>
               : type === 'chi2'
                 ? <>自由度 k = {df}：期待値 {df}、分散 {2 * df}</>
                 : <>F({df}, {df2})：{df2 > 2 ? <>期待値 {df2}/({df2}−2) ≈ {(df2 / (df2 - 2)).toFixed(2)}</> : <>分母の自由度が2以下では期待値なし</>}</>}

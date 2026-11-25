@@ -2021,7 +2021,8 @@ function ciChi2(): string {
     ${area(b, f, lo, hi, INDIGO, 0.22)}${area(b, f, 0.001, lo, ROSE, 0.5)}${area(b, f, hi, 26, ROSE, 0.5)}
     ${curve(b, f, INDIGO, 0.01, 26, 2.2)}
     ${[lo, hi].map((x) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 16)}" x2="${f1(PX(b, x))}" y2="${base}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />`).join('')}
-    ${axes(b, [0, 7, 10])}
+    ${axes(b, [0, 9])}
+    <line x1="${f1(PX(b, 9))}" y1="${f1(PY(b, f(9)))}" x2="${f1(PX(b, 9))}" y2="${base}" stroke="${INK}" stroke-width="1.2" />
     <text x="${f1(PX(b, lo))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.70</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
     <text x="${f1(PX(b, 9))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
@@ -2029,13 +2030,13 @@ function ciChi2(): string {
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
   </svg>`;
-  const cap = `ボルト10本の 9S²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。山の頂上は7で左に寄っているので、2つの端は頂上から等しい距離になりません。`;
+  const cap = `ボルト10本の 9S²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。σ² が s² と等しいときの値は9（黒い線）で、2.70 は9から6.3、19.02 は10.0 離れています。山が左に寄っているので、2つの端は9から等しい距離になりません。`;
   return fig(svg, cap);
 }
 
 // ============ 1.16：カイ二乗の両端が σ² の区間では左右入れ替わる（9s² ＝ 0.0441） ============
 function ciChi2Flip(): string {
-  const W = 340, H = 214, L = 24, R = 316, yT = 58, yB = 150;
+  const W = 340, H = 250, L = 24, R = 316, yT = 58, yB = 150, yD = 204, s2 = 0.0049;
   const tx = (v: number) => L + ((R - L) * v) / 22, bx = (v: number) => L + ((R - L) * v) / 0.018;
   const pts = [
     { c: 2.70, s: 0.0441 / 2.70, col: INDIGO, lab: '9s² ÷ 2.70' },
@@ -2056,9 +2057,15 @@ function ciChi2Flip(): string {
       <circle cx="${f1(bx(p.s))}" cy="${yB}" r="4" fill="${p.col}" />
       <text x="${f1(bx(p.s))}" y="${yB + 18}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${p.col}">${p.s < 0.01 ? p.s.toFixed(5) : p.s.toFixed(4)}</text>
       <text x="${f1(bx(p.s))}" y="${yB + 34}" text-anchor="middle" font-size="12.4" fill="${p.col}">${p.lab}</text>`).join('')}
-    <text x="${L}" y="${H - 4}" font-size="12.4" font-weight="700" fill="${INK}">下：σ² の値（求める区間）</text>
+    <line x1="${f1(bx(s2))}" y1="${yB}" x2="${f1(bx(s2))}" y2="${yD + 6}" stroke="${INK}" stroke-dasharray="3 3" />
+    <text x="${f1(bx(s2) + 4)}" y="${yB - 6}" font-size="12.4" font-weight="700" fill="${INK}">s²＝0.0049</text>
+    <line x1="${f1(bx(0.0441 / 19.02))}" y1="${yD}" x2="${f1(bx(s2))}" y2="${yD}" stroke="${AMBER}" stroke-width="3" />
+    <line x1="${f1(bx(s2))}" y1="${yD}" x2="${f1(bx(0.0441 / 2.70))}" y2="${yD}" stroke="${INDIGO}" stroke-width="3" />
+    <text x="${f1(bx(s2) - 4)}" y="${yD + 18}" text-anchor="end" font-size="12.4" fill="${AMBER}">0.0026</text>
+    <text x="${f1(bx(s2) + 4)}" y="${yD + 18}" font-size="12.4" fill="${INDIGO}">0.0114（2.70 で割った側が遠い）</text>
+    <text x="${L}" y="${H - 4}" font-size="12.4" font-weight="700" fill="${INK}">下：σ² の値（求める区間）と s² からの距離</text>
   </svg>`;
-  const cap = `σ² は分母にあるので、カイ二乗分布で小さい方の端2.70 で割ると σ² の大きい方の端に、大きい方の端19.02 で割ると小さい方の端になります。矢印が交差するのはこのためです。`;
+  const cap = `σ² は分母にあるので、カイ二乗分布で小さい方の端2.70 で割ると σ² の大きい方の端に、大きい方の端19.02 で割ると小さい方の端になります。矢印が交差するのはこのためです。割る数が小さいほど結果は大きく変わるので、2.70 で割った右の端は s² から遠くへ伸び、区間は s² を中心に左右対称になりません。`;
   return fig(svg, cap);
 }
 
