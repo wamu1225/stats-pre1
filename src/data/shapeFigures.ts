@@ -4003,7 +4003,7 @@ function mdsMap(): string {
     <text x="8" y="${H - 22}" font-size="12.4" fill="${SLATE}">入力は上の表の距離 6 個だけ</text>
     <text x="8" y="${H - 6}" font-size="12.4" fill="${SLATE}">北は上（向きは実際にそろえた）</text>
   </svg>`;
-  const cap = `地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ平面に並んでいて、2次元で距離をほとんど説明できるからです。`;
+  const cap = `地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ一直線に並んでいて、2次元で距離をほとんど説明できるからです。`;
   return fig(svg, cap);
 }
 
@@ -4771,7 +4771,7 @@ function caProfile(): string {
 
 // ── 2.7 多次元尺度法：距離の表から座標を作る3段（古典的MDS）。数は本文の4都市 ──
 function mdsSteps(): string {
-  const W = 340, H = 262;
+  const W = 340, H = 296;
   const box = (y: number, h: number, head: string, lines: string[], color: string) => `
     <rect x="8" y="${y}" width="324" height="${h}" rx="8" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1.4" />
     <text x="20" y="${y + 21}" font-size="13" font-weight="700" fill="${color}">${head}</text>
@@ -4782,15 +4782,15 @@ function mdsSteps(): string {
     ${arrow(68)}
     ${box(84, 80, '② 内積の表 B にする（二重中心化）', ['各行・各列の平均を引き、−1/2 を掛ける', 'B の (i, j) 成分＝重心から見た i と j の内積'], TEAL)}
     ${arrow(166)}
-    ${box(182, 76, '③ B を固有値分解する', ['座標＝固有ベクトル × √固有値', '固有値 410255・236・0・0：第1軸で 99.9%'], '#b45309')}
+    ${box(182, 110, '③ B を固有値分解する', ['B＝(座標)(座標)ᵀ なので', '座標＝固有ベクトル × √固有値', '表の距離での固有値は 410487・271・0・−135', '負は0とみなすと、第1軸で 99.9%'], '#b45309')}
   </svg>`;
   return fig(svg, '③は主成分分析と同じ固有値分解です。固有値の大きい順に軸をとり、固有値の合計に占める割合で何次元あれば足りるかを決めます。');
 }
 
 function correspondenceMap(): string {
-  const W = 350, H = 270;
+  const W = 350, H = 175;
   const { axes } = caSolve();
-  const x0 = 20, x1 = 330, y0 = 24, y1 = 232;
+  const x0 = 20, x1 = 330, y0 = 24, y1 = 135; // 縦横を同じ縮尺に（310px で 1.9、111px で 0.68）
   const xr = 0.95, yr = 0.34; // 表示範囲 x:[-0.95,0.95] y:[-0.34,0.34]
   const px = (x: number) => x0 + ((x + xr) / (2 * xr)) * (x1 - x0);
   const py = (y: number) => y1 - ((y + yr) / (2 * yr)) * (y1 - y0);
