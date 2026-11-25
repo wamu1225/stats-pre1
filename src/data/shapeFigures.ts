@@ -265,7 +265,7 @@ function binomialShapes(): string {
     const mean = c.n * c.p, sd = Math.sqrt(c.n * c.p * (1 - c.p));
     const ticks = c.n === 50 ? [0, 5, 10, 15, 20, 25] : [0, 2, 4, 6, 8, 10];
     return `<text x="${b.x}" y="${b.y - 22}" font-size="13.2" font-weight="700" fill="${INK}">B(${c.n}, ${c.p})</text>
-      <text x="${b.x}" y="${b.y - 7}" font-size="12.4" fill="${SLATE}">平均 ${mean}・SD ${f2(sd)}</text>
+      <text x="${b.x}" y="${b.y - 7}" font-size="12.4" fill="${SLATE}">期待値 ${mean}・標準偏差 ${f2(sd)}</text>
       ${axes(b, ticks)}
       ${bars(b, ks, ps, c.n === 50 ? TEAL : INDIGO, c.n === 50 ? 0.25 : 0.3)}
       <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.4" stroke-dasharray="3 2" />`;
@@ -274,7 +274,7 @@ function binomialShapes(): string {
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
   </svg>`;
   const p0 = binom(10, 0.2, 0), p2 = binom(10, 0.2, 2), pmax50 = Math.max(...range(0, 50).map((k) => binom(50, 0.2, k)));
-  const cap = `成功確率 p が小さい B(10, 0.2) は0〜2回に山があり、右に裾を引きます（0回の確率 ${f2(p0)}、2回が最大で ${f2(p2)}）。p = 0.5 で左右対称、p = 0.8 では鏡に映したように左へ裾を引きます。同じ p = 0.2 でも n を 50 に増やすと、山は平均 np = 10 に移り、左右がほぼ対称な釣鐘形になります（最も高い棒は ${f2(pmax50)}）。これが後で学ぶ「二項分布の正規近似」が n の大きいときに使える理由です。`;
+  const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。p = 0.5 では左右対称、p = 0.8 では左へ裾を引きます。n を 50 に増やすと、山は期待値10のあたりで左右がほぼ対称になります。`;
   return fig(svg, cap);
 }
 
@@ -3534,11 +3534,11 @@ function uniformDice(): string {
     ${bars(b, [1, 2, 3, 4, 5, 6], Array(6).fill(1 / 6), INDIGO, 0.4)}
     <text x="${b.x - 4}" y="${f1(PY(b, 1 / 6) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">1/6</text>
     <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.6" stroke-dasharray="4 3" />
-    <text x="${f1(PX(b, mean))}" y="${b.y - 8}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">平均 3.5（どの目でもない）</text>
+    <text x="${f1(PX(b, mean))}" y="${b.y - 8}" text-anchor="middle" font-size="13.2" font-weight="700" fill="#b45309">期待値 3.5</text>
     <line x1="${f1(PX(b, mean - Math.sqrt(v)))}" y1="${b.y + b.h + 26}" x2="${f1(PX(b, mean + Math.sqrt(v)))}" y2="${b.y + b.h + 26}" stroke="${TEAL}" stroke-width="2" />
-    <text x="${f1(PX(b, mean))}" y="${b.y + b.h + 42}" text-anchor="middle" font-size="12.4" fill="${TEAL}">平均 ± 標準偏差 √(35/12) ≈ ${f2(Math.sqrt(v))}</text>
+    <text x="${f1(PX(b, mean))}" y="${b.y + b.h + 42}" text-anchor="middle" font-size="12.4" fill="${TEAL}">期待値 ± 標準偏差 √(35/12) ≈ ${f2(Math.sqrt(v))}</text>
   </svg>`;
-  const cap = `サイコロの目の分布です。棒の高さはどれも 1/6 で、山も谷もない平らな形が<strong>一様</strong>という名前の意味です。平均 (6+1)/2 = 3.5 は棒の真ん中の位置で、実際には出ない値です。分散は (6² − 1)/12 = 35/12 ≈ ${f2(v)}、標準偏差は約 ${f2(Math.sqrt(v))} で、緑の線の幅がそのおおよその広がりです。`;
+  const cap = `サイコロの目の分布です。棒の高さはどれも 1/6 で、山も谷もない平らな形が<strong>一様</strong>という名前の意味です。緑の線は、期待値から標準偏差 ${f2(Math.sqrt(v))} だけ左右に広げた範囲です。`;
   return fig(svg, cap);
 }
 
@@ -3554,8 +3554,8 @@ function bernoulli(): string {
     ${bars(L, [0, 1], [1 - p, p], INDIGO, 0.45)}
     <text x="${f1(PX(L, 0))}" y="${f1(PY(L, 1 - p) - 6)}" text-anchor="middle" font-size="13.2" fill="${INK}">${1 - p}</text>
     <text x="${f1(PX(L, 1))}" y="${f1(PY(L, p) - 6)}" text-anchor="middle" font-size="13.2" fill="${INK}">${p}</text>
-    <text x="${f1(PX(L, 0))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">失敗</text>
-    <text x="${f1(PX(L, 1))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">成功</text>
+    <text x="${f1(PX(L, 0))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">良品</text>
+    <text x="${f1(PX(L, 1))}" y="${L.y + L.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">不良</text>
     <text x="${R.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">分散 p(1−p) と p の関係</text>
     ${axes(R, [0, 0.5, 1])}
     ${curve(R, (x) => x * (1 - x), TEAL)}
@@ -3563,9 +3563,9 @@ function bernoulli(): string {
     <text x="${f1(PX(R, 0.5))}" y="${f1(PY(R, 0.25) - 8)}" text-anchor="middle" font-size="12.4" fill="${TEAL}">p=0.5 で最大 0.25</text>
     <circle cx="${f1(PX(R, p))}" cy="${f1(PY(R, p * (1 - p)))}" r="3.5" fill="${INDIGO}" />
     <text x="${f1(PX(R, p) - 6)}" y="${f1(PY(R, p * (1 - p)) + 16)}" text-anchor="end" font-size="12.4" fill="${INDIGO}">${f2(p * (1 - p))}</text>
-    <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 成功確率 p</text>
+    <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 不良の確率 p</text>
   </svg>`;
-  const cap = `左はベルヌーイ分布そのもので、値は0（失敗）と1（成功）の2つだけです。p = ${p} なら成功の棒が ${p}、失敗の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたもので、p = 0.5（どちらが出るか最も読めない）で最大の 0.25 になり、p が0や1に近づくほど結果が決まりきって分散は0に近づきます。p = ${p} の分散は ${f2(p * (1 - p))} です。`;
+  const cap = `左は p = ${p} のベルヌーイ分布で、1（不良）の棒が ${p}、0（良品）の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたものです。分散は p = 0.5 で最大の 0.25 になります。どちらが出るかいちばん予想しにくいときです。p が0や1に近いと結果がほぼ決まるので、分散は0に近づきます。`;
   return fig(svg, cap);
 }
 
@@ -3589,7 +3589,7 @@ function hypergeo(): string {
     <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 4個のうちの不良品の数 k</text>
   </svg>`;
-  const cap = `本文の例（不良品${K}個・良品${N - K}個の計${N}個の箱から${n}個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。平均はどちらも ${n} × ${K}/${N} ≈ ${f2((n * K) / N)} ですが、戻さない方が両端（0個・${n}個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${f2(vh)}、二項 ${f2(vb)} で、比 ${f2(vh / vb)} がちょうど有限母集団修正 (${N}−${n})/(${N}−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`;
+  const cap = `青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。戻さない場合は、0個や${n}個が出にくく、真ん中に寄ります。分散は ${f2(vh)} と ${f2(vb)} で、その比 ${f2(vh / vb)} が有限母集団修正 (${N}−${n})/(${N}−1) に一致します。`;
   return fig(svg, cap);
 }
 
