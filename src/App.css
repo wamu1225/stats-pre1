@@ -786,7 +786,7 @@
   color: var(--text-muted);
 }
 
-/* ── 先に考える（答えは開くと見える） ── */
+/* ── 考えてみましょう（答えは開くと見える） ── */
 .column-think { border-left: 3px solid #4338ca; background: rgba(67, 56, 202, 0.06); padding: 0.85rem 1rem 0.85rem 1.15rem; border-radius: 0 var(--radius-card) var(--radius-card) 0; margin: 1.25rem 0; }
 .column-think-q { font-weight: 700; line-height: 1.8; }
 .column-think summary { cursor: pointer; margin-top: 0.5rem; color: #4338ca; font-weight: 700; font-size: 0.9rem; }

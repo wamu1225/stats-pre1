@@ -40,7 +40,7 @@ function renderMath(formula: string, block: boolean): string {
 // 素朴なトークナイザ：[[...]] / [ラベル](URL) / $$...$$ / $...$ / **太字** をこの優先順で切り出す。
 // 残りの地の文はescHtmlし、数式はrenderMathでHTML化（escHtmlしない＝renderMathの出力はそのまま埋め込む）。
 const inlineHtml = (raw: string): string => {
-  const s = raw.replace(/\[\[think:(.*?)\]\]([\s\S]*?)\[\[\/think\]\]/g, '先に考える：$1　答え：$2').replace(/\[\[.*?\]\]/g, '').replace(/\[([^\]\n]+)\]\([^)\n]+\)/g, '$1');
+  const s = raw.replace(/\[\[think:(.*?)\]\]([\s\S]*?)\[\[\/think\]\]/g, '考えてみましょう：$1　答え：$2').replace(/\[\[.*?\]\]/g, '').replace(/\[([^\]\n]+)\]\([^)\n]+\)/g, '$1');
   return renderInline(s);
 };
 // 太字は数式を内包しうる（**一般化したのが$n$次モーメント**）。数式より先に太字を最外で切り、中身を再帰で処理する
@@ -230,7 +230,7 @@ function mdToHtmlPlain(content: string): string {
     const figKey = t.match(/^\[\[([a-z0-9-]+)\]\]$/);
     if (figKey && FIGURES[figKey[1]]) { out.push(FIGURES[figKey[1]]); i++; continue; }
     const think = t.match(/^\[\[think:(.*?)\]\]([\s\S]*?)\[\[\/think\]\]$/);
-    if (think) { out.push(`<div class="column-think"><p class="column-think-q">先に考える：${inlineHtml(think[1])}</p><p class="column-think-a">答え：${inlineHtml(think[2])}</p></div>`); i++; continue; }
+    if (think) { out.push(`<div class="column-think"><p class="column-think-q">考えてみましょう：${inlineHtml(think[1])}</p><p class="column-think-a">答え：${inlineHtml(think[2])}</p></div>`); i++; continue; }
     if (t === '' || /^\[\[.*?\]\]$/.test(t)) { i++; continue; }
     if (t.startsWith('|')) {
       const rows: string[] = [];
