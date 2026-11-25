@@ -651,7 +651,7 @@ function App() {
             );
             if (part.startsWith('[[think:')) {
               const q = part.match(/\[\[think:(.*?)\]\]/), a = part.match(/\]\]([\s\S]*?)\[\[\/think\]\]/);
-              if (q && a) return <div key={key} className="column-think"><div className="column-think-q">考えてみましょう：{parseInline(q[1])}</div><details><summary>答えを見る</summary><div className="column-think-a">{parseInline(a[1])}</div></details></div>;
+              if (q && a) return <div key={key} className="column-think"><div className="column-think-q">{parseInline(q[1])}</div><details><summary>答えを見る</summary><div className="column-think-a">{parseInline(a[1])}</div></details></div>;
             }
             if (part.startsWith('[[practical:')) {
               const titleMatch = part.match(/\[\[practical:(.*?)\]\]/);
