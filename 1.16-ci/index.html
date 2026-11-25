@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CNDwCy5A.js"></script>
+    <script type="module" crossorigin src="../assets/index-Awq5A0Tm.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -74,13 +74,14 @@
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">信頼区間：考え方と母平均</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">信頼区間の作り方と「95%」の意味を、身長と新薬の数値例、くり返しの模擬で学びます。母標準偏差が分かるときは正規分布、分からないときは t 分布を使います。</p>
-  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールでできるようになること</strong></p>
-<p class="content-p">標本分布では、新薬を10人に使って血圧が平均5mmHg下がった例で「効果が無いとしたら珍しいか」を調べました。次に知りたいのは「では効果は何mmHgくらいか」です。</p>
-<p class="content-p">5という1つの数（点推定）だけでは答えになりません。本当の効果が4.5〜5.5mmHg と言えるのか、−2〜12mmHg（悪くなることもありうる）なのかで、薬の評価はまったく変わるからです。</p>
-<p class="content-p">そこで「真の値はこのあたり」を幅で答えます。この幅を<strong>信頼区間</strong>（CI: Confidence Interval）と言い、幅を作る手順を<strong>区間推定</strong>と言います。</p>
-<ul><li>標本の平均から、母平均の95%信頼区間を計算できる</li><li>1.96 や <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> の値がどこから来るかを、分布の面積で説明できる</li><li>「95%」が何の確率なのかを正しく言える</li></ul>
-<p class="content-p">平均、比率、分散の区間はどれも、「推定値がどれだけずれるか」の95%の範囲を求め、それを真の値の範囲に読み替える、という同じ手順で作ります。違うのは使う分布だけです。</p>
-<p class="content-p">下の表の母比率と母分散の行は、続きの信頼区間：母比率と母分散 で同じ手順を当てはめます。</p>
+  <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
+<p class="content-p">新薬を10人に試したところ、血圧が平均5mmHg下がりました（標本分布と同じ例です）。では、この薬の本当の効果はどれくらいでしょうか。</p>
+<p class="content-p">10人の平均の5を、そのまま答えにはできません。別の10人に試せば、平均は4にも7にもなるからです。</p>
+<p class="content-p">本当の効果が4〜6mmHgの間にあると言えるなら、頼りになる薬です。−2〜12mmHgの間としか言えないなら、かえって血圧が上がる人もいるかもしれません。</p>
+<p class="content-p">そこで、本当の値がありそうな範囲を幅で答えます。この幅を<strong>信頼区間</strong>と呼びます。1つの数で答えることを点推定、幅で答えることを区間推定と言います。</p>
+<p class="content-p">読み終えると、次のことができるようになります。</p>
+<ul><li>標本の平均から、母平均の95%信頼区間を計算できる</li><li>計算に使う1.96や <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> の値がどこから来るかを、分布の面積で説明できる</li><li>「95%」が何の確率なのかを正しく言える</li></ul>
+<p class="content-p">同じ考え方で、母比率や母分散の信頼区間も作れます。違うのは使う分布だけで、下の表にまとめました。このページでは母平均を扱い、母比率と母分散は続きの信頼区間：母比率と母分散で扱います。</p>
 <div class="content-table-wrap"><table class="content-table"><thead><tr><th>推定するもの（条件）</th><th>使う分布</th><th>扱う所</th></tr></thead><tbody><tr><td>母平均（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span> が分かる）</td><td>標準正規分布</td><td>第1節</td></tr><tr><td>母平均（<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">σ</span></span></span></span></span> が分からない）</td><td>t 分布（自由度 n−1）</td><td>第1節</td></tr><tr><td>母比率（n が大きい）</td><td>正規分布で近似</td><td>母比率と母分散</td></tr><tr><td>母比率（n が小さいか、p が0や1に近い）</td><td>二項分布（正確法）</td><td>母比率と母分散</td></tr><tr><td>母分散（母集団が正規分布）</td><td>カイ二乗分布（自由度 n−1）</td><td>母比率と母分散</td></tr></tbody></table></div>
 <hr class="content-hr">
 <h3 class="content-h3">1. 母平均の信頼区間</h3>
