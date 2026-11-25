@@ -2025,7 +2025,7 @@ function ciChi2(): string {
     <line x1="${f1(PX(b, 9))}" y1="${f1(PY(b, f(9)))}" x2="${f1(PX(b, 9))}" y2="${base}" stroke="${INK}" stroke-width="1.2" />
     <text x="${f1(PX(b, lo))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.70</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
-    <text x="${f1(PX(b, 9))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, 13))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
     <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
@@ -2078,7 +2078,7 @@ function ciPropN(): string {
     return `<text x="${b.x - 8}" y="${y + 4}" text-anchor="end" font-size="12.4" fill="${INK}">${n}人</text>
     <line x1="${f1(PX(b, ph - h))}" y1="${y}" x2="${f1(PX(b, ph + h))}" y2="${y}" stroke="${c}" stroke-width="4" stroke-linecap="round" />
     <circle cx="${f1(PX(b, ph))}" cy="${y}" r="4.5" fill="${INK}" />
-    <text x="${f1(Math.abs(ph - h - 0.5) < 0.015 ? PX(b, 0.5) + 4 : PX(b, ph - h))}" y="${y - 9}" text-anchor="${Math.abs(ph - h - 0.5) < 0.015 ? 'start' : 'middle'}" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${(ph - h).toFixed(3)}</text>
+    <text x="${f1(Math.abs(ph - h - 0.5) < 0.015 ? PX(b, 0.5) - 4 : PX(b, ph - h))}" y="${y - 9}" text-anchor="${Math.abs(ph - h - 0.5) < 0.015 ? 'end' : 'middle'}" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${(ph - h).toFixed(3)}</text>
     <text x="${f1(Math.abs(ph - h - 0.5) < 0.015 ? PX(b, ph + h) + 6 : PX(b, ph + h))}" y="${Math.abs(ph - h - 0.5) < 0.015 ? y + 4 : y - 9}" text-anchor="${Math.abs(ph - h - 0.5) < 0.015 ? 'start' : 'middle'}" font-size="12.4" font-weight="700" fill="${c}" stroke="#fff" stroke-width="4" paint-order="stroke">${(ph + h).toFixed(3)}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, '標本比率0.52の95%信頼区間。250人と1000人では0.5をまたぎ、4000人では0.505から0.535で0.5を含まない')}
