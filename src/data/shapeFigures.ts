@@ -4722,6 +4722,69 @@ function caSolve() {
   if (axes[0].rows[0] > 0) { axes[0].rows = axes[0].rows.map(x => -x); axes[0].cols = axes[0].cols.map(x => -x); }
   return { n, inertia, chi2: n * inertia, axes };
 }
+// ── 2.7 対応分析の前：年代ごとの割合（行プロフィール）の帯と、全体の区切りの破線 ──
+function caProfile(): string {
+  const W = 350, H = 232;
+  const N = CA_TABLE.counts;
+  const colors = ['#92400e', ROSE, TEAL, AMBER];
+  const txt = ['#fff', '#fff', '#fff', INK];
+  const tot = CA_TABLE.cols.map((_, j) => N.reduce((s, r) => s + r[j], 0));
+  const rows = N.map((r, i) => ({ lab: CA_TABLE.rows[i], v: r.map(x => x / r.reduce((s, y) => s + y, 0)) }));
+  rows.push({ lab: '全体', v: tot.map(x => x / tot.reduce((s, y) => s + y, 0)) });
+  const x0 = 52, x1 = 336, bh = 30, gap = 10, top = 46;
+  const by = (i: number) => top + i * (bh + gap) + (i === 3 ? 8 : 0);
+  const legend = CA_TABLE.cols.map((c, j) => {
+    const lx = 8 + j * 84;
+    return `<rect x="${lx}" y="10" width="12" height="12" fill="${colors[j]}" /><text x="${lx + 16}" y="21" font-size="12.4" fill="${INK}">${c}</text>`;
+  }).join('');
+  const bars = rows.map((r, i) => {
+    let acc = 0;
+    const segs = r.v.map((p, j) => {
+      const a = x0 + acc * (x1 - x0), w = p * (x1 - x0);
+      acc += p;
+      return `<rect x="${f1(a)}" y="${by(i)}" width="${f1(w)}" height="${bh}" fill="${colors[j]}" stroke="#fff" stroke-width="1" />`;
+    }).join('');
+    return `<text x="8" y="${by(i) + 20}" font-size="12.4" font-weight="700" fill="${INK}">${r.lab}</text>${segs}`;
+  }).join('');
+  const nums = rows.map((r, i) => {
+    let acc = 0;
+    return r.v.map((p, j) => {
+      const a = x0 + acc * (x1 - x0), w = p * (x1 - x0);
+      acc += p;
+      return `<text x="${f1(a + w / 2)}" y="${by(i) + 20}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${txt[j]}" stroke="${colors[j]}" stroke-width="4" paint-order="stroke">${Math.round(p * 100)}</text>`;
+    }).join('');
+  }).join('');
+  let acc = 0;
+  const cuts = rows[3].v.slice(0, 3).map(p => {
+    acc += p;
+    const x = x0 + acc * (x1 - x0);
+    return `<line x1="${f1(x)}" y1="${top - 6}" x2="${f1(x)}" y2="${by(3) + bh + 4}" stroke="${INK}" stroke-width="1.4" stroke-dasharray="4 3" />`;
+  }).join('');
+  const svg = `${svgOpen(W, H, '年代ごとの好きな飲み物の割合の帯。破線は全体の区切りで、20代はジュース、60代は緑茶の所で破線から大きくずれる')}
+    ${legend}${bars}${cuts}${nums}
+    <text x="8" y="${H - 6}" font-size="12.4" fill="${SLATE}">数字は各年代80人の中の割合（%）。破線＝全体の区切り</text>
+  </svg>`;
+  return fig(svg, '年代と飲み物が独立なら、どの年代の帯も破線の所で区切られるはずです。20代はジュースが、60代は緑茶が破線を大きくはみ出します。');
+}
+
+// ── 2.7 多次元尺度法：距離の表から座標を作る3段（古典的MDS）。数は本文の4都市 ──
+function mdsSteps(): string {
+  const W = 340, H = 262;
+  const box = (y: number, h: number, head: string, lines: string[], color: string) => `
+    <rect x="8" y="${y}" width="324" height="${h}" rx="8" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1.4" />
+    <text x="20" y="${y + 21}" font-size="13" font-weight="700" fill="${color}">${head}</text>
+    ${lines.map((t, k) => `<text x="20" y="${y + 41 + k * 17}" font-size="12.4" fill="${INK}">${t}</text>`).join('')}`;
+  const arrow = (y: number) => `<path d="M170,${y} v12 m-5,-5 l5,5 l5,-5" fill="none" stroke="${SLATE}" stroke-width="1.6" />`;
+  const svg = `${svgOpen(W, H, '古典的多次元尺度法の3段：距離を2乗し、二重中心化で内積の表にし、固有値分解して座標を得る')}
+    ${box(4, 62, '① 距離を2乗する', ['東京と名古屋なら 258² = 66564（6組すべて）'], INDIGO)}
+    ${arrow(68)}
+    ${box(84, 80, '② 内積の表 B にする（二重中心化）', ['各行・各列の平均を引き、−1/2 を掛ける', 'B の (i, j) 成分＝重心から見た i と j の内積'], TEAL)}
+    ${arrow(166)}
+    ${box(182, 76, '③ B を固有値分解する', ['座標＝固有ベクトル × √固有値', '固有値 410255・236・0・0：第1軸で 99.9%'], '#b45309')}
+  </svg>`;
+  return fig(svg, '③は主成分分析と同じ固有値分解です。固有値の大きい順に軸をとり、固有値の合計に占める割合で何次元あれば足りるかを決めます。');
+}
+
 function correspondenceMap(): string {
   const W = 350, H = 270;
   const { axes } = caSolve();
@@ -5587,6 +5650,8 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-dag-front': dagFront,
   'f-dag-iv': dagIV, 'f-frontdoor-calc': frontdoorCalc, 'f-mediation': mediationFig,
   'f-ca': correspondenceMap,
+  'f-ca-profile': caProfile,
+  'f-mds-steps': mdsSteps,
   'f-sem-path': semPath,
   'f-mv-choose': mvChoose,
   'f-bayes-spam': bayesSpam, 'f-conjugate-coin': betaUpdate, 'f-shrinkage': shrinkage,
