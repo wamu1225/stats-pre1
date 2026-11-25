@@ -1941,7 +1941,7 @@ function nMinus1(): string {
     ${axes(b, [9, 10, 11, 12, 13, 14, 15, 16])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">差 ${ss(mu) - ss(xbar)} ＝ 5 ×（13 − 10）² ＝ n(x̄ − μ)²</text>
   </svg>`;
-  const cap = `5個のデータ（11〜15）のずれを、真の平均 μ ＝ 10 から測った場合と、データ自身の平均 x̄ ＝ 13 から測った場合です。x̄ はデータの真ん中にあるので、2乗の和はほかのどの点から測るより小さくなります。`;
+  const cap = `5個のデータ（11〜15）のずれを、上は真の平均 μ ＝ 10 から、下はデータ自身の平均 x̄ ＝ 13 から測りました。`;
   return fig(svg, cap);
 }
 
@@ -2968,8 +2968,8 @@ function darts(): string {
   const g = gaussFrom(mulberry32(1515));
   const cells = [
     { bx: 0, by: 0, sd: 0.12, t: '偏りなし・ばらつき小', s: '不偏で有効' },
-    { bx: 0, by: 0, sd: 0.34, t: '偏りなし・ばらつき大', s: '不偏だが有効でない' },
-    { bx: 0.42, by: -0.3, sd: 0.12, t: '偏りあり・ばらつき小', s: '精度は高いが的外れ' },
+    { bx: 0, by: 0, sd: 0.34, t: '偏りなし・ばらつき大', s: '不偏だが有効とは限らない' },
+    { bx: 0.42, by: -0.3, sd: 0.12, t: '偏りあり・ばらつき小', s: 'まとまっているが的外れ' },
     { bx: 0.42, by: -0.3, sd: 0.34, t: '偏りあり・ばらつき大', s: '最悪' },
   ];
   const body = cells.map((c, i) => {
@@ -2984,7 +2984,7 @@ function darts(): string {
       <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${c.s}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, 'ダーツのたとえ：偏りの有無とばらつきの大小の4通り')}${body}</svg>`;
-  const cap = `赤い輪が真の値（的の中心）、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい推定量です。不偏でばらつきも小さい左上が有効です。`;
+  const cap = `赤い輪が真の値（的の中心）、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。`;
   return fig(svg, cap);
 }
 
@@ -3009,7 +3009,7 @@ function varianceEstimators(): string {
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／軸の下の短い線＝分布の平均</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">正規分布から5個とった場合</text>
   </svg>`;
-  const cap = `S² は平均がちょうど1（不偏）ですが広く散らばり、n で割った方は平均 ${f2(mH)} と小さめで、幅は狭くなります。どちらが真の値に近いかは、下の平均二乗誤差で比べます。`;
+  const cap = `5個とるたびに計算した値が、どこにどれだけ出るかを表しています。`;
   return fig(svg, cap);
 }
 
@@ -3032,7 +3032,7 @@ function consistency(): string {
     <text x="${W / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">N(0, 1) から n 個とったときの推定値の分布</text>
     <text x="${W / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">真の値＝0</text>
   </svg>`;
-  const cap = `どちらも平均は真の値0で不偏です。X̄ は n を4倍にするたびに幅が半分になり0に集まります（一致）が、X₁ は何個データを集めても1個しか使わないので広がったままです。`;
+  const cap = `左は n 個の平均、右は最初の1個だけを使った推定値です。どちらも平均は真の値0です。`;
   return fig(svg, cap);
 }
 
