@@ -2021,7 +2021,7 @@ function ciChi2(): string {
     ${area(b, f, lo, hi, INDIGO, 0.22)}${area(b, f, 0.001, lo, ROSE, 0.5)}${area(b, f, hi, 26, ROSE, 0.5)}
     ${curve(b, f, INDIGO, 0.01, 26, 2.2)}
     ${[lo, hi].map((x) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 16)}" x2="${f1(PX(b, x))}" y2="${base}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />`).join('')}
-    ${axes(b, [0, 10])}
+    ${axes(b, [0, 7, 10])}
     <text x="${f1(PX(b, lo))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.70</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
     <text x="${f1(PX(b, 9))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
@@ -2030,6 +2030,35 @@ function ciChi2(): string {
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
   </svg>`;
   const cap = `ボルト10本の 9S²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。山の頂上は7で左に寄っているので、2つの端は頂上から等しい距離になりません。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.16：カイ二乗の両端が σ² の区間では左右入れ替わる（9s² ＝ 0.0441） ============
+function ciChi2Flip(): string {
+  const W = 340, H = 214, L = 24, R = 316, yT = 58, yB = 150;
+  const tx = (v: number) => L + ((R - L) * v) / 22, bx = (v: number) => L + ((R - L) * v) / 0.018;
+  const pts = [
+    { c: 2.70, s: 0.0441 / 2.70, col: INDIGO, lab: '9s² ÷ 2.70' },
+    { c: 19.02, s: 0.0441 / 19.02, col: AMBER, lab: '9s² ÷ 19.02' },
+  ];
+  const head = (x1: number, y1: number, x2: number, y2: number, col: string) => {
+    const a = Math.atan2(y2 - y1, x2 - x1), l = 9, w = 0.45;
+    return `<path d="M${f1(x2)},${f1(y2)} L${f1(x2 - l * Math.cos(a - w))},${f1(y2 - l * Math.sin(a - w))} L${f1(x2 - l * Math.cos(a + w))},${f1(y2 - l * Math.sin(a + w))} Z" fill="${col}" />`;
+  };
+  const svg = `${svgOpen(W, H, 'カイ二乗分布の左の端2.70は σ² の右の端0.0163に、右の端19.02は σ² の左の端0.00232に対応し、矢印が交差する')}
+    <text x="${L}" y="18" font-size="12.4" font-weight="700" fill="${INK}">上：9s²/σ² の値（カイ二乗分布の両端）</text>
+    <line x1="${L}" y1="${yT}" x2="${R}" y2="${yT}" stroke="${SLATE}" />
+    <line x1="${L}" y1="${yB}" x2="${R}" y2="${yB}" stroke="${SLATE}" />
+    ${pts.map((p) => `<circle cx="${f1(tx(p.c))}" cy="${yT}" r="4" fill="${p.col}" />
+      <text x="${f1(tx(p.c))}" y="${yT - 10}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${p.col}">${p.c.toFixed(2)}</text>
+      <line x1="${f1(tx(p.c))}" y1="${yT + 6}" x2="${f1(bx(p.s))}" y2="${yB - 8}" stroke="${p.col}" stroke-width="2" />
+      ${head(tx(p.c), yT + 6, bx(p.s), yB - 6, p.col)}
+      <circle cx="${f1(bx(p.s))}" cy="${yB}" r="4" fill="${p.col}" />
+      <text x="${f1(bx(p.s))}" y="${yB + 18}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${p.col}">${p.s < 0.01 ? p.s.toFixed(5) : p.s.toFixed(4)}</text>
+      <text x="${f1(bx(p.s))}" y="${yB + 34}" text-anchor="middle" font-size="12.4" fill="${p.col}">${p.lab}</text>`).join('')}
+    <text x="${L}" y="${H - 4}" font-size="12.4" font-weight="700" fill="${INK}">下：σ² の値（求める区間）</text>
+  </svg>`;
+  const cap = `σ² は分母にあるので、カイ二乗分布で小さい方の端2.70 で割ると σ² の大きい方の端に、大きい方の端19.02 で割ると小さい方の端になります。矢印が交差するのはこのためです。`;
   return fig(svg, cap);
 }
 
@@ -2939,14 +2968,14 @@ function darts(): string {
     const pts = Array.from({ length: 12 }, () => [c.bx + c.sd * g(), c.by + c.sd * g()]);
     const mx = pts.reduce((s, p) => s + p[0], 0) / 12, my = pts.reduce((s, p) => s + p[1], 0) / 12;
     return `${[1, 0.66, 0.33].map((k) => `<circle cx="${cx}" cy="${cy}" r="${f1(R * k)}" fill="none" stroke="#cbd5e1" />`).join('')}
-      <circle cx="${cx}" cy="${cy}" r="2.5" fill="${ROSE}" />
       ${pts.map(([x, y]) => `<circle cx="${f1(cx + x * R)}" cy="${f1(cy - y * R)}" r="2.6" fill="${INDIGO}" />`).join('')}
       <path d="M${f1(cx + mx * R - 5)},${f1(cy - my * R)} h10 M${f1(cx + mx * R)},${f1(cy - my * R - 5)} v10" stroke="${AMBER}" stroke-width="2" />
+      <circle cx="${cx}" cy="${cy}" r="7" fill="none" stroke="${ROSE}" stroke-width="2" />
       <text x="${cx}" y="${cy + R + 16}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">${c.t}</text>
       <text x="${cx}" y="${cy + R + 30}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${c.s}</text>`;
   }).join('');
   const svg = `${svgOpen(W, H, 'ダーツのたとえ：偏りの有無とばらつきの大小の4通り')}${body}</svg>`;
-  const cap = `赤い点が真の値（上の段は十字の下）、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい推定量です。不偏でばらつきも小さい左上が有効です。`;
+  const cap = `赤い輪が真の値（的の中心）、青い点が1回分のデータから計算した推定値、橙の十字が推定値の平均です。上の段は平均が中心に来ていて（不偏）、左の列はばらつきが小さい推定量です。不偏でばらつきも小さい左上が有効です。`;
   return fig(svg, cap);
 }
 
@@ -2966,7 +2995,7 @@ function varianceEstimators(): string {
     ${curve(b, fS, INDIGO, 0.001, 3.5, 2.2)}${curve(b, fH, AMBER, 0.001, 3.5, 2.2)}
     ${[{ m: mS, c: INDIGO }, { m: mH, c: AMBER }].map(({ m, c }) => `<line x1="${f1(PX(b, m))}" y1="${f1(PY(b, 0))}" x2="${f1(PX(b, m))}" y2="${f1(PY(b, 0) + 8)}" stroke="${c}" stroke-width="3" />`).join('')}
     ${axes(b, [0, 0.5, 1, 1.5, 2, 2.5, 3])}
-    <text x="2" y="14" font-size="12.4" font-weight="700" fill="#b45309">σ<tspan dx="-6.5" dy="-7" font-size="11">^</tspan><tspan dx="0.5" dy="7">²：n で割る（平均 ${f2(mH)}）</tspan></text>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="#b45309">n で割る（平均 ${f2(mH)}）</text>
     <text x="${W - 2}" y="14" text-anchor="end" font-size="12.4" font-weight="700" fill="${INDIGO}">S²：n−1 で割る（平均 1）</text>
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値／軸の下の短い線＝分布の平均</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">正規分布から5個とった場合</text>
@@ -5514,7 +5543,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-chi2-flip': ciChi2Flip, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-pvalue': pValue,

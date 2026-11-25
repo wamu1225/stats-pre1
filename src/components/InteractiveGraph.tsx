@@ -91,6 +91,15 @@ function chi2XMax(k: number): number {
 function niceStep(xMax: number): number {
   return xMax <= 20 ? 5 : xMax <= 50 ? 10 : 20;
 }
+// t 分布の上側2.5%点：0 から x までの面積が 0.475 になる x を二分法で求める
+function tUpper025(df: number): number {
+  let lo = 0, hi = 15;
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2;
+    if (simpson(x => tPDF(x, df), 0, mid, 400) < 0.475) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
 function simpson(f: (x: number) => number, a: number, b: number, m: number): number {
   const h = (b - a) / m;
   let s = f(a) + f(b);
@@ -294,7 +303,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             {type === 't'
-              ? <>|T| が 2 を超える確率：{(tailT * 100).toFixed(1)}%（N(0,1) では 4.6%）</>
+              ? <>上側2.5%点：<b>{tUpper025(df).toFixed(3)}</b>（N(0,1) では 1.960）<br />|T| が 2 を超える確率：{(tailT * 100).toFixed(1)}%（N(0,1) では 4.6%）</>
               : type === 'chi2'
                 ? <>自由度 k = {df}：期待値 {df}、分散 {2 * df}</>
                 : <>F({df}, {df2})：{df2 > 2 ? <>期待値 {df2}/({df2}−2) ≈ {(df2 / (df2 - 2)).toFixed(2)}</> : <>分母の自由度が2以下では期待値なし</>}</>}

@@ -8,6 +8,7 @@ import { modules } from './data/modules';
 import { chapterNames, chapterColors } from './data/chapters';
 import { glossary } from './data/glossary';
 import { InteractiveGraph } from './components/InteractiveGraph';
+import { CoverageSim } from './components/CoverageSim';
 import { MathDisplay } from './components/MathDisplay';
 import { Quiz } from './components/Quiz';
 import { TermText } from './components/TermGlossary';
@@ -461,6 +462,7 @@ function App() {
                 </figure>
               );
             }
+            if (part === '[[interactive:coverage]]') return <CoverageSim key={key} />;
             if (part.startsWith('[[interactive:')) {
               const typeMatch = part.match(/\[\[interactive:(.*?)\]\]/);
               if (typeMatch) {
