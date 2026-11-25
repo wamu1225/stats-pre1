@@ -4003,7 +4003,7 @@ function mdsMap(): string {
     <text x="8" y="${H - 22}" font-size="12.4" fill="${SLATE}">入力は上の表の距離 6 個だけ</text>
     <text x="8" y="${H - 6}" font-size="12.4" fill="${SLATE}">北は上（向きは実際にそろえた）</text>
   </svg>`;
-  const cap = `地図も緯度経度も渡していません。それでも復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。ずれが小さいのは、4点がほぼ一直線に並んでいて、2次元で距離をほとんど説明できるからです。`;
+  const cap = `復元した位置（青）は、実際の位置（灰の輪）と最大 ${Math.round(maxDev)} km のずれにおさまります。距離から座標を作ると、回転や反転の自由度が残ります（距離は回しても裏返しても変わらないため）。図では実際の向きにそろえて重ねました。表の距離は球面上の値なので平面の距離と少し食い違い、それが次の図の負の固有値に出ますが、食い違いは小さく済みます。`;
   return fig(svg, cap);
 }
 
@@ -4748,12 +4748,16 @@ function caProfile(): string {
     }).join('');
     return `<text x="8" y="${by(i) + 20}" font-size="12.4" font-weight="700" fill="${INK}">${r.lab}</text>${segs}`;
   }).join('');
+  const cutX: number[] = [];
+  rows[3].v.slice(0, 3).reduce((s, p) => { cutX.push(x0 + (s + p) * (x1 - x0)); return s + p; }, 0);
   const nums = rows.map((r, i) => {
     let acc = 0;
     return r.v.map((p, j) => {
       const a = x0 + acc * (x1 - x0), w = p * (x1 - x0);
       acc += p;
-      return `<text x="${f1(a + w / 2)}" y="${by(i) + 20}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${txt[j]}" stroke="${colors[j]}" stroke-width="4" paint-order="stroke">${Math.round(p * 100)}</text>`;
+      let tx = a + w / 2;
+      cutX.forEach((c) => { if (Math.abs(tx - c) < 13 && w > 40) tx = c + (tx >= c ? 14 : -14); });
+      return `<text x="${f1(tx)}" y="${by(i) + 20}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${txt[j]}" stroke="${colors[j]}" stroke-width="4" paint-order="stroke">${Math.round(p * 100)}</text>`;
     }).join('');
   }).join('');
   let acc = 0;
@@ -4771,7 +4775,7 @@ function caProfile(): string {
 
 // ── 2.7 多次元尺度法：距離の表から座標を作る3段（古典的MDS）。数は本文の4都市 ──
 function mdsSteps(): string {
-  const W = 340, H = 296;
+  const W = 340, H = 313;
   const box = (y: number, h: number, head: string, lines: string[], color: string) => `
     <rect x="8" y="${y}" width="324" height="${h}" rx="8" fill="${color}" fill-opacity="0.08" stroke="${color}" stroke-width="1.4" />
     <text x="20" y="${y + 21}" font-size="13" font-weight="700" fill="${color}">${head}</text>
@@ -4780,9 +4784,9 @@ function mdsSteps(): string {
   const svg = `${svgOpen(W, H, '古典的多次元尺度法の3段：距離を2乗し、二重中心化で内積の表にし、固有値分解して座標を得る')}
     ${box(4, 62, '① 距離を2乗する', ['東京と名古屋なら 258² = 66564（6組すべて）'], INDIGO)}
     ${arrow(68)}
-    ${box(84, 80, '② 内積の表 B にする（二重中心化）', ['各行・各列の平均を引き、−1/2 を掛ける', 'B の (i, j) 成分＝重心から見た i と j の内積'], TEAL)}
-    ${arrow(166)}
-    ${box(182, 110, '③ B を固有値分解する', ['B＝(座標)(座標)ᵀ なので', '座標＝固有ベクトル × √固有値', '表の距離での固有値は 410487・271・0・−135', '負は0とみなすと、第1軸で 99.9%'], '#b45309')}
+    ${box(84, 97, '② 内積の表 B にする（二重中心化）', ['d²ᵢⱼ＝|xᵢ|²＋|xⱼ|²−2xᵢ·xⱼ を内積 xᵢ·xⱼ について解く', '（各行・各列の平均を引き、−1/2 を掛ける）', 'B の (i, j) 成分＝重心から見た i と j の内積'], TEAL)}
+    ${arrow(183)}
+    ${box(199, 110, '③ B を固有値分解する', ['B＝(座標)(座標)ᵀ なので', '座標＝固有ベクトル × √固有値', '表の距離での固有値は 410487・271・0・−135', '負は0とみなすと、第1軸で 99.9%'], '#b45309')}
   </svg>`;
   return fig(svg, '③は主成分分析と同じ固有値分解です。固有値の大きい順に軸をとり、固有値の合計に占める割合で何次元あれば足りるかを決めます。');
 }
@@ -4812,11 +4816,11 @@ function correspondenceMap(): string {
   const svg = `${svgOpen(W, H, '対応分析の散布図：年代（四角）と好きな飲み物（丸）を同じ平面に置く。20代はジュースとコーヒー、40代は紅茶、60代は緑茶の近く')}
     <line x1="${x0}" y1="${f1(py(0))}" x2="${x1}" y2="${f1(py(0))}" stroke="#cbd5e1" stroke-width="1" />
     <line x1="${f1(px(0))}" y1="${y0 - 6}" x2="${f1(px(0))}" y2="${y1 + 6}" stroke="#cbd5e1" stroke-width="1" />
-    ${rowPts}${colPts}
+    ${colPts}${rowPts}
     <text x="${x1}" y="${y1 + 32}" text-anchor="end" font-size="12.5" fill="${SLATE}">第1軸（寄与率 ${s1}%）</text>
-    <text x="${x0}" y="${y0 - 8}" text-anchor="start" font-size="12.5" fill="${SLATE}">第2軸（${s2}%）</text>
+    <text x="${f1(px(0) - 6)}" y="${y0 - 8}" text-anchor="end" font-size="12.5" fill="${SLATE}">第2軸（寄与率 ${s2}%）</text>
   </svg>`;
-  return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表します。原点は全体の平均的な好みです。数値は上の表（240人の架空データ）を特異値分解して計算しました。');
+  return fig(svg, '四角が年代、丸が飲み物。同じ平面に置くので、四角と丸が同じ方向にあれば、おおまかに「その年代にその飲み物が多い」傾向を表します。原点は全体の平均的な好みです。数値は、上の表の各マスの (O−E)/√(nE) を並べた表を特異値分解して計算しました（特異値の2乗が各軸の慣性）。');
 }
 
 // ── 負の二項分布（1.7b）：表が3回出るまでの1つの並び。最後は必ず表、前の4回に表が2回、待ち回数は幾何分布3つの和 ──
