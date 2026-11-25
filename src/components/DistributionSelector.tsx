@@ -36,7 +36,7 @@ const flow: Record<string, Question> = {
       { label: '1つ（またはサンプル数が非常に多い）', nextId: 'normalclt' },
       { label: '2つ（A/Bテストなど）', nextId: null, result: '1.12-sampling' },
       { label: '3つ以上（複数の条件比較）', nextId: null, result: '1.21-anova' },
-      { label: '検定のP値・検出力・サンプルサイズを設計したい', nextId: null, result: '1.18-inference' }
+      { label: '検定のP値・検出力・サンプルサイズを設計したい', nextId: null, result: '1.18b-power' }
     ]
   },
   normalclt: {
