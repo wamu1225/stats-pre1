@@ -226,7 +226,7 @@ function App() {
 
   const parseInlineContent = useCallback((text: string): React.ReactNode => {
     function parseInline(t: string): React.ReactNode {
-      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[cov-quadrants\]\]|\[\[cdf-pdf\]\]|\[\[f-[a-z0-9-]+\]\]|\[\[resid-steps\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
+      const regex = /(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$|\*\*[\s\S]*?\*\*|\[\[term:.*?\]\][\s\S]*?\[\[\/term\]\]|\[\[translate:.*?\]\][\s\S]*?\[\[\/translate\]\]|\[\[darts\]\]|\[\[practical:.*?\]\][\s\S]*?\[\[\/practical\]\]|\[\[think:.*?\]\][\s\S]*?\[\[\/think\]\]|\[\[conjugate\]\]|\[\[hierarchy\]\]|\[\[venn-inclusion\]\]|\[\[venn-conditional\]\]|\[\[total-probability\]\]|\[\[ci-coverage\]\]|\[\[cov-quadrants\]\]|\[\[cdf-pdf\]\]|\[\[f-[a-z0-9-]+\]\]|\[\[resid-steps\]\]|\[\[power-curve\]\]|\[\[markov-chain\]\]|\[\[logistic-sigmoid\]\]|\[\[interactive:.*?\]\]|\[\[regularization-card\]\]|\[\[pvalue-table\]\]|\[\[anova-table\]\]|\[\[type-error-table\]\]|\[\[confusion-matrix\]\]|\[\[pca-vs-fa-table\]\]|\[\[conjugate-table\]\]|\[[^\]\n]+\]\([^)\n]+\))/g;
       const parts = t.split(regex);
       return (
         <>
@@ -649,6 +649,10 @@ function App() {
                 </div>
               </div>
             );
+            if (part.startsWith('[[think:')) {
+              const q = part.match(/\[\[think:(.*?)\]\]/), a = part.match(/\]\]([\s\S]*?)\[\[\/think\]\]/);
+              if (q && a) return <div key={key} className="column-think"><div className="column-think-q">先に考える：{parseInline(q[1])}</div><details><summary>答えを見る</summary><div className="column-think-a">{parseInline(a[1])}</div></details></div>;
+            }
             if (part.startsWith('[[practical:')) {
               const titleMatch = part.match(/\[\[practical:(.*?)\]\]/);
               const contentMatch = part.match(/\]\]([\s\S]*?)\[\[\/practical\]\]/);

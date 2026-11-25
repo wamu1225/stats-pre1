@@ -2024,7 +2024,9 @@ function ciChi2(): string {
     ${axes(b, [0, 9])}
     <line x1="${f1(PX(b, 9))}" y1="${f1(PY(b, f(9)))}" x2="${f1(PX(b, 9))}" y2="${base}" stroke="${INK}" stroke-width="1.2" />
     <text x="${f1(PX(b, lo))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.70</text>
+    <text x="${f1(PX(b, lo))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側97.5%点</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
+    <text x="${f1(PX(b, hi))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側2.5%点</text>
     <text x="${f1(PX(b, 13))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
     <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
