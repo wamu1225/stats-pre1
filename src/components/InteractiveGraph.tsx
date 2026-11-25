@@ -304,7 +304,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             {type === 't'
-              ? <>赤は左右2.5%ずつ。右端2.5%の境目：<b>{tUpper025(df).toFixed(3)}</b>（標準正規分布では 1.960）</>
+              ? <>赤は左右2.5%ずつ。倍率（右側2.5%の境目）：<b>{tUpper025(df).toFixed(3)}</b>（標準正規分布では 1.960）</>
               : type === 'chi2'
                 ? <>自由度 k = {df}：期待値 {df}、分散 {2 * df}</>
                 : <>F({df}, {df2})：{df2 > 2 ? <>期待値 {df2}/({df2}−2) ≈ {(df2 / (df2 - 2)).toFixed(2)}</> : <>分母の自由度が2以下では期待値なし</>}</>}

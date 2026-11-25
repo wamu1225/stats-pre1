@@ -93,7 +93,7 @@ export function CoverageSim() {
         </button>
       </div>
       <figcaption className="venn-caption">
-        μ ＝ 4 mmHg、σ ＝ 6 として、選んだ人数のデータから区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。<br />信頼係数や人数を変えると区間の幅は変わりますが、μ を含む割合はいつも信頼係数に近づきます。
+        μ ＝ 4 mmHg、σ ＝ 6 として、選んだ人数のデータから区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。
       </figcaption>
     </figure>
   );

@@ -271,7 +271,7 @@ function binomialShapes(): string {
       <line x1="${f1(PX(b, mean))}" y1="${b.y}" x2="${f1(PX(b, mean))}" y2="${b.y + b.h}" stroke="${AMBER}" stroke-width="1.4" stroke-dasharray="3 2" />`;
   }).join('');
   const svg = `${svgOpen(W, H, '二項分布の形：p が小さいと右に裾、p=0.5 で左右対称、p が大きいと左に裾、n を大きくすると釣鐘形に近づく')}${parts}
-    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 平均 np</text>
+    <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 期待値 np</text>
   </svg>`;
   const p0 = binom(10, 0.2, 0), p2 = binom(10, 0.2, 2), pmax50 = Math.max(...range(0, 50).map((k) => binom(50, 0.2, k)));
   const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。p = 0.5 では左右対称、p = 0.8 では左へ裾を引きます。n を 50 に増やすと、山は期待値10のあたりで左右がほぼ対称になります。`;
@@ -1964,7 +1964,7 @@ function ciZ(): string {
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">10人の平均 X̄ の分布（標準誤差 6/√10 ≈ 1.90 mmHg）</text>
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">3.72 ＝ 倍率 1.96 × 標準誤差 1.90</text>
   </svg>`;
-  const cap = `両側の2.5%ずつを除いた、真ん中の95%の範囲です。`;
+  const cap = `色の付いた真ん中の部分が、両側の2.5%ずつを除いた95%の範囲です。`;
   return fig(svg, cap);
 }
 
@@ -3565,7 +3565,7 @@ function bernoulli(): string {
     <text x="${f1(PX(R, p) - 6)}" y="${f1(PY(R, p * (1 - p)) + 16)}" text-anchor="end" font-size="12.4" fill="${INDIGO}">${f2(p * (1 - p))}</text>
     <text x="${R.x + R.w / 2}" y="${R.y + R.h + 28}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 不良の確率 p</text>
   </svg>`;
-  const cap = `左は p = ${p} のベルヌーイ分布で、1（不良）の棒が ${p}、0（良品）の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたものです。分散は p = 0.5 で最大の 0.25 になります。どちらが出るかいちばん予想しにくいときです。p が0や1に近いと結果がほぼ決まるので、分散は0に近づきます。`;
+  const cap = `左は p = ${p} のベルヌーイ分布で、1（不良）の棒が ${p}、0（良品）の棒が ${1 - p} です。右は分散 p(1−p) を p の関数として描いたものです。分散は p = 0.5 のとき最大の 0.25 になります。不良か良品か、どちらが出るかいちばん予想しにくいからです。p が0や1に近いと結果がほぼ決まるので、分散は0に近づきます。`;
   return fig(svg, cap);
 }
 
