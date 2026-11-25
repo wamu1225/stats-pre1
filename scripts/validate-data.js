@@ -219,6 +219,17 @@ filesToWatch.forEach(checkFile);
   }
 }
 
+// 1章のモジュール数の上限（src/data/chapters.ts の決まり：3〜5を目安、7以上は章を分ける）。
+// 2026-11-25 に上位10モジュールを分割したとき、7〜11モジュールの章が5つでき、ユーザーに指摘されるまで気づかなかった
+{
+  const src = fs.readFileSync(path.join(root, 'src/data/modules.ts'), 'utf8');
+  const count = {};
+  for (const m of src.matchAll(/\{id:`[^`]+`,updatedAt:`[^`]*`,title:`[^`]*`,chapter:(\d+),/g)) count[m[1]] = (count[m[1]] || 0) + 1;
+  for (const [ch, n] of Object.entries(count)) {
+    if (n >= 7) errors.push(`[Error] 第${ch}章が ${n} モジュール。1章は6モジュールまで（7以上は src/data/chapters.ts で章を分ける）`);
+  }
+}
+
 if (errors.length > 0) {
   console.error('\n❌ VALIDATION FAILED!\n');
   [...new Set(errors)].forEach(err => console.error(err));
