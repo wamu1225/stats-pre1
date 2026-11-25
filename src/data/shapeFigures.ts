@@ -3547,7 +3547,7 @@ function bernoulli(): string {
   const W = 350, H = 220;
   const L: Box = { x: 22, y: 36, w: 120, h: 130, xMin: -0.5, xMax: 1.5, yMax: 1 };
   const R: Box = { x: 186, y: 36, w: 150, h: 130, xMin: 0, xMax: 1, yMax: 0.3 };
-  const p = 0.3;
+  const p = 0.2;
   const svg = `${svgOpen(W, H, 'ベルヌーイ分布は0と1の2本の棒。分散 p(1−p) は p=0.5 で最大の0.25')}
     <text x="${L.x}" y="16" font-size="13.2" font-weight="700" fill="${INK}">p = ${p} のとき</text>
     ${axes(L, [0, 1])}
@@ -3581,15 +3581,15 @@ function hypergeo(): string {
   const bar = (k: number, v: number, dx: number, c: string) => { const y = PY(b, v); return `<rect x="${f1(PX(b, k) + dx)}" y="${f1(y)}" width="${f1(w)}" height="${f1(b.y + b.h - y)}" fill="${c}" fill-opacity="0.8" />`; };
   const vh = n * (K / N) * ((N - K) / N) * ((N - n) / (N - 1));
   const vb = n * (K / N) * (1 - K / N);
-  const svg = `${svgOpen(W, H, '赤玉5個・青玉10個から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較')}
+  const svg = `${svgOpen(W, H, '不良品5個・良品10個の箱から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較')}
     ${axes(b, ks)}
     ${ks.map((k) => bar(k, hg(k), -w, INDIGO) + bar(k, bn(k), 0, AMBER)).join('')}
     ${ks.map((k) => `<text x="${f1(PX(b, k) - w / 2)}" y="${f1(PY(b, hg(k)) - 4)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">${hg(k) < 0.01 ? hg(k).toFixed(3) : f2(hg(k))}</text>`).join('')}
     <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="12.4" fill="${INK}">戻さない（超幾何）</text>
     <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 4個のうちの赤玉の数 k</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 4個のうちの不良品の数 k</text>
   </svg>`;
-  const cap = `本文の例（赤玉${K}個・青玉${N - K}個の計${N}個から${n}個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。平均はどちらも ${n} × ${K}/${N} ≈ ${f2((n * K) / N)} ですが、戻さない方が両端（0個・${n}個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${f2(vh)}、二項 ${f2(vb)} で、比 ${f2(vh / vb)} がちょうど有限母集団修正 (${N}−${n})/(${N}−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`;
+  const cap = `本文の例（不良品${K}個・良品${N - K}個の計${N}個の箱から${n}個取り出す）を描きました。青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。平均はどちらも ${n} × ${K}/${N} ≈ ${f2((n * K) / N)} ですが、戻さない方が両端（0個・${n}個）が出にくく、真ん中に寄ります。分散で比べると超幾何 ${f2(vh)}、二項 ${f2(vb)} で、比 ${f2(vh / vb)} がちょうど有限母集団修正 (${N}−${n})/(${N}−1) です。母集団が取り出す数よりずっと大きければ、この差はほとんど消えます。`;
   return fig(svg, cap);
 }
 
