@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-D-d-i6zs.js"></script>
+    <script type="module" crossorigin src="../assets/index-DES_AUKr.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -69,7 +69,7 @@
     <div id="root"><div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
-    <a href="/stats-pre1/2.1b-regression-diagnostics/" style="color:#2563eb;text-decoration:none">← 回帰診断・正則化・一般化最小二乗法</a>
+    <a href="/stats-pre1/2.1d-regularization-gls/" style="color:#2563eb;text-decoration:none">← 回帰の改善：Box-Cox 変換、正則化、一般化最小二乗法</a>
     <a href="/stats-pre1/1.23-model-selection/" style="color:#2563eb;text-decoration:none">KL情報量と AIC：モデルの近さをはかる →</a>
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">ロジスティック回帰と一般化線形モデル</h1>
@@ -150,7 +150,7 @@ c5.3,-9.3,12,-14,20,-14
 H400000v40H845.2724
 s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
 c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
-M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.205em;"><span></span></span></span></span></span></span></span></span></span>）で割った<strong>ピアソン残差</strong>に直してから、回帰診断・正則化・一般化最小二乗法と同じく図で確かめます。</p>
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.205em;"><span></span></span></span></span></span></span></span></span></span>）で割った<strong>ピアソン残差</strong>に直してから、回帰診断：多重共線性、てこ比、系列相関と同じく図で確かめます。</p>
 <hr class="content-hr">
 <h3 class="content-h3">4. ニューラルネットワーク</h3>
 <p class="content-p">GLM は線形予測子をリンク関数で1回変換するだけなので、表せる関係の形は限られます。線形の式と非線形の変換を何段も重ねて、曲がった関係も表せるようにしたのが<strong>ニューラルネットワーク</strong>です。</p>
@@ -194,14 +194,15 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   <ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px">
     <li><a href="/stats-pre1/2.1-regression/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">重回帰分析：偏回帰係数と最小二乗法</a></li>
     <li><a href="/stats-pre1/2.1c-model-evaluation/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">モデルの評価と変数選択：決定係数・AIC・変数増加法</a></li>
-    <li><a href="/stats-pre1/2.1b-regression-diagnostics/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">回帰診断・正則化・一般化最小二乗法</a></li>
+    <li><a href="/stats-pre1/2.1b-regression-diagnostics/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">回帰診断：多重共線性、てこ比、系列相関</a></li>
+    <li><a href="/stats-pre1/2.1d-regularization-gls/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">回帰の改善：Box-Cox 変換、正則化、一般化最小二乗法</a></li>
     <li><a href="/stats-pre1/1.23-model-selection/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">KL情報量と AIC：モデルの近さをはかる</a></li>
     <li><a href="/stats-pre1/1.23b-bic-cv/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">BIC・マローズの Cp・クロスバリデーション</a></li>
   </ul>
 </section>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
-    <a href="/stats-pre1/2.1b-regression-diagnostics/" style="color:#2563eb;text-decoration:none">← 回帰診断・正則化・一般化最小二乗法</a>
+    <a href="/stats-pre1/2.1d-regularization-gls/" style="color:#2563eb;text-decoration:none">← 回帰の改善：Box-Cox 変換、正則化、一般化最小二乗法</a>
     <a href="/stats-pre1/1.23-model-selection/" style="color:#2563eb;text-decoration:none">KL情報量と AIC：モデルの近さをはかる →</a>
   </nav>
   <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">

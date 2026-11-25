@@ -26,7 +26,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.4-dist-basics/</loc>
-    <lastmod>2026-11-08</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.4b-mean-variance/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -139,7 +145,19 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://study-apps.com/stats-pre1/1.15b-efficiency-cramer-rao/</loc>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://study-apps.com/stats-pre1/1.16-ci/</loc>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.16b-ci-proportion-variance/</loc>
     <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -164,25 +182,49 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.18-inference/</loc>
-    <lastmod>2026-10-21</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.18b-power/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.19-testing-adv/</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.19b-large-sample-tests/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.20-testing-applied/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.20d-proportion-poisson/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/1.20b-nonparametric/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/1.20c-rank-tests/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -218,7 +260,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.1b-regression-diagnostics/</loc>
-    <lastmod>2026-11-22</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.1d-regularization-gls/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -266,7 +314,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.3-discriminant/</loc>
-    <lastmod>2026-11-14</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.3b-qda-canonical/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -308,7 +362,13 @@
   </url>
   <url>
     <loc>https://study-apps.com/stats-pre1/2.8-sampling/</loc>
-    <lastmod>2026-11-02</lastmod>
+    <lastmod>2026-11-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://study-apps.com/stats-pre1/2.8b-stratified-cluster/</loc>
+    <lastmod>2026-11-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-D-d-i6zs.js"></script>
+    <script type="module" crossorigin src="../assets/index-DES_AUKr.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -69,13 +69,13 @@
     <div id="root"><div style="background:#eff6ff;border-bottom:1px solid #bfdbfe;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:860px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#1e3a8a;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div><article id="static-fallback" style="font-family:sans-serif;line-height:1.7;max-width:860px;margin:0 auto;padding:24px 16px">
   <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
-    <a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none">← 信頼区間：1標本の推定</a>
+    <a href="/stats-pre1/1.16b-ci-proportion-variance/" style="color:#2563eb;text-decoration:none">← 信頼区間：母比率と母分散</a>
     <a href="/stats-pre1/1.17b-ci-ratio-onesided/" style="color:#2563eb;text-decoration:none">信頼区間：比率の差・分散の比・片側信頼限界・被覆確率 →</a>
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">信頼区間：2つの平均の差・ウェルチの方法・対応のあるデータ</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">2つの平均の差の信頼区間をウェルチの方法とプール分散で計算し、同じ人を前後で測ったデータを差にして区間を作る方法を、パンの重さと血圧の例で学びます。</p>
   <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
-<p class="content-p">信頼区間：1標本の推定では、1つの集団の平均・比率・分散を幅で答えました。実際の調査では「AとBで平均に差はあるか、あるならどれくらいか」を知りたいことがよくあります。ここでは2つの平均を比べる区間を作ります。比率の差・分散の比・片側の限界は、信頼区間：比率の差・分散の比・片側信頼限界・被覆確率で扱います。読み終えると、次の3つができるようになります。</p>
+<p class="content-p">信頼区間：考え方と母平均と信頼区間：母比率と母分散では、1つの集団の平均、比率、分散を幅で答えました。実際の調査では「AとBで平均に差はあるか、あるならどれくらいか」を知りたいことがよくあります。ここでは2つの平均を比べる区間を作ります。比率の差・分散の比・片側の限界は、信頼区間：比率の差・分散の比・片側信頼限界・被覆確率で扱います。読み終えると、次の3つができるようになります。</p>
 <ol><li>2つの平均の差の95%信頼区間を、ウェルチの方法で計算できる</li><li>等分散を仮定してよいかで、プール分散とウェルチの方法を選べる</li><li>同じ人を2回測ったデータを差にして、区間が狭くなる理由を言える</li></ol>
 <hr class="content-hr">
 <h3 class="content-h3">1. 2つの平均の差：どれくらい違うか</h3>
@@ -226,15 +226,17 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 10px;color:#1e3a5f">第6章の他のモジュール</h2>
   <ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px">
     <li><a href="/stats-pre1/1.14-estimation/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">推定法：最尤推定法とモーメント法</a></li>
-    <li><a href="/stats-pre1/1.15-estimator-props/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">推定量の性質：不偏性・一致性・有効性の理論</a></li>
-    <li><a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">信頼区間：1標本の推定</a></li>
+    <li><a href="/stats-pre1/1.15-estimator-props/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">推定量の性質：不偏性と一致性</a></li>
+    <li><a href="/stats-pre1/1.15b-efficiency-cramer-rao/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">推定量の性質：有効性とクラーメル・ラオの下限</a></li>
+    <li><a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">信頼区間：考え方と母平均</a></li>
+    <li><a href="/stats-pre1/1.16b-ci-proportion-variance/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">信頼区間：母比率と母分散</a></li>
     <li><a href="/stats-pre1/1.17b-ci-ratio-onesided/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">信頼区間：比率の差・分散の比・片側信頼限界・被覆確率</a></li>
     <li><a href="/stats-pre1/1.22-asymptotic/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法</a></li>
   </ul>
 </section>
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
-    <a href="/stats-pre1/1.16-ci/" style="color:#2563eb;text-decoration:none">← 信頼区間：1標本の推定</a>
+    <a href="/stats-pre1/1.16b-ci-proportion-variance/" style="color:#2563eb;text-decoration:none">← 信頼区間：母比率と母分散</a>
     <a href="/stats-pre1/1.17b-ci-ratio-onesided/" style="color:#2563eb;text-decoration:none">信頼区間：比率の差・分散の比・片側信頼限界・被覆確率 →</a>
   </nav>
   <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">
