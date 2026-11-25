@@ -84,7 +84,7 @@ export function CoverageSim() {
       <div style={{ textAlign: 'center', fontSize: '0.95rem', marginTop: 6, lineHeight: 1.7 }}>
         この20本：μ を含む <b style={{ color: INDIGO }}>{hits}本</b>、外す <b style={{ color: ROSE }}>{N - hits}本</b>
         <br />
-        {level}%・{size}人の区間のこれまでの合計：{sumN}本中 {sumHit}本が μ を含む（<b>{((sumHit / sumN) * 100).toFixed(1)}%</b>）
+        これまでの合計（{level}%、{size}人）：{sumN}本中 {sumHit}本が μ を含む（<b>{((sumHit / sumN) * 100).toFixed(1)}%</b>）
       </div>
       <div style={{ textAlign: 'center', marginTop: 8 }}>
         <button type="button" onClick={again}
@@ -93,7 +93,7 @@ export function CoverageSim() {
         </button>
       </div>
       <figcaption className="venn-caption">
-        本当の効果を μ ＝ 4 mmHg、ばらつきを σ ＝ 6 と決めて、試した人数から区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。<br />信頼係数を上げると区間は長くなり、外れが減ります。人数を4倍にすると区間は半分の長さになりますが、μ を含む割合は信頼係数のままです。
+        μ ＝ 4 mmHg、σ ＝ 6 として、選んだ人数のデータから区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。<br />信頼係数を上げると区間は長くなり、外れが減ります。人数を4倍にすると区間は半分の長さになりますが、μ を含む割合は信頼係数のままです。
       </figcaption>
     </figure>
   );

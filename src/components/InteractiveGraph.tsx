@@ -300,11 +300,11 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
             </ComposedChart>
           </ResponsiveContainer>
           <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
-            {type === 't' ? '青: 自由度 ' + df + ' の t 分布。点線: N(0,1)。' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝比が1（2つの標本分散が等しい）。'}
+            {type === 't' ? '青：自由度 ' + df + ' の t 分布、点線：標準正規分布' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝比が1（2つの標本分散が等しい）。'}
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>
             {type === 't'
-              ? <>赤は左右2.5%ずつ。境目（上側2.5%点）：<b>{tUpper025(df).toFixed(3)}</b>（N(0,1) では 1.960）</>
+              ? <>赤は左右2.5%ずつ。右端2.5%の境目：<b>{tUpper025(df).toFixed(3)}</b>（標準正規分布では 1.960）</>
               : type === 'chi2'
                 ? <>自由度 k = {df}：期待値 {df}、分散 {2 * df}</>
                 : <>F({df}, {df2})：{df2 > 2 ? <>期待値 {df2}/({df2}−2) ≈ {(df2 / (df2 - 2)).toFixed(2)}</> : <>分母の自由度が2以下では期待値なし</>}</>}
