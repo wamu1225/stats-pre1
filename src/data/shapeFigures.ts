@@ -1947,24 +1947,24 @@ function nMinus1(): string {
 
 // ============ 1.16：標本平均の95%が入る範囲（σ 既知・身長の例） ============
 function ciZ(): string {
-  const W = 340, H = 226, se = 1.2, m = 1.96 * se;
-  const b: Box = { x: 14, y: 34, w: 312, h: 140, xMin: -4.5, xMax: 4.5, yMax: 0.36 };
+  const W = 340, H = 226, se = 6 / Math.sqrt(10), m = 1.96 * se;
+  const b: Box = { x: 14, y: 34, w: 312, h: 140, xMin: -6.5, xMax: 6.5, yMax: 0.24 };
   const f = (x: number) => normPdf(x, 0, se);
   const base = b.y + b.h;
   const tick = (x: number, t: string, c: string) => `<line x1="${f1(PX(b, x))}" y1="${base}" x2="${f1(PX(b, x))}" y2="${base + 4}" stroke="${c}" stroke-width="1.2" /><text x="${f1(PX(b, x))}" y="${base + 17}" text-anchor="middle" font-size="12.4" fill="${c}">${t}</text>`;
-  const svg = `${svgOpen(W, H, '25人の平均身長の分布。真の平均から上下2.35cmの内側に95%が入り、外側は左右2.5%ずつ')}
-    ${area(b, f, -m, m, INDIGO, 0.22)}${area(b, f, -4.5, -m, ROSE, 0.45)}${area(b, f, m, 4.5, ROSE, 0.45)}
-    ${curve(b, f, INDIGO, -4.5, 4.5, 2.2)}
+  const svg = `${svgOpen(W, H, '10人の平均の分布。本当の効果から上下3.72mmHgの内側に95%が入り、外側は左右2.5%ずつ')}
+    ${area(b, f, -m, m, INDIGO, 0.22)}${area(b, f, -6.5, -m, ROSE, 0.45)}${area(b, f, m, 6.5, ROSE, 0.45)}
+    ${curve(b, f, INDIGO, -6.5, 6.5, 2.2)}
     <line x1="${b.x}" y1="${base}" x2="${b.x + b.w}" y2="${base}" stroke="${SLATE}" stroke-width="1" />
     ${[-m, m].map((x) => `<line x1="${f1(PX(b, x))}" y1="${f1(PY(b, f(x)) - 14)}" x2="${f1(PX(b, x))}" y2="${base}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />`).join('')}
-    ${tick(-m, 'μ − 2.35', ROSE)}${tick(0, 'μ', INK)}${tick(m, 'μ ＋ 2.35', ROSE)}
-    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.1))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
-    <text x="${f1(PX(b, -3.5))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
-    <text x="${f1(PX(b, 3.5))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
-    <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">25人の平均 X̄ の分布（標準誤差 6/√25 ＝ 1.2 cm）</text>
-    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">±2.35 ＝ 1.96 × 1.2（1.96 は標準正規分布で中央95%の端）</text>
+    ${tick(-m, 'μ − 3.72', ROSE)}${tick(0, 'μ', INK)}${tick(m, 'μ ＋ 3.72', ROSE)}
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.07))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, -5.2))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, 5.2))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">10人の平均 X̄ の分布（標準誤差 6/√10 ≈ 1.90 mmHg）</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">±3.72 ＝ 1.96 × 1.90（1.96 は標準正規分布で中央95%の端）</text>
   </svg>`;
-  const cap = `25人の平均 X̄ は、真の平均 μ を中心に標準誤差 1.2 cm で散らばります。μ から ±2.35 cm の内側に95%が入り、外側に出るのは左右2.5%ずつです。`;
+  const cap = `10人の平均 X̄ は、本当の効果 μ を中心に、標準誤差 1.90 mmHg で散らばります。μ から ±3.72 mmHg の内側に95%が入り、外に出るのは左右2.5%ずつです。`;
   return fig(svg, cap);
 }
 

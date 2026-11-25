@@ -1,8 +1,8 @@
 // 1.16 信頼区間：「95%」は区間を作る手順の確率であることを、引き直して確かめる模擬。
-// 仮の母集団 μ = 171、σ = 6、n = 25（標準誤差 1.2）。最初の20本は固定の乱数（ページを開くたびに同じ図）。
+// 新薬の例：仮の本当の効果 μ = 4、σ = 6、n = 10（標準誤差 1.90）。最初の20本は固定の乱数（ページを開くたびに同じ図）。
 import { useMemo, useState } from 'react';
 
-const MU = 171, SIGMA = 6, N = 20;
+const MU = 4, SIGMA = 6, N = 20;
 const Z: Record<number, number> = { 90: 1.645, 95: 1.96, 99: 2.576 };
 const INDIGO = '#4338ca', ROSE = '#be123c', SLATE = '#64748b';
 
@@ -23,7 +23,7 @@ function draw(rand: () => number): number[] {
 
 export function CoverageSim() {
   const [level, setLevel] = useState(95);
-  const [size, setSize] = useState(25);
+  const [size, setSize] = useState(10);
   const [zs, setZs] = useState<number[]>(() => draw(mulberry32(1016)));
   const [total, setTotal] = useState({ n: 0, hit: 0 });
   const SE = SIGMA / Math.sqrt(size);
@@ -40,10 +40,10 @@ export function CoverageSim() {
   const switchSize = (k: number) => { setSize(k); setTotal({ n: 0, hit: 0 }); };
   const btn = (on: boolean) => ({ padding: '6px 12px', borderRadius: 6, border: `1.5px solid ${INDIGO}`, background: on ? INDIGO : 'transparent', color: on ? '#fff' : INDIGO, fontWeight: 700, fontSize: '0.9rem' });
 
-  const W = 340, x0 = 14, w = 312, lo = 165, hi = 177, top = 30;
+  const W = 340, x0 = 14, w = 312, lo = -6, hi = 14, top = 30;
   const px = (v: number) => x0 + ((v - lo) / (hi - lo)) * w;
   const base = top + N * 8.4 + 8;
-  const ticks = [166, 168, 170, 172, 174, 176];
+  const ticks = [-4, 0, 4, 8, 12];
 
   return (
     <figure className="venn-figure">
@@ -55,13 +55,13 @@ export function CoverageSim() {
       </div>
       <div role="group" aria-label="1回に測る人数" style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginBottom: 8 }}>
         <span style={{ fontSize: '0.85rem', color: SLATE, width: '4.2em', whiteSpace: 'nowrap' }}>人数</span>
-        {[10, 25, 100].map((k) => (
+        {[10, 40, 160].map((k) => (
           <button key={k} type="button" onClick={() => switchSize(k)} aria-pressed={size === k} style={btn(size === k)}>{k}人</button>
         ))}
       </div>
-      <svg viewBox={`0 0 ${W} ${base + 34}`} className="venn-svg" role="img" aria-label={`${size}人の${level}%信頼区間を20本作った模擬。${N}本中${hits}本が真の平均を含む`}>
+      <svg viewBox={`0 0 ${W} ${base + 50}`} className="venn-svg" role="img" aria-label={`${size}人の${level}%信頼区間を20本作った模擬。${N}本中${hits}本が真の平均を含む`}>
         <line x1={px(MU)} y1={22} x2={px(MU)} y2={base} stroke={ROSE} strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={px(MU)} y={15} textAnchor="middle" fontSize={12.4} fontWeight={700} fill={ROSE}>真の平均 μ ＝ {MU}（動かない）</text>
+        <text x={px(MU)} y={15} textAnchor="middle" fontSize={12.4} fontWeight={700} fill={ROSE}>本当の効果 μ ＝ {MU}（動かない）</text>
         {xs.map((x, i) => {
           const y = top + 6 + i * 8.4, miss = Math.abs(x - MU) > m, c = miss ? ROSE : INDIGO;
           return (
@@ -78,7 +78,8 @@ export function CoverageSim() {
             <text x={px(t)} y={base + 16} textAnchor="middle" fontSize={12.4} fill={SLATE}>{t}</text>
           </g>
         ))}
-        <text x={W / 2} y={base + 31} textAnchor="middle" fontSize={12.4} fill={SLATE}>横軸＝身長（cm）／点＝その回の x̄、横線＝x̄ ± {m.toFixed(2)}</text>
+        <text x={W / 2} y={base + 31} textAnchor="middle" fontSize={12.4} fill={SLATE}>横軸＝血圧の下がり方（mmHg）</text>
+        <text x={W / 2} y={base + 47} textAnchor="middle" fontSize={12.4} fill={SLATE}>点＝その回の平均 x̄、横線＝x̄ ± {m.toFixed(2)}</text>
       </svg>
       <div style={{ textAlign: 'center', fontSize: '0.95rem', marginTop: 6, lineHeight: 1.7 }}>
         この20本：μ を含む <b style={{ color: INDIGO }}>{hits}本</b>、外す <b style={{ color: ROSE }}>{N - hits}本</b>
@@ -92,7 +93,7 @@ export function CoverageSim() {
         </button>
       </div>
       <figcaption className="venn-caption">
-        仮に μ ＝ 171、σ ＝ 6 として、測った人数から区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。<br />信頼係数を上げると区間は長くなり、外れが減ります。人数を4倍にすると区間は半分の長さになりますが、μ を含む割合は信頼係数のままです。
+        本当の効果を μ ＝ 4 mmHg、ばらつきを σ ＝ 6 と決めて、試した人数から区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。<br />信頼係数を上げると区間は長くなり、外れが減ります。人数を4倍にすると区間は半分の長さになりますが、μ を含む割合は信頼係数のままです。
       </figcaption>
     </figure>
   );
