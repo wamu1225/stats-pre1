@@ -47,7 +47,7 @@ function saveProgress(p: Progress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
 }
 
-const CHAPTER_TEST_KEY = 'stats-pre1-chapter-tests-v3';  // 11章に再編（2026-10-16・第4章を2つに分割）したため v3
+const CHAPTER_TEST_KEY = 'stats-pre1-chapter-tests-v4';  // 17章に再編（2026-11-25・上限を超えた5章を分割）したため v4（v3 は11章）
 const CHAPTER_TEST_SIZE = 10;
 const RANDOM_QUIZ_SIZE = 20;
 type ChapterBest = Record<string, { score: number; total: number; completedAt: string }>;
