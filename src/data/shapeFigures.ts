@@ -1964,7 +1964,7 @@ function ciZ(): string {
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="12.4" fill="${SLATE}">10人の平均 X̄ の分布（標準誤差 6/√10 ≈ 1.90 mmHg）</text>
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">3.72 ＝ 倍率 1.96 × 標準誤差 1.90</text>
   </svg>`;
-  const cap = `色の付いた真ん中の部分が、両側の2.5%ずつを除いた95%の範囲です。`;
+  const cap = `薄紫の真ん中の部分が、両側の2.5%ずつを除いた95%の範囲です。`;
   return fig(svg, cap);
 }
 
