@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-CaDMOHhK.js"></script>
+    <script type="module" crossorigin src="../assets/index-DudKH_T7.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -75,11 +75,11 @@
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">信頼区間：母比率と母分散</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">母比率と母分散の信頼区間を、出口調査とボルトの数値例と図で計算します。人数が少ないときの正確法と、必要な人数の見積もりも扱います。</p>
   <div style="color:#333"><p class="content-p callout-tip"> <strong>このモジュールで学ぶこと</strong></p>
-<p class="content-p">信頼区間：考え方と母平均では、標準誤差に係数を掛けて、母平均の区間を作れるようになりました。けれども、出口調査の得票率のように「何人中何人」と数えたデータや、工程のばらつきそのものを知りたいときは、同じ式をそのままは使えません。</p>
+<p class="content-p">信頼区間：考え方と母平均では、標準誤差に倍率を掛けて、母平均の区間を作れるようになりました。けれども、出口調査の得票率のように「何人中何人」と数えたデータや、工程のばらつきそのものを知りたいときは、同じ式をそのままは使えません。</p>
 <p class="content-p">比率では標準誤差の中に分からない <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> が入り、人数が少ないと正規分布の近似も崩れます。分散では「推定値 <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">±</span></span></span></span></span> 幅」の形にならず、区間が左右対称になりません。</p>
 <p class="content-p">読み終えると、次のことができるようになります。</p>
 <ul><li>標本比率から母比率の95%信頼区間を計算し、必要な人数を見積もれる</li><li>人数が少ないときに、二項分布から正確法で区間を作れる</li><li>カイ二乗分布の2つの点から、母分散の信頼区間を作れる</li></ul>
-<p class="content-p">手順は母平均のときと同じで、推定値の揺れの95%の範囲を決めてから、真の値について解きます。どの分布を使うかは、信頼区間：考え方と母平均の最後の表の下3行にまとめてあります。</p>
+<p class="content-p">手順は母平均のときと同じで、推定値の揺れの95%の範囲を決めてから、真の値について解きます。違うのは使う分布で、比率では正規分布（人数が少ないときは二項分布）、分散ではカイ二乗分布を使います。</p>
 <hr class="content-hr">
 <h3 class="content-h3">1. 母比率の信頼区間</h3>
 <p class="content-p">選挙の出口調査で1000人に聞いたところ、520人が候補者Aに投票していました（標本比率 <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.52</span></span></span></span></span>）。Aの得票率 <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> は過半数と言えるでしょうか。</p>
