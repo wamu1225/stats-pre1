@@ -3051,7 +3051,7 @@ function meanVsMedian(): string {
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝推定値（真の値 0）</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">N(0, 1) から25個（中央値は近似）</text>
   </svg>`;
-  const cap = `どちらも不偏ですが、中央値の分散は平均の約1.57倍です。真の値から0.2以上ずれる確率は、平均が ${pct(p(sM))}、中央値が ${pct(p(sMed))} です。`;
+  const cap = `真の値から0.2以上ずれる確率は、平均が ${pct(p(sM))}、中央値が ${pct(p(sMed))} です。`;
   return fig(svg, cap);
 }
 
@@ -3070,12 +3070,12 @@ function infoSharpness(): string {
     ${curve(b, h(2), AMBER, -0.5, 0.5, 2.2)}${curve(b, h(1), INDIGO, -0.5, 0.5, 2.2)}
     ${mark(2, AMBER)}${mark(1, INDIGO)}
     ${axes(b, [-0.4, -0.2, 0, 0.2, 0.4])}
-    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">σ = 1 g：鋭い（下限 0.04）</text>
-    <text x="2" y="31" font-size="12.4" font-weight="700" fill="#b45309">σ = 2 g：なだらか（下限 0.16）</text>
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">σ = 1 g：鋭い山</text>
+    <text x="2" y="31" font-size="12.4" font-weight="700" fill="#b45309">σ = 2 g：なだらかな山</text>
     <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝μ と標本平均の差（g）</text>
     <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を0とした値）</text>
   </svg>`;
-  const cap = `点線は頂上から0.2 g ずれた所です。対数尤度は σ = 1 g なら ${num(drop(0.2, 1))}、σ = 2 g なら ${drop(0.2, 2).toFixed(3)} 下がります。`;
+  const cap = `点線は頂上から0.2 g ずれた所で、対数尤度は ${num(drop(0.2, 1))} と ${drop(0.2, 2).toFixed(3)} 下がります。分散の下限は σ = 1 g で 0.04、σ = 2 g で 0.16 です。`;
   return fig(svg, cap);
 }
 
