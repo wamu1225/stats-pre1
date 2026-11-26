@@ -99,7 +99,9 @@ export const MathDisplay: React.FC<Props> = ({ formula, block, wrap }) => {
     // 🔒 文章中の数式は折り返す（2026-10-18 ユーザー指摘「スマホ画面だと数式が切れてるように見える」）。
     //    inline-block＋nowrap のままだと、長い等式の連鎖が行幅で切れ、後ろはスクロールしないと見えなかった。
     //    KaTeX は = や + の後ろで改行できるので、普通のインラインに戻して文章と一緒に折り返させる。
-    return <span className="katex-wrap" dangerouslySetInnerHTML={{ __html: html }} />;
+    // 🔒 短い式は途中で改行させない（2026-11-26 点検「n − ／ 1」「0.2² × ／ 0.8⁸」のように式の途中で行が変わる）。
+    //    30字以下の式は390px幅の1行に必ず収まるので、行をまたがせず丸ごと次の行へ送る。長い式は従来どおり折り返す。
+    return <span className={formula.length <= 30 ? 'katex-wrap katex-nobreak' : 'katex-wrap'} dangerouslySetInnerHTML={{ __html: html }} />;
   }
 
   if (!block) {

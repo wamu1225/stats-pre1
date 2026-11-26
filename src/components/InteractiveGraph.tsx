@@ -299,7 +299,7 @@ export const InteractiveGraph: React.FC<Props> = ({ type }) => {
                 : <Area type="monotone" dataKey="y" fill="var(--primary)" stroke="var(--primary)" fillOpacity={0.3} dot={false} isAnimationActive={false} />}
             </ComposedChart>
           </ResponsiveContainer>
-          <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#94a3b8', marginTop: 2 }}>
+          <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#475569', marginTop: 2 }}>
             {type === 't' ? '青：自由度 ' + df + ' の t 分布、点線：標準正規分布' : type === 'chi2' ? '赤い点線＝期待値 k。' : '赤い点線＝比が1（2つの標本分散が等しい）。'}
           </div>
           <div style={{ textAlign: 'center', fontSize: '0.8rem', marginTop: 4 }}>

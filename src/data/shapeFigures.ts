@@ -274,7 +274,7 @@ function binomialShapes(): string {
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 期待値 np</text>
   </svg>`;
   const p0 = binom(10, 0.2, 0), p2 = binom(10, 0.2, 2), pmax50 = Math.max(...range(0, 50).map((k) => binom(50, 0.2, k)));
-  const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。不良の確率が0.5なら左右対称、0.8なら逆に左へ裾を引きます。n を 50 に増やすと、山は期待値10のあたりで左右がほぼ対称の釣鐘形になります。`;
+  const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。不良の確率が0.5なら左右対称、0.8なら逆に左へ裾を引きます。n を 50 に増やすと（緑の図）、山は期待値10のあたりで左右がほぼ対称の釣鐘形になります。`;
   return fig(svg, cap);
 }
 
@@ -3612,7 +3612,7 @@ function hypergeo(): string {
     <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(10, 0.2)）</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 10個のうちの不良品の数 k（7個以上はほぼ0）</text>
   </svg>`;
-  const cap = `青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 0.2)）です。青の方が真ん中の2個のあたりに集まり、0個や5個以上が出にくくなっています。分散は ${f2(vh)} と ${f2(vb)} です。`;
+  const cap = `青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 0.2)）です。青の方が真ん中の2個のあたりに集まり、0個や5個以上が出にくくなっています。`;
   return fig(svg, cap);
 }
 

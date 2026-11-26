@@ -678,6 +678,12 @@
   overflow-x: auto;
 }
 
+/* 短い文中の式は途中で改行しない（MathDisplay が30字以下の式に付ける） */
+.katex-nobreak,
+.katex-nobreak .katex {
+  white-space: nowrap;
+}
+
 .content-table-wrap {
   overflow-x: auto;
   margin: 1rem 0;

@@ -78,7 +78,7 @@ export function CoverageSim() {
             <text x={px(t)} y={base + 16} textAnchor="middle" fontSize={12.4} fill={SLATE}>{t}</text>
           </g>
         ))}
-        <text x={W / 2} y={base + 31} textAnchor="middle" fontSize={12.4} fill={SLATE}>横軸＝血圧の下がり方（mmHg）</text>
+        <text x={W / 2} y={base + 31} textAnchor="middle" fontSize={12.4} fill={SLATE}>横軸＝平均の下がり方（mmHg）</text>
         <text x={W / 2} y={base + 47} textAnchor="middle" fontSize={12.4} fill={SLATE}>点＝その回の平均 x̄、横線＝x̄ ± {m.toFixed(2)}</text>
       </svg>
       <div style={{ textAlign: 'center', fontSize: '0.95rem', marginTop: 6, lineHeight: 1.7 }}>
@@ -94,6 +94,80 @@ export function CoverageSim() {
       </div>
       <figcaption className="venn-caption">
         青は μ を含んだ区間、赤は μ を外した区間です。
+      </figcaption>
+    </figure>
+  );
+}
+
+// 1.16 第3節：σ の代わりに s を使うと、倍率1.96のままでは95%に届かないことを確かめる。10人の標本を20組。
+function drawSamples(rand: () => number): { m: number; s: number }[] {
+  return Array.from({ length: N }, () => {
+    const x = Array.from({ length: 10 }, () => {
+      const u = Math.max(rand(), 1e-12), v = rand();
+      return MU + SIGMA * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    });
+    const m = x.reduce((a, b) => a + b, 0) / 10;
+    const s = Math.sqrt(x.reduce((a, b) => a + (b - m) ** 2, 0) / 9);
+    return { m, s };
+  });
+}
+
+export function SdCoverageSim() {
+  const [k, setK] = useState(1.96);
+  const [ds, setDs] = useState(() => drawSamples(mulberry32(2047)));
+  const [total, setTotal] = useState({ n: 0, hit: 0 });
+  const se = (s: number) => s / Math.sqrt(10);
+  const hits = ds.filter((d) => Math.abs(d.m - MU) <= k * se(d.s)).length;
+  const sumN = total.n + N, sumHit = total.hit + hits;
+  const again = () => { setTotal({ n: sumN, hit: sumHit }); setDs(drawSamples(Math.random)); };
+  const switchK = (v: number) => { setK(v); setTotal({ n: 0, hit: 0 }); };
+  const btn = (on: boolean) => ({ padding: '6px 12px', borderRadius: 6, border: `1.5px solid ${INDIGO}`, background: on ? INDIGO : 'transparent', color: on ? '#fff' : INDIGO, fontWeight: 700, fontSize: '0.9rem' });
+  const W = 340, x0 = 14, w = 312, lo = -6, hi = 14, top = 30;
+  const px = (v: number) => x0 + ((v - lo) / (hi - lo)) * w;
+  const base = top + N * 8.4 + 8;
+  const ticks = [-4, 0, 4, 8, 12];
+  return (
+    <figure className="venn-figure">
+      <div role="group" aria-label="倍率" style={{ display: 'flex', gap: 6, justifyContent: 'center', alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: '0.85rem', color: SLATE, whiteSpace: 'nowrap' }}>倍率</span>
+        <button type="button" onClick={() => switchK(1.96)} aria-pressed={k === 1.96} style={btn(k === 1.96)}>1.96 のまま</button>
+        <button type="button" onClick={() => switchK(2.262)} aria-pressed={k === 2.262} style={btn(k === 2.262)}>2.262 に広げる</button>
+      </div>
+      <svg viewBox={`0 0 ${W} ${base + 50}`} className="venn-svg" role="img" aria-label={`10人のデータから標本標準偏差 s を使い、倍率${k}で区間を20本作った模擬。${N}本中${hits}本が μ を含む`}>
+        <line x1={px(MU)} y1={22} x2={px(MU)} y2={base} stroke={ROSE} strokeWidth={1.5} strokeDasharray="4 3" />
+        <text x={px(MU)} y={15} textAnchor="middle" fontSize={12.4} fontWeight={700} fill={ROSE}>本当の効果 μ ＝ {MU}（動かない）</text>
+        {ds.map((d, i) => {
+          const y = top + 6 + i * 8.4, m = k * se(d.s), miss = Math.abs(d.m - MU) > m, c = miss ? ROSE : INDIGO;
+          return (
+            <g key={i}>
+              <line x1={Math.max(x0, px(d.m - m))} y1={y} x2={Math.min(x0 + w, px(d.m + m))} y2={y} stroke={c} strokeWidth={miss ? 2.6 : 2} />
+              <circle cx={px(d.m)} cy={y} r={2.2} fill={c} />
+            </g>
+          );
+        })}
+        <line x1={x0} y1={base} x2={x0 + w} y2={base} stroke={SLATE} />
+        {ticks.map((t) => (
+          <g key={t}>
+            <line x1={px(t)} y1={base} x2={px(t)} y2={base + 4} stroke={SLATE} />
+            <text x={px(t)} y={base + 16} textAnchor="middle" fontSize={12.4} fill={SLATE}>{t}</text>
+          </g>
+        ))}
+        <text x={W / 2} y={base + 31} textAnchor="middle" fontSize={12.4} fill={SLATE}>横軸＝平均の下がり方（mmHg）</text>
+        <text x={W / 2} y={base + 47} textAnchor="middle" fontSize={12.4} fill={SLATE}>横線＝x̄ ± {k} × s/√10（s は回ごとに違う）</text>
+      </svg>
+      <div style={{ textAlign: 'center', fontSize: '0.95rem', marginTop: 6, lineHeight: 1.7 }}>
+        この20本：μ を含む <b style={{ color: INDIGO }}>{hits}本</b>、外す <b style={{ color: ROSE }}>{N - hits}本</b>
+        <br />
+        倍率 {k} でこれまでに作った区間：{sumN}本中 {sumHit}本が μ を含む（<b>{((sumHit / sumN) * 100).toFixed(1)}%</b>）
+      </div>
+      <div style={{ textAlign: 'center', marginTop: 8 }}>
+        <button type="button" onClick={again}
+          style={{ padding: '8px 18px', borderRadius: 6, border: 'none', background: INDIGO, color: '#fff', fontWeight: 700, fontSize: '0.95rem' }}>
+          別の10人で、もう20本作る
+        </button>
+      </div>
+      <figcaption className="venn-caption">
+        横線の長さが回ごとに違うのは、s が回ごとに違うからです。青は μ を含んだ区間、赤は μ を外した区間です。
       </figcaption>
     </figure>
   );

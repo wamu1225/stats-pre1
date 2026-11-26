@@ -10,7 +10,7 @@ const filesToWatch = ['src/data/modules.ts', 'src/data/glossary.ts'];
 let errors = [];
 
 // Supported interactive types (Must match InteractiveGraph.tsx)
-const validInteractiveTypes = ['coverage', 
+const validInteractiveTypes = ['coverage', 'coverage-s', 
   'normal', 't', 'chi2', 'f', 'pca', 'regression', 'logistic', 'mcmc', 'gibbs', 'update', 'overfit', 'outlier', 'multico', 'skewkurt'
 ];
 
