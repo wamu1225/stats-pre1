@@ -24,7 +24,7 @@ function draw(rand: () => number): number[] {
 export function CoverageSim() {
   const [level, setLevel] = useState(95);
   const [size, setSize] = useState(10);
-  const [zs, setZs] = useState<number[]>(() => draw(mulberry32(1016)));
+  const [zs, setZs] = useState<number[]>(() => draw(mulberry32(1047)));
   const [total, setTotal] = useState({ n: 0, hit: 0 });
   const SE = SIGMA / Math.sqrt(size);
   const xs = useMemo(() => zs.map((z) => MU + SE * z), [zs, SE]);
@@ -93,7 +93,7 @@ export function CoverageSim() {
         </button>
       </div>
       <figcaption className="venn-caption">
-        μ ＝ 4 mmHg、σ ＝ 6 として、選んだ人数のデータから区間を作ることをコンピュータでくり返します。赤は μ を外した区間です。
+        青は μ を含んだ区間、赤は μ を外した区間です。
       </figcaption>
     </figure>
   );

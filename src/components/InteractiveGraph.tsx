@@ -110,7 +110,7 @@ function simpson(f: (x: number) => number, a: number, b: number, m: number): num
 export const InteractiveGraph: React.FC<Props> = ({ type }) => {
   const title = typeToTitle[type] || '統計シミュレーター';
   const [n, setN] = useState(5);
-  const [df, setDf] = useState(5);
+  const [df, setDf] = useState(type === 't' ? 9 : 5);
   const [df2, setDf2] = useState(10);
   const [degree, setDegree] = useState(1);
   const [corr, setCorr] = useState(0.9);

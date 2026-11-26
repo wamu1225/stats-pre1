@@ -274,7 +274,7 @@ function binomialShapes(): string {
     <text x="${W / 2}" y="${H - 6}" text-anchor="middle" font-size="12.4" fill="${SLATE}">棒の高さ ＝ P(X = k)。橙の点線 ＝ 期待値 np</text>
   </svg>`;
   const p0 = binom(10, 0.2, 0), p2 = binom(10, 0.2, 2), pmax50 = Math.max(...range(0, 50).map((k) => binom(50, 0.2, k)));
-  const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。p = 0.5 では左右対称、p = 0.8 では左へ裾を引きます。n を 50 に増やすと、山は期待値10のあたりで左右がほぼ対称になります。`;
+  const cap = `B(10, 0.2) は2個のところがいちばん高く、右へなだらかに裾を引きます。不良の確率が0.5なら左右対称、0.8なら逆に左へ裾を引きます。n を 50 に増やすと、山は期待値10のあたりで左右がほぼ対称の釣鐘形になります。`;
   return fig(svg, cap);
 }
 
@@ -3595,25 +3595,24 @@ function bernoulli(): string {
 
 // ============ 1.6 節4：超幾何分布と二項分布 ============
 function hypergeo(): string {
-  const N = 15, K = 5, n = 4;
+  const N = 50, K = 10, n = 10;
   const hg = (k: number) => (choose(K, k) * choose(N - K, n - k)) / choose(N, n);
   const bn = (k: number) => binom(n, K / N, k);
-  const ks = range(0, n);
+  const ks = range(0, 6);
   const W = 340, H = 220;
-  const b: Box = { x: 30, y: 30, w: 296, h: 140, xMin: -0.5, xMax: 4.5, yMax: 0.5 };
+  const b: Box = { x: 30, y: 30, w: 296, h: 140, xMin: -0.5, xMax: 6.5, yMax: 0.4 };
   const w = (PX(b, 1) - PX(b, 0)) * 0.34;
   const bar = (k: number, v: number, dx: number, c: string) => { const y = PY(b, v); return `<rect x="${f1(PX(b, k) + dx)}" y="${f1(y)}" width="${f1(w)}" height="${f1(b.y + b.h - y)}" fill="${c}" fill-opacity="0.8" />`; };
   const vh = n * (K / N) * ((N - K) / N) * ((N - n) / (N - 1));
   const vb = n * (K / N) * (1 - K / N);
-  const svg = `${svgOpen(W, H, '不良品5個・良品10個の箱から4個取り出す：戻さない超幾何分布と、戻す二項分布の比較')}
+  const svg = `${svgOpen(W, H, '不良品10個・良品40個の箱から10個取り出す：戻さない超幾何分布と、戻す二項分布 B(10, 0.2) の比較')}
     ${axes(b, ks)}
     ${ks.map((k) => bar(k, hg(k), -w, INDIGO) + bar(k, bn(k), 0, AMBER)).join('')}
-    ${ks.map((k) => `<text x="${f1(PX(b, k) - w / 2)}" y="${f1(PY(b, hg(k)) - 4)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">${hg(k) < 0.01 ? hg(k).toFixed(3) : f2(hg(k))}</text>`).join('')}
     <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="12.4" fill="${INK}">戻さない（超幾何）</text>
-    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(4, 1/3)）</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 4個のうちの不良品の数 k</text>
+    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(10, 0.2)）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 10個のうちの不良品の数 k（7個以上はほぼ0）</text>
   </svg>`;
-  const cap = `青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 1/3)）です。戻さない場合は、0個や${n}個が出にくく、真ん中に寄ります。分散は ${f2(vh)} と ${f2(vb)} で、その比 ${f2(vh / vb)} が有限母集団修正 (${N}−${n})/(${N}−1) に一致します。`;
+  const cap = `青が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 0.2)）です。青の方が真ん中の2個のあたりに集まり、0個や5個以上が出にくくなっています。分散は ${f2(vh)} と ${f2(vb)} です。`;
   return fig(svg, cap);
 }
 
