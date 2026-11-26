@@ -3055,6 +3055,30 @@ function meanVsMedian(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.15b：対数尤度の山の鋭さ（25個、σ = 1 と σ = 2） ============
+function infoSharpness(): string {
+  const W = 344, H = 262, n = 25, top = 3.2;
+  const b: Box = { x: 34, y: 44, w: 300, h: 160, xMin: -0.5, xMax: 0.5, yMax: top };
+  const drop = (d: number, s: number) => (n * d * d) / (2 * s * s);
+  const h = (s: number) => (d: number) => top - drop(d, s);
+  const yT = (v: number) => PY(b, top + v);
+  const mark = (s: number, c: string) => [-0.2, 0.2].map((d) => `<circle cx="${f1(PX(b, d))}" cy="${f1(PY(b, h(s)(d)))}" r="3.4" fill="${c}" />`).join('');
+  const svg = `${svgOpen(W, H, '部品25個の対数尤度。標準偏差1 g の山は鋭く、2 g の山はなだらか。頂上から0.2ずれたとき、下がり方は0.5と0.125')}
+    ${[0, -1, -2, -3].map((v) => `<line x1="${b.x}" y1="${f1(yT(v))}" x2="${b.x + b.w}" y2="${f1(yT(v))}" stroke="#e2e8f0" />
+    <text x="${b.x - 6}" y="${f1(yT(v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    ${[-0.2, 0.2].map((d) => `<line x1="${f1(PX(b, d))}" y1="${b.y}" x2="${f1(PX(b, d))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-dasharray="3 3" />`).join('')}
+    ${curve(b, h(2), AMBER, -0.5, 0.5, 2.2)}${curve(b, h(1), INDIGO, -0.5, 0.5, 2.2)}
+    ${mark(2, AMBER)}${mark(1, INDIGO)}
+    ${axes(b, [-0.4, -0.2, 0, 0.2, 0.4])}
+    <text x="2" y="14" font-size="12.4" font-weight="700" fill="${INDIGO}">σ = 1 g：鋭い（下限 0.04）</text>
+    <text x="2" y="31" font-size="12.4" font-weight="700" fill="#b45309">σ = 2 g：なだらか（下限 0.16）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 22}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸＝μ と標本平均の差（g）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 5}" text-anchor="middle" font-size="12.4" fill="${SLATE}">縦軸＝対数尤度（頂上を0とした値）</text>
+  </svg>`;
+  const cap = `点線は頂上から0.2 g ずれた所です。対数尤度は σ = 1 g なら ${num(drop(0.2, 1))}、σ = 2 g なら ${drop(0.2, 2).toFixed(3)} 下がります。`;
+  return fig(svg, cap);
+}
+
 // ============ 2.1：推定量の範囲の入れ子（ガウス・マルコフと MVUE） ============
 function estimatorClasses(): string {
   const W = 344, H = 250;
@@ -5621,7 +5645,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-chi2-flip': ciChi2Flip, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
-  'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
+  'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-info-sharpness': infoSharpness, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
