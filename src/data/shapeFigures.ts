@@ -3605,14 +3605,14 @@ function hypergeo(): string {
   const bar = (k: number, v: number, dx: number, c: string) => { const y = PY(b, v); return `<rect x="${f1(PX(b, k) + dx)}" y="${f1(y)}" width="${f1(w)}" height="${f1(b.y + b.h - y)}" fill="${c}" fill-opacity="0.8" />`; };
   const vh = n * (K / N) * ((N - K) / N) * ((N - n) / (N - 1));
   const vb = n * (K / N) * (1 - K / N);
-  const svg = `${svgOpen(W, H, '不良品10個・良品40個の箱から10個取り出す：戻さない超幾何分布と、戻す二項分布 B(10, 0.2) の比較')}
+  const svg = `${svgOpen(W, H, '不良品10個・良品40個の箱から10個取り出す超幾何分布と、大量生産から10個調べる二項分布 B(10, 0.2) の比較')}
     ${axes(b, ks)}
     ${ks.map((k) => bar(k, hg(k), -w, INDIGO) + bar(k, bn(k), 0, AMBER)).join('')}
-    <rect x="${b.x + 150}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 164}" y="${b.y + 7}" font-size="12.4" fill="${INK}">戻さない（超幾何）</text>
-    <rect x="${b.x + 150}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 164}" y="${b.y + 23}" font-size="12.4" fill="${INK}">戻す（二項 B(10, 0.2)）</text>
+    <rect x="${b.x + 104}" y="${b.y - 2}" width="10" height="10" fill="${INDIGO}" /><text x="${b.x + 118}" y="${b.y + 7}" font-size="12.4" fill="${INK}">50個の箱から（超幾何）</text>
+    <rect x="${b.x + 104}" y="${b.y + 14}" width="10" height="10" fill="${AMBER}" /><text x="${b.x + 118}" y="${b.y + 23}" font-size="12.4" fill="${INK}">大量生産から（二項 B(10, 0.2)）</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 10個のうちの不良品の数 k（7個以上はほぼ0）</text>
   </svg>`;
-  const cap = `紫が戻さない場合（超幾何分布）、橙が毎回戻す場合（二項分布 B(${n}, 0.2)）です。紫の方が真ん中の2個のあたりに集まり、0個や5個以上が出にくくなっています。`;
+  const cap = `紫が50個の箱から取り出す場合（超幾何分布）、橙が大量に作られる部品から調べる場合（二項分布 B(${n}, 0.2)）です。紫の方が真ん中の2個のあたりに集まり、0個や5個以上が出にくくなっています。`;
   return fig(svg, cap);
 }
 
