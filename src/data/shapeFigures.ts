@@ -2027,7 +2027,7 @@ function ciChi2(): string {
     <text x="${f1(PX(b, lo))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側97.5%点</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
     <text x="${f1(PX(b, hi))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側2.5%点</text>
-    <text x="${f1(PX(b, 9.6))}" y="${f1(PY(b, 0.03))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, 6.2))}" y="${f1(PY(b, 0.03))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
     <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
