@@ -3182,7 +3182,7 @@ function rejectRegion(): string {
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">棄却域 ＝ 赤い左右の端（|z| ≥ 1.96）</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差は0）のもとでの z の分布</text>
   </svg>`;
-  const cap = `差が本当に0でも、z は左右合わせて5%の確率で赤い範囲に入ります。新薬の z ＝ ${z} は右の赤い範囲に入っています。`;
+  const cap = `赤い左右の端が棄却域、黒い線が新薬の z です。`;
   return fig(svg, cap);
 }
 
@@ -3201,9 +3201,10 @@ function pValue(): string {
     <line x1="${f1(PX(b, z))}" y1="${b.y + 6}" x2="${f1(PX(b, z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.6" />
     <text x="${f1(PX(b, z) + 4)}" y="${b.y + 16}" font-size="13.2" font-weight="700" fill="${ROSE}">観測値 ${z}</text>
     <line x1="${f1(PX(b, -z))}" y1="${b.y + 40}" x2="${f1(PX(b, -z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="3 2" />
+    <text x="${f1(PX(b, -z) - 4)}" y="${b.y + 50}" text-anchor="end" font-size="12.4" fill="${ROSE}">−${z}</text>
     <text x="${f1(PX(b, 3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
     <text x="${f1(PX(b, -3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
-    <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${f2(p)}</text>
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${p.toFixed(3)}</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差は0）のもとでの z の分布</text>
   </svg>`;
   const cap = `赤い面積は、観測値 ${z} より外側（左右とも）です。灰色の点線は棄却域の境 ±1.96 です。`;
