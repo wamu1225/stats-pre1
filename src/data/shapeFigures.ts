@@ -2027,12 +2027,12 @@ function ciChi2(): string {
     <text x="${f1(PX(b, lo))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側97.5%点</text>
     <text x="${f1(PX(b, hi))}" y="${base + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">19.02</text>
     <text x="${f1(PX(b, hi))}" y="${base + 28}" text-anchor="middle" font-size="12.4" fill="${ROSE}">上側2.5%点</text>
-    <text x="${f1(PX(b, 13))}" y="${f1(PY(b, 0.04))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${f1(PX(b, 9.6))}" y="${f1(PY(b, 0.03))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
     <text x="${f1(PX(b, lo) - 4)}" y="${f1(PY(b, f(lo)) - 20)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
   </svg>`;
-  const cap = `ボルト10本の 9S²/σ² は、95%の確率で 2.70 から 19.02 の間に出ます。σ² が s² と等しいときの値は9（黒い線）で、2.70 は9から6.3、19.02 は10.0 離れています。山が左に寄っているので、2つの端は9から等しい距離になりません。`;
+  const cap = `σ² が s² と等しければ 9S²/σ² は9になります（黒い線）。山が左に寄っているので、2つの点は9から等しい距離になく、19.02 の側が遠くにあります（6.3 と 10.0）。`;
   return fig(svg, cap);
 }
 
@@ -2067,7 +2067,33 @@ function ciChi2Flip(): string {
     <text x="${f1(bx(s2) + 4)}" y="${yD + 18}" font-size="12.4" fill="${INDIGO}">0.0114（2.70 で割った側が遠い）</text>
     <text x="${L}" y="${H - 4}" font-size="12.4" font-weight="700" fill="${INK}">下：σ² の値（求める区間）と s² からの距離</text>
   </svg>`;
-  const cap = `σ² は分母にあるので、カイ二乗分布で小さい方の端2.70 で割ると σ² の大きい方の端に、大きい方の端19.02 で割ると小さい方の端になります。矢印が交差するのはこのためです。割る数が小さいほど結果は大きく変わるので、2.70 で割った右の端は s² から遠くへ伸び、区間は s² を中心に左右対称になりません。`;
+  const cap = `σ² は分母にあるので、小さい方の2.70 で割ると右の端、大きい方の19.02 で割ると左の端になり、矢印が交差します。カイ二乗分布では19.02 の側が遠かったのに、割る数が小さいほど結果は大きく動くので、σ² では右の端が s² から遠くへ伸びます。`;
+  return fig(svg, cap);
+}
+
+// ============ 1.16b：正確法（20人中0人の確率 (1−p)^20 が2.5%を切る p） ============
+function ciExact(): string {
+  const W = 340, H = 214, n = 20, up = 1 - Math.pow(0.025, 1 / n), yM = 0.25;
+  const b: Box = { x: 44, y: 34, w: 282, h: 136, xMin: 0, xMax: 0.3, yMax: yM };
+  const f = (p: number) => Math.pow(1 - p, n);
+  const p0 = 1 - Math.pow(yM, 1 / n), base = b.y + b.h;
+  const svg = `${svgOpen(W, H, '20人中0人になる確率は p を上げると下がり、p＝0.168 で2.5%になる。0から0.168が区間、それより右は外す')}
+    <text x="4" y="16" font-size="12.4" font-weight="700" fill="${INK}">20人中0人になる確率 (1−p)²⁰</text>
+    ${[0.1, 0.2].map((v) => `<line x1="${b.x}" y1="${f1(PY(b, v))}" x2="${b.x + b.w}" y2="${f1(PY(b, v))}" stroke="#e2e8f0" /><text x="${b.x - 6}" y="${f1(PY(b, v) + 4)}" text-anchor="end" font-size="12.4" fill="${SLATE}">${v}</text>`).join('')}
+    <rect x="${b.x}" y="${b.y}" width="${f1(PX(b, up) - b.x)}" height="${b.h}" fill="${TEAL}" opacity="0.1" />
+    <rect x="${f1(PX(b, up))}" y="${b.y}" width="${f1(b.x + b.w - PX(b, up))}" height="${b.h}" fill="${ROSE}" opacity="0.08" />
+    <line x1="${b.x}" y1="${f1(PY(b, 0.025))}" x2="${b.x + b.w}" y2="${f1(PY(b, 0.025))}" stroke="${ROSE}" stroke-width="1.3" stroke-dasharray="4 3" />
+    <text x="${b.x + b.w}" y="${f1(PY(b, 0.025) - 5)}" text-anchor="end" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
+    ${curve(b, f, INDIGO, p0, 0.3, 2.4)}
+    <text x="${f1(PX(b, p0) + 6)}" y="${b.y + 12}" font-size="12.4" fill="${INDIGO}">↑ p＝0 では1</text>
+    <line x1="${f1(PX(b, up))}" y1="${b.y}" x2="${f1(PX(b, up))}" y2="${base}" stroke="${INK}" stroke-width="1.2" stroke-dasharray="3 3" />
+    <circle cx="${f1(PX(b, up))}" cy="${f1(PY(b, 0.025))}" r="4" fill="${INK}" />
+    <text x="${f1(PX(b, 0.04))}" y="${f1(PY(b, 0.05))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${TEAL}">区間に残す</text>
+    <text x="${f1(PX(b, 0.234))}" y="${f1(PY(b, 0.12))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">外す</text>
+    ${axes(b, [0, 0.1, 0.168, 0.3])}
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 本当の副作用の割合 p（縦軸は0.25まで）</text>
+  </svg>`;
+  const cap = `本当の割合 p が大きいほど、20人中0人は起きにくくなります。確率が2.5%を切る p＝0.168 より右は、今の結果が珍しすぎるので区間から外します。`;
   return fig(svg, cap);
 }
 
@@ -2090,7 +2116,7 @@ function ciPropN(): string {
     ${axes(b, [0.44, 0.48, 0.52, 0.56, 0.6])}
     <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">黒丸 ＝ 標本比率 0.52（どの人数でも同じ）</text>
   </svg>`;
-  const cap = `標本比率が同じでも、聞いた人数で区間の幅が変わります。幅は人数の平方根に反比例するので、4倍の4000人に聞くと幅が半分になり、区間が0.5の右に収まります。`;
+  const cap = `黒丸の標本比率は同じでも、幅は人数の平方根に反比例します。人数を4倍にすると、幅は半分になります。`;
   return fig(svg, cap);
 }
 
@@ -5642,7 +5668,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-dist-family': distFamily,
   'f-noncentral-t': noncentralT, 'f-chi2-tail': chi2Tail, 'f-t-tail': tTail, 'f-t-fold': tFold, 'f-df-three': dfThree, 'f-t-scale': tScale, 'f-rcbd-layout': rcbdLayout, 'f-rcbd-ss': rcbdSS, 'f-f-tail': fTail,
   'f-order-stats': orderStats, 'f-order-split': orderSplit, 'f-median-spread': medianSpread, 'f-var-ratio-ci': varRatioCi, 'f-poisson-test': poissonTest, 'f-gof-dice': gofDice,
-  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-chi2-flip': ciChi2Flip, 'f-ci-prop-n': ciPropN, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
+  'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-chi2-flip': ciChi2Flip, 'f-ci-prop-n': ciPropN, 'f-ci-exact': ciExact, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-info-sharpness': infoSharpness, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-pvalue': pValue,
