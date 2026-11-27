@@ -2032,7 +2032,7 @@ function ciChi2(): string {
     <text x="${f1(PX(b, 22))}" y="${f1(PY(b, 0.022))}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">横軸 ＝ 9S²/σ²（自由度9のカイ二乗分布）</text>
   </svg>`;
-  const cap = `σ² が s² と等しければ 9S²/σ² は9になります（黒い線）。山が左に寄っているので、2つの点は9から等しい距離になく、19.02 の側が遠くにあります（6.3 と 10.0）。`;
+  const cap = `σ² が s² と等しければ 9s²/σ² は9になります（黒い線）。山が左に寄っているので、2つの点は9から等しい距離になく、19.02 の側が遠くにあります（6.3 と 10.0）。`;
   return fig(svg, cap);
 }
 
