@@ -3186,6 +3186,29 @@ function rejectRegion(): string {
   return fig(svg, cap);
 }
 
+function ciVsTest(): string {
+  const W = 350, H = 136;
+  const x0 = 20, x1 = 330, lo = -1, hi = 8;
+  const X = (v: number) => x0 + ((v - lo) / (hi - lo)) * (x1 - x0);
+  const m = 3.5, h = 1.96 * 1.6, L = m - h, U = m + h, y = 58;
+  const svg = `${svgOpen(W, H, '差の95%信頼区間 [0.36, 6.64] と0の位置：区間が0を含まないので両側5%で棄却')}
+    <line x1="${x0}" y1="${y + 30}" x2="${x1}" y2="${y + 30}" stroke="${SLATE}" stroke-width="1" />
+    ${[0, 2, 4, 6, 8].map((t) => `<line x1="${f1(X(t))}" y1="${y + 27}" x2="${f1(X(t))}" y2="${y + 33}" stroke="${SLATE}" /><text x="${f1(X(t))}" y="${y + 47}" text-anchor="middle" font-size="12.4" fill="${SLATE}">${t}</text>`).join('')}
+    <line x1="${f1(X(0))}" y1="${y - 30}" x2="${f1(X(0))}" y2="${y + 30}" stroke="${ROSE}" stroke-width="1.4" stroke-dasharray="4 3" />
+    <text x="${f1(X(0) + 4)}" y="${y - 20}" font-size="12.4" fill="${ROSE}">差＝0</text>
+    <line x1="${f1(X(L))}" y1="${y}" x2="${f1(X(U))}" y2="${y}" stroke="${INDIGO}" stroke-width="3" />
+    <line x1="${f1(X(L))}" y1="${y - 7}" x2="${f1(X(L))}" y2="${y + 7}" stroke="${INDIGO}" stroke-width="2" />
+    <line x1="${f1(X(U))}" y1="${y - 7}" x2="${f1(X(U))}" y2="${y + 7}" stroke="${INDIGO}" stroke-width="2" />
+    <circle cx="${f1(X(m))}" cy="${y}" r="4.5" fill="${INDIGO}" />
+    <text x="${f1(X(L) + 3)}" y="${y + 21}" font-size="12.4" fill="${INDIGO}">${f2(L)}</text>
+    <text x="${f1(X(U) - 3)}" y="${y + 21}" text-anchor="end" font-size="12.4" fill="${INDIGO}">${f2(U)}</text>
+    <text x="${f1(X(m))}" y="${y - 12}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${INDIGO}">観測した差 3.5</text>
+    <text x="${W / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">新薬とプラセボの差（mmHg）</text>
+  </svg>`;
+  const cap = `横線が差の95%信頼区間です。左の端 ${f2(L)} が0より右にあるので、区間は0を含みません。`;
+  return fig(svg, cap);
+}
+
 function pValue(): string {
   const W = 350, H = 220;
   const b: Box = { x: 14, y: 30, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.44 };
@@ -5695,6 +5718,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-info-sharpness': infoSharpness, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-reject': rejectRegion,
+  'f-ci-test': ciVsTest,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
