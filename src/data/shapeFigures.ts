@@ -3164,27 +3164,49 @@ function partialCoef(): string {
 }
 
 // ============ 1.18：P値＝帰無分布の裾の面積 ============
+function rejectRegion(): string {
+  const W = 350, H = 230;
+  const b: Box = { x: 14, y: 36, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.44 };
+  const c = 1.96, z = 2.19;
+  const svg = `${svgOpen(W, H, '棄却域：帰無仮説のもとで左右合わせて5%しか出ない範囲と、観測した z')}
+    ${area(b, normPdf, -4, -c, ROSE, 0.45)}${area(b, normPdf, c, 4, ROSE, 0.45)}
+    ${curve(b, normPdf, INDIGO)}
+    ${axes(b, [-4, -3, -1, 0, 1, 3, 4])}
+    ${[-c, c].map((x) => `<line x1="${f1(PX(b, x))}" y1="${b.y + 50}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="3 2" />
+    <text x="${f1(PX(b, x))}" y="${b.y + b.h + 14}" text-anchor="middle" font-size="12.4" font-weight="700" fill="${ROSE}">${x < 0 ? '−' : ''}${c}</text>`).join('')}
+    <line x1="${f1(PX(b, z))}" y1="${b.y + 6}" x2="${f1(PX(b, z))}" y2="${b.y + b.h}" stroke="${INK}" stroke-width="1.6" />
+    <text x="${f1(PX(b, z) + 4)}" y="${b.y + 16}" font-size="13.2" font-weight="700" fill="${INK}">z ＝ ${z}</text>
+    <text x="${f1(PX(b, 3.2))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, -3.2))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.15))}" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INDIGO}">95%</text>
+    <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">棄却域 ＝ 赤い左右の端（|z| ≥ 1.96）</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差は0）のもとでの z の分布</text>
+  </svg>`;
+  const cap = `差が本当に0でも、z は左右合わせて5%の確率で赤い範囲に入ります。新薬の z ＝ ${z} は右の赤い範囲に入っています。`;
+  return fig(svg, cap);
+}
+
 function pValue(): string {
   const W = 350, H = 220;
   const b: Box = { x: 14, y: 30, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.44 };
-  const z = 2.19;
+  const z = 2.19, c = 1.96;
   const p = 2 * (1 - Phi(z));
-  const svg = `${svgOpen(W, H, 'P値は帰無仮説のもとでの分布で、観測値より極端な側の面積')}
+  const svg = `${svgOpen(W, H, 'P値は帰無仮説のもとでの分布で、観測値より外側の面積。棄却域の境 ±1.96 より外にある')}
     ${area(b, normPdf, -4, -z, ROSE, 0.45)}${area(b, normPdf, z, 4, ROSE, 0.45)}
-    ${area(b, normPdf, -1.96, 1.96, INDIGO, 0.08)}
     ${curve(b, normPdf, INDIGO)}
     ${axes(b, [-4, -3, -2, -1, 0, 1, 2, 3, 4])}
+    ${[-c, c].map((x) => `<line x1="${f1(PX(b, x))}" y1="${b.y + 52}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 2" />`).join('')}
+    <text x="${f1(PX(b, c) - 4)}" y="${b.y + 62}" text-anchor="end" font-size="12.4" fill="${SLATE}">1.96</text>
+    <text x="${f1(PX(b, -c) + 4)}" y="${b.y + 62}" font-size="12.4" fill="${SLATE}">−1.96</text>
     <line x1="${f1(PX(b, z))}" y1="${b.y + 6}" x2="${f1(PX(b, z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.6" />
     <text x="${f1(PX(b, z) + 4)}" y="${b.y + 16}" font-size="13.2" font-weight="700" fill="${ROSE}">観測値 ${z}</text>
     <line x1="${f1(PX(b, -z))}" y1="${b.y + 40}" x2="${f1(PX(b, -z))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1" stroke-dasharray="3 2" />
     <text x="${f1(PX(b, 3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
     <text x="${f1(PX(b, -3.1))}" y="${f1(PY(b, 0.06))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">${(1 - Phi(z)).toFixed(3)}</text>
-    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.15))}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">「差がない」なら</text>
-    <text x="${f1(PX(b, 0))}" y="${f1(PY(b, 0.15) + 16)}" text-anchor="middle" font-size="12.4" fill="${INDIGO}">普通に出る範囲</text>
     <text x="${W / 2}" y="16" text-anchor="middle" font-size="13.2" font-weight="700" fill="${INK}">P値 ＝ 赤い面積の合計 ＝ ${f2(p)}</text>
-    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差がない）のもとでの検定統計量の分布</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">帰無仮説（差は0）のもとでの z の分布</text>
   </svg>`;
-  const cap = `曲線は、本当に差がないと仮定したときに検定統計量がとる値の分布です。赤い面積は観測値 ${z} より外側（左右とも）で、合わせて ${f2(p)} です。`;
+  const cap = `赤い面積は、観測値 ${z} より外側（左右とも）です。灰色の点線は棄却域の境 ±1.96 です。`;
   return fig(svg, cap);
 }
 
@@ -5671,6 +5693,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-quantile': quantileFn, 'f-nminus1': nMinus1, 'f-ci-z': ciZ, 'f-ci-t': ciT, 'f-ci-coverage': ciCoverage, 'f-ci-chi2': ciChi2, 'f-ci-chi2-flip': ciChi2Flip, 'f-ci-prop-n': ciPropN, 'f-ci-exact': ciExact, 'f-ci-diff': ciDiff, 'f-paired': pairedDiff, 'f-one-sided': oneSided, 'f-wald-coverage': waldCoverage, 'f-jackknife': jackknife, 'f-np-region': npRegion, 'f-ump-power': umpPower, 'f-three-tests': threeTests, 'f-canonical-disc': canonicalDisc, 'f-ci-ad': ciAd, 'f-power-design': powerDesign, 'f-power-curve': powerCurve, 'f-wls': wls, 'f-lasso-ridge': lassoRidge, 'f-logit-age': logitAge, 'f-logit-probit': logitProbit, 'f-nn-layers': nnLayers, 'f-suff-poisson': suffPoisson, 'f-median-cdf': medianCdf,
   'f-likelihood': likelihood, 'f-estimator-flow': estimatorFlow, 'f-likelihood-peak': likelihoodLog, 'f-likelihood-trouble': likelihoodTrouble, 'f-mm-vs-mle': mmVsMle,
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-info-sharpness': infoSharpness, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
+  'f-reject': rejectRegion,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
