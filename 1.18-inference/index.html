@@ -54,7 +54,7 @@
         }
       })();
     </script>
-    <script type="module" crossorigin src="../assets/index-D95CMjWi.js"></script>
+    <script type="module" crossorigin src="../assets/index-CQUqxA9s.js"></script>
     <link rel="modulepreload" crossorigin href="../assets/rolldown-runtime-COnpUsM8.js">
     <link rel="modulepreload" crossorigin href="../assets/motion-Ml2aNURp.js">
     <link rel="modulepreload" crossorigin href="../assets/react-DL9wba-t.js">
@@ -70,7 +70,7 @@
   <nav style="margin-bottom:16px;display:flex;gap:12px;font-size:0.9rem">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホーム</a>
     <a href="/stats-pre1/1.22-asymptotic/" style="color:#2563eb;text-decoration:none">← 漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法</a>
-    <a href="/stats-pre1/1.18b-power/" style="color:#2563eb;text-decoration:none">検定の誤りと検出力：必要な人数と多重検定 →</a>
+    <a href="/stats-pre1/1.18c-t-tests/" style="color:#2563eb;text-decoration:none">平均の t 検定：1標本・対応のあるデータ・2標本・ウェルチ →</a>
   </nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #2563eb;padding-bottom:8px;margin-bottom:12px">仮説検定の手順とP値の解釈</h1>
   <p style="color:#555;margin-bottom:20px;font-size:1.05rem">帰無仮説を立てて検定統計量を計算する手順を新薬の例で追い、P値を分布の面積として求めます。P値の読み違いを見分け、効果量と区別します。</p>
@@ -122,7 +122,7 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   </svg><figcaption class="venn-caption">赤い左右の端が棄却域、黒い線が新薬の z です。</figcaption></figure>
 <p class="content-p">新薬は <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">2.19</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.96</span></span></span></span></span> なので棄却し、「差がある」と判断します。</p>
 <div class="column-think"><p class="column-think-q">差が 2.5 mmHg だったら、どう判断するでしょうか。</p><p class="column-think-a">答え：<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2.5/1.6</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6835em;vertical-align:-0.0391em;"></span><span class="mord">1.56</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.96</span></span></span></span></span> なので、<span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0813em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> を棄却しません。差が0と分かったのではなく、偶然の揺れと区別できなかっただけです。</p></div>
-<p class="content-p">母標準偏差が分からなければ、標本標準偏差で置き換えて <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 分布の点と比べます（<strong><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 検定</strong>）。</p>
+<p class="content-p">母標準偏差が分からなければ、標本標準偏差で置き換えて <span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 分布の点と比べます（<strong><span class="katex-inline"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 検定</strong>。平均の t 検定で詳しく扱います）。</p>
 <hr class="content-hr">
 <h3 class="content-h3">2. P値は面積</h3>
 <p class="content-p">棄却したかだけでは、1.96をわずかに超えたのか大きく超えたのかが分かりません。そこで、観測値より端の側（左右とも）にある面積も報告します。これが<strong>P値</strong>です。</p>
@@ -199,6 +199,7 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 </section><section style="margin-top:28px;padding:16px;background:#f8fafc;border-radius:8px">
   <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 10px;color:#1e3a5f">第8章の他のモジュール</h2>
   <ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px">
+    <li><a href="/stats-pre1/1.18c-t-tests/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">平均の t 検定：1標本・対応のあるデータ・2標本・ウェルチ</a></li>
     <li><a href="/stats-pre1/1.18b-power/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">検定の誤りと検出力：必要な人数と多重検定</a></li>
     <li><a href="/stats-pre1/1.19-testing-adv/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">検定の理論：ネイマン・ピアソンの基本定理と一様最強力検定</a></li>
     <li><a href="/stats-pre1/1.19b-large-sample-tests/" style="color:#2563eb;text-decoration:none;font-size:0.9rem;background:#fff;border:1px solid #dbeafe;border-radius:4px;padding:3px 10px;display:inline-block">大標本の検定：尤度比検定、ワルド検定、スコア検定</a></li>
@@ -207,7 +208,7 @@ M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
   <nav style="margin-top:32px;border-top:1px solid #ddd;padding-top:16px;display:flex;gap:12px;font-size:0.9rem;flex-wrap:wrap">
     <a href="/stats-pre1/" style="color:#2563eb;text-decoration:none">← ホームへ戻る</a>
     <a href="/stats-pre1/1.22-asymptotic/" style="color:#2563eb;text-decoration:none">← 漸近理論の基礎：フィッシャー情報量・MLE漸近正規性・デルタ法</a>
-    <a href="/stats-pre1/1.18b-power/" style="color:#2563eb;text-decoration:none">検定の誤りと検出力：必要な人数と多重検定 →</a>
+    <a href="/stats-pre1/1.18c-t-tests/" style="color:#2563eb;text-decoration:none">平均の t 検定：1標本・対応のあるデータ・2標本・ウェルチ →</a>
   </nav>
   <nav style="margin-top:12px;display:flex;gap:14px;flex-wrap:wrap;font-size:0.82rem">
     <a href="/stats-pre1/glossary/" style="color:#6b7280;text-decoration:none">用語集</a>
