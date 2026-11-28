@@ -3227,7 +3227,7 @@ function tTestOne(): string {
     <text x="${f1(PX(b, 3.2))}" y="${f1(PY(b, 0.05))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">2.5%</text>
     <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">H₀（下がった量の平均は0）のもとでの t の分布（自由度9）</text>
   </svg>`;
-  const cap = `赤い部分が両側5%の棄却域で、±2.262 より外側です。観測した t = ${t} は右の棄却域に入るので、H₀ を棄却します。`;
+  const cap = `赤い部分が両側5%の棄却域で、±2.262 より外側です。観測した t = ${t} は右の棄却域に入ります。`;
   return fig(svg, cap);
 }
 
