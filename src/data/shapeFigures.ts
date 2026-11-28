@@ -3209,6 +3209,28 @@ function ciVsTest(): string {
   return fig(svg, cap);
 }
 
+// ============ 1.18c：1標本 t 検定（自由度9、t = 2.64 と棄却域 ±2.262） ============
+function tTestOne(): string {
+  const W = 350, H = 220;
+  const b: Box = { x: 14, y: 30, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.42 };
+  const f = tPdf(9), c = 2.262, t = 2.64;
+  const svg = `${svgOpen(W, H, '自由度9の t 分布。両側5%の棄却域は ±2.262 より外側で、観測した t = 2.64 は棄却域に入る')}
+    ${area(b, f, -4, -c, ROSE, 0.4)}${area(b, f, c, 4, ROSE, 0.4)}
+    ${curve(b, f, INDIGO)}
+    ${axes(b, [-4, -2, 0, 2, 4])}
+    ${[-c, c].map((x) => `<line x1="${f1(PX(b, x))}" y1="${b.y + 60}" x2="${f1(PX(b, x))}" y2="${b.y + b.h}" stroke="${SLATE}" stroke-width="1" stroke-dasharray="2 2" />`).join('')}
+    <text x="${f1(PX(b, -c) + 4)}" y="${b.y + 70}" font-size="12.4" fill="${SLATE}">−2.262</text>
+    <text x="${f1(PX(b, c) - 4)}" y="${b.y + 70}" text-anchor="end" font-size="12.4" fill="${SLATE}">2.262</text>
+    <line x1="${f1(PX(b, t))}" y1="${b.y + 6}" x2="${f1(PX(b, t))}" y2="${b.y + b.h}" stroke="${ROSE}" stroke-width="1.6" />
+    <text x="${f1(PX(b, t) + 4)}" y="${b.y + 16}" font-size="13.2" font-weight="700" fill="${ROSE}">t = ${t}</text>
+    <text x="${f1(PX(b, -3.2))}" y="${f1(PY(b, 0.05))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">2.5%</text>
+    <text x="${f1(PX(b, 3.2))}" y="${f1(PY(b, 0.05))}" text-anchor="middle" font-size="12.4" fill="${ROSE}">2.5%</text>
+    <text x="${b.x + b.w / 2}" y="${H - 4}" text-anchor="middle" font-size="12.4" fill="${SLATE}">H₀（下がった量の平均は0）のもとでの t の分布（自由度9）</text>
+  </svg>`;
+  const cap = `赤い部分が両側5%の棄却域で、±2.262 より外側です。観測した t = ${t} は右の棄却域に入るので、H₀ を棄却します。`;
+  return fig(svg, cap);
+}
+
 function pValue(): string {
   const W = 350, H = 220;
   const b: Box = { x: 14, y: 30, w: 322, h: 140, xMin: -4, xMax: 4, yMax: 0.44 };
@@ -5719,6 +5741,7 @@ const SHAPE_FIGS_RAW: Record<string, () => string> = {
   'f-darts': darts, 'f-variance-estimators': varianceEstimators, 'f-consistency': consistency, 'f-mean-vs-median': meanVsMedian, 'f-info-sharpness': infoSharpness, 'f-estimator-classes': estimatorClasses, 'f-weekend-slope': partialCoef,
   'f-reject': rejectRegion,
   'f-ci-test': ciVsTest,
+  'f-ttest-one': tTestOne,
   'f-pvalue': pValue,
   'f-anova': anovaDots,
   'f-dendrogram': dendrogram,
